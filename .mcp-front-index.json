@@ -6299,6 +6299,17 @@
           "kind": "interface",
           "signature": "interface MeteringProviderProps",
           "members": []
+        },
+        {
+          "name": "UpdateMeterDefinitionVariables",
+          "kind": "type",
+          "signature": "type UpdateMeterDefinitionVariables = { readonly id: string; readonly request: MeterDefinitionUpdateRequest; }"
+        },
+        {
+          "name": "UsageForPeriodParams",
+          "kind": "interface",
+          "signature": "interface UsageForPeriodParams",
+          "members": []
         }
       ]
     },
@@ -6742,6 +6753,22 @@
           "kind": "interface",
           "signature": "interface PartiesProviderProps",
           "members": []
+        },
+        {
+          "name": "PartiesListProvider",
+          "kind": "function",
+          "signature": "function PartiesListProvider("
+        },
+        {
+          "name": "PartiesListProviderProps",
+          "kind": "interface",
+          "signature": "interface PartiesListProviderProps",
+          "members": []
+        },
+        {
+          "name": "usePartiesListQuery",
+          "kind": "function",
+          "signature": "function usePartiesListQuery( options?: UseQueryEndpointOptions ): UseQueryEndpointReturn<PartyListItemResponse>"
         },
         {
           "name": "useMergePartyMutation",

@@ -1,9 +1,11 @@
 import { useOptionalGranitClient } from '@granit/react-api-client';
+import { QueryProvider } from '@granit/react-query-engine';
 import { createContext, useContext, useMemo } from 'react';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
 import type { AxiosInstance } from '@granit/api-client';
+import type { QueryConfig } from '@granit/query-engine';
 import type { ReactNode } from 'react';
 
 /** Configuration for the metering provider. */
@@ -48,7 +50,20 @@ export function MeteringProvider({ config, children }: Readonly<MeteringProvider
       client,
     };
   }, [config, contextClient]);
-  return <MeteringConfigContext value={value}>{children}</MeteringConfigContext>;
+
+  // QueryEngine surface for the meter catalog grid: `GET {basePath}/meters` is a
+  // `MapGranitQuery<MeterDefinitionResponse>` endpoint (it ships a `/meta`), so the
+  // list is driven by `useMetersQuery` (useQueryEndpoint) under this provider.
+  const queryConfig = useMemo<QueryConfig>(
+    () => ({ client: value.client, basePath: `${value.basePath}/meters` }),
+    [value]
+  );
+
+  return (
+    <MeteringConfigContext value={value}>
+      <QueryProvider config={queryConfig}>{children}</QueryProvider>
+    </MeteringConfigContext>
+  );
 }
 
 /** Returns the metering configuration from the nearest `MeteringProvider`. */

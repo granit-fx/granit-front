@@ -187,11 +187,15 @@ export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // ── GET /meta — query metadata ───────────────────────────────────
     createQueryMetaHandler(baseUrl, partyQueryMetadata),
 
-    // ── GET list ─────────────────────────────────────────────────────
+    // ── GET list — query-engine paged envelope ───────────────────────
+    // `GET {basePath}` is a `MapGranitQuery<Party>()` group. The role flag is a
+    // first-class filterable field (`roles`, see `partyQueryMetadata`), so it
+    // arrives as `filter[roles.Eq]=Customer`. The legacy `role` query param is
+    // still honored for the plain `usePartiesQuery` non-grid caller.
     http.get(baseUrl, ({ request }) => {
       const url = new URL(request.url);
-      const role = url.searchParams.get('role');
-      const items = role
+      const role = url.searchParams.get('filter[roles.Eq]') ?? url.searchParams.get('role');
+      const matching = role
         ? sampleParties.filter((p) =>
             p.roles
               .split(',')
@@ -199,7 +203,14 @@ export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
               .includes(role)
           )
         : sampleParties;
-      return HttpResponse.json(items.map(toListItem));
+
+      // Grid callers send `page` / `pageSize` and expect the paged envelope;
+      // the plain `usePartiesQuery` caller reads a bare array off `.items`.
+      const page = Number(url.searchParams.get('page') ?? '1');
+      const pageSize = Number(url.searchParams.get('pageSize') ?? '100');
+      const start = (page - 1) * pageSize;
+      const items = matching.slice(start, start + pageSize).map(toListItem);
+      return pagedResponse(items, matching.length);
     }),
 
     // ── Duplicate candidates: paged inbox (QueryEngine shape) ────────

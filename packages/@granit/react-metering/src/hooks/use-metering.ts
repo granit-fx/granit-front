@@ -9,6 +9,7 @@ import {
   recordUsageEvents,
   updateMeterDefinition,
 } from '@granit/metering';
+import { useQueryEndpoint } from '@granit/react-query-engine';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { buildMeteringQueryKey, useMeteringConfig } from '../providers/metering-provider';
@@ -21,6 +22,7 @@ import type {
   RecordUsageRequest,
   UsageAggregateResponse,
 } from '@granit/metering';
+import type { UseQueryEndpointOptions, UseQueryEndpointReturn } from '@granit/react-query-engine';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 // ---------------------------------------------------------------------------
@@ -42,6 +44,29 @@ export function useActiveMeters(): UseQueryResult<readonly MeterDefinitionRespon
     queryKey: buildMeteringQueryKey(config, 'meters'),
     queryFn: () => listActiveMeters(config.client, config.basePath),
   });
+}
+
+/**
+ * QueryEngine endpoint for meter definitions ({@link MeterDefinitionResponse}),
+ * backed by the `MapGranitQuery<MeterDefinitionResponse>()` group under
+ * `{basePath}/meters`. Owns the pagination / filter / sort / group-by state and
+ * exposes the dispatchers plus the paged result — the standard surface for the
+ * interactive meter catalog grid.
+ *
+ * Unlike {@link useActiveMeters} (Published-only, unpaginated array), this lists
+ * ALL meters server-side paginated and filterable — the admin grid surface. Must
+ * be used within a {@link MeteringProvider}, which wires the inner `QueryProvider`.
+ *
+ * @example
+ * ```tsx
+ * const { query, params, setPage, setPageSize } = useMetersQuery();
+ * query.data?.items.map((meter) => meter.name);
+ * ```
+ */
+export function useMetersQuery(
+  options?: UseQueryEndpointOptions
+): UseQueryEndpointReturn<MeterDefinitionResponse> {
+  return useQueryEndpoint<MeterDefinitionResponse>(options);
 }
 
 /**

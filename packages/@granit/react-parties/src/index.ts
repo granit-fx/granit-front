@@ -5,6 +5,8 @@ export {
   usePartiesConfig,
 } from './providers/parties-provider';
 export type { PartiesConfig, PartiesProviderProps } from './providers/parties-provider';
+export { PartiesListProvider } from './providers/parties-list-provider';
+export type { PartiesListProviderProps } from './providers/parties-list-provider';
 
 // Hooks — CRUD + lifecycle + sub-collections + tax status + metadata
 export {
@@ -29,6 +31,9 @@ export {
   useSuspendPartyMutation,
   useUpdatePartyMutation,
 } from './hooks/use-parties';
+
+// Hook — parties list (query-engine grid)
+export { usePartiesListQuery } from './hooks/use-parties-list';
 
 // Hooks — merge
 export { useMergePartyMutation, useMergePartyPreviewQuery } from './hooks/use-party-merge';

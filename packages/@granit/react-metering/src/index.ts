@@ -13,12 +13,10 @@ export {
   useCreateMeterDefinition,
   useMeterDefinition,
   useMeteringQuota,
+  useMetersQuery,
   usePublishMeterDefinition,
   useRecordUsageEvents,
   useUpdateMeterDefinition,
   useUsageForPeriod,
 } from './hooks/use-metering';
-export type {
-  UpdateMeterDefinitionVariables,
-  UsageForPeriodParams,
-} from './hooks/use-metering';
+export type { UpdateMeterDefinitionVariables, UsageForPeriodParams } from './hooks/use-metering';

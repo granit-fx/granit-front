@@ -1,5 +1,5 @@
 import { useTranslation } from '@granit/react-localization';
-import { useActiveMeters, useCreateMeterDefinition } from '@granit/react-metering';
+import { useCreateMeterDefinition, useMetersQuery } from '@granit/react-metering';
 import {
   Button,
   Dialog,
@@ -7,16 +7,9 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  Skeleton,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
   toast,
 } from '@granit/react-ui';
-import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { QueryEndpointDataTable } from '@granit/react-ui-admin-kit';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -25,15 +18,20 @@ import { createMeterColumns } from './components/meter-columns';
 import { MeterForm } from './components/meter-form';
 
 import type { MeterFormValues } from './components/meter-form';
-import type { AggregationType, MeterDefinitionResponse } from '@granit/metering';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { AggregationType } from '@granit/metering';
 
+// The meter catalog grid is driven by the query-engine endpoint, which needs a
+// `QueryProvider` — wired by `MeteringProvider` in the host tree (the same way
+// `MeterDetailPage` / `MeteringUsagePage` resolve the Axios client). The page
+// does NOT wrap its own provider; it assumes an enclosing `MeteringProvider`.
 export function MeterListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [createOpen, setCreateOpen] = useState(false);
 
-  const { data: meters, isLoading } = useActiveMeters();
+  // Query-engine surface: server-side pagination/filter/sort lives in the shared
+  // reducer (wired by MeteringProvider). Lists ALL meters (not just Published).
+  const queryEndpoint = useMetersQuery();
   const createMeter = useCreateMeterDefinition();
 
   const handleViewDetail = useCallback(
@@ -82,15 +80,7 @@ export function MeterListPage() {
       </div>
 
       {/* Data table */}
-      {isLoading ? (
-        <div className="space-y-3">
-          {Array.from({ length: 5 }, (_, i) => (
-            <Skeleton key={`skeleton-${i}`} className="h-12 w-full rounded-lg" />
-          ))}
-        </div>
-      ) : (
-        <MeterDataTable columns={columns} data={[...(meters ?? [])]} />
-      )}
+      <QueryEndpointDataTable queryEndpoint={queryEndpoint} columns={columns} />
 
       {/* Create dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
@@ -107,63 +97,6 @@ export function MeterListPage() {
           />
         </DialogContent>
       </Dialog>
-    </div>
-  );
-}
-
-interface MeterDataTableProps {
-  columns: ColumnDef<MeterDefinitionResponse, unknown>[];
-  data: MeterDefinitionResponse[];
-}
-
-function MeterDataTable({ columns, data }: Readonly<MeterDataTableProps>) {
-  const { t } = useTranslation();
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(header.column.columnDef.header, header.getContext())}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.length === 0 ? (
-            <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="py-8 text-center text-muted-foreground"
-              >
-                {t('Common.NoResults')}
-              </TableCell>
-            </TableRow>
-          ) : (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
     </div>
   );
 }

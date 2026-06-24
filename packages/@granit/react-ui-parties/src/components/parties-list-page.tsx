@@ -1,5 +1,5 @@
 import { useTranslation } from '@granit/react-localization';
-import { usePartiesQuery } from '@granit/react-parties';
+import { PartiesListProvider, usePartiesListQuery } from '@granit/react-parties';
 import {
   Button,
   Input,
@@ -8,17 +8,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Skeleton,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
 } from '@granit/react-ui';
-import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { QueryEndpointDataTable } from '@granit/react-ui-admin-kit';
 import { Plus } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -30,18 +23,70 @@ import {
 
 import { createPartyColumns } from './party-columns';
 
-import type { PartyId, PartyRole } from '@granit/parties';
+import type { PartyId } from '@granit/parties';
+import type { FilterEntry } from '@granit/query-engine';
+
+// Query-engine filterable fields backing the toolbar controls. `roles`, `name`
+// and `status` are all first-class filterable fields on `GET /parties/meta`,
+// so the role / status dropdowns and the name search are honored server-side
+// (no client-side post-filtering — the grid is fully server-driven).
+const ROLE_FIELD = 'roles';
+const STATUS_FIELD = 'status';
+const NAME_FIELD = 'name';
+
+/** Rebuild the full filter array, replacing the entry for `field`. */
+function withFilter(
+  current: readonly FilterEntry[] | undefined,
+  field: string,
+  operator: FilterEntry['operator'],
+  value: string | undefined
+): FilterEntry[] {
+  const rest = (current ?? []).filter((f) => f.field !== field);
+  return value ? [...rest, { field, operator, value }] : rest;
+}
 
 export function PartiesListPage() {
+  return (
+    <PartiesListProvider>
+      <PartiesListContent />
+    </PartiesListProvider>
+  );
+}
+
+function PartiesListContent() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const [roleFilter, setRoleFilter] = useState<PartyListRoleFilter>('All');
-  const [statusFilter, setStatusFilter] = useState<PartyListStatusFilter>('All');
-  const [search, setSearch] = useState('');
+  const qe = usePartiesListQuery();
+  const { params, setFilters } = qe;
+  const filters = params.filters;
 
-  const { data: parties, isLoading } = usePartiesQuery(
-    roleFilter === 'All' ? undefined : { role: roleFilter as PartyRole }
+  const roleFilter = (filters?.find((f) => f.field === ROLE_FIELD)?.value ??
+    'All') as PartyListRoleFilter;
+  const statusFilter = (filters?.find((f) => f.field === STATUS_FIELD)?.value ??
+    'All') as PartyListStatusFilter;
+  const search = filters?.find((f) => f.field === NAME_FIELD)?.value ?? '';
+
+  const handleRoleChange = useCallback(
+    (value: PartyListRoleFilter) => {
+      setFilters(withFilter(filters, ROLE_FIELD, 'Eq', value === 'All' ? undefined : value));
+    },
+    [filters, setFilters]
+  );
+
+  const handleStatusChange = useCallback(
+    (value: PartyListStatusFilter) => {
+      setFilters(withFilter(filters, STATUS_FIELD, 'Eq', value === 'All' ? undefined : value));
+    },
+    [filters, setFilters]
+  );
+
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      const term = value.trim();
+      setFilters(withFilter(filters, NAME_FIELD, 'Contains', term || undefined));
+    },
+    [filters, setFilters]
   );
 
   const handleViewDetail = useCallback(
@@ -55,22 +100,6 @@ export function PartiesListPage() {
     () => createPartyColumns({ t, onViewDetail: handleViewDetail }),
     [t, handleViewDetail]
   );
-
-  const filteredParties = useMemo(() => {
-    const list = parties ?? [];
-    const term = search.trim().toLowerCase();
-    return list.filter((p) => {
-      if (statusFilter !== 'All' && p.status !== statusFilter) return false;
-      if (term && !p.name.toLowerCase().includes(term)) return false;
-      return true;
-    });
-  }, [parties, search, statusFilter]);
-
-  const table = useReactTable({
-    data: [...filteredParties],
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
 
   return (
     <div data-slot="parties-list-page" className="space-y-6">
@@ -88,12 +117,12 @@ export function PartiesListPage() {
       <div className="flex flex-wrap items-center gap-3">
         <Input
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => handleSearchChange(e.target.value)}
           placeholder={t('Parties.List.SearchPlaceholder')}
           aria-label={t('Parties.List.SearchPlaceholder')}
           className="max-w-xs"
         />
-        <Select value={roleFilter} onValueChange={(v) => setRoleFilter(v as PartyListRoleFilter)}>
+        <Select value={roleFilter} onValueChange={handleRoleChange}>
           <SelectTrigger className="w-44" aria-label={t('Parties.List.FilterByRole')}>
             <SelectValue placeholder={t('Parties.List.FilterByRole')} />
           </SelectTrigger>
@@ -105,10 +134,7 @@ export function PartiesListPage() {
             ))}
           </SelectContent>
         </Select>
-        <Select
-          value={statusFilter}
-          onValueChange={(v) => setStatusFilter(v as PartyListStatusFilter)}
-        >
+        <Select value={statusFilter} onValueChange={handleStatusChange}>
           <SelectTrigger className="w-44" aria-label={t('Parties.List.FilterByStatus')}>
             <SelectValue placeholder={t('Parties.List.FilterByStatus')} />
           </SelectTrigger>
@@ -122,52 +148,7 @@ export function PartiesListPage() {
         </Select>
       </div>
 
-      {isLoading ? (
-        <div className="space-y-3">
-          {Array.from({ length: 5 }, (_, i) => (
-            <Skeleton key={`skeleton-${i}`} className="h-12 w-full rounded-lg" />
-          ))}
-        </div>
-      ) : (
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="py-8 text-center">
-                    <span className="text-sm text-muted-foreground">
-                      {t('Parties.List.NoResults')}
-                    </span>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      )}
+      <QueryEndpointDataTable queryEndpoint={qe} columns={columns} />
     </div>
   );
 }
