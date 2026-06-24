@@ -18,6 +18,7 @@
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/react-api-client": "workspace:*",
+    "@granit/react-data-lookup": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/taxonomy": "workspace:*",
     "@granit/types": "workspace:*",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/react-api-client": "workspace:*",
+    "@granit/react-data-lookup": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/taxonomy": "workspace:*",

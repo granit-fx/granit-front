@@ -1,3 +1,4 @@
+import { useDebouncedValue } from '@granit/react-data-lookup';
 import { QueryProvider, useQueryEndpoint } from '@granit/react-query-engine';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -116,28 +117,16 @@ function DocumentSearchPaletteBody({
   const dialogRef = useRef<HTMLDialogElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [draftQuery, setDraftQuery] = useState('');
-  const [activeQuery, setActiveQuery] = useState('');
+  const activeQuery = useDebouncedValue(draftQuery.trim(), SEARCH_DEBOUNCE_MS);
   const [highlight, setHighlight] = useState(0);
 
   // Reset state on every open so the palette doesn't show stale results.
   useEffect(() => {
     if (open) {
       setDraftQuery('');
-      setActiveQuery('');
       setHighlight(0);
     }
   }, [open]);
-
-  // Debounce — fires the QueryEngine call ~200 ms after the user stops typing
-  // to avoid hammering the server on every keystroke. A trimmed query of
-  // length 0 short-circuits to "no remote query" so we don't ship an empty
-  // Contains filter (the backend would return everything in the folder).
-  useEffect(() => {
-    const handle = setTimeout(() => {
-      setActiveQuery(draftQuery.trim());
-    }, SEARCH_DEBOUNCE_MS);
-    return () => clearTimeout(handle);
-  }, [draftQuery]);
 
   // Sync the native <dialog> open state with the `open` prop.
   useEffect(() => {

@@ -1,4 +1,5 @@
-import { useEffect, useId, useState } from 'react';
+import { useDebouncedValue } from '@granit/react-data-lookup';
+import { useId, useState } from 'react';
 
 import { useTaxonomySearch } from '../hooks/use-taxonomy-search';
 
@@ -63,14 +64,9 @@ export function TaxonomySearchBar({
   const labelStrings = { ...DEFAULT_LABELS, ...labels };
   const listboxId = useId();
   const [input, setInput] = useState('');
-  const [debounced, setDebounced] = useState('');
+  const debounced = useDebouncedValue(input, debounceMs);
   const [highlight, setHighlight] = useState(0);
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const handle = setTimeout(() => setDebounced(input), debounceMs);
-    return () => clearTimeout(handle);
-  }, [input, debounceMs]);
 
   const enabled = debounced.length >= minQueryLength;
   const searchQuery = useTaxonomySearch({ q: debounced, enabled });
