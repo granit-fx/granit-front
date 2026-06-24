@@ -7088,11 +7088,6 @@
           "signature": "function useInfiniteScroll<T, P extends InfiniteScrollPage<T> = InfiniteScrollPage<T>>( options: UseInfiniteScrollOptions<T, P> ): UseInfiniteScrollReturn<T>"
         },
         {
-          "name": "usePagination",
-          "kind": "function",
-          "signature": "function usePagination<T, P extends PaginationPage<T> = PaginationPage<T>>( options: UsePaginationOptions<T, P> ): UsePaginationReturn<T>"
-        },
-        {
           "name": "usePagedInfiniteQuery",
           "kind": "function",
           "signature": "function usePagedInfiniteQuery<T, TPage extends InfinitePageResult<T>, TPageParam>( options: UsePagedInfiniteQueryOptions<T, TPage, TPageParam> ): UsePagedInfiniteQueryReturn<T>"

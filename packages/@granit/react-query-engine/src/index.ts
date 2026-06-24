@@ -15,12 +15,6 @@ export type {
   UseInfiniteScrollOptions,
   UseInfiniteScrollReturn,
 } from './hooks/use-infinite-scroll';
-export { usePagination } from './hooks/use-pagination';
-export type {
-  PaginationPage,
-  UsePaginationOptions,
-  UsePaginationReturn,
-} from './hooks/use-pagination';
 export { usePagedInfiniteQuery } from './hooks/use-paged-infinite-query';
 export type {
   InfinitePageResult,
