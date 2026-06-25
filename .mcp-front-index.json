@@ -8784,6 +8784,11 @@
           "signature": "function DashboardEditPage()"
         },
         {
+          "name": "DashboardViewPage",
+          "kind": "function",
+          "signature": "function DashboardViewPage()"
+        },
+        {
           "name": "DashboardPage",
           "kind": "function",
           "signature": "function DashboardPage()"

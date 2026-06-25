@@ -151,11 +151,18 @@ function EntityFormField({
   const componentId = field.lookup ? 'lookup' : field.component;
   const Component = components.form[componentId];
 
+  // Always render a label: fields whose entity definition never called
+  // `.Label(...)` arrive with `labelKey: null`, and without a fallback they'd
+  // render no label at all. Route the humanized property name through
+  // `resolveLabel` so apps can still localize by property name and the i18n
+  // bridge's `defaultValue` path keeps working.
+  const labelText = field.labelKey
+    ? resolveLabel(field.labelKey)
+    : resolveLabel(field.propertyName, humanizePropertyName(field.propertyName));
+
   return (
     <div data-granit-form-field="" data-property={field.propertyName} data-component={componentId}>
-      {field.labelKey ? (
-        <label data-granit-field-label="">{resolveLabel(field.labelKey)}</label>
-      ) : null}
+      <label data-granit-field-label="">{labelText}</label>
       {Component ? (
         <Component
           field={field}
@@ -178,4 +185,13 @@ function EntityFormField({
       ) : null}
     </div>
   );
+}
+
+/**
+ * Turns a PascalCase property name into spaced words for use as a fallback
+ * label when the manifest carries no `labelKey` (`"TaxId"` → `"Tax Id"`,
+ * `"DefaultCurrency"` → `"Default Currency"`, `"Kind"` → `"Kind"`).
+ */
+function humanizePropertyName(name: string): string {
+  return name.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2');
 }

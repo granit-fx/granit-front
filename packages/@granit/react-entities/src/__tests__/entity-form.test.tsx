@@ -196,6 +196,39 @@ describe('EntityForm', () => {
     expect(container.textContent).toContain('[Field.Number.Label]');
   });
 
+  it('falls back to a humanized property name when a field has no labelKey', () => {
+    const variant = manifest(
+      section('identity', 0, [
+        field('Kind', 0, { labelKey: null }),
+        field('TaxId', 1, { labelKey: null }),
+      ])
+    );
+    const { container } = render(
+      withProvider(<EntityForm variant={variant} values={{}} onChange={() => undefined} />)
+    );
+    const labels = Array.from(
+      container.querySelectorAll('[data-granit-field-label]'),
+      (el) => el.textContent
+    );
+    expect(labels).toContain('Kind');
+    expect(labels).toContain('Tax Id');
+  });
+
+  it('passes the humanized property name as the resolver fallback for null labelKey', () => {
+    const variant = manifest(section('identity', 0, [field('TaxId', 0, { labelKey: null })]));
+    const resolve = vi.fn((key: string, fallback?: string) => fallback ?? `[${key}]`);
+    const { container } = render(
+      withProvider(
+        <EntityForm variant={variant} values={{}} onChange={() => undefined} />,
+        catalog,
+        resolve
+      )
+    );
+    expect(resolve).toHaveBeenCalledWith('TaxId', 'Tax Id');
+    const label = container.querySelector('[data-property="TaxId"] [data-granit-field-label]');
+    expect(label?.textContent).toBe('Tax Id');
+  });
+
   it('renders the error message when one is provided for a field', () => {
     const variant = manifest(section('main', 0, [field('Email', 0)]));
     const { container } = render(
