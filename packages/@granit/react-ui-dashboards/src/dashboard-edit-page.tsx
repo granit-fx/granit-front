@@ -296,7 +296,7 @@ export function DashboardEditPage() {
       </div>
 
       <div ref={editorRef}>
-        <EditableDashboard definition={local} onChange={setLocal} />
+        <EditableDashboard definition={local} onChange={setLocal} catalog={catalog} />
       </div>
 
       <Dialog open={addOpen} onOpenChange={setAddOpen}>

@@ -65,6 +65,41 @@ describe('resizeWidget', () => {
     ).toBe(12);
   });
 
+  it('clamps width/height up to the supplied minSize floor', () => {
+    const next = resizeWidget(
+      baseDefinition,
+      'A',
+      { width: 1, height: 1 },
+      { width: 2, height: 2 }
+    );
+    expect(next.widgets[0]?.size).toEqual({ width: 2, height: 2 });
+  });
+
+  it('allows sizes at or above the minSize floor', () => {
+    const next = resizeWidget(
+      baseDefinition,
+      'A',
+      { width: 5, height: 3 },
+      { width: 2, height: 2 }
+    );
+    expect(next.widgets[0]?.size).toEqual({ width: 5, height: 3 });
+  });
+
+  it('clamps the minSize itself to the grid bounds (min never exceeds columns)', () => {
+    const next = resizeWidget(
+      baseDefinition,
+      'A',
+      { width: 1, height: 1 },
+      { width: 99, height: 1 }
+    );
+    expect(next.widgets[0]?.size.width).toBe(12);
+  });
+
+  it('defaults the minSize to 1x1 when omitted (historical behaviour)', () => {
+    const next = resizeWidget(baseDefinition, 'A', { width: 1, height: 1 });
+    expect(next.widgets[0]?.size).toEqual({ width: 1, height: 1 });
+  });
+
   it('preserves all non-size fields on the resized widget', () => {
     const next = resizeWidget(baseDefinition, 'A', { width: 6, height: 2 });
     const a = next.widgets[0];

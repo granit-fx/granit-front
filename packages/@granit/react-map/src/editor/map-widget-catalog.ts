@@ -26,6 +26,7 @@ export const mapWidgetCatalog: readonly WidgetCatalogEntry[] = Object.freeze([
     labelLocalizationKey: 'Dashboard:Widget.Map.Label',
     iconKey: 'map',
     defaultSize: { width: 6, height: 4 },
+    minSize: { width: 3, height: 3 },
     createDefaultWidget: (slug, position): MapWidgetDefinition => ({
       slug,
       type: 'map',

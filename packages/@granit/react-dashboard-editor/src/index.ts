@@ -20,7 +20,13 @@ export { TextConfigForm } from './components/forms/text-config-form';
 // Pure helpers — exported for tests + custom palette / DnD wrappers
 export { reorderWidgets } from './lib/reorder-widgets';
 export { resizeWidget } from './lib/resize-widget';
-export { addWidget, composeCatalogs, defaultWidgetCatalog } from './lib/widget-catalog';
+export {
+  addWidget,
+  composeCatalogs,
+  defaultWidgetCatalog,
+  DEFAULT_MIN_WIDGET_SIZE,
+  resolveWidgetMinSize,
+} from './lib/widget-catalog';
 export type { WidgetCatalogEntry } from './lib/widget-catalog';
 export { removeWidget, updateWidget } from './lib/update-widget';
 export { defaultWidgetConfigFormRegistry } from './lib/default-widget-config-form-registry';

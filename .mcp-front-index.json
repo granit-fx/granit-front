@@ -4684,22 +4684,7 @@
         {
           "name": "resizeWidget",
           "kind": "function",
-          "signature": "function resizeWidget( definition: DashboardDefinition, slug: string, size: WidgetSize ): DashboardDefinition"
-        },
-        {
-          "name": "addWidget",
-          "kind": "function",
-          "signature": "function addWidget<TDefinition extends"
-        },
-        {
-          "name": "composeCatalogs",
-          "kind": "function",
-          "signature": "function composeCatalogs( ...catalogs: readonly (readonly WidgetCatalogEntry[])[] ): readonly WidgetCatalogEntry[]"
-        },
-        {
-          "name": "defaultWidgetCatalog",
-          "kind": "const",
-          "signature": "const defaultWidgetCatalog: readonly WidgetCatalogEntry[]"
+          "signature": "function resizeWidget( definition: DashboardDefinition, slug: string, size: WidgetSize, minSize: WidgetSize ="
         },
         {
           "name": "WidgetCatalogEntry",

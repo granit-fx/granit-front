@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { addWidget, composeCatalogs, defaultWidgetCatalog } from '../lib/widget-catalog';
+import {
+  addWidget,
+  composeCatalogs,
+  defaultWidgetCatalog,
+  DEFAULT_MIN_WIDGET_SIZE,
+  resolveWidgetMinSize,
+} from '../lib/widget-catalog';
 
 import type { WidgetCatalogEntry } from '../lib/widget-catalog';
 import type { DashboardDefinition } from '@granit/dashboards';
@@ -13,6 +19,52 @@ const baseDefinition: DashboardDefinition = {
   layout: { columns: 12, rowHeight: 80 },
   widgets: [],
 };
+
+describe('resolveWidgetMinSize', () => {
+  const catalog: readonly WidgetCatalogEntry[] = [
+    {
+      type: 'kpi',
+      labelLocalizationKey: 'k',
+      defaultSize: { width: 3, height: 2 },
+      minSize: { width: 2, height: 2 },
+      createDefaultWidget: (slug, position) => ({
+        slug,
+        type: 'kpi',
+        position,
+        size: { width: 3, height: 2 },
+      }),
+    },
+  ];
+
+  it('returns the matching entry minSize', () => {
+    expect(resolveWidgetMinSize(catalog, 'kpi')).toEqual({ width: 2, height: 2 });
+  });
+
+  it('falls back to DEFAULT_MIN_WIDGET_SIZE for an unknown type', () => {
+    expect(resolveWidgetMinSize(catalog, 'chart')).toBe(DEFAULT_MIN_WIDGET_SIZE);
+  });
+
+  it('falls back to DEFAULT_MIN_WIDGET_SIZE when no catalog is supplied', () => {
+    expect(resolveWidgetMinSize(undefined, 'kpi')).toBe(DEFAULT_MIN_WIDGET_SIZE);
+  });
+
+  it('falls back to DEFAULT_MIN_WIDGET_SIZE when the entry omits minSize', () => {
+    const noMin: readonly WidgetCatalogEntry[] = [
+      {
+        type: 'bare',
+        labelLocalizationKey: 'b',
+        defaultSize: { width: 2, height: 2 },
+        createDefaultWidget: (slug, position) => ({
+          slug,
+          type: 'bare',
+          position,
+          size: { width: 2, height: 2 },
+        }),
+      },
+    ];
+    expect(resolveWidgetMinSize(noMin, 'bare')).toBe(DEFAULT_MIN_WIDGET_SIZE);
+  });
+});
 
 describe('defaultWidgetCatalog', () => {
   it('ships entries for the framework widget kinds (markdown / text / image)', () => {

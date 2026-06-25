@@ -21,11 +21,15 @@ function clamp(value: number, min: number, max: number): number {
 /**
  * Returns a fresh `DashboardDefinition` with the widget identified by
  * `slug` resized to `size`. Width is clamped to
- * `[1, definition.layout.columns]`; height is clamped to
- * `[1, MAX_HEIGHT_ROWS]`. Returns the original definition unchanged
- * when the slug is unknown or the clamped size is identical to the
- * widget's current size — lets callers diff cheaply with referential
- * equality.
+ * `[minSize.width, definition.layout.columns]`; height is clamped to
+ * `[minSize.height, MAX_HEIGHT_ROWS]`. `minSize` defaults to `1x1` (the
+ * historical floor); callers pass a per-widget minimum (resolved from the
+ * catalog via `resolveWidgetMinSize`) to stop users shrinking a tile below
+ * the space its content needs. The minimum is itself clamped to the grid
+ * bounds so an over-large `minSize` can never exceed the column count.
+ * Returns the original definition unchanged when the slug is unknown or the
+ * clamped size is identical to the widget's current size — lets callers diff
+ * cheaply with referential equality.
  *
  * Pure function — pairs with `reorderWidgets` and `addWidget` /
  * `removeWidget` from the same `lib/` namespace.
@@ -33,10 +37,13 @@ function clamp(value: number, min: number, max: number): number {
 export function resizeWidget(
   definition: DashboardDefinition,
   slug: string,
-  size: WidgetSize
+  size: WidgetSize,
+  minSize: WidgetSize = { width: 1, height: 1 }
 ): DashboardDefinition {
-  const targetWidth = clamp(size.width, 1, definition.layout.columns);
-  const targetHeight = clamp(size.height, 1, MAX_HEIGHT_ROWS);
+  const minWidth = clamp(minSize.width, 1, definition.layout.columns);
+  const minHeight = clamp(minSize.height, 1, MAX_HEIGHT_ROWS);
+  const targetWidth = clamp(size.width, minWidth, definition.layout.columns);
+  const targetHeight = clamp(size.height, minHeight, MAX_HEIGHT_ROWS);
   let mutated = false;
   const widgets = definition.widgets.map((widget) => {
     if (widget.slug !== slug) return widget;

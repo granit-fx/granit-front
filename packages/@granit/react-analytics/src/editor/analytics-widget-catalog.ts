@@ -31,12 +31,14 @@ export const analyticsWidgetCatalog: readonly WidgetCatalogEntry[] = Object.free
     type: 'kpi',
     labelLocalizationKey: 'Dashboard:Widget.Kpi.Label',
     iconKey: 'kpi',
-    defaultSize: { width: 3, height: 1 },
+    // Two rows so the framed tile fits its header + value without clipping.
+    defaultSize: { width: 3, height: 2 },
+    minSize: { width: 2, height: 2 },
     createDefaultWidget: (slug, position): KpiWidgetDefinition => ({
       slug,
       type: 'kpi',
       position,
-      size: { width: 3, height: 1 },
+      size: { width: 3, height: 2 },
       // Empty metric name — the user binds it in the config form. The
       // backend rejects empty metricName at construction, so a fresh
       // widget can't be saved before being configured (acceptable v1
@@ -49,6 +51,7 @@ export const analyticsWidgetCatalog: readonly WidgetCatalogEntry[] = Object.free
     labelLocalizationKey: 'Dashboard:Widget.Chart.Label',
     iconKey: 'chart',
     defaultSize: { width: 6, height: 3 },
+    minSize: { width: 3, height: 2 },
     createDefaultWidget: (slug, position): ChartWidgetDefinition => ({
       slug,
       type: 'chart',
@@ -66,6 +69,7 @@ export const analyticsWidgetCatalog: readonly WidgetCatalogEntry[] = Object.free
     labelLocalizationKey: 'Dashboard:Widget.Table.Label',
     iconKey: 'table',
     defaultSize: { width: 6, height: 3 },
+    minSize: { width: 3, height: 2 },
     createDefaultWidget: (slug, position): TableWidgetDefinition => ({
       slug,
       type: 'table',
@@ -81,6 +85,7 @@ export const analyticsWidgetCatalog: readonly WidgetCatalogEntry[] = Object.free
     labelLocalizationKey: 'Dashboard:Widget.Pivot.Label',
     iconKey: 'pivot',
     defaultSize: { width: 6, height: 3 },
+    minSize: { width: 3, height: 2 },
     createDefaultWidget: (slug, position): PivotWidgetDefinition => ({
       slug,
       type: 'pivot',

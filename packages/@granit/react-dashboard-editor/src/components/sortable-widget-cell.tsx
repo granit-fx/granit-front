@@ -43,6 +43,10 @@ export interface SortableWidgetCellProps {
   readonly gapPx?: number;
   /** Maximum width in cells — typically `definition.layout.columns`. */
   readonly maxWidth?: number;
+  /** Minimum width in cells the resize gesture allows. Defaults to 1. */
+  readonly minWidth?: number;
+  /** Minimum height in cells the resize gesture allows. Defaults to 1. */
+  readonly minHeight?: number;
 }
 
 const MAX_HEIGHT = 12;
@@ -62,6 +66,8 @@ export function SortableWidgetCell({
   rowPx,
   gapPx = 16,
   maxWidth,
+  minWidth = 1,
+  minHeight = 1,
 }: SortableWidgetCellProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
@@ -93,8 +99,16 @@ export function SortableWidgetCell({
         const dy = ev.clientY - startRef.current.y;
         const stepX = columnPx + gapPx;
         const stepY = rowPx + gapPx;
-        const nextWidth = clamp(startRef.current.width + Math.round(dx / stepX), 1, maxWidth ?? 12);
-        const nextHeight = clamp(startRef.current.height + Math.round(dy / stepY), 1, MAX_HEIGHT);
+        const nextWidth = clamp(
+          startRef.current.width + Math.round(dx / stepX),
+          minWidth,
+          maxWidth ?? 12
+        );
+        const nextHeight = clamp(
+          startRef.current.height + Math.round(dy / stepY),
+          minHeight,
+          MAX_HEIGHT
+        );
         onResize({ width: nextWidth, height: nextHeight });
       };
       const onUp = (ev: PointerEvent) => {
@@ -108,7 +122,7 @@ export function SortableWidgetCell({
       globalThis.addEventListener('pointerup', onUp);
       globalThis.addEventListener('pointercancel', onUp);
     },
-    [onResize, size, columnPx, rowPx, gapPx, maxWidth]
+    [onResize, size, columnPx, rowPx, gapPx, maxWidth, minWidth, minHeight]
   );
 
   const style = {

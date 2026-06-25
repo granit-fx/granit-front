@@ -22,6 +22,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 
 import { reorderWidgets } from '../lib/reorder-widgets';
 import { resizeWidget } from '../lib/resize-widget';
+import { resolveWidgetMinSize, type WidgetCatalogEntry } from '../lib/widget-catalog';
 
 import { SortableWidgetCell } from './sortable-widget-cell';
 
@@ -62,6 +63,14 @@ export interface EditableDashboardProps {
   readonly className?: string;
   /** Override the row height (in pixels). Falls back to `definition.layout.rowHeight`. */
   readonly rowHeight?: number;
+  /**
+   * Widget catalog driving per-kind minimum sizes for the drag-resize
+   * clamp. When omitted (or a widget's type is absent), the floor is
+   * {@link DEFAULT_MIN_WIDGET_SIZE} (`1x1`) — the historical behaviour.
+   * Pass the same composed catalog the palette uses so a KPI can't be
+   * shrunk below the space its value needs, etc.
+   */
+  readonly catalog?: readonly WidgetCatalogEntry[];
 }
 
 export function EditableDashboard({
@@ -69,6 +78,7 @@ export function EditableDashboard({
   onChange,
   className,
   rowHeight,
+  catalog,
 }: EditableDashboardProps) {
   const breakpoint = useDashboardBreakpoint();
 
@@ -125,8 +135,8 @@ export function EditableDashboard({
     return () => observer.disconnect();
   }, [layout.columns]);
 
-  const handleResize = (slug: string, size: WidgetSize) => {
-    const next = resizeWidget(definition, slug, size);
+  const handleResize = (slug: string, size: WidgetSize, minSize: WidgetSize) => {
+    const next = resizeWidget(definition, slug, size, minSize);
     if (next !== definition) onChange(next);
   };
 
@@ -142,16 +152,20 @@ export function EditableDashboard({
             className={className}
             style={gridStyle}
           >
-            {orderedWidgets.map((widget) => (
-              <EditableCell
-                key={widget.slug}
-                widget={widget}
-                columnPx={columnPx}
-                rowPx={effectiveRowHeight}
-                maxColumns={layout.columns}
-                onResize={(size) => handleResize(widget.slug, size)}
-              />
-            ))}
+            {orderedWidgets.map((widget) => {
+              const minSize = resolveWidgetMinSize(catalog, widget.type);
+              return (
+                <EditableCell
+                  key={widget.slug}
+                  widget={widget}
+                  columnPx={columnPx}
+                  rowPx={effectiveRowHeight}
+                  maxColumns={layout.columns}
+                  minSize={minSize}
+                  onResize={(size) => handleResize(widget.slug, size, minSize)}
+                />
+              );
+            })}
           </div>
         </SortableContext>
       </DndContext>
@@ -164,12 +178,14 @@ function EditableCell({
   columnPx,
   rowPx,
   maxColumns,
+  minSize,
   onResize,
 }: {
   readonly widget: WidgetDefinition;
   readonly columnPx: number;
   readonly rowPx: number;
   readonly maxColumns: number;
+  readonly minSize: WidgetSize;
   readonly onResize: (size: WidgetSize) => void;
 }) {
   const cellStyle: CSSProperties = {
@@ -185,6 +201,8 @@ function EditableCell({
         rowPx={rowPx}
         gapPx={GRID_GAP_PX}
         maxWidth={maxColumns}
+        minWidth={minSize.width}
+        minHeight={minSize.height}
         onResize={onResize}
       >
         <WidgetRenderer widget={widget} />

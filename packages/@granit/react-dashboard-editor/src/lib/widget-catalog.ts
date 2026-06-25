@@ -31,6 +31,15 @@ export interface WidgetCatalogEntry {
   /** Grid size assigned to a freshly added widget. */
   readonly defaultSize: WidgetSize;
   /**
+   * Smallest size a user may shrink this widget to via the editor's
+   * drag-resize handle. Prevents collapsing a tile below the space its
+   * content needs (e.g. a KPI clipping its value in a 1-row cell).
+   * Falls back to {@link DEFAULT_MIN_WIDGET_SIZE} when omitted. Must be
+   * `<= defaultSize` on both axes so a freshly added widget is never born
+   * below its own floor.
+   */
+  readonly minSize?: WidgetSize;
+  /**
    * Factory producing a fresh widget for this kind. Receives the slug +
    * position {@link addWidget} computed for it; the factory fills in the
    * kind-specific fields (content localization key, source URL, query
@@ -48,6 +57,28 @@ export interface WidgetCatalogEntry {
    * generation stays centralized.
    */
   readonly createDefaultWidget: (slug: string, position: number) => WidgetDefinitionBase;
+}
+
+/**
+ * Floor applied to widgets whose catalog entry (or whose type) declares no
+ * explicit {@link WidgetCatalogEntry.minSize}. `1x1` keeps the historical
+ * behaviour — only widgets that opt into a larger minimum get a tighter
+ * clamp, so existing callers without a catalog see no change.
+ */
+export const DEFAULT_MIN_WIDGET_SIZE: WidgetSize = Object.freeze({ width: 1, height: 1 });
+
+/**
+ * Resolves the minimum resize size for a widget `type` from a catalog.
+ * Returns the matching entry's {@link WidgetCatalogEntry.minSize}, else
+ * {@link DEFAULT_MIN_WIDGET_SIZE}. Used by `<EditableDashboard>` to clamp
+ * drag-resize gestures per widget kind.
+ */
+export function resolveWidgetMinSize(
+  catalog: readonly WidgetCatalogEntry[] | undefined,
+  type: string
+): WidgetSize {
+  const entry = catalog?.find((candidate) => candidate.type === type);
+  return entry?.minSize ?? DEFAULT_MIN_WIDGET_SIZE;
 }
 
 /**
@@ -148,6 +179,7 @@ export const defaultWidgetCatalog: readonly WidgetCatalogEntry[] = Object.freeze
     labelLocalizationKey: 'Dashboard:Widget.Markdown.Label',
     iconKey: 'markdown',
     defaultSize: WIDGET_SIZE.FULL_WIDTH_ROW,
+    minSize: { width: 2, height: 1 },
     createDefaultWidget: (slug, position) => ({
       slug,
       type: 'markdown',
@@ -161,6 +193,7 @@ export const defaultWidgetCatalog: readonly WidgetCatalogEntry[] = Object.freeze
     labelLocalizationKey: 'Dashboard:Widget.Text.Label',
     iconKey: 'text',
     defaultSize: { width: 3, height: 1 },
+    minSize: { width: 2, height: 1 },
     createDefaultWidget: (slug, position) => ({
       slug,
       type: 'text',
@@ -175,6 +208,7 @@ export const defaultWidgetCatalog: readonly WidgetCatalogEntry[] = Object.freeze
     labelLocalizationKey: 'Dashboard:Widget.Image.Label',
     iconKey: 'image',
     defaultSize: WIDGET_SIZE.MEDIA_TILE,
+    minSize: { width: 2, height: 2 },
     createDefaultWidget: (slug, position) => ({
       slug,
       type: 'image',
