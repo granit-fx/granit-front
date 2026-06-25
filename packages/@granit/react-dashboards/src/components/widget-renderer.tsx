@@ -44,9 +44,15 @@ export function WidgetRenderer({ widget, framed = true }: WidgetRendererProps) {
 
   if (!framed) return body;
 
-  const titleKey = dashboardCtx
-    ? `Widget:${dashboardCtx.dashboardName}.${widget.slug}.Title`
-    : `Widget:${widget.slug}.Title`;
+  // Prefer the widget's persisted title key (carried through the
+  // definition bridge from a stored dashboard); fall back to the composed
+  // `Widget:{Dashboard}.{Slug}.Title` convention for hand-authored
+  // definitions (catalog previews / fixtures) that don't carry one.
+  const titleKey =
+    widget.titleLocalizationKey ??
+    (dashboardCtx
+      ? `Widget:${dashboardCtx.dashboardName}.${widget.slug}.Title`
+      : `Widget:${widget.slug}.Title`);
   const title = t(titleKey, { defaultValue: '' });
 
   return <WidgetCard title={title || undefined}>{body}</WidgetCard>;

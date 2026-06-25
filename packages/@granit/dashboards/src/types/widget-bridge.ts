@@ -42,6 +42,9 @@ export const STRUCTURAL_WIDGET_FIELDS = Object.freeze([
   'position',
   'size',
   'requiredPermission',
+  // Persisted as a top-level column, not inside `configJson` — kept out of
+  // the serialized blob so it never round-trips into the config payload.
+  'titleLocalizationKey',
 ] as const);
 
 /**
@@ -185,6 +188,10 @@ export function widgetInstanceToDefinition(
     type: instance.widgetType.charAt(0).toLowerCase() + instance.widgetType.slice(1),
     position: instance.position,
     size: { width: instance.width, height: instance.height },
+    // Carry the persisted title key verbatim so the editor resolves the
+    // actual stored title instead of recomposing a convention that may
+    // not match (e.g. the backend's no-suffix `Widget:{Dashboard}.{Slug}`).
+    titleLocalizationKey: instance.titleLocalizationKey,
     ...(instance.requiredPermission === null
       ? undefined
       : { requiredPermission: instance.requiredPermission }),
@@ -238,7 +245,8 @@ export function widgetDefinitionToAddRequest(
     position: widget.position,
     width: widget.size.width,
     height: widget.size.height,
-    titleLocalizationKey: composeTitleLocalizationKey(dashboardName, widget.slug),
+    titleLocalizationKey:
+      widget.titleLocalizationKey ?? composeTitleLocalizationKey(dashboardName, widget.slug),
     configJson: widgetFieldsToConfigJson(widget),
     metricName,
     queryName,
@@ -262,7 +270,8 @@ export function widgetDefinitionToUpdateRequest(
     position: widget.position,
     width: widget.size.width,
     height: widget.size.height,
-    titleLocalizationKey: composeTitleLocalizationKey(dashboardName, widget.slug),
+    titleLocalizationKey:
+      widget.titleLocalizationKey ?? composeTitleLocalizationKey(dashboardName, widget.slug),
     configJson: widgetFieldsToConfigJson(widget),
   };
 }

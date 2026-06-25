@@ -49,6 +49,16 @@ export interface WidgetDefinitionBase {
    * `null` or missing = the widget has no actions wired.
    */
   readonly actions?: readonly WidgetAction[] | null;
+  /**
+   * The widget's persisted title localization key, carried verbatim from
+   * {@link WidgetInstanceResponse.titleLocalizationKey} when a definition is
+   * bridged from a stored dashboard. Lets the editor resolve the *actual*
+   * title the backend stored (e.g. `Widget:{Dashboard}.{Slug}`) rather than
+   * recomposing a convention that may not match. Omitted for hand-authored
+   * definitions (catalog previews / fixtures), where the renderer falls back
+   * to the composed `Widget:{Dashboard}.{Slug}.Title` convention.
+   */
+  readonly titleLocalizationKey?: string;
 }
 
 /**
