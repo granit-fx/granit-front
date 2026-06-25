@@ -1,0 +1,57 @@
+{
+  "name": "@granit/react-rich-text",
+  "description": "Granit shared rich-text editor — a generic TipTap-based WYSIWYG (HTML in/out) with a configurable toolbar slot. The base every Granit HTML editor (templating, dashboards, …) composes, replacing per-feature editors and raw Markdown widgets.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@tiptap/extension-placeholder": "^3.27.1",
+    "@tiptap/extension-task-item": "^3.27.1",
+    "@tiptap/extension-task-list": "^3.27.1",
+    "@tiptap/extension-text-align": "^3.27.1",
+    "@tiptap/react": "^3.27.1",
+    "@tiptap/starter-kit": "^3.27.1",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/react-localization": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
+    "@tiptap/extension-placeholder": "^3.27.1",
+    "@tiptap/extension-task-item": "^3.27.1",
+    "@tiptap/extension-task-list": "^3.27.1",
+    "@tiptap/extension-text-align": "^3.27.1",
+    "@tiptap/react": "^3.27.1",
+    "@tiptap/starter-kit": "^3.27.1",
+    "i18next": "^26.0.0",
+    "lucide-react": "^1.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-i18next": "^17.0.0",
+    "storybook": "^10.4.6"
+  }
+}

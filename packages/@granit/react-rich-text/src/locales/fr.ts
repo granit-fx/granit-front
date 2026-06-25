@@ -1,0 +1,28 @@
+// @granit/react-rich-text — i18next resource bundle (flat keys, "translation" ns), French.
+
+export const richTextTranslationsFr = {
+  'RichText.Bold': 'Gras',
+  'RichText.Italic': 'Italique',
+  'RichText.Underline': 'Souligné',
+  'RichText.Strikethrough': 'Barré',
+  'RichText.Paragraph': 'Paragraphe',
+  'RichText.Heading1': 'Titre 1',
+  'RichText.Heading2': 'Titre 2',
+  'RichText.Heading3': 'Titre 3',
+  'RichText.Heading4': 'Titre 4',
+  'RichText.AlignLeft': 'Aligner à gauche',
+  'RichText.AlignCenter': 'Centrer',
+  'RichText.AlignRight': 'Aligner à droite',
+  'RichText.AlignJustify': 'Justifier',
+  'RichText.Lists': 'Listes',
+  'RichText.BulletList': 'Liste à puces',
+  'RichText.OrderedList': 'Liste numérotée',
+  'RichText.TaskList': 'Liste de tâches',
+  'RichText.Blockquote': 'Citation',
+  'RichText.Link': 'Lien',
+  'RichText.Unlink': 'Supprimer le lien',
+  'RichText.LinkPrompt': 'URL',
+  'RichText.Undo': 'Annuler',
+  'RichText.Redo': 'Rétablir',
+  'RichText.Content': "Contenu de l'éditeur",
+} as const;
