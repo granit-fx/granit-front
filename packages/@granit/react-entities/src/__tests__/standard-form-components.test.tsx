@@ -169,6 +169,92 @@ describe('STANDARD_FORM_COMPONENTS', () => {
     expect(container.querySelector('[data-granit-select-misconfigured]')).not.toBeNull();
   });
 
+  // -------------------------------------------------------------------------
+  // multiselect — the default for [Flags] enum fields. The wire value is a
+  // single comma-separated string (STJ JsonStringEnumConverter), e.g.
+  // "Customer, Supplier", NOT a JSON array. "None"/null/"" mean the empty set.
+  // -------------------------------------------------------------------------
+
+  function flagsVariant() {
+    return singleFieldVariant(
+      field('multiselect', {
+        config: {
+          options: [
+            { value: 'Customer', labelKey: 'Enum:PartyRoles.Customer' },
+            { value: 'Supplier', labelKey: 'Enum:PartyRoles.Supplier' },
+            { value: 'Employee', labelKey: null },
+          ],
+        },
+      })
+    );
+  }
+
+  function setSelection(select: HTMLSelectElement, values: readonly string[]) {
+    for (const option of Array.from(select.options)) {
+      option.selected = values.includes(option.value);
+    }
+    fireEvent.change(select);
+  }
+
+  it('multiselect — parses the comma-joined string into selected options', () => {
+    const { container } = harness(flagsVariant(), 'Customer, Supplier');
+    const select = container.querySelector('select') as HTMLSelectElement;
+    expect(select.multiple).toBe(true);
+    const selected = Array.from(select.selectedOptions, (o) => o.value);
+    expect(selected).toEqual(['Customer', 'Supplier']);
+  });
+
+  it('multiselect — selecting options emits the comma-joined string', () => {
+    const { container, onChange } = harness(flagsVariant(), 'Customer');
+    const select = container.querySelector('select') as HTMLSelectElement;
+    setSelection(select, ['Customer', 'Supplier']);
+    expect(onChange).toHaveBeenLastCalledWith({ X: 'Customer, Supplier' });
+  });
+
+  it('multiselect — deselecting an option round-trips the remaining flag', () => {
+    const { container, onChange } = harness(flagsVariant(), 'Customer, Supplier');
+    const select = container.querySelector('select') as HTMLSelectElement;
+    setSelection(select, ['Supplier']);
+    expect(onChange).toHaveBeenLastCalledWith({ X: 'Supplier' });
+  });
+
+  it('multiselect — deselecting everything emits the "None" zero-member token', () => {
+    const { container, onChange } = harness(flagsVariant(), 'Customer');
+    const select = container.querySelector('select') as HTMLSelectElement;
+    setSelection(select, []);
+    expect(onChange).toHaveBeenLastCalledWith({ X: 'None' });
+  });
+
+  it.each([
+    { label: 'None', value: 'None' },
+    { label: 'empty string', value: '' },
+    { label: 'null', value: null },
+  ])('multiselect — treats $label as the empty set', ({ value }) => {
+    const { container } = harness(flagsVariant(), value);
+    const select = container.querySelector('select') as HTMLSelectElement;
+    expect(Array.from(select.selectedOptions)).toHaveLength(0);
+  });
+
+  it('multiselect — surfaces the misconfiguration marker when config.options is missing', () => {
+    const { container } = harness(singleFieldVariant(field('multiselect')), null);
+    expect(container.querySelector('[data-granit-select-misconfigured]')).not.toBeNull();
+    expect(container.querySelector('select')).toBeNull();
+  });
+
+  it('multiselect — exposes disabled when readOnly', () => {
+    const { container } = render(
+      <EntityRendererProvider components={STANDARD_FORM_COMPONENTS}>
+        <EntityForm
+          variant={flagsVariant()}
+          values={{ X: 'Customer' }}
+          onChange={() => undefined}
+          readOnly
+        />
+      </EntityRendererProvider>
+    );
+    expect((container.querySelector('select') as HTMLSelectElement).disabled).toBe(true);
+  });
+
   it('readOnly — text/textarea expose readOnly, boolean/select expose disabled', () => {
     function renderRO(component: string) {
       const { container, unmount } = render(

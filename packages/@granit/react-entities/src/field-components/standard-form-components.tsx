@@ -201,6 +201,55 @@ const SelectComponent: EntityFormComponent = ({
   );
 };
 
+/**
+ * Multi-choice counterpart of {@link SelectComponent}, the default for
+ * `[Flags]` enum fields (the .NET side emits `multiselect` from
+ * `FieldBuilder.ChooseDefaultComponent` — ADR-041). It consumes the same
+ * `config.options` shape ({@link SelectComponentOption}); `value` on each
+ * option is the enum member name (e.g. `"Customer"`), symmetric with STJ's
+ * `JsonStringEnumConverter`.
+ *
+ * Wire format: the field value is a single comma-separated string, not a
+ * JSON array — e.g. `"Customer, Supplier"` for `Customer | Supplier`, and
+ * `"None"` (or `null` / `""`) for the empty set. The component parses that
+ * string into the set of selected names and emits the same comma-joined
+ * string on change, so the flags enum binds round-trip.
+ */
+const MultiselectComponent: EntityFormComponent = ({
+  field,
+  value,
+  onChange,
+  readOnly,
+  errorMessage,
+}) => {
+  const options = readOptions(field.config);
+  if (!options) {
+    return (
+      <div data-granit-select-misconfigured="" data-property={field.propertyName}>
+        Multiselect component on {field.propertyName} requires <code>config.options</code> with the
+        documented shape.
+      </div>
+    );
+  }
+  const selected = parseFlagsValue(value);
+  return (
+    <select
+      multiple
+      {...commonProps(field, errorMessage)}
+      value={[...selected]}
+      disabled={readOnly}
+      onChange={(e) => {
+        const names = Array.from(e.target.selectedOptions, (option) => option.value);
+        onChange(joinFlagsValue(names));
+      }}
+    >
+      {options.map((option) => (
+        <SelectOption key={String(option.value)} option={option} />
+      ))}
+    </select>
+  );
+};
+
 function SelectOption({ option }: { readonly option: SelectComponentOption }): ReactNode {
   return <option value={String(option.value)}>{option.labelKey ?? String(option.value)}</option>;
 }
@@ -241,6 +290,32 @@ function stringifySelectValue(value: unknown): string {
 }
 
 /**
+ * Parses a `[Flags]` enum wire value into the set of selected member names.
+ * The value is the comma-separated string produced by STJ's
+ * `JsonStringEnumConverter` (e.g. `"Customer, Supplier"`); whitespace around
+ * names is tolerated. `null`, `undefined`, `""` and the zero-member token
+ * `"None"` all map to the empty set (the zero member is dropped from
+ * `config.options`, so it never round-trips as a selectable name).
+ */
+function parseFlagsValue(value: unknown): ReadonlySet<string> {
+  if (typeof value !== 'string') return new Set();
+  const names = value
+    .split(',')
+    .map((name) => name.trim())
+    .filter((name) => name !== '' && name !== 'None');
+  return new Set(names);
+}
+
+/**
+ * Joins selected member names back into the comma-separated wire string,
+ * matching STJ's `", "` separator. The empty selection emits `"None"` (the
+ * zero-member token) so the non-nullable flags enum still binds.
+ */
+function joinFlagsValue(names: readonly string[]): string {
+  return names.length === 0 ? 'None' : names.join(', ');
+}
+
+/**
  * Standard form-component catalog (ADR-041 minimum set). Pass it to
  * `<EntityRendererProvider components={STANDARD_FORM_COMPONENTS}>` to
  * get working unstyled HTML inputs out of the box. Apps that want
@@ -265,6 +340,7 @@ export const STANDARD_FORM_COMPONENTS: EntityComponentCatalog = Object.freeze({
     time: TimeComponent,
     datetime: DatetimeComponent,
     select: SelectComponent,
+    multiselect: MultiselectComponent,
     lookup: LookupFormComponent,
   }),
 });
