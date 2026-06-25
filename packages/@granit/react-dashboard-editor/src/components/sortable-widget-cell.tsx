@@ -140,7 +140,7 @@ export function SortableWidgetCell({
       data-slot="sortable-widget-cell"
       data-widget-slug={id}
       data-dragging={isDragging || undefined}
-      className="group/cell relative"
+      className="group/cell relative h-full"
     >
       <button
         type="button"
