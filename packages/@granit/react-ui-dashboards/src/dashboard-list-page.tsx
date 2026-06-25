@@ -15,7 +15,15 @@ import {
 import { useTranslation } from '@granit/react-localization';
 import { toast, Button, Spinner } from '@granit/react-ui';
 import { EmptyState } from '@granit/react-ui-kit';
-import { Archive, ArchiveRestore, LayoutDashboard, Pencil, RefreshCw, Send } from 'lucide-react';
+import {
+  Archive,
+  ArchiveRestore,
+  Eye,
+  LayoutDashboard,
+  Pencil,
+  RefreshCw,
+  Send,
+} from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -204,6 +212,16 @@ export function DashboardListPage() {
                       {t('Common.Archive', { defaultValue: 'Archive' })}
                     </Button>
                   )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      navigate(`/dashboards/manage/${encodeURIComponent(dashboard.id)}`)
+                    }
+                  >
+                    <Eye className="mr-2 h-4 w-4" />
+                    {t('Common.View', { defaultValue: 'View' })}
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"

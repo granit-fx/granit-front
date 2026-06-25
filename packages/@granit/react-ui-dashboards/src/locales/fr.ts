@@ -50,4 +50,5 @@ export const dashboardsTranslationsFr = {
   'Dashboards.List.Toast.ResyncSuccess':
     '« {{name}} » re-synchronisé en v{{version}} · {{widgetsAdded}} ajouté(s), {{widgetsRemoved}} retiré(s), {{overridesCarriedOver}} surcharge(s) préservée(s)',
   'Dashboards.List.WidgetsSuffix': 'widgets',
+  'Dashboards.View.NotFound': 'Tableau de bord introuvable.',
 } as const;

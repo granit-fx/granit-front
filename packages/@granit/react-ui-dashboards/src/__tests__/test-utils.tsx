@@ -40,6 +40,7 @@ void testI18n.use(initReactI18next).init({
         'Common.Resync': 'Re-sync',
         'Common.Save': 'Save',
         'Common.Saving': 'Saving…',
+        'Common.View': 'View',
       },
     },
   },

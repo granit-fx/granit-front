@@ -6,6 +6,7 @@
 
 export { DashboardListPage } from './dashboard-list-page';
 export { DashboardEditPage } from './dashboard-edit-page';
+export { DashboardViewPage } from './dashboard-view-page';
 export { DashboardPage } from './dashboard-page';
 
 // Public components

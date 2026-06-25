@@ -52,6 +52,7 @@ export const dashboardsTranslationsEn = {
   'Dashboards.List.Toast.ResyncSuccess':
     'Re-synced “{{name}}” to v{{version}} · {{widgetsAdded}} added, {{widgetsRemoved}} removed, {{overridesCarriedOver}} overrides preserved',
   'Dashboards.List.WidgetsSuffix': 'widgets',
+  'Dashboards.View.NotFound': 'Dashboard not found.',
 } as const;
 
 export type DashboardsTranslations = typeof dashboardsTranslationsEn;
