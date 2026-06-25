@@ -8,6 +8,11 @@ import { renderWithProviders } from './test-utils';
 import type { TemplateEditorHandle } from '../components/template-editor';
 import type * as ReactTemplating from '@granit/react-templating';
 
+// The generic formatting toolbar + HTML round-trip are owned (and tested) by
+// @granit/react-rich-text. These tests cover only what this wrapper adds: the
+// templating toolbar extras (variable picker, switch-to-code) and the
+// re-exposed insertAtCursor handle.
+
 vi.mock('@granit/react-templating', async () => {
   const actual = await vi.importActual<typeof ReactTemplating>('@granit/react-templating');
   return {
@@ -23,8 +28,7 @@ vi.mock('@granit/react-templating', async () => {
 });
 
 // ProseMirror's scrollToSelection calls getClientRects on text nodes, which jsdom
-// does not implement. Polyfill it so block-level commands (alignment, lists,
-// headings, blockquote) don't crash with "getClientRects is not a function".
+// does not implement. Polyfill it so editor commands don't crash.
 beforeAll(() => {
   const emptyRect = {
     x: 0,
@@ -61,109 +65,45 @@ async function renderEditor(props: Partial<React.ComponentProps<typeof RichTextE
   return result;
 }
 
-describe('RichTextEditor', () => {
+describe('RichTextEditor (templating wrapper)', () => {
   afterEach(() => vi.unstubAllGlobals());
 
-  it('should render the editor and toolbar', async () => {
+  it('renders the shared editor with its toolbar', async () => {
     const { container } = await renderEditor();
     expect(container.querySelector('[data-slot="rich-text-toolbar"]')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Bold' })).toBeInTheDocument();
   });
 
-  it('should not render the toolbar when readOnly', async () => {
+  it('does not render the toolbar when readOnly', async () => {
     const { container } = await renderEditor({ readOnly: true });
     expect(container.querySelector('[data-slot="rich-text-toolbar"]')).not.toBeInTheDocument();
   });
 
-  it('should call onChange when a formatting command runs', async () => {
-    const onChange = vi.fn();
-    const { user } = await renderEditor({ onChange });
-    await user.click(screen.getByRole('button', { name: 'Bold' }));
-    await waitFor(() => expect(onChange).toHaveBeenCalled());
-  });
-
-  it.each([
-    'Italic',
-    'Underline',
-    'Strikethrough',
-    'Align Left',
-    'Align Center',
-    'Align Right',
-    'Justify',
-    'Blockquote',
-  ])('should run the %s toolbar action without crashing', async (label) => {
-    const { user } = await renderEditor();
-    await user.click(screen.getByRole('button', { name: label }));
-    expect(screen.getByRole('button', { name: label })).toBeInTheDocument();
-  });
-
-  it('should set a link via the prompt', async () => {
-    vi.stubGlobal('prompt', vi.fn().mockReturnValue('https://granit.dev'));
-    const onChange = vi.fn();
-    const { user } = await renderEditor({ onChange });
-    await user.click(screen.getByRole('button', { name: 'Link' }));
-    expect(globalThis.prompt).toHaveBeenCalled();
-  });
-
-  it('should cancel link insertion when the prompt is dismissed', async () => {
-    vi.stubGlobal('prompt', vi.fn().mockReturnValue(null));
-    const { user } = await renderEditor();
-    await user.click(screen.getByRole('button', { name: 'Link' }));
-    expect(globalThis.prompt).toHaveBeenCalled();
-  });
-
-  it('should remove a link when the prompt returns an empty string', async () => {
-    vi.stubGlobal('prompt', vi.fn().mockReturnValue(''));
-    const { user } = await renderEditor();
-    await user.click(screen.getByRole('button', { name: 'Link' }));
-    expect(globalThis.prompt).toHaveBeenCalled();
-  });
-
-  it('should open the heading dropdown and pick a heading', async () => {
-    const onChange = vi.fn();
-    const { user } = await renderEditor({ onChange });
-    await user.click(screen.getByRole('button', { name: 'Paragraph' }));
-    await user.click(await screen.findByText('Heading 1'));
-    await waitFor(() => expect(onChange).toHaveBeenCalled());
-  });
-
-  it('should open the heading dropdown and reset to paragraph', async () => {
-    const { user } = await renderEditor();
-    await user.click(screen.getByRole('button', { name: 'Paragraph' }));
-    const items = await screen.findAllByText('Paragraph');
-    await user.click(items[items.length - 1]!);
-  });
-
-  it('should open the lists dropdown and toggle list types', async () => {
-    const { user } = await renderEditor();
-    await user.click(screen.getByRole('button', { name: 'Lists' }));
-    await user.click(await screen.findByText('Bullet List'));
-    await user.click(screen.getByRole('button', { name: 'Lists' }));
-    await user.click(await screen.findByText('Ordered List'));
-    await user.click(screen.getByRole('button', { name: 'Lists' }));
-    await user.click(await screen.findByText('Task List'));
-  });
-
-  it('should render the insert-variable button when templateName is provided', async () => {
+  it('renders the insert-variable button when templateName is provided', async () => {
     await renderEditor({ templateName: 'welcome' });
     expect(screen.getByRole('button', { name: 'Insert Variable' })).toBeInTheDocument();
   });
 
-  it('should render and trigger the switch-to-code control', async () => {
+  it('does not render the insert-variable button without a templateName', async () => {
+    await renderEditor();
+    expect(screen.queryByRole('button', { name: 'Insert Variable' })).not.toBeInTheDocument();
+  });
+
+  it('renders and triggers the switch-to-code control', async () => {
     const onSwitchToCode = vi.fn();
     const { user } = await renderEditor({ onSwitchToCode });
     await user.click(screen.getByRole('button', { name: 'Code' }));
     expect(onSwitchToCode).toHaveBeenCalled();
   });
 
-  it('should expose insertAtCursor via ref', async () => {
+  it('exposes insertAtCursor via ref', async () => {
     const ref = createRef<TemplateEditorHandle>();
     await renderEditor({ ref });
     expect(typeof ref.current?.insertAtCursor).toBe('function');
     expect(() => ref.current?.insertAtCursor('{{ now }}')).not.toThrow();
   });
 
-  it('should sync external value updates', async () => {
+  it('syncs external value updates', async () => {
     const { container, rerender } = await renderEditor();
     rerender(<RichTextEditor value="<p>Updated</p>" onChange={vi.fn()} />);
     await waitFor(() => expect(container.textContent).toContain('Updated'));

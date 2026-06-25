@@ -6701,6 +6701,9 @@ importers:
       '@granit/react-query-engine':
         specifier: workspace:*
         version: link:../react-query-engine
+      '@granit/react-rich-text':
+        specifier: workspace:*
+        version: link:../react-rich-text
       '@granit/react-templating':
         specifier: workspace:*
         version: link:../react-templating
@@ -6737,24 +6740,6 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@tiptap/extension-placeholder':
-        specifier: ^3.27.1
-        version: 3.27.1(@tiptap/extensions@3.27.1(@tiptap/core@3.27.1(@tiptap/pm@3.27.1))(@tiptap/pm@3.27.1))
-      '@tiptap/extension-task-item':
-        specifier: ^3.27.1
-        version: 3.27.1(@tiptap/extension-list@3.27.1(@tiptap/core@3.27.1(@tiptap/pm@3.27.1))(@tiptap/pm@3.27.1))
-      '@tiptap/extension-task-list':
-        specifier: ^3.27.1
-        version: 3.27.1(@tiptap/extension-list@3.27.1(@tiptap/core@3.27.1(@tiptap/pm@3.27.1))(@tiptap/pm@3.27.1))
-      '@tiptap/extension-text-align':
-        specifier: ^3.27.1
-        version: 3.27.1(@tiptap/core@3.27.1(@tiptap/pm@3.27.1))
-      '@tiptap/react':
-        specifier: ^3.27.1
-        version: 3.27.1(@floating-ui/dom@1.7.6)(@tiptap/core@3.27.1(@tiptap/pm@3.27.1))(@tiptap/pm@3.27.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@tiptap/starter-kit':
-        specifier: ^3.27.1
-        version: 3.27.1
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
