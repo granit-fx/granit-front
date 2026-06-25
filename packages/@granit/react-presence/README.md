@@ -17,9 +17,8 @@ The split is three packages over the same .NET `Granit.Presence` backend (and it
   `PresencePermissions` and `PRESENCE_DEFAULTS`.
 - `@granit/react-presence` (this package) — React Query hooks, provider,
   heartbeat scheduler, headless components and i18n bundles.
-- [`@granit/react-ui-presence`](../react-ui-presence) — admin UI kit: the
-  live-presence demo page composing these headless parts with the foundation UI
-  packages.
+- The showcase app's playground (`granit-showcase-react`) composes these
+  headless parts into a live-presence demo page with the foundation UI packages.
 
 The module covers two surfaces. **User presence** is the per-user effective
 status (`Online`/`Away`/`Busy`/`DoNotDisturb`/`Offline`) computed server-side
@@ -100,7 +99,11 @@ function StatusMenu() {
   return (
     <>
       <DndBanner presence={presence} onClear={() => clear.mutate()} />
-      <PresencePicker onApplied={() => {/* close the menu */}} />
+      <PresencePicker
+        onApplied={() => {
+          /* close the menu */
+        }}
+      />
     </>
   );
 }
@@ -144,7 +147,7 @@ function ViewersStrip({ docId }: { docId: string }) {
 | `PresenceHeartbeat`          | component | Render-less mount wrapper around `useHeartbeat`                          |
 | `PresenceDot`                | component | Headless coloured status pastille (`data-status`, inline/overlay)        |
 | `PresencePicker`             | component | Headless manual-override form (status + expiry presets), cache-driven    |
-| `DndBanner`                  | component | Passive reminder in `DoNotDisturb`/`AppearOffline`; else renders nothing  |
+| `DndBanner`                  | component | Passive reminder in `DoNotDisturb`/`AppearOffline`; else renders nothing |
 | `DEFAULT_PRESENCE_COLORS`    | const     | Per-status hex map used by `PresenceDot` (overridable via `colorMap`)    |
 | `presenceTranslationsEn`     | const     | English i18next bundle (namespace `presence`)                            |
 | `presenceTranslationsFr`     | const     | French i18next bundle (namespace `presence`)                             |
@@ -189,7 +192,7 @@ fixtures (GUID-formatted ids that round-trip the .NET stack).
 
 - **`Offline` is a value, never a 404.** Single and batch user lookups resolve
   unknown users to an `Offline` snapshot with `lastSeenUtc = null`; do not treat
-  absence as an error. Resource rooms, by contrast, *can* 404 (visibility policy
+  absence as an error. Resource rooms, by contrast, _can_ 404 (visibility policy
   or dissolved room).
 
 - **Privacy.** `AppearOffline` is owner-controlled; the backend reports it as
@@ -199,13 +202,13 @@ fixtures (GUID-formatted ids that round-trip the .NET stack).
 - **Real-time notification gate.** When the user is in `DoNotDisturb` or
   `AppearOffline`, the backend `Granit.Presence.Notifications` gate suppresses
   push / SignalR / SSE delivery. `<DndBanner>` is a passive reminder that
-  explains *why* toasts stopped; it neither performs nor enforces the muting.
+  explains _why_ toasts stopped; it neither performs nor enforces the muting.
 
 ## Out of scope
 
 - **Admin UI** — the live-presence demo page and any styled chrome live in
-  [`@granit/react-ui-presence`](../react-ui-presence). The components here are
-  headless.
+  the showcase app's playground (`granit-showcase-react`). The components here
+  are headless.
 
 - **DTOs and HTTP transport** — owned by [`@granit/presence`](../presence)
   (mirror of `Granit.Presence`); hooks here only adapt them to React Query.

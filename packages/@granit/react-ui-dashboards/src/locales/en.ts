@@ -4,7 +4,6 @@
 //   i18n.addResourceBundle("en", "translation", dashboardsTranslationsEn, true, true);
 
 export const dashboardsTranslationsEn = {
-  'Dashboards.Demo.ManageDashboards': 'Manage dashboards',
   'Dashboards.Edit.AddWidget': 'Add widget',
   'Dashboards.Edit.AddWidget.Body':
     'Pick a widget type to drop on the dashboard. You can configure it after it lands on the grid.',

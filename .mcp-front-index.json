@@ -8789,11 +8789,6 @@
           "signature": "function DashboardViewPage()"
         },
         {
-          "name": "DashboardPage",
-          "kind": "function",
-          "signature": "function DashboardPage()"
-        },
-        {
           "name": "StatusBadge",
           "kind": "function",
           "signature": "function StatusBadge("
@@ -8823,16 +8818,6 @@
           "kind": "interface",
           "signature": "interface PendingLifecycle",
           "members": []
-        },
-        {
-          "name": "sampleFinanceDashboard",
-          "kind": "const",
-          "signature": "const sampleFinanceDashboard: DashboardDefinition"
-        },
-        {
-          "name": "sampleWelcomeDashboard",
-          "kind": "const",
-          "signature": "const sampleWelcomeDashboard: DashboardDefinition"
         }
       ]
     },
@@ -10121,17 +10106,6 @@
           "name": "createPaymentHistoryColumns",
           "kind": "function",
           "signature": "function createPaymentHistoryColumns< TRow extends PaymentHistoryRow, TStatus extends string, >("
-        }
-      ]
-    },
-    {
-      "name": "@granit/react-ui-presence",
-      "description": "Granit admin UI for the Presence module — the live-presence demo page (your presence, status picker, DnD banner, team batch lookup, resource room). Composes @granit/react-presence (headless) with the foundation UI packages.",
-      "exports": [
-        {
-          "name": "PresenceDemoPage",
-          "kind": "function",
-          "signature": "function PresenceDemoPage()"
         }
       ]
     },

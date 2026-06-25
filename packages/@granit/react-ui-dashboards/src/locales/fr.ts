@@ -1,7 +1,6 @@
 // @granit/react-ui-dashboards — i18next resource bundle (flat keys, "translation" ns), French.
 
 export const dashboardsTranslationsFr = {
-  'Dashboards.Demo.ManageDashboards': 'Gérer les dashboards',
   'Dashboards.Edit.AddWidget': 'Ajouter un widget',
   'Dashboards.Edit.AddWidget.Body':
     'Choisissez un type de widget à déposer sur le dashboard. Vous pourrez le configurer une fois posé sur la grille.',

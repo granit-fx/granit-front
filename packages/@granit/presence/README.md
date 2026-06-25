@@ -9,8 +9,8 @@ client, permission constants and server defaults needed to read and write
 presence from any client — React, React Native, a CLI, tests. It holds **no**
 React, DOM or Node-only dependency. The React Query hooks/providers layer lives
 in [`@granit/react-presence`](../react-presence) (provider, heartbeat
-scheduler, headless components); the admin feature kit lives in
-[`@granit/react-ui-presence`](../react-ui-presence).
+scheduler, headless components). A live-presence demo page composing these
+parts lives in the showcase app's playground (`granit-showcase-react`).
 
 The module covers two presence surfaces. **User presence** is the per-user
 effective status (`Online`/`Away`/`Busy`/`DoNotDisturb`/`Offline`) computed
@@ -70,30 +70,30 @@ await leaveResourceRoom(client, basePath, 'document', docId);
 
 ## Public API
 
-| Symbol | Kind | Purpose |
-| --- | --- | --- |
-| `PresenceStatus` | type | Effective status: `Online \| Away \| Busy \| DoNotDisturb \| Offline` |
-| `ManualPresenceStatus` | type | User override: `Available \| Busy \| DoNotDisturb \| AppearOffline` |
-| `PresenceResponse` | type | Presence snapshot (effective status, override, `lastSeenUtc`) |
-| `SetPresenceRequest` | type | `PUT /presence/my` body (manual status + optional `untilUtc`) |
-| `HeartbeatRequest` | type | `POST /presence/my/poll` body (`idleSeconds`) |
-| `BatchPresenceRequest` | type | `POST /presence/users/batch` body (`userIds`) |
-| `BatchPresenceResponse` | type | Batch result keyed by `userId` (unknown users → Offline) |
-| `HeartbeatRoomRequest` | type | Room heartbeat body (opaque `metadata`, ≤ 512 bytes) |
-| `ResourceRoomResponse` | type | A room's `kind`/`id` + participant list |
-| `ResourcePresenceParticipantResponse` | type | One room participant (`userId`, `lastSeenUtc`, `metadata`) |
-| `getMyPresence` | fn | `GET {basePath}/presence/my` |
-| `setMyPresence` | fn | `PUT {basePath}/presence/my` (set manual override) |
-| `clearMyPresenceOverride` | fn | `DELETE {basePath}/presence/my/override` |
-| `pollMyPresence` | fn | `POST {basePath}/presence/my/poll` (heartbeat) |
-| `getUserPresence` | fn | `GET {basePath}/presence/users/{userId}` (never 404s) |
-| `getBatchPresence` | fn | `POST {basePath}/presence/users/batch` |
-| `normalizeUserIds` | fn | Dedupe + drop empties + sort a list of `UserId` |
-| `joinResourceRoom` | fn | `POST {basePath}/presence/rooms/{kind}/{id}/heartbeat` |
-| `getResourceRoom` | fn | `GET {basePath}/presence/rooms/{kind}/{id}` (may 404) |
-| `leaveResourceRoom` | fn | `DELETE {basePath}/presence/rooms/{kind}/{id}` (idempotent) |
-| `PresencePermissions` | const | Permission string constants (`Self`, `Users`, `Rooms`) |
-| `PRESENCE_DEFAULTS` | const | Server-default thresholds (offline/away/idle/batch/override) |
+| Symbol                                | Kind  | Purpose                                                               |
+| ------------------------------------- | ----- | --------------------------------------------------------------------- |
+| `PresenceStatus`                      | type  | Effective status: `Online \| Away \| Busy \| DoNotDisturb \| Offline` |
+| `ManualPresenceStatus`                | type  | User override: `Available \| Busy \| DoNotDisturb \| AppearOffline`   |
+| `PresenceResponse`                    | type  | Presence snapshot (effective status, override, `lastSeenUtc`)         |
+| `SetPresenceRequest`                  | type  | `PUT /presence/my` body (manual status + optional `untilUtc`)         |
+| `HeartbeatRequest`                    | type  | `POST /presence/my/poll` body (`idleSeconds`)                         |
+| `BatchPresenceRequest`                | type  | `POST /presence/users/batch` body (`userIds`)                         |
+| `BatchPresenceResponse`               | type  | Batch result keyed by `userId` (unknown users → Offline)              |
+| `HeartbeatRoomRequest`                | type  | Room heartbeat body (opaque `metadata`, ≤ 512 bytes)                  |
+| `ResourceRoomResponse`                | type  | A room's `kind`/`id` + participant list                               |
+| `ResourcePresenceParticipantResponse` | type  | One room participant (`userId`, `lastSeenUtc`, `metadata`)            |
+| `getMyPresence`                       | fn    | `GET {basePath}/presence/my`                                          |
+| `setMyPresence`                       | fn    | `PUT {basePath}/presence/my` (set manual override)                    |
+| `clearMyPresenceOverride`             | fn    | `DELETE {basePath}/presence/my/override`                              |
+| `pollMyPresence`                      | fn    | `POST {basePath}/presence/my/poll` (heartbeat)                        |
+| `getUserPresence`                     | fn    | `GET {basePath}/presence/users/{userId}` (never 404s)                 |
+| `getBatchPresence`                    | fn    | `POST {basePath}/presence/users/batch`                                |
+| `normalizeUserIds`                    | fn    | Dedupe + drop empties + sort a list of `UserId`                       |
+| `joinResourceRoom`                    | fn    | `POST {basePath}/presence/rooms/{kind}/{id}/heartbeat`                |
+| `getResourceRoom`                     | fn    | `GET {basePath}/presence/rooms/{kind}/{id}` (may 404)                 |
+| `leaveResourceRoom`                   | fn    | `DELETE {basePath}/presence/rooms/{kind}/{id}` (idempotent)           |
+| `PresencePermissions`                 | const | Permission string constants (`Self`, `Users`, `Rooms`)                |
+| `PRESENCE_DEFAULTS`                   | const | Server-default thresholds (offline/away/idle/batch/override)          |
 
 ## Caveats
 
@@ -126,8 +126,8 @@ await leaveResourceRoom(client, basePath, 'document', docId);
 
 - **React Query hooks, the heartbeat scheduler and headless components** — see
   [`@granit/react-presence`](../react-presence).
-- **Admin presence feature kit** — see
-  [`@granit/react-ui-presence`](../react-ui-presence).
+- **Live-presence demo page** — composed in the showcase app's playground
+  (`granit-showcase-react`) from the headless `@granit/react-presence` parts.
 - **Real-time push** (SignalR/SSE fan-out of status changes) — this package is
   request/response only; subscribe via the realtime transport instead of
   polling other users.
