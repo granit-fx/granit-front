@@ -1,5 +1,5 @@
 import { SidebarInset, SidebarProvider } from '@granit/react-ui';
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { AppRightSidebar } from './app-right-sidebar';
@@ -8,6 +8,7 @@ import { Header } from './header';
 import { RightSidebarProvider } from './right-sidebar-context';
 
 const SIDEBAR_COLLAPSE_BREAKPOINT = 1024;
+const DEFAULT_COLLAPSED_PATHS: readonly string[] = ['/'];
 
 export interface AppShellProps {
   /** Account/user menu rendered in the sidebar footer (app-supplied). */
@@ -32,7 +33,7 @@ export function AppShell({
   userMenu,
   headerActions,
   routeLabels,
-  collapsedPaths = ['/'],
+  collapsedPaths = DEFAULT_COLLAPSED_PATHS,
   children,
 }: AppShellProps) {
   const location = useLocation();
@@ -50,14 +51,21 @@ export function AppShell({
 
   // Auto-collapse to icon mode on launcher-style paths (e.g. `/`) so a tile
   // grid gets breathing room; the sidebar stays mounted and re-expandable.
+  // Key the effect on a serialized path list rather than the array reference:
+  // an inline `collapsedPaths` prop is a fresh array every render, so depending
+  // on it directly would re-run this effect on every render and immediately
+  // override a manual sidebar toggle (the trigger would appear dead).
+  const collapsedPathsRef = useRef(collapsedPaths);
+  collapsedPathsRef.current = collapsedPaths;
+  const collapsedPathsKey = collapsedPaths.join('\n');
   useEffect(() => {
-    if (collapsedPaths.includes(location.pathname)) {
+    if (collapsedPathsRef.current.includes(location.pathname)) {
       // Sync the sidebar to the route change.
       setSidebarOpen(false);
     } else if (globalThis.innerWidth > SIDEBAR_COLLAPSE_BREAKPOINT) {
       setSidebarOpen(true);
     }
-  }, [location.pathname, collapsedPaths]);
+  }, [location.pathname, collapsedPathsKey]);
 
   return (
     <RightSidebarProvider>
