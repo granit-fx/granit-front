@@ -30,8 +30,9 @@ export function PivotConfigForm({
   onChange,
 }: WidgetConfigFormProps<PivotWidgetDefinition>) {
   const { t } = useTranslation();
-  const { catalogEntries, hasCatalog, groupByOptions, numericColumnOptions } =
-    useQueryFieldMetadata(widget.queryName);
+  const { catalogEntries, hasCatalog, groupByOptions, fieldOptions } = useQueryFieldMetadata(
+    widget.queryName
+  );
 
   return (
     <div data-slot="pivot-config-form" className="space-y-3">
@@ -77,7 +78,7 @@ export function PivotConfigForm({
         <MetaFieldInput
           slot="pivot-value-field"
           value={widget.valueField ?? ''}
-          options={numericColumnOptions}
+          options={fieldOptions}
           disabled={widget.valueAggregation === 'Count'}
           allowEmpty
           onChange={(value) => onChange({ ...widget, valueField: value === '' ? null : value })}

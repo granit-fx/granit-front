@@ -31,8 +31,9 @@ export function ChartConfigForm({
   onChange,
 }: WidgetConfigFormProps<ChartWidgetDefinition>) {
   const { t } = useTranslation();
-  const { catalogEntries, hasCatalog, groupByOptions, numericColumnOptions } =
-    useQueryFieldMetadata(widget.queryName);
+  const { catalogEntries, hasCatalog, groupByOptions, fieldOptions } = useQueryFieldMetadata(
+    widget.queryName
+  );
 
   const isCount = widget.aggregation === 'Count';
 
@@ -89,7 +90,7 @@ export function ChartConfigForm({
         <MetaFieldInput
           slot="chart-field"
           value={widget.field ?? ''}
-          options={numericColumnOptions}
+          options={fieldOptions}
           disabled={isCount}
           allowEmpty
           onChange={(value) => onChange({ ...widget, field: value === '' ? null : value })}
