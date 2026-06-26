@@ -1,7 +1,7 @@
 import { createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getGrouped, getPage, getQueryMeta } from '../api/query-api';
+import { getGrouped, getPage, getQueryCatalog, getQueryMeta } from '../api/query-api';
 import {
   createSavedView,
   deleteSavedView,
@@ -83,6 +83,25 @@ describe('query-api', () => {
     const { signal } = new AbortController();
     await getQueryMeta(client, '/api/v1/patients', { signal });
     expect(client.get).toHaveBeenCalledWith('/api/v1/patients/meta', { signal });
+  });
+
+  it('getQueryCatalog calls GET /catalog', async () => {
+    const client = createMockClient();
+    const catalog = [
+      { name: 'Granit.Test.Query', basePath: '/api/v1/patients', label: 'Patients' },
+    ];
+    vi.mocked(client.get).mockResolvedValueOnce({ data: catalog });
+    const result = await getQueryCatalog(client, '/api/v1');
+    expect(client.get).toHaveBeenCalledWith('/api/v1/catalog', undefined);
+    expect(result).toEqual(catalog);
+  });
+
+  it('getQueryCatalog forwards the abort signal', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValueOnce({ data: [] });
+    const { signal } = new AbortController();
+    await getQueryCatalog(client, '/api/v1', { signal });
+    expect(client.get).toHaveBeenCalledWith('/api/v1/catalog', { signal });
   });
 });
 

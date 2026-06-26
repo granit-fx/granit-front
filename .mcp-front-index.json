@@ -2556,6 +2556,11 @@
           "signature": "async function getPage<T>( client: AxiosInstance, basePath: string, request: QueryRequest, options?:"
         },
         {
+          "name": "getQueryCatalog",
+          "kind": "function",
+          "signature": "async function getQueryCatalog( client: AxiosInstance, basePath: string, options?:"
+        },
+        {
           "name": "getQueryMeta",
           "kind": "function",
           "signature": "async function getQueryMeta( client: AxiosInstance, basePath: string, options?:"
@@ -7105,9 +7110,19 @@
           "signature": "function useQueryEndpointReducer(initialParams?: QueryRequest): QueryEndpointState"
         },
         {
+          "name": "useQueryCatalog",
+          "kind": "function",
+          "signature": "function useQueryCatalog(): UseQueryResult<readonly QueryCatalogEntryResponse[]>"
+        },
+        {
           "name": "useQueryMeta",
           "kind": "function",
           "signature": "function useQueryMeta(): UseQueryResult<QueryMetadata>"
+        },
+        {
+          "name": "useQueryMetaAt",
+          "kind": "function",
+          "signature": "function useQueryMetaAt(basePath: string | null): UseQueryResult<QueryMetadata>"
         },
         {
           "name": "useSmartFilter",

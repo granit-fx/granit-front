@@ -1,0 +1,111 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "query-engine",
+    "version": "1"
+  },
+  "paths": {
+    "/catalog": {
+      "get": {
+        "tags": ["Query Engine"],
+        "summary": "Lists every registered QueryDefinition.",
+        "description": "Returns the full query catalogue surfaced by IQueryDefinitionRegistry so a dashboard editor can offer a dropdown of queries instead of a free-text queryName. Each entry carries the wire identifier and, when a MapGranitQuery route exposes it, the resolved base path of its list endpoint. Registration and routing are decoupled: a query registered without a mapped route is returned with a null base path rather than a forged URL.",
+        "operationId": "ListQueryCatalog",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QueryCatalogEntryResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "QueryCatalogEntryResponse": {
+        "required": ["name", "basePath", "label"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "basePath": {
+            "type": ["null", "string"]
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Query Engine"
+    }
+  ]
+}

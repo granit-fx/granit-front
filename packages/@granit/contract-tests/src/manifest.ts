@@ -36,6 +36,10 @@ export const CONTRACTS: readonly ModuleContract[] = [
     checkEndpoints: true,
   },
   { slug: 'bff', package: 'bff', types: ['BffCsrfTokenResponse'] },
+  // The query-engine generic surface. Only the catalogue DTO is hand-written;
+  // the QueryMetadata family (columns, group-by, …) is a shared schema owned by
+  // the package and verified indirectly, per the header note.
+  { slug: 'query-engine', package: 'query-engine', types: ['QueryCatalogEntryResponse'] },
   {
     // Only the self-service session/device schemas are published; the provider
     // admin + user-cache surfaces are conditionally registered and absent from

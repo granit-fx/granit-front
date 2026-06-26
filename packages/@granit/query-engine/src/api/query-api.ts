@@ -4,6 +4,7 @@
 
 import { serializeQueryRequest } from './query-param-serializer';
 
+import type { QueryCatalogEntryResponse } from '../types/query-catalog';
 import type { QueryMetadata } from '../types/query-metadata';
 import type { QueryRequest } from '../types/query-params';
 import type { GroupedResult, PagedResult } from '../types/query-results';
@@ -59,5 +60,27 @@ export async function getQueryMeta(
   options?: { readonly signal?: AbortSignal }
 ): Promise<QueryMetadata> {
   const response = await client.get<QueryMetadata>(`${basePath}/meta`, options);
+  return response.data;
+}
+
+/**
+ * List every registered query definition (the query catalogue).
+ *
+ * Powers a query picker in the dashboard editor instead of a free-text
+ * `queryName`. Each entry's `basePath` (when non-null) can be passed to
+ * {@link getQueryMeta} to load that query's fields.
+ *
+ * @param client - Axios instance (from @granit/api-client)
+ * @param basePath - Query-engine root path where `/catalog` is mounted
+ */
+export async function getQueryCatalog(
+  client: AxiosInstance,
+  basePath: string,
+  options?: { readonly signal?: AbortSignal }
+): Promise<readonly QueryCatalogEntryResponse[]> {
+  const response = await client.get<readonly QueryCatalogEntryResponse[]>(
+    `${basePath}/catalog`,
+    options
+  );
   return response.data;
 }

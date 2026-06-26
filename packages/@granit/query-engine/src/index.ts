@@ -23,6 +23,7 @@ export type {
   PagedResult,
   PaginationMeta,
   PresetMeta,
+  QueryCatalogEntryResponse,
   QueryMetadata,
   QueryRequest,
   QuickFilterMeta,
@@ -54,7 +55,7 @@ export { QUERY_LIMITS } from './validation/query-limits';
 export { validateQueryRequest } from './validation/validate-query-request';
 
 // API
-export { getGrouped, getPage, getQueryMeta } from './api/query-api';
+export { getGrouped, getPage, getQueryCatalog, getQueryMeta } from './api/query-api';
 export { parseQueryRequest, serializeQueryRequest } from './api/query-param-serializer';
 export {
   createSavedView,

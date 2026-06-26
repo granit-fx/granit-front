@@ -25,6 +25,8 @@ export type {
   SortableField,
 } from './query-metadata';
 
+export type { QueryCatalogEntryResponse } from './query-catalog';
+
 export type { GroupEntry, GroupedResult, PagedResult } from './query-results';
 
 export type {
