@@ -27,6 +27,15 @@ export const richTextTranslationsEn = {
   'RichText.Undo': 'Undo',
   'RichText.Redo': 'Redo',
   'RichText.Content': 'Editor content',
+  'RichText.Slash.Paragraph': 'Text',
+  'RichText.Slash.Heading1': 'Heading 1',
+  'RichText.Slash.Heading2': 'Heading 2',
+  'RichText.Slash.Heading3': 'Heading 3',
+  'RichText.Slash.BulletList': 'Bullet list',
+  'RichText.Slash.OrderedList': 'Ordered list',
+  'RichText.Slash.TaskList': 'Task list',
+  'RichText.Slash.Quote': 'Quote',
+  'RichText.Slash.CodeBlock': 'Code block',
 } as const;
 
 export type RichTextTranslations = typeof richTextTranslationsEn;

@@ -17,6 +17,7 @@ import TaskItem from '@tiptap/extension-task-item';
 import TaskList from '@tiptap/extension-task-list';
 import TextAlign from '@tiptap/extension-text-align';
 import { EditorContent, useEditor } from '@tiptap/react';
+import { BubbleMenu } from '@tiptap/react/menus';
 import StarterKit from '@tiptap/starter-kit';
 import {
   AlignCenter,
@@ -38,7 +39,16 @@ import {
   Unlink,
   Undo,
 } from 'lucide-react';
-import { forwardRef, useCallback, useEffect, useImperativeHandle, type ReactNode } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  type ReactNode,
+} from 'react';
+
+import { SlashCommand, createDefaultSlashItems } from './slash-command';
 
 import type { Editor } from '@tiptap/react';
 
@@ -84,6 +94,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
     ref
   ) {
     const { t } = useTranslation();
+    const slashItems = useMemo(() => createDefaultSlashItems(t), [t]);
 
     const editor = useEditor({
       extensions: [
@@ -96,6 +107,11 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
         TextAlign.configure({ types: ['heading', 'paragraph'] }),
         TaskList,
         TaskItem.configure({ nested: true }),
+        // Notion-style `/` block menu.
+        SlashCommand.configure({
+          items: (query) =>
+            slashItems.filter((item) => item.title.toLowerCase().includes(query.toLowerCase())),
+        }),
       ],
       content: value,
       editable: !readOnly,
@@ -142,6 +158,42 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
         className={cn('rounded-md border bg-background', className)}
       >
         <RichTextToolbar editor={editor} readOnly={readOnly} toolbarExtras={toolbarExtras} />
+        {!readOnly ? (
+          <BubbleMenu
+            editor={editor}
+            data-slot="rich-text-bubble-menu"
+            className="flex items-center gap-0.5 rounded-md border bg-popover p-1 shadow-md"
+          >
+            <BubbleButton
+              onClick={() => editor.chain().focus().toggleBold().run()}
+              active={editor.isActive('bold')}
+              label={t('RichText.Bold', { defaultValue: 'Bold' })}
+            >
+              <Bold className="h-4 w-4" />
+            </BubbleButton>
+            <BubbleButton
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+              active={editor.isActive('italic')}
+              label={t('RichText.Italic', { defaultValue: 'Italic' })}
+            >
+              <Italic className="h-4 w-4" />
+            </BubbleButton>
+            <BubbleButton
+              onClick={() => editor.chain().focus().toggleUnderline().run()}
+              active={editor.isActive('underline')}
+              label={t('RichText.Underline', { defaultValue: 'Underline' })}
+            >
+              <UnderlineIcon className="h-4 w-4" />
+            </BubbleButton>
+            <BubbleButton
+              onClick={() => editor.chain().focus().toggleStrike().run()}
+              active={editor.isActive('strike')}
+              label={t('RichText.Strikethrough', { defaultValue: 'Strikethrough' })}
+            >
+              <Strikethrough className="h-4 w-4" />
+            </BubbleButton>
+          </BubbleMenu>
+        ) : null}
         <EditorContent
           editor={editor}
           className={cn(
@@ -204,6 +256,38 @@ function ToolbarButton({ action, isActive, icon, label, disabled }: ToolbarButto
         {label}
       </TooltipContent>
     </Tooltip>
+  );
+}
+
+// Selection ("bubble") menu button — no tooltip (the bubble floats outside the
+// toolbar's TooltipProvider). `onMouseDown` preventDefault keeps the selection
+// alive so the command applies to the still-selected text.
+function BubbleButton({
+  onClick,
+  active,
+  label,
+  children,
+}: {
+  readonly onClick: () => void;
+  readonly active?: boolean;
+  readonly label: string;
+  readonly children: ReactNode;
+}) {
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon"
+      className={cn('h-7 w-7', active && 'bg-accent text-accent-foreground')}
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick();
+      }}
+      aria-label={label}
+    >
+      {children}
+    </Button>
   );
 }
 

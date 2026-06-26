@@ -64,3 +64,9 @@ function MyEditor() {
   `toolbarExtras` slot. The bundled StarterKit configures `Link` and `Underline`.
 - **Labels.** Every label passes a `defaultValue`, so the editor works without
   registering the i18n bundle; register `richTextTranslations*` to localize.
+- **Notion-style editing.** Typing `/` opens a block menu (headings, lists,
+  quote, code block); selecting text shows a bubble toolbar (bold / italic /
+  underline / strike). The slash extension (`SlashCommand`) and the default
+  block list (`createDefaultSlashItems`) are exported so apps can add their own
+  blocks. Built on the free TipTap `@tiptap/suggestion` + `tippy.js` — no
+  TipTap Pro / Cloud dependency.

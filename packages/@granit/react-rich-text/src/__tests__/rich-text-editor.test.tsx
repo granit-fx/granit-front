@@ -7,6 +7,7 @@ import { beforeAll, afterEach, describe, expect, it, vi } from 'vitest';
 
 import { richTextTranslationsEn } from '../locales';
 import { RichTextEditor, type RichTextEditorHandle } from '../rich-text-editor';
+import { createDefaultSlashItems } from '../slash-command';
 
 import type { ReactNode } from 'react';
 
@@ -139,5 +140,18 @@ describe('RichTextEditor', () => {
     const { container, rerender } = await renderReady();
     rerender(<RichTextEditor value="<p>Updated</p>" onChange={vi.fn()} />);
     await waitFor(() => expect(container.textContent).toContain('Updated'));
+  });
+});
+
+describe('createDefaultSlashItems', () => {
+  const t = (_key: string, opts: { readonly defaultValue: string }) => opts.defaultValue;
+
+  it('builds the default block list with runnable commands', () => {
+    const items = createDefaultSlashItems(t);
+    const titles = items.map((i) => i.title);
+    expect(titles).toContain('Heading 1');
+    expect(titles).toContain('Bullet list');
+    expect(titles).toContain('Code block');
+    expect(items.every((i) => typeof i.command === 'function')).toBe(true);
   });
 });

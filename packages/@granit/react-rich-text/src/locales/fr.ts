@@ -25,4 +25,13 @@ export const richTextTranslationsFr = {
   'RichText.Undo': 'Annuler',
   'RichText.Redo': 'Rétablir',
   'RichText.Content': "Contenu de l'éditeur",
+  'RichText.Slash.Paragraph': 'Texte',
+  'RichText.Slash.Heading1': 'Titre 1',
+  'RichText.Slash.Heading2': 'Titre 2',
+  'RichText.Slash.Heading3': 'Titre 3',
+  'RichText.Slash.BulletList': 'Liste à puces',
+  'RichText.Slash.OrderedList': 'Liste numérotée',
+  'RichText.Slash.TaskList': 'Liste de tâches',
+  'RichText.Slash.Quote': 'Citation',
+  'RichText.Slash.CodeBlock': 'Bloc de code',
 } as const;

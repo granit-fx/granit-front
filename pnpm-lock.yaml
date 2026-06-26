@@ -3191,6 +3191,9 @@ importers:
       '@storybook/react-vite':
         specifier: ^10.4.6
         version: 10.4.6(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rollup@4.62.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)(vite@8.1.0(@types/node@26.0.0)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
+      '@tiptap/core':
+        specifier: ^3.27.1
+        version: 3.27.1(@tiptap/pm@3.27.1)
       '@tiptap/extension-placeholder':
         specifier: ^3.27.1
         version: 3.27.1(@tiptap/extensions@3.27.1(@tiptap/core@3.27.1(@tiptap/pm@3.27.1))(@tiptap/pm@3.27.1))
@@ -3209,6 +3212,9 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^3.27.1
         version: 3.27.1
+      '@tiptap/suggestion':
+        specifier: ^3.27.1
+        version: 3.27.1(@floating-ui/dom@1.7.6)(@tiptap/core@3.27.1(@tiptap/pm@3.27.1))(@tiptap/pm@3.27.1)
       i18next:
         specifier: ^26.0.0
         version: 26.3.2(typescript@6.0.3)
@@ -3227,6 +3233,9 @@ importers:
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      tippy.js:
+        specifier: ^6.3.7
+        version: 6.3.7
 
   packages/@granit/react-scheduling:
     dependencies:
