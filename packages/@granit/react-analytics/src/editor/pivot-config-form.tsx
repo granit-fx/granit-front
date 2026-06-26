@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import {
-  CONTROL_CLASS,
+  EnumSelect,
   MetaFieldInput,
   MetaMultiFieldInput,
   QueryNameCombobox,
@@ -30,9 +30,7 @@ export function PivotConfigForm({
   onChange,
 }: WidgetConfigFormProps<PivotWidgetDefinition>) {
   const { t } = useTranslation();
-  const { catalogEntries, hasCatalog, groupByOptions, fieldOptions } = useQueryFieldMetadata(
-    widget.queryName
-  );
+  const { catalogEntries, groupByOptions, fieldOptions } = useQueryFieldMetadata(widget.queryName);
 
   return (
     <div data-slot="pivot-config-form" className="space-y-3">
@@ -42,11 +40,9 @@ export function PivotConfigForm({
         </span>
         <QueryNameCombobox
           slot="pivot-query-name"
-          datalistId="pivot-query-name-options"
           value={widget.queryName}
           onChange={(value) => onChange({ ...widget, queryName: value })}
           entries={catalogEntries}
-          hasCatalog={hasCatalog}
         />
       </label>
       <label className="block text-sm">
@@ -88,20 +84,14 @@ export function PivotConfigForm({
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Pivot.ValueAggregation.Label')}
         </span>
-        <select
-          data-slot="pivot-value-aggregation"
+        <EnumSelect
+          slot="pivot-value-aggregation"
           value={widget.valueAggregation}
-          onChange={(event) =>
-            onChange({ ...widget, valueAggregation: event.target.value as AggregateFunction })
+          options={AGGREGATIONS}
+          onChange={(value) =>
+            onChange({ ...widget, valueAggregation: value as AggregateFunction })
           }
-          className={CONTROL_CLASS}
-        >
-          {AGGREGATIONS.map((agg) => (
-            <option key={agg} value={agg}>
-              {agg}
-            </option>
-          ))}
-        </select>
+        />
       </label>
     </div>
   );

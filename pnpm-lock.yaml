@@ -1378,6 +1378,9 @@ importers:
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
+      '@granit/react-ui':
+        specifier: workspace:*
+        version: link:../react-ui
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing

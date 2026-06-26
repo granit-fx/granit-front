@@ -1,7 +1,8 @@
 import { QueryCatalogProvider } from '@granit/react-query-engine';
 import { createTestQueryClient } from '@granit/react-testing';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
@@ -82,54 +83,53 @@ afterEach(() => {
 });
 
 describe('ChartConfigForm', () => {
-  it('falls back to free-text inputs without a catalogue provider', () => {
+  it('renders combobox + select triggers for every field', () => {
     const { container } = wrap(<ChartConfigForm widget={baseChart} onChange={vi.fn()} />);
-    expect(container.querySelector('input[data-slot="chart-query-name"]')).not.toBeNull();
-    expect(container.querySelector('input[data-slot="chart-group-by"]')).not.toBeNull();
-    expect(container.querySelector('input[data-slot="chart-field"]')).not.toBeNull();
-    // No catalogue → no suggestions datalist.
-    expect(container.querySelector('#chart-query-name-options')).toBeNull();
-  });
-
-  it('emits queryName changes from the free-text input', () => {
-    const onChange = vi.fn();
-    const { container } = wrap(<ChartConfigForm widget={baseChart} onChange={onChange} />);
-    const input = container.querySelector('[data-slot="chart-query-name"]');
-    if (!(input instanceof HTMLInputElement)) throw new Error('input not found');
-    fireEvent.change(input, { target: { value: 'Granit.Other.Query' } });
-    expect(onChange.mock.calls[0]?.[0]?.queryName).toBe('Granit.Other.Query');
-  });
-
-  it('renders catalogue suggestions and metadata-backed dropdowns', async () => {
-    const { container } = wrap(
-      <ChartConfigForm widget={baseChart} onChange={vi.fn()} />,
-      mockCatalogClient()
-    );
-
-    // Query combobox gains a suggestions datalist.
-    await waitFor(() =>
-      expect(container.querySelector('#chart-query-name-options')).not.toBeNull()
-    );
-
-    // Group by + field become <select> sourced from metadata.
-    await waitFor(() =>
-      expect(container.querySelector('select[data-slot="chart-group-by"]')).not.toBeNull()
-    );
-    const groupBy = container.querySelector('select[data-slot="chart-group-by"]');
-    expect(groupBy?.querySelector('option[value="Status"]')).not.toBeNull();
-
-    const field = container.querySelector('select[data-slot="chart-field"]');
-    expect(field).not.toBeNull();
-    // Numeric column offered; string column filtered out.
-    expect(field?.querySelector('option[value="Amount"]')).not.toBeNull();
-    expect(field?.querySelector('option[value="Name"]')).toBeNull();
+    for (const slot of [
+      'chart-query-name',
+      'chart-group-by',
+      'chart-aggregation',
+      'chart-field',
+      'chart-type',
+    ]) {
+      expect(container.querySelector(`[data-slot="${slot}"]`)).not.toBeNull();
+    }
   });
 
   it('disables the field control for Count aggregation', () => {
     const countChart: ChartWidgetDefinition = { ...baseChart, aggregation: 'Count', field: null };
     const { container } = wrap(<ChartConfigForm widget={countChart} onChange={vi.fn()} />);
     const field = container.querySelector('[data-slot="chart-field"]');
-    expect(field).not.toBeNull();
-    expect((field as HTMLInputElement).disabled).toBe(true);
+    expect((field as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it('picks a query from the catalogue combobox', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const emptyChart: ChartWidgetDefinition = { ...baseChart, queryName: '' };
+    const { container } = wrap(
+      <ChartConfigForm widget={emptyChart} onChange={onChange} />,
+      mockCatalogClient()
+    );
+
+    await user.click(container.querySelector('[data-slot="chart-query-name"]')!);
+    await user.click(await screen.findByRole('option', { name: 'Patients' }));
+    expect(onChange.mock.calls.at(-1)?.[0]?.queryName).toBe('Granit.Test.Query');
+  });
+
+  it('sources Group By from group-by fields and Field from numeric columns only', async () => {
+    const user = userEvent.setup();
+    const { container } = wrap(
+      <ChartConfigForm widget={baseChart} onChange={vi.fn()} />,
+      mockCatalogClient()
+    );
+
+    await user.click(container.querySelector('[data-slot="chart-group-by"]')!);
+    expect(await screen.findByRole('option', { name: 'Status' })).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+
+    await user.click(container.querySelector('[data-slot="chart-field"]')!);
+    expect(await screen.findByRole('option', { name: 'Amount' })).toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: 'Name' })).toBeNull();
   });
 });

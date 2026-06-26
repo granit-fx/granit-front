@@ -1,7 +1,8 @@
 import { QueryCatalogProvider } from '@granit/react-query-engine';
 import { createTestQueryClient } from '@granit/react-testing';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
@@ -84,10 +85,17 @@ afterEach(() => {
 });
 
 describe('PivotConfigForm', () => {
-  it('falls back to free-text inputs without a catalogue provider', () => {
+  it('renders combobox + select triggers for every field', () => {
     const { container } = wrap(<PivotConfigForm widget={basePivot} onChange={vi.fn()} />);
-    expect(container.querySelector('input[data-slot="pivot-row-fields"]')).not.toBeNull();
-    expect(container.querySelector('input[data-slot="pivot-value-field"]')).not.toBeNull();
+    for (const slot of [
+      'pivot-query-name',
+      'pivot-row-fields',
+      'pivot-column-fields',
+      'pivot-value-field',
+      'pivot-value-aggregation',
+    ]) {
+      expect(container.querySelector(`[data-slot="${slot}"]`)).not.toBeNull();
+    }
   });
 
   it('disables the value field for Count aggregation', () => {
@@ -98,28 +106,23 @@ describe('PivotConfigForm', () => {
     };
     const { container } = wrap(<PivotConfigForm widget={countPivot} onChange={vi.fn()} />);
     const field = container.querySelector('[data-slot="pivot-value-field"]');
-    expect((field as HTMLInputElement).disabled).toBe(true);
+    expect((field as HTMLButtonElement).disabled).toBe(true);
   });
 
-  it('sources dimensions from group-by fields and value field from numeric columns', async () => {
+  it('sources dimensions from group-by fields and the value field from numeric columns', async () => {
+    const user = userEvent.setup();
     const { container } = wrap(
       <PivotConfigForm widget={basePivot} onChange={vi.fn()} />,
       mockCatalogClient()
     );
 
-    await waitFor(() =>
-      expect(container.querySelector('select[data-slot="pivot-row-fields"]')).not.toBeNull()
-    );
-    const rowFields = container.querySelector('select[data-slot="pivot-row-fields"]');
-    expect(rowFields?.hasAttribute('multiple')).toBe(true);
-    expect(rowFields?.querySelector('option[value="Status"]')).not.toBeNull();
-    expect(rowFields?.querySelector('option[value="Region"]')).not.toBeNull();
+    await user.click(container.querySelector('[data-slot="pivot-row-fields"]')!);
+    expect(await screen.findByRole('option', { name: 'Status' })).toBeInTheDocument();
+    expect(await screen.findByRole('option', { name: 'Region' })).toBeInTheDocument();
+    await user.keyboard('{Escape}');
 
-    // Value field is a single-select of numeric columns only.
-    const valueField = container.querySelector('select[data-slot="pivot-value-field"]');
-    expect(valueField).not.toBeNull();
-    expect(valueField?.hasAttribute('multiple')).toBe(false);
-    expect(valueField?.querySelector('option[value="Amount"]')).not.toBeNull();
-    expect(valueField?.querySelector('option[value="Name"]')).toBeNull();
+    await user.click(container.querySelector('[data-slot="pivot-value-field"]')!);
+    expect(await screen.findByRole('option', { name: 'Amount' })).toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: 'Name' })).toBeNull();
   });
 });

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import {
-  CONTROL_CLASS,
+  EnumSelect,
   MetaFieldInput,
   QueryNameCombobox,
   useQueryFieldMetadata,
@@ -31,9 +31,7 @@ export function ChartConfigForm({
   onChange,
 }: WidgetConfigFormProps<ChartWidgetDefinition>) {
   const { t } = useTranslation();
-  const { catalogEntries, hasCatalog, groupByOptions, fieldOptions } = useQueryFieldMetadata(
-    widget.queryName
-  );
+  const { catalogEntries, groupByOptions, fieldOptions } = useQueryFieldMetadata(widget.queryName);
 
   const isCount = widget.aggregation === 'Count';
 
@@ -45,11 +43,9 @@ export function ChartConfigForm({
         </span>
         <QueryNameCombobox
           slot="chart-query-name"
-          datalistId="chart-query-name-options"
           value={widget.queryName}
           onChange={(value) => onChange({ ...widget, queryName: value })}
           entries={catalogEntries}
-          hasCatalog={hasCatalog}
         />
       </label>
       <label className="block text-sm">
@@ -67,20 +63,12 @@ export function ChartConfigForm({
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Chart.Aggregation.Label')}
         </span>
-        <select
-          data-slot="chart-aggregation"
+        <EnumSelect
+          slot="chart-aggregation"
           value={widget.aggregation}
-          onChange={(event) =>
-            onChange({ ...widget, aggregation: event.target.value as AggregateFunction })
-          }
-          className={CONTROL_CLASS}
-        >
-          {AGGREGATIONS.map((agg) => (
-            <option key={agg} value={agg}>
-              {agg}
-            </option>
-          ))}
-        </select>
+          options={AGGREGATIONS}
+          onChange={(value) => onChange({ ...widget, aggregation: value as AggregateFunction })}
+        />
       </label>
       {/* Field is required for everything except Count. The label hints at it. */}
       <label className="block text-sm">
@@ -100,18 +88,12 @@ export function ChartConfigForm({
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Chart.ChartType.Label')}
         </span>
-        <select
-          data-slot="chart-type"
+        <EnumSelect
+          slot="chart-type"
           value={widget.chartType}
-          onChange={(event) => onChange({ ...widget, chartType: event.target.value as ChartType })}
-          className={CONTROL_CLASS}
-        >
-          {CHART_TYPES.map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
+          options={CHART_TYPES}
+          onChange={(value) => onChange({ ...widget, chartType: value as ChartType })}
+        />
       </label>
     </div>
   );

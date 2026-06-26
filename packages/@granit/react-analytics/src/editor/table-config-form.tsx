@@ -1,7 +1,7 @@
+import { Input } from '@granit/react-ui';
 import { useTranslation } from 'react-i18next';
 
 import {
-  CONTROL_CLASS,
   MetaMultiFieldInput,
   QueryNameCombobox,
   useQueryFieldMetadata,
@@ -25,7 +25,7 @@ export function TableConfigForm({
   onChange,
 }: WidgetConfigFormProps<TableWidgetDefinition>) {
   const { t } = useTranslation();
-  const { catalogEntries, hasCatalog, columnOptions } = useQueryFieldMetadata(widget.queryName);
+  const { catalogEntries, columnOptions } = useQueryFieldMetadata(widget.queryName);
 
   return (
     <div data-slot="table-config-form" className="space-y-3">
@@ -35,11 +35,9 @@ export function TableConfigForm({
         </span>
         <QueryNameCombobox
           slot="table-query-name"
-          datalistId="table-query-name-options"
           value={widget.queryName}
           onChange={(value) => onChange({ ...widget, queryName: value })}
           entries={catalogEntries}
-          hasCatalog={hasCatalog}
         />
       </label>
       <label className="block text-sm">
@@ -60,7 +58,7 @@ export function TableConfigForm({
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Table.PageSize.Label')}
         </span>
-        <input
+        <Input
           type="number"
           data-slot="table-page-size"
           min={1}
@@ -68,7 +66,6 @@ export function TableConfigForm({
           onChange={(event) =>
             onChange({ ...widget, pageSize: Number.parseInt(event.target.value, 10) || 1 })
           }
-          className={CONTROL_CLASS}
         />
       </label>
     </div>

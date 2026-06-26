@@ -1,7 +1,8 @@
 import { QueryCatalogProvider } from '@granit/react-query-engine';
 import { createTestQueryClient } from '@granit/react-testing';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
@@ -79,32 +80,32 @@ afterEach(() => {
 });
 
 describe('TableConfigForm', () => {
-  it('falls back to free-text inputs without a catalogue provider', () => {
+  it('renders the query combobox, the columns multi-select and the page-size input', () => {
     const { container } = wrap(<TableConfigForm widget={baseTable} onChange={vi.fn()} />);
-    expect(container.querySelector('input[data-slot="table-query-name"]')).not.toBeNull();
-    expect(container.querySelector('input[data-slot="table-visible-columns"]')).not.toBeNull();
+    expect(container.querySelector('[data-slot="table-query-name"]')).not.toBeNull();
+    expect(container.querySelector('[data-slot="table-visible-columns"]')).not.toBeNull();
+    expect(container.querySelector('input[data-slot="table-page-size"]')).not.toBeNull();
   });
 
-  it('parses comma-separated columns into the visibleColumns array', () => {
+  it('emits page-size changes', () => {
     const onChange = vi.fn();
     const { container } = wrap(<TableConfigForm widget={baseTable} onChange={onChange} />);
-    const input = container.querySelector('[data-slot="table-visible-columns"]');
-    if (!(input instanceof HTMLInputElement)) throw new Error('input not found');
-    fireEvent.change(input, { target: { value: 'Name, Amount' } });
-    expect(onChange.mock.calls[0]?.[0]?.visibleColumns).toEqual(['Name', 'Amount']);
+    const input = container.querySelector('input[data-slot="table-page-size"]');
+    fireEvent.change(input!, { target: { value: '50' } });
+    expect(onChange.mock.calls.at(-1)?.[0]?.pageSize).toBe(50);
   });
 
-  it('renders a column multi-select from query metadata', async () => {
+  it('toggles a visible column from the metadata multi-select', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
     const { container } = wrap(
-      <TableConfigForm widget={baseTable} onChange={vi.fn()} />,
+      <TableConfigForm widget={baseTable} onChange={onChange} />,
       mockCatalogClient()
     );
-    await waitFor(() =>
-      expect(container.querySelector('select[data-slot="table-visible-columns"]')).not.toBeNull()
-    );
-    const select = container.querySelector('select[data-slot="table-visible-columns"]');
-    expect(select?.hasAttribute('multiple')).toBe(true);
-    expect(select?.querySelector('option[value="Name"]')).not.toBeNull();
-    expect(select?.querySelector('option[value="Amount"]')).not.toBeNull();
+
+    await user.click(container.querySelector('[data-slot="table-visible-columns"]')!);
+    expect(await screen.findByRole('option', { name: 'Name' })).toBeInTheDocument();
+    await user.click(await screen.findByRole('option', { name: 'Amount' }));
+    expect(onChange.mock.calls.at(-1)?.[0]?.visibleColumns).toEqual(['Amount']);
   });
 });
