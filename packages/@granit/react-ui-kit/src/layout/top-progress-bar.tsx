@@ -90,8 +90,7 @@ export function TopProgressBar() {
         className="bg-primary h-full transition-[width] duration-300 ease-out"
         style={{
           width: `${progress}%`,
-          boxShadow:
-            '0 0 10px var(--color-primary, currentColor), 0 0 4px var(--color-primary, currentColor)',
+          boxShadow: '0 0 10px var(--primary, currentColor), 0 0 4px var(--primary, currentColor)',
         }}
       />
     </div>

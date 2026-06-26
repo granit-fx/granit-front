@@ -111,8 +111,7 @@ export function createBackgroundJobColumns({
             variant={variant}
             className={cn(
               'text-xs',
-              variant === 'default' &&
-                'bg-success-500/15 text-success-600 dark:text-success-500 border-success-500/25'
+              variant === 'default' && 'bg-success-500/15 text-success border-success-500/25'
             )}
           >
             {label}

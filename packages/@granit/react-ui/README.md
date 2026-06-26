@@ -36,12 +36,22 @@ these peers (all listed in `peerDependencies`):
   chevron, and trigger affordances.
 - `react-hook-form` (`^7.80`) — backs `Form` and the `*Field` wrappers.
 - `sonner` (`^2.0`) — the toast engine behind `Toaster` / `toast`.
+- `tw-animate-css` (`^1.4`) — supplies the `animate-in`/`fade-in`/`zoom-in`/
+  `slide-in-*` keyframes the overlay families (`Dialog`, `AlertDialog`, `Sheet`,
+  `Popover`, `Tooltip`, `DropdownMenu`) emit. **CSS-only** — there is nothing to
+  import in JS; the host app must `@import 'tw-animate-css'` (see below).
 
 Runtime theming is **not** a JS dependency: colors, radii, and the dark-mode
 palette come from the `@granit/ui-theme` CSS custom properties (`--primary`,
 `--popover`, `--radius`, the `success-/warning-/alert-/admin-/info-` token
-scales). The host app must load that stylesheet for the components to pick up
-brand colors.
+scales). The host app must load that stylesheet **and** `tw-animate-css` for the
+components to pick up brand colors and animate:
+
+```css
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@granit/ui-theme/base.css';
+```
 
 ## Quick start
 
@@ -87,10 +97,22 @@ function MemberForm() {
 
   return (
     <form onSubmit={handleSubmit(() => undefined)} className="grid gap-4">
-      <TextField control={control} name="email" label="Email" type="email"
-        transform={(v) => v.toLowerCase()} />
-      <SelectField control={control} name="role" label="Role"
-        options={[{ value: 'admin', label: 'Admin' }, { value: 'member', label: 'Member' }]} />
+      <TextField
+        control={control}
+        name="email"
+        label="Email"
+        type="email"
+        transform={(v) => v.toLowerCase()}
+      />
+      <SelectField
+        control={control}
+        name="role"
+        label="Role"
+        options={[
+          { value: 'admin', label: 'Admin' },
+          { value: 'member', label: 'Member' },
+        ]}
+      />
       <CheckboxField control={control} name="active" label="Active" />
       <Button type="submit">Create</Button>
     </form>
@@ -109,25 +131,25 @@ prop type. The table groups the large shadcn re-export families; each family
 exports a `Root` plus the conventional shadcn sub-parts (`*Trigger`, `*Content`,
 `*Header`, `*Item`, …).
 
-| Symbol | Kind | Purpose |
-| --- | --- | --- |
-| `Button`, `buttonVariants` | component / fn | CVA button; adds `icon-xs`/`icon-sm`/`icon-lg` sizes for admin density |
-| `Input`, `Textarea`, `Label`, `Checkbox`, `RadioGroup`, `Switch` | component | Stock form controls |
-| `Select*` | component | Radix select (`Select`, `SelectTrigger`, `SelectContent`, `SelectItem`, …) |
-| `Form`, `FormField`, `FormItem`, `FormLabel`, `FormControl`, `FormDescription`, `FormMessage` | component | `react-hook-form` field scaffolding (memoized provider value) |
-| `useFormField` | hook | Field state (`id`, `error`, message ids) inside a `FormField` |
-| `TextField`, `SelectField`, `CheckboxField` | component | Typed `Control`-bound field wrappers (label + control + `FormMessage`) |
-| `SelectFieldProps`, `SelectFieldOption`, `TextFieldProps`, `CheckboxFieldProps` | type | Generic field-wrapper props over `FieldValues` |
-| `Dialog*`, `AlertDialog*`, `Sheet*`, `Popover*`, `Tooltip*` | component | Overlay/portal families |
-| `DropdownMenu*` | component | Radix dropdown menu (items, checkbox/radio items, sub-menus) |
-| `Command*`, `CommandDialog` | component | `cmdk` command palette / typeahead |
-| `Sidebar*`, `useSidebar` | component / hook | App-shell sidebar; `SidebarProvider` holds the expand state |
-| `Tabs*`, `Breadcrumb*`, `Separator`, `Card*`, `Table*` | component | Layout & navigation |
-| `Tree`, `TreeItem`, `TreeGroup`, `TreeItemRow`, `TreeItemToggle`, `TreeItemSpacer` | component | Headless WAI-ARIA tree styling (data/expansion owned by the caller) |
-| `Alert*`, `Badge`, `badgeVariants`, `Avatar*`, `Skeleton`, `Spinner` | component / fn | Feedback & status |
-| `StatusBadge`, `statusBadgeVariants`, `StatusBadgeIntent` | component / fn / type | Semantic outcome pill (success/warning/danger/info/accent/neutral) |
-| `Toaster`, `toast`, `ExternalToast` | component / fn / type | `sonner` toasts wired to Granit tokens + lucide icons |
-| `Collapsible*` | component | Radix collapsible primitive |
+| Symbol                                                                                        | Kind                  | Purpose                                                                    |
+| --------------------------------------------------------------------------------------------- | --------------------- | -------------------------------------------------------------------------- |
+| `Button`, `buttonVariants`                                                                    | component / fn        | CVA button; adds `icon-xs`/`icon-sm`/`icon-lg` sizes for admin density     |
+| `Input`, `Textarea`, `Label`, `Checkbox`, `RadioGroup`, `Switch`                              | component             | Stock form controls                                                        |
+| `Select*`                                                                                     | component             | Radix select (`Select`, `SelectTrigger`, `SelectContent`, `SelectItem`, …) |
+| `Form`, `FormField`, `FormItem`, `FormLabel`, `FormControl`, `FormDescription`, `FormMessage` | component             | `react-hook-form` field scaffolding (memoized provider value)              |
+| `useFormField`                                                                                | hook                  | Field state (`id`, `error`, message ids) inside a `FormField`              |
+| `TextField`, `SelectField`, `CheckboxField`                                                   | component             | Typed `Control`-bound field wrappers (label + control + `FormMessage`)     |
+| `SelectFieldProps`, `SelectFieldOption`, `TextFieldProps`, `CheckboxFieldProps`               | type                  | Generic field-wrapper props over `FieldValues`                             |
+| `Dialog*`, `AlertDialog*`, `Sheet*`, `Popover*`, `Tooltip*`                                   | component             | Overlay/portal families                                                    |
+| `DropdownMenu*`                                                                               | component             | Radix dropdown menu (items, checkbox/radio items, sub-menus)               |
+| `Command*`, `CommandDialog`                                                                   | component             | `cmdk` command palette / typeahead                                         |
+| `Sidebar*`, `useSidebar`                                                                      | component / hook      | App-shell sidebar; `SidebarProvider` holds the expand state                |
+| `Tabs*`, `Breadcrumb*`, `Separator`, `Card*`, `Table*`                                        | component             | Layout & navigation                                                        |
+| `Tree`, `TreeItem`, `TreeGroup`, `TreeItemRow`, `TreeItemToggle`, `TreeItemSpacer`            | component             | Headless WAI-ARIA tree styling (data/expansion owned by the caller)        |
+| `Alert*`, `Badge`, `badgeVariants`, `Avatar*`, `Skeleton`, `Spinner`                          | component / fn        | Feedback & status                                                          |
+| `StatusBadge`, `statusBadgeVariants`, `StatusBadgeIntent`                                     | component / fn / type | Semantic outcome pill (success/warning/danger/info/accent/neutral)         |
+| `Toaster`, `toast`, `ExternalToast`                                                           | component / fn / type | `sonner` toasts wired to Granit tokens + lucide icons                      |
+| `Collapsible*`                                                                                | component             | Radix collapsible primitive                                                |
 
 `useIsMobile` (the `768px` viewport hook behind the sidebar) is intentionally
 **internal** — it is not part of the barrel. Import `cn` from
@@ -155,7 +177,7 @@ exports a `Root` plus the conventional shadcn sub-parts (`*Trigger`, `*Content`,
   here, not import `sonner` directly — this keeps the shadcn stack confined to
   the UI tier (enforced by `no-restricted-imports`).
 - **`StatusBadge` vs `Badge`.** `Badge` variants map to brand/structural roles;
-  `StatusBadge` maps to semantic lifecycle *outcomes*. Map a domain status to a
+  `StatusBadge` maps to semantic lifecycle _outcomes_. Map a domain status to a
   `StatusBadgeIntent` via your own `Record`, do not overload `Badge`.
 - **`Tree` is headless of data.** It supplies container/row/indentation/chevron
   styling and the WAI-ARIA roles only; the consumer owns expansion state, lazy

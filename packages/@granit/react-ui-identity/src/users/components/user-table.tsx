@@ -80,7 +80,7 @@ export function UserTable({ users, loading = false, onViewDetails }: Readonly<Us
                   className={cn(
                     'text-xs',
                     user.enabled
-                      ? 'border-success-500/25 bg-success-500/15 text-success-600 dark:text-success-500'
+                      ? 'border-success-500/25 bg-success-500/15 text-success'
                       : 'bg-accent text-muted-foreground'
                   )}
                 >

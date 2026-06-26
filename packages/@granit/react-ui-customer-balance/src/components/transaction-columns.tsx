@@ -54,10 +54,7 @@ export function createTransactionColumns({
         const isCredit = type === 'Credit';
         return (
           <span
-            className={cn(
-              'text-sm font-medium',
-              isCredit ? 'text-success-600 dark:text-success-500' : 'text-destructive'
-            )}
+            className={cn('text-sm font-medium', isCredit ? 'text-success' : 'text-destructive')}
           >
             {isCredit ? '+' : ''}
             {formatNumber(amount / 100, { minimumFractionDigits: 2 }, locale)}

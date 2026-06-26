@@ -7,88 +7,330 @@
  *   @import 'tailwindcss';
  *   @import '@granit/ui-theme/base.css';
  *
- * Re-brand a consuming app by redefining the CSS variables below in your own
- * global stylesheet (e.g. `--color-primary`) — the change cascades to every
- * component (including @granit/react-* domain components) because they all
- * consume the same semantic tokens.
+ * PLUMBING (shadcn-aligned). Semantic tokens are plain CSS variables WITHOUT the
+ * `--color-` prefix (`--background`, `--primary`, `--radius`, `--font-sans`…),
+ * exactly like a shadcn/tweakcn theme. A single `@theme inline { … }` block
+ * bridges them to Tailwind utilities (`--color-background: var(--background)`),
+ * so a registry/tweakcn theme's `cssVars` drop in verbatim — scoped under a
+ * `[data-theme]` selector for our multi-theme catalogue.
  *
- * Contains tokens / palettes / dark mode / per-app colour themes / sidebar
- * variables only. App- and feature-specific CSS (fonts, flag-icons, the
- * `data-granit-*` entity/gallery component styles, the reaction-bar glyphs,
- * the scrollbar utility) stays in the consuming app's own stylesheet. */
+ *   :root / .dark            → the default (Granit blue) theme, light + dark
+ *   [data-theme='x']         → theme `x`, light (+ theme-level vars)
+ *   .dark[data-theme='x']    → theme `x`, dark colour overrides
+ *
+ * Colours are the Tailwind v4 default palette in OKLCH (verbatim from
+ * `tailwindcss/theme.css`); the shade is named in the trailing comment.
+ *
+ * Re-brand by overriding these variables in your own stylesheet or a new
+ * `[data-theme]` block — the change cascades to every component.
+ *
+ * App- and feature-specific CSS (fonts, flag-icons, the `data-granit-*` styles,
+ * the reaction-bar glyphs, the scrollbar utility) stays in the app stylesheet. */
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
-  /* Admin accent palette — Blue (enterprise/SaaS panel aesthetic) */
-  --color-admin-50: #eff6ff;
-  --color-admin-100: #dbeafe;
-  --color-admin-200: #bfdbfe;
-  --color-admin-300: #93c5fd;
-  --color-admin-400: #60a5fa;
-  --color-admin-500: #3b82f6;
-  --color-admin-600: #2563eb;
-  --color-admin-700: #1d4ed8;
-  --color-admin-800: #1e40af;
-  --color-admin-900: #1e3a8a;
-  --color-admin-950: #172554;
+/* ── Default theme — Granit blue (light) ─────────────────────────── */
+:root {
+  color-scheme: light;
 
-  /* Alert palette — Red */
-  --color-alert-50: #fef2f2;
-  --color-alert-100: #fee2e2;
-  --color-alert-500: #ef4444;
-  --color-alert-600: #dc2626;
-  --color-alert-700: #b91c1c;
+  --background: oklch(98.4% 0.003 247.858); /* slate-50 — off-white for admin */
+  --foreground: oklch(20.8% 0.042 265.755); /* slate-900 */
+  --card: oklch(100% 0 0); /* white */
+  --card-foreground: oklch(20.8% 0.042 265.755); /* slate-900 */
+  --popover: oklch(100% 0 0); /* white */
+  --popover-foreground: oklch(20.8% 0.042 265.755); /* slate-900 */
+  --primary: oklch(42.4% 0.199 265.638); /* blue-800 */
+  --primary-foreground: oklch(100% 0 0); /* white */
+  --secondary: oklch(96.8% 0.007 247.896); /* slate-100 */
+  --secondary-foreground: oklch(12.9% 0.042 264.695); /* slate-950 */
+  --muted: oklch(96.8% 0.007 247.896); /* slate-100 — subtle surface */
+  --muted-foreground: oklch(44.6% 0.043 257.281); /* slate-600 — comfortable AA */
+  --accent: oklch(96.8% 0.007 247.896); /* slate-100 */
+  --accent-foreground: oklch(20.8% 0.042 265.755); /* slate-900 */
+  --destructive: var(--color-alert-500); /* red-500 — shares the alert palette */
+  --destructive-foreground: oklch(100% 0 0); /* white */
+  --border: oklch(92.9% 0.013 255.508); /* slate-200 */
+  --input: oklch(92.9% 0.013 255.508); /* slate-200 */
+  --ring: oklch(42.4% 0.199 265.638); /* blue-800 */
 
-  /* Success palette — Emerald */
-  --color-success-50: #ecfdf5;
-  --color-success-100: #d1fae5;
-  --color-success-500: #10b981;
-  --color-success-600: #059669;
+  /* Semantic status — single source for status text/badges (Granit extra). */
+  --success: oklch(59.6% 0.145 163.225); /* emerald-600 */
+  --success-foreground: oklch(100% 0 0); /* white */
+  --warning: oklch(66.6% 0.179 58.318); /* amber-600 */
+  --warning-foreground: oklch(100% 0 0); /* white */
+  --alert: oklch(57.7% 0.245 27.325); /* red-600 */
+  --alert-foreground: oklch(100% 0 0); /* white */
 
-  /* Warning palette — Amber */
-  --color-warning-50: #fffbeb;
-  --color-warning-100: #fef3c7;
-  --color-warning-500: #f59e0b;
-  --color-warning-600: #d97706;
+  /* Charts — categorical series. */
+  --chart-1: oklch(54.6% 0.245 262.881); /* blue-600 */
+  --chart-2: oklch(59.6% 0.145 163.225); /* emerald-600 */
+  --chart-3: oklch(66.6% 0.179 58.318); /* amber-600 */
+  --chart-4: oklch(54.1% 0.281 293.009); /* violet-600 */
+  --chart-5: oklch(58.6% 0.253 17.585); /* rose-600 */
 
-  /* shadcn/ui semantic tokens — admin blue theme */
-  --color-primary: #1e40af; /* blue-800 */
-  --color-primary-foreground: #ffffff;
-  --color-secondary: #f1f5f9; /* slate-100 */
-  --color-secondary-foreground: #020617; /* slate-950 */
-  --color-background: #f8fafc; /* slate-50 — slightly off-white for admin */
-  --color-foreground: #0f172a; /* slate-900 */
-  --color-card: #ffffff;
-  --color-card-foreground: #0f172a; /* slate-900 */
-  --color-popover: #ffffff;
-  --color-popover-foreground: #0f172a; /* slate-900 */
-  --color-accent: #f1f5f9; /* slate-100 */
-  --color-accent-foreground: #0f172a;
-  --color-destructive: #ef4444; /* red-500 */
-  --color-destructive-foreground: #ffffff;
-  --color-muted: #94a3b8; /* slate-400 */
-  --color-muted-foreground: #64748b; /* slate-500 */
-  --color-border: #e2e8f0; /* slate-200 */
-  --color-input: #e2e8f0; /* slate-200 */
-  --color-ring: #1e40af; /* blue-800 */
+  /* Sidebar. */
+  --sidebar: oklch(98.4% 0.003 247.858); /* slate-50 */
+  --sidebar-foreground: oklch(37.2% 0.044 257.287); /* slate-700 */
+  --sidebar-primary: var(--primary); /* follows active theme */
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: oklch(96.8% 0.007 247.896); /* slate-100 */
+  --sidebar-accent-foreground: oklch(20.8% 0.042 265.755); /* slate-900 */
+  --sidebar-border: oklch(92.9% 0.013 255.508); /* slate-200 */
+  --sidebar-ring: var(--ring); /* follows active theme */
 
-  /* Typography — Inter for admin (more neutral than DM Sans) */
+  /* Typography, shape, shadows — themeable (a full theme may override). */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
   --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-
-  /* Shadows */
+  --radius: 0.5rem;
   --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
   --shadow-card-hover: 0 4px 12px -1px rgb(30 64 175 / 0.1), 0 2px 4px -2px rgb(30 64 175 / 0.06);
   --shadow-header: 0 1px 3px 0 rgb(0 0 0 / 0.04);
+}
 
-  /* Border radius */
-  --radius: 0.5rem;
+/* ── Default theme — Granit blue (dark) ──────────────────────────── */
+.dark {
+  color-scheme: dark;
+
+  --background: oklch(14.1% 0.005 285.823); /* zinc-950 — neutral near-black */
+  --foreground: oklch(92.9% 0.013 255.508); /* slate-200 */
+  --card: oklch(14.1% 0.005 285.823); /* zinc-950 — Tailwind has no shade above 950 */
+  --card-foreground: oklch(92.9% 0.013 255.508); /* slate-200 */
+  --popover: oklch(21% 0.006 285.885); /* zinc-900 — top layer */
+  --popover-foreground: oklch(96.8% 0.007 247.896); /* slate-100 */
+  --secondary: oklch(21% 0.006 285.885); /* zinc-900 */
+  --secondary-foreground: oklch(92.9% 0.013 255.508); /* slate-200 */
+  --muted: oklch(27.9% 0.041 260.031); /* slate-800 */
+  --muted-foreground: oklch(70.4% 0.04 256.788); /* slate-400 */
+  --accent: oklch(27.9% 0.041 260.031); /* slate-800 — visible hover bg */
+  --accent-foreground: oklch(96.8% 0.007 247.896); /* slate-100 */
+  --destructive: oklch(70.4% 0.191 22.216); /* red-400 */
+  --destructive-foreground: oklch(25.8% 0.092 26.042); /* red-950 */
+  --border: oklch(27.9% 0.041 260.031); /* slate-800 — visible borders */
+  --input: oklch(27.9% 0.041 260.031); /* slate-800 */
+  /* --primary / --ring are set per theme (see Blue dark below). */
+
+  --success: oklch(69.6% 0.17 162.48); /* emerald-500 — lifted for dark bg */
+  --warning: oklch(76.9% 0.188 70.08); /* amber-500 */
+  --alert: oklch(63.7% 0.237 25.331); /* red-500 */
+
+  --chart-1: oklch(70.7% 0.165 254.624); /* blue-400 */
+  --chart-2: oklch(76.5% 0.177 163.223); /* emerald-400 */
+  --chart-3: oklch(82.8% 0.189 84.429); /* amber-400 */
+  --chart-4: oklch(70.2% 0.183 293.541); /* violet-400 */
+  --chart-5: oklch(71.2% 0.194 13.428); /* rose-400 */
+
+  --sidebar: oklch(14.1% 0.005 285.823); /* zinc-950 — deepest layer */
+  --sidebar-foreground: oklch(86.9% 0.022 252.894); /* slate-300 */
+  --sidebar-accent: oklch(21% 0.006 285.885); /* zinc-900 — lifted hover */
+  --sidebar-accent-foreground: oklch(92.9% 0.013 255.508); /* slate-200 */
+  --sidebar-border: oklch(21% 0.006 285.885); /* zinc-900 */
+
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+  --shadow-card-hover:
+    0 4px 12px -1px rgb(255 255 255 / 0.08), 0 2px 4px -2px rgb(255 255 255 / 0.05);
+  --shadow-header: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+}
+
+/* ── Colour themes — override the raw vars under [data-theme] ─────── */
+
+/* Blue — symmetric with the other accent themes; also the :root default. */
+[data-theme='blue'] {
+  --primary: oklch(42.4% 0.199 265.638); /* blue-800 */
+  --primary-foreground: oklch(100% 0 0); /* white */
+  --ring: oklch(42.4% 0.199 265.638); /* blue-800 */
+}
+
+.dark[data-theme='blue'],
+.dark:not([data-theme]) {
+  --primary: oklch(48.8% 0.243 264.376); /* blue-700 — softer than blue-600 on dark */
+  --primary-foreground: oklch(97% 0.014 254.604); /* blue-50 */
+  --ring: oklch(48.8% 0.243 264.376);
+  --shadow-card-hover: 0 4px 12px -1px rgb(29 78 216 / 0.2), 0 2px 4px -2px rgb(29 78 216 / 0.12);
+}
+
+/* Teal */
+[data-theme='teal'] {
+  --primary: oklch(43.7% 0.078 188.216); /* teal-800 */
+  --primary-foreground: oklch(100% 0 0); /* white */
+  --ring: oklch(43.7% 0.078 188.216); /* teal-800 */
+}
+
+.dark[data-theme='teal'] {
+  --primary: oklch(60% 0.118 184.704); /* teal-600 */
+  --primary-foreground: oklch(98.4% 0.014 180.72); /* teal-50 */
+  --ring: oklch(60% 0.118 184.704);
+  --shadow-card-hover: 0 4px 12px -1px rgb(13 148 136 / 0.2), 0 2px 4px -2px rgb(13 148 136 / 0.12);
+}
+
+/* Rose */
+[data-theme='rose'] {
+  --primary: oklch(45.5% 0.188 13.697); /* rose-800 */
+  --primary-foreground: oklch(100% 0 0); /* white */
+  --ring: oklch(45.5% 0.188 13.697); /* rose-800 */
+}
+
+.dark[data-theme='rose'] {
+  --primary: oklch(58.6% 0.253 17.585); /* rose-600 */
+  --primary-foreground: oklch(96.9% 0.015 12.422); /* rose-50 */
+  --ring: oklch(58.6% 0.253 17.585);
+  --shadow-card-hover: 0 4px 12px -1px rgb(225 29 72 / 0.2), 0 2px 4px -2px rgb(225 29 72 / 0.12);
+}
+
+/* Amber */
+[data-theme='amber'] {
+  --primary: oklch(47.3% 0.137 46.201); /* amber-800 */
+  --primary-foreground: oklch(100% 0 0); /* white */
+  --ring: oklch(47.3% 0.137 46.201); /* amber-800 */
+}
+
+.dark[data-theme='amber'] {
+  --primary: oklch(66.6% 0.179 58.318); /* amber-600 */
+  --primary-foreground: oklch(98.7% 0.022 95.277); /* amber-50 */
+  --ring: oklch(66.6% 0.179 58.318);
+  --shadow-card-hover: 0 4px 12px -1px rgb(217 119 6 / 0.2), 0 2px 4px -2px rgb(217 119 6 / 0.12);
+}
+
+/* Slate (neutral) */
+[data-theme='slate'] {
+  --primary: oklch(27.9% 0.041 260.031); /* slate-800 */
+  --primary-foreground: oklch(100% 0 0); /* white */
+  --ring: oklch(27.9% 0.041 260.031); /* slate-800 */
+}
+
+.dark[data-theme='slate'] {
+  --primary: oklch(44.6% 0.043 257.281); /* slate-600 */
+  --primary-foreground: oklch(98.4% 0.003 247.858); /* slate-50 */
+  --ring: oklch(44.6% 0.043 257.281);
+  --shadow-card-hover: 0 4px 12px -1px rgb(71 85 105 / 0.2), 0 2px 4px -2px rgb(71 85 105 / 0.12);
+}
+
+/* Mauve (purple) */
+[data-theme='mauve'] {
+  --primary: oklch(43.8% 0.218 303.724); /* purple-800 */
+  --primary-foreground: oklch(100% 0 0); /* white */
+  --ring: oklch(43.8% 0.218 303.724); /* purple-800 */
+}
+
+.dark[data-theme='mauve'] {
+  --primary: oklch(55.8% 0.288 302.321); /* purple-600 */
+  --primary-foreground: oklch(97.7% 0.014 308.299); /* purple-50 */
+  --ring: oklch(55.8% 0.288 302.321);
+  --shadow-card-hover: 0 4px 12px -1px rgb(147 51 234 / 0.2), 0 2px 4px -2px rgb(147 51 234 / 0.12);
+}
+
+/* Mist (sky) */
+[data-theme='mist'] {
+  --primary: oklch(44.3% 0.11 240.79); /* sky-800 */
+  --primary-foreground: oklch(100% 0 0); /* white */
+  --ring: oklch(44.3% 0.11 240.79); /* sky-800 */
+}
+
+.dark[data-theme='mist'] {
+  --primary: oklch(58.8% 0.158 241.966); /* sky-600 */
+  --primary-foreground: oklch(97.7% 0.013 236.62); /* sky-50 */
+  --ring: oklch(58.8% 0.158 241.966);
+  --shadow-card-hover: 0 4px 12px -1px rgb(2 132 199 / 0.2), 0 2px 4px -2px rgb(2 132 199 / 0.12);
+}
+
+/* ── Bridge raw vars → Tailwind utilities (shadcn @theme inline) ──── */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-alert: var(--alert);
+  --color-alert-foreground: var(--alert-foreground);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+
+  /* Radius scale derived from --radius (pixel-identical to Tailwind at 0.5rem). */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 16px);
+  --radius-4xl: calc(var(--radius) + 24px);
+}
+
+/* ── Granit fixed scales (not themed) ────────────────────────────
+   `static` so the whole palette is always emitted (a design-system contract:
+   any shade usable as a utility, never tree-shaken away). */
+@theme static {
+  /* Admin accent palette — Blue (enterprise/SaaS panel aesthetic) */
+  --color-admin-50: oklch(97% 0.014 254.604); /* blue-50 */
+  --color-admin-100: oklch(93.2% 0.032 255.585); /* blue-100 */
+  --color-admin-200: oklch(88.2% 0.059 254.128); /* blue-200 */
+  --color-admin-300: oklch(80.9% 0.105 251.813); /* blue-300 */
+  --color-admin-400: oklch(70.7% 0.165 254.624); /* blue-400 */
+  --color-admin-500: oklch(62.3% 0.214 259.815); /* blue-500 */
+  --color-admin-600: oklch(54.6% 0.245 262.881); /* blue-600 */
+  --color-admin-700: oklch(48.8% 0.243 264.376); /* blue-700 */
+  --color-admin-800: oklch(42.4% 0.199 265.638); /* blue-800 */
+  --color-admin-900: oklch(37.9% 0.146 265.522); /* blue-900 */
+  --color-admin-950: oklch(28.2% 0.091 267.935); /* blue-950 */
+
+  /* Alert palette — Red */
+  --color-alert-50: oklch(97.1% 0.013 17.38); /* red-50 */
+  --color-alert-100: oklch(93.6% 0.032 17.717); /* red-100 */
+  --color-alert-500: oklch(63.7% 0.237 25.331); /* red-500 */
+  --color-alert-600: oklch(57.7% 0.245 27.325); /* red-600 */
+  --color-alert-700: oklch(50.5% 0.213 27.518); /* red-700 */
+
+  /* Success palette — Emerald */
+  --color-success-50: oklch(97.9% 0.021 166.113); /* emerald-50 */
+  --color-success-100: oklch(95% 0.052 163.051); /* emerald-100 */
+  --color-success-500: oklch(69.6% 0.17 162.48); /* emerald-500 */
+  --color-success-600: oklch(59.6% 0.145 163.225); /* emerald-600 */
+
+  /* Warning palette — Amber */
+  --color-warning-50: oklch(98.7% 0.022 95.277); /* amber-50 */
+  --color-warning-100: oklch(96.2% 0.059 95.617); /* amber-100 */
+  --color-warning-500: oklch(76.9% 0.188 70.08); /* amber-500 */
+  --color-warning-600: oklch(66.6% 0.179 58.318); /* amber-600 */
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border outline-ring/50;
   }
 
   body {
@@ -115,97 +357,6 @@
   h6 {
     @apply font-semibold tracking-tight;
   }
-
-  /* ── Dark mode (all color themes) ─────────────────────────────── */
-  .dark {
-    --color-background: #09090b; /* zinc-950 — neutral near-black */
-    --color-foreground: #e2e8f0; /* slate-200 — softer than pure white */
-    --color-card: #0c0c0f; /* neutral dark grey — lifted layer */
-    --color-card-foreground: #e2e8f0; /* slate-200 */
-    --color-popover: #18181b; /* zinc-900 — top layer */
-    --color-popover-foreground: #f1f5f9; /* slate-100 */
-    --color-secondary: #18181b; /* zinc-900 */
-    --color-secondary-foreground: #e2e8f0;
-    --color-accent: #1e293b; /* slate-800 — visible hover bg */
-    --color-accent-foreground: #f1f5f9;
-    --color-destructive: #f87171; /* red-400 */
-    --color-destructive-foreground: #450a0a;
-    --color-muted: #1e293b; /* slate-800 */
-    --color-muted-foreground: #94a3b8; /* slate-400 */
-    --color-input: #1e293b; /* slate-800 — visible button borders */
-    --color-border: #1e293b; /* slate-800 — visible borders */
-    --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.3);
-    --shadow-card-hover:
-      0 4px 12px -1px rgb(255 255 255 / 0.08), 0 2px 4px -2px rgb(255 255 255 / 0.05);
-    --shadow-header: 0 1px 3px 0 rgb(0 0 0 / 0.3);
-  }
-}
-
-/* ── Color themes (outside @layer to override @theme tokens) ─── */
-
-/* Blue dark (light uses @theme defaults) */
-.dark[data-theme='blue'],
-.dark:not([data-theme]) {
-  --color-primary: #2563eb; /* blue-600 */
-  --color-primary-foreground: #eff6ff; /* blue-50 */
-  --color-ring: #2563eb;
-  --shadow-card-hover: 0 4px 12px -1px rgb(37 99 235 / 0.2), 0 2px 4px -2px rgb(37 99 235 / 0.12);
-}
-
-/* Teal */
-[data-theme='teal'] {
-  --color-primary: #115e59; /* teal-800 */
-  --color-primary-foreground: #ffffff;
-  --color-ring: #115e59; /* teal-800 */
-}
-
-.dark[data-theme='teal'] {
-  --color-primary: #0d9488; /* teal-600 */
-  --color-primary-foreground: #f0fdfa; /* teal-50 */
-  --color-ring: #0d9488;
-  --shadow-card-hover: 0 4px 12px -1px rgb(13 148 136 / 0.2), 0 2px 4px -2px rgb(13 148 136 / 0.12);
-}
-
-/* Rose */
-[data-theme='rose'] {
-  --color-primary: #9f1239; /* rose-800 */
-  --color-primary-foreground: #ffffff;
-  --color-ring: #9f1239; /* rose-800 */
-}
-
-.dark[data-theme='rose'] {
-  --color-primary: #e11d48; /* rose-600 */
-  --color-primary-foreground: #fff1f2; /* rose-50 */
-  --color-ring: #e11d48;
-  --shadow-card-hover: 0 4px 12px -1px rgb(225 29 72 / 0.2), 0 2px 4px -2px rgb(225 29 72 / 0.12);
-}
-
-/* Amber */
-[data-theme='amber'] {
-  --color-primary: #92400e; /* amber-800 */
-  --color-primary-foreground: #ffffff;
-  --color-ring: #92400e; /* amber-800 */
-}
-
-.dark[data-theme='amber'] {
-  --color-primary: #d97706; /* amber-600 */
-  --color-primary-foreground: #fffbeb; /* amber-50 */
-  --color-ring: #d97706;
-  --shadow-card-hover: 0 4px 12px -1px rgb(217 119 6 / 0.2), 0 2px 4px -2px rgb(217 119 6 / 0.12);
-}
-
-/* Slate (neutral) */
-[data-theme='slate'] {
-  --color-primary: #1e293b; /* slate-800 */
-  --color-primary-foreground: #ffffff;
-  --color-ring: #1e293b; /* slate-800 */
-}
-
-.dark[data-theme='slate'] {
-  --color-primary: #475569; /* slate-600 */
-  --color-primary-foreground: #f8fafc; /* slate-50 */
-  --color-ring: #475569;
-  --shadow-card-hover: 0 4px 12px -1px rgb(71 85 105 / 0.2), 0 2px 4px -2px rgb(71 85 105 / 0.12);
 }
 
 @layer utilities {
@@ -220,37 +371,4 @@
   .header-shadow {
     box-shadow: var(--shadow-header);
   }
-}
-
-:root {
-  --sidebar: #f8fafc; /* slate-50 */
-  --sidebar-foreground: #334155; /* slate-700 */
-  --sidebar-primary: var(--color-primary); /* follows active color theme */
-  --sidebar-primary-foreground: var(--color-primary-foreground);
-  --sidebar-accent: #f1f5f9; /* slate-100 */
-  --sidebar-accent-foreground: #0f172a; /* slate-900 */
-  --sidebar-border: #e2e8f0; /* slate-200 */
-  --sidebar-ring: var(--color-ring); /* follows active color theme */
-}
-
-.dark {
-  --sidebar: #0a0a0c; /* neutral near-black — distinct from card */
-  --sidebar-foreground: #cbd5e1; /* slate-300 */
-  --sidebar-primary: var(--color-primary); /* follows active color theme */
-  --sidebar-primary-foreground: var(--color-primary-foreground);
-  --sidebar-accent: #141416; /* neutral dark grey */
-  --sidebar-accent-foreground: #e2e8f0; /* slate-200 */
-  --sidebar-border: #18181b; /* zinc-900 */
-  --sidebar-ring: var(--color-ring); /* follows active color theme */
-}
-
-@theme inline {
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
 }

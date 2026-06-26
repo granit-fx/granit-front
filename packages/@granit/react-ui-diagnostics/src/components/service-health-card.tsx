@@ -12,17 +12,17 @@ const statusConfig: Record<
   healthy: {
     icon: CheckCircle2,
     colorClass: 'text-success-600',
-    badgeClass: 'border-success-500/25 bg-success-500/15 text-success-600 dark:text-success-500',
+    badgeClass: 'border-success-500/25 bg-success-500/15 text-success',
   },
   degraded: {
     icon: Activity,
     colorClass: 'text-warning-600',
-    badgeClass: 'border-warning-500/25 bg-warning-500/15 text-warning-600 dark:text-warning-500',
+    badgeClass: 'border-warning-500/25 bg-warning-500/15 text-warning',
   },
   down: {
     icon: XCircle,
     colorClass: 'text-alert-600',
-    badgeClass: 'border-alert-500/25 bg-alert-500/15 text-alert-600 dark:text-alert-500',
+    badgeClass: 'border-alert-500/25 bg-alert-500/15 text-alert',
   },
 };
 
@@ -91,7 +91,7 @@ export function ServiceHealthCard({ service, checkedAt }: Readonly<ServiceHealth
             aria-live="polite"
           >
             <WifiOff className="h-3.5 w-3.5 text-alert-600" aria-hidden="true" />
-            <span className="text-xs font-medium text-alert-600 dark:text-alert-500">
+            <span className="text-xs font-medium text-alert">
               {t('Diagnostics.ServiceUnreachable', 'Service unreachable')}
             </span>
           </div>

@@ -39,10 +39,7 @@ export function ImportReportSummary({ report, onDownloadCorrection }: ImportRepo
     <div data-slot="import-report-summary" className="space-y-3">
       <div className="flex items-center gap-2">
         {isComplete ? (
-          <CheckCircle
-            className="h-5 w-5 text-success-600 dark:text-success-500"
-            aria-hidden="true"
-          />
+          <CheckCircle className="h-5 w-5 text-success" aria-hidden="true" />
         ) : (
           <XCircle className="h-5 w-5 text-destructive" aria-hidden="true" />
         )}
@@ -58,11 +55,7 @@ export function ImportReportSummary({ report, onDownloadCorrection }: ImportRepo
 
       <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-3">
         <StatItem label="Total rows" value={report.totalRows} />
-        <StatItem
-          label="Succeeded"
-          value={report.succeededRows}
-          className="text-success-600 dark:text-success-500"
-        />
+        <StatItem label="Succeeded" value={report.succeededRows} className="text-success" />
         <StatItem
           label="Failed"
           value={report.failedRows}

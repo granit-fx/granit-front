@@ -25,7 +25,11 @@ function resolveErrorDetail(error: unknown): string {
  * React Router `errorElement` — distinguishes a 404 from other route errors and
  * links back home. Pass `onError` to log via the host's logger.
  */
-export function ErrorPage({ layout: Layout, onError, showErrorDetail = false }: Readonly<ErrorPageProps>) {
+export function ErrorPage({
+  layout: Layout,
+  onError,
+  showErrorDetail = false,
+}: Readonly<ErrorPageProps>) {
   const { t } = useTranslation();
   const error = useRouteError();
   const [copied, setCopied] = useState(false);
@@ -65,7 +69,7 @@ export function ErrorPage({ layout: Layout, onError, showErrorDetail = false }: 
               className="flex items-center gap-1.5 rounded px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               {copied ? (
-                <Check className="h-3.5 w-3.5 text-success-600 dark:text-success-500" />
+                <Check className="h-3.5 w-3.5 text-success" />
               ) : (
                 <Copy className="h-3.5 w-3.5" />
               )}

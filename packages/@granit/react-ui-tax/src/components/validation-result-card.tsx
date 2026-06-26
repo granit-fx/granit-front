@@ -21,9 +21,7 @@ export function ValidationResultCard({ result }: ValidationResultCardProps) {
             variant={result.isValid ? 'default' : 'destructive'}
             className={cn(
               'text-xs',
-              result.isValid
-                ? 'bg-success-500/15 text-success-600 dark:text-success-500 border-success-500/25'
-                : ''
+              result.isValid ? 'bg-success-500/15 text-success border-success-500/25' : ''
             )}
           >
             {result.isValid ? t('Tax.Validate.Valid') : t('Tax.Validate.Invalid')}

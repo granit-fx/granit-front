@@ -24,8 +24,8 @@ export function WebhookDashboard({ stats, isLoading }: Readonly<WebhookDashboard
 
   const successRate = stats.successRateLast24h;
   let successRateColor = 'text-destructive';
-  if (successRate >= 95) successRateColor = 'text-success-600 dark:text-success-500';
-  else if (successRate >= 80) successRateColor = 'text-warning-600 dark:text-warning-500';
+  if (successRate >= 95) successRateColor = 'text-success';
+  else if (successRate >= 80) successRateColor = 'text-warning';
 
   const cards = [
     {
@@ -35,12 +35,12 @@ export function WebhookDashboard({ stats, isLoading }: Readonly<WebhookDashboard
     {
       label: t('Webhooks.Dashboard.ActiveSubscriptions'),
       value: stats.activeCount,
-      valueClass: 'text-success-600 dark:text-success-500',
+      valueClass: 'text-success',
     },
     {
       label: t('Webhooks.Dashboard.SuspendedSubscriptions'),
       value: stats.suspendedCount,
-      valueClass: stats.suspendedCount > 0 ? 'text-warning-600 dark:text-warning-500' : undefined,
+      valueClass: stats.suspendedCount > 0 ? 'text-warning' : undefined,
     },
     {
       label: t('Webhooks.Dashboard.DeliveriesLast24h'),

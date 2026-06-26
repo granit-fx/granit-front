@@ -68,7 +68,7 @@ function DirectLoginDemo() {
       {result ? (
         <div className="space-y-2">
           {result.succeeded && (
-            <div className="flex items-center gap-2 text-sm text-success-600 dark:text-success-500">
+            <div className="flex items-center gap-2 text-sm text-success">
               <CheckCircle className="h-4 w-4" />
               {t('Auth.HeadlessLogin.DirectLoginSuccess', 'Login succeeded (session cookie set)')}
             </div>

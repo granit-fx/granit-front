@@ -1,5 +1,7 @@
 import { createReactLocalization } from '@granit/react-localization';
 
+import { commonTranslationsEn, commonTranslationsFr } from './locales/common';
+
 /**
  * Minimal i18n instance for Storybook. `createReactLocalization` registers it as
  * the default react-i18next instance (via `initReactI18next`), so package
@@ -15,7 +17,14 @@ export const i18n = createReactLocalization();
 i18n.options.nsSeparator = false;
 i18n.options.keySeparator = false;
 i18n.options.fallbackLng = ['en'];
-i18n.addResourceBundle('en', 'translation', {}, true, true);
+
+// Shared host/backend-shipped keys (`Common.*` / `Operators.*` / `Components.*`)
+// — resource-class strings owned by the host root, not by any package bundle.
+// Register them first so framework components calling e.g. `t('Common.NoResults')`
+// or `t('Components.Querying.Columns.Label')` (no inline default) resolve instead
+// of rendering the raw key.
+i18n.addResourceBundle('en', 'translation', commonTranslationsEn, true, true);
+i18n.addResourceBundle('fr', 'translation', commonTranslationsFr, true, true);
 
 /**
  * Auto-register every UI package's flat translation bundle — no per-module list

@@ -31,8 +31,7 @@ export function JobStatusBadge({ status }: Readonly<{ status: JobStatus }>) {
       variant={variant}
       className={cn(
         'text-xs',
-        status === 'Completed' &&
-          'bg-success-500/15 text-success-600 dark:text-success-500 border-success-500/25',
+        status === 'Completed' && 'bg-success-500/15 text-success border-success-500/25',
         status === 'PartiallyCompleted' &&
           'border-orange-500/25 bg-orange-500/15 text-orange-600 dark:text-orange-400'
       )}

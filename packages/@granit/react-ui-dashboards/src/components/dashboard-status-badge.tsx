@@ -1,8 +1,8 @@
 import type { DashboardStatus } from '@granit/dashboards';
 
 function pickStatusBadgeTone(status: DashboardStatus): string {
-  if (status === 'Published') return 'bg-success-500/15 text-success-600 dark:text-success-500';
-  if (status === 'Draft') return 'bg-warning-500/15 text-warning-600 dark:text-warning-500';
+  if (status === 'Published') return 'bg-success-500/15 text-success';
+  if (status === 'Draft') return 'bg-warning-500/15 text-warning';
   return 'bg-muted text-muted-foreground';
 }
 

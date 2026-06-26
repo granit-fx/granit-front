@@ -56,6 +56,12 @@ Full frontend conventions: `../granit-dotnet/docs/guide/conventions/frontend/`
 `composants.md` (React, shadcn/ui, CVA, Storybook, WCAG),
 `etat-et-api.md` (React Query, Orval, auth, routing, i18n, Zod forms).
 
+**shadcn/ui reference**: design tokens / theming / component APIs live at
+`https://ui.shadcn.com/llms.txt` (LLM-readable index). Fetch it before changing
+`@granit/ui-theme` tokens, the Tailwind theme layer, or shadcn-derived components,
+to check parity (e.g. `--color-chart-*`, radius scale, `@theme inline` pattern).
+Our `base.css` uses hex (not OKLCH) and adds Granit palettes (admin/status/themes).
+
 ## Tech rules
 
 - TS strict, no implicit `any`. `import type` for type-only imports.

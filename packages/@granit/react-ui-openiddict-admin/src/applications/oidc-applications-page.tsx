@@ -360,7 +360,7 @@ export function OidcApplicationsPage() {
                   <td className="px-4 py-3">
                     {app.hasSigningKey ? (
                       <CheckCircle2
-                        className="size-4 text-success-600 dark:text-success-500"
+                        className="size-4 text-success"
                         aria-label={t('OpenIddict.Applications.HasSigningKey')}
                       />
                     ) : (

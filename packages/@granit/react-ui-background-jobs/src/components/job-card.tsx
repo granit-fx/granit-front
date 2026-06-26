@@ -88,7 +88,7 @@ export function JobCard({ job }: Readonly<{ job: BackgroundJobStatus }>) {
 
         {job.deadLetterCount > 0 && (
           <div className="rounded-md bg-warning-500/10 p-2 text-sm">
-            <p className="font-medium text-warning-600 dark:text-warning-500">
+            <p className="font-medium text-warning">
               {t('BackgroundJobs.DeadLetters', { count: job.deadLetterCount })}
             </p>
           </div>

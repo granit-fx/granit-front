@@ -6,7 +6,7 @@ import type { LegalDocumentLifecycleStatus } from '@granit/privacy';
 
 const statusStyles: Record<LegalDocumentLifecycleStatus, string> = {
   Draft: 'bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/25',
-  Published: 'bg-success-500/15 text-success-600 dark:text-success-500 border-success-500/25',
+  Published: 'bg-success-500/15 text-success border-success-500/25',
   Archived: 'bg-muted/50 text-muted-foreground',
 };
 

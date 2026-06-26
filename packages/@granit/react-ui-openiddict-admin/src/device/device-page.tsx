@@ -34,7 +34,7 @@ export function DevicePage({ layout: Layout = Passthrough }: DevicePageProps) {
     return (
       <Layout>
         <div className="flex flex-col items-center gap-4 py-4 text-center">
-          <CheckCircle className="size-12 text-success-600 dark:text-success-500" />
+          <CheckCircle className="size-12 text-success" />
           <p className="font-medium">{t('OpenIddict.Device.Success')}</p>
         </div>
       </Layout>

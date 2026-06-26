@@ -213,11 +213,7 @@ function FactorStatusBadge({ enabled }: { readonly enabled: boolean }) {
   return (
     <Badge
       variant={enabled ? 'default' : 'secondary'}
-      className={
-        enabled
-          ? 'border-success-500/25 bg-success-500/15 text-success-600 dark:text-success-500'
-          : ''
-      }
+      className={enabled ? 'border-success-500/25 bg-success-500/15 text-success' : ''}
     >
       {enabled ? (
         <>

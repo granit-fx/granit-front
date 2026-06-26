@@ -381,10 +381,7 @@ export function ExportDialog({
                 <Separator />
                 <div className="flex items-center gap-2 text-sm">
                   {exportJob.job.status === 'Completed' && (
-                    <Check
-                      className="h-4 w-4 text-success-600 dark:text-success-500"
-                      aria-hidden="true"
-                    />
+                    <Check className="h-4 w-4 text-success" aria-hidden="true" />
                   )}
                   {exportJob.job.status === 'Failed' && (
                     <X className="h-4 w-4 text-destructive" aria-hidden="true" />

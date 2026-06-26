@@ -54,7 +54,7 @@ export function ErrorFallback({
               className="flex items-center gap-1.5 rounded px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               {copied ? (
-                <Check className="h-3.5 w-3.5 text-success-600 dark:text-success-500" />
+                <Check className="h-3.5 w-3.5 text-success" />
               ) : (
                 <Copy className="h-3.5 w-3.5" />
               )}

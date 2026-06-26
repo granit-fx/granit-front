@@ -17,7 +17,7 @@ function getQuotaColor(percent: number): string {
 function getQuotaTextColor(percent: number): string {
   if (percent > 95) return 'text-destructive';
   if (percent >= 80) return 'text-yellow-600 dark:text-yellow-500';
-  return 'text-success-600 dark:text-success-500';
+  return 'text-success';
 }
 
 export function QuotaStatusCard({ quota }: Readonly<QuotaStatusCardProps>) {

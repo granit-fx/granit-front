@@ -3,7 +3,7 @@ import { useTranslation } from '@granit/react-localization';
 import type { DashboardVersionDrift } from '@granit/dashboards';
 
 function pickDriftTone(drift: DashboardVersionDrift): string {
-  if (drift === 'behind') return 'bg-warning-500/15 text-warning-600 dark:text-warning-500';
+  if (drift === 'behind') return 'bg-warning-500/15 text-warning';
   if (drift === 'ahead') return 'bg-primary/10 text-primary';
   return 'bg-muted text-muted-foreground';
 }

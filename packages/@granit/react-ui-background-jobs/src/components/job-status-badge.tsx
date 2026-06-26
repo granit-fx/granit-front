@@ -24,7 +24,7 @@ export function JobStatusBadge({ job }: Readonly<{ job: BackgroundJobStatus }>) 
     <Badge
       data-slot="job-status-badge"
       variant="default"
-      className="border-success-500/25 bg-success-500/15 text-success-600 hover:bg-success-500/25 dark:text-success-500"
+      className="border-success-500/25 bg-success-500/15 text-success hover:bg-success-500/25"
     >
       {t('BackgroundJobs.Status.Active')}
     </Badge>

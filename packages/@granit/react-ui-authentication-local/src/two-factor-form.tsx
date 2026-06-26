@@ -189,7 +189,7 @@ export function TwoFactorForm({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {method === 'Email' && emailSent && (
-              <div className="flex items-center gap-2 rounded-md border border-success-500/25 bg-success-500/10 px-3 py-2 text-sm text-success-600 dark:text-success-500">
+              <div className="flex items-center gap-2 rounded-md border border-success-500/25 bg-success-500/10 px-3 py-2 text-sm text-success">
                 <CheckCircle className="h-4 w-4 shrink-0" />
                 <span>{t('Auth.HeadlessLogin.EmailCodeSent')}</span>
               </div>

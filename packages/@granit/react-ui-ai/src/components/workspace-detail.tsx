@@ -15,7 +15,7 @@ export function WorkspaceDetail({ workspace }: WorkspaceDetailProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3 rounded-lg border border-warning-500/25 bg-warning-500/15 p-4 text-sm text-warning-600 dark:text-warning-500">
+      <div className="flex items-center gap-3 rounded-lg border border-warning-500/25 bg-warning-500/15 p-4 text-sm text-warning">
         <Info className="h-4 w-4 shrink-0" />
         {t('AI.Workspaces.Kind.System:Hint', { nsSeparator: false })}
       </div>

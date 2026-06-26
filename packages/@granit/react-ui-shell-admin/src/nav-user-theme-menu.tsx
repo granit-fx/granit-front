@@ -9,7 +9,6 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from '@granit/react-ui';
-import { COLOR_THEMES, COLOR_THEME_SWATCHES } from '@granit/ui-theme';
 import { Check, Monitor, Moon, Palette, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
@@ -35,6 +34,9 @@ export function NavUserThemeMenu() {
   const { theme, setTheme } = useTheme();
   const colorTheme = useColorThemeStore((s) => s.colorTheme);
   const setColorTheme = useColorThemeStore((s) => s.setColorTheme);
+  // The themes this app offers (its chosen subset of the catalogue) — each one a
+  // self-describing descriptor, so the menu needs no central swatch/label map.
+  const themes = useColorThemeStore((s) => s.themes);
 
   return (
     <DropdownMenuSub>
@@ -61,26 +63,23 @@ export function NavUserThemeMenu() {
           ))}
           <DropdownMenuSeparator />
           <DropdownMenuLabel>{t('Theme.Color', 'Color')}</DropdownMenuLabel>
-          {COLOR_THEMES.map((ct) => {
-            const label = ct.charAt(0).toUpperCase() + ct.slice(1);
-            return (
-              <DropdownMenuItem
-                key={ct}
-                data-active={colorTheme === ct ? 'true' : undefined}
-                onSelect={(e) => {
-                  e.preventDefault();
-                  setColorTheme(ct);
-                }}
-              >
-                <span
-                  className="mr-2 h-3.5 w-3.5 rounded-full border border-border"
-                  style={{ backgroundColor: COLOR_THEME_SWATCHES[ct] }}
-                />
-                <span className="flex-1">{t(`Theme.Colors.${label}`, label)}</span>
-                {colorTheme === ct && <Check className="h-4 w-4 text-primary" aria-hidden="true" />}
-              </DropdownMenuItem>
-            );
-          })}
+          {themes.map(({ id, label, swatch }) => (
+            <DropdownMenuItem
+              key={id}
+              data-active={colorTheme === id ? 'true' : undefined}
+              onSelect={(e) => {
+                e.preventDefault();
+                setColorTheme(id);
+              }}
+            >
+              <span
+                className="mr-2 h-3.5 w-3.5 rounded-full border border-border"
+                style={{ backgroundColor: swatch }}
+              />
+              <span className="flex-1">{t(`Theme.Colors.${label}`, label)}</span>
+              {colorTheme === id && <Check className="h-4 w-4 text-primary" aria-hidden="true" />}
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuSubContent>
       </DropdownMenuPortal>
     </DropdownMenuSub>

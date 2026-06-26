@@ -220,10 +220,7 @@ export function ImportDialog({
               )}
               {!importJob.isExecuting && importJob.job?.status === 'Mapped' && (
                 <>
-                  <CheckCircle
-                    className="h-8 w-8 text-success-600 dark:text-success-500"
-                    aria-hidden="true"
-                  />
+                  <CheckCircle className="h-8 w-8 text-success" aria-hidden="true" />
                   <p className="text-sm">{t('DataExchange.Import.MappingsConfirmed')}</p>
                 </>
               )}
@@ -233,16 +230,10 @@ export function ImportDialog({
                     <Loader2 className="h-8 w-8 animate-spin" aria-hidden="true" />
                   )}
                   {statusIcon === 'success' && (
-                    <CheckCircle
-                      className="h-8 w-8 text-success-600 dark:text-success-500"
-                      aria-hidden="true"
-                    />
+                    <CheckCircle className="h-8 w-8 text-success" aria-hidden="true" />
                   )}
                   {statusIcon === 'warning' && (
-                    <AlertTriangle
-                      className="h-8 w-8 text-warning-600 dark:text-warning-500"
-                      aria-hidden="true"
-                    />
+                    <AlertTriangle className="h-8 w-8 text-warning" aria-hidden="true" />
                   )}
                   {statusIcon === 'error' && (
                     <X className="h-8 w-8 text-destructive" aria-hidden="true" />

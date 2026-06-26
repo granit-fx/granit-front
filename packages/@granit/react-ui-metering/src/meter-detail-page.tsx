@@ -131,7 +131,7 @@ export function MeterDetailPage() {
                 className={cn(
                   'text-xs',
                   meter.lifecycleStatus === 'Published'
-                    ? 'bg-success-500/15 text-success-600 dark:text-success-500 border-success-500/25'
+                    ? 'bg-success-500/15 text-success border-success-500/25'
                     : 'bg-muted/50 text-muted-foreground'
                 )}
               >

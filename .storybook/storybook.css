@@ -1,5 +1,7 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
 @import '@granit/ui-theme/base.css';
+@import '@granit/ui-themes/themes.css';
 
 /* granit-front packages aren't symlinked, but pin the content sources explicitly
    so utility classes used only inside package components are always emitted,
@@ -8,3 +10,15 @@
 @source '../packages/@granit/react-ui-admin-kit/src/**/*.{ts,tsx}';
 @source '../packages/@granit/react-ui-shell-admin/src/**/*.{ts,tsx}';
 @source '../packages/@granit/react-*/src/**/*.{ts,tsx}';
+
+/* Storybook leaves the canvas (`.sb-show-main`) and docs preview blocks
+   (`.docs-story`) transparent — the `backgrounds` addon isn't enabled — so a
+   container-less, isolated component sits on the iframe's default white. Paint
+   them with the theme tokens instead: both are descendants of `html.dark`, so
+   `--color-background` resolves to the dark value and isolated stories get the
+   themed (dark) backdrop, in sync with the Light/Dark toolbar. */
+.sb-show-main,
+.docs-story {
+  background-color: var(--background);
+  color: var(--foreground);
+}

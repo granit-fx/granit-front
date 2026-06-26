@@ -11832,6 +11832,17 @@
       "description": "Granit admin design tokens — CSS custom properties for colour palettes, dark mode, per-app colour themes, typography, shadows and sidebar variables. Import the base stylesheet and override the CSS variables to re-brand any consuming app.",
       "exports": [
         {
+          "name": "ColorThemeDescriptor",
+          "kind": "interface",
+          "signature": "interface ColorThemeDescriptor",
+          "members": []
+        },
+        {
+          "name": "COLOR_THEME_CATALOG",
+          "kind": "const",
+          "signature": "const COLOR_THEME_CATALOG"
+        },
+        {
           "name": "COLOR_THEMES",
           "kind": "const",
           "signature": "const COLOR_THEMES"
@@ -11839,7 +11850,7 @@
         {
           "name": "ColorTheme",
           "kind": "type",
-          "signature": "type ColorTheme = (typeof COLOR_THEMES)[number]"
+          "signature": "type ColorTheme = (typeof COLOR_THEME_CATALOG)[number]['id']"
         },
         {
           "name": "DEFAULT_COLOR_THEME",
@@ -11849,7 +11860,23 @@
         {
           "name": "COLOR_THEME_SWATCHES",
           "kind": "const",
-          "signature": "const COLOR_THEME_SWATCHES: Record<ColorTheme, string>"
+          "signature": "const COLOR_THEME_SWATCHES"
+        }
+      ]
+    },
+    {
+      "name": "@granit/ui-themes",
+      "description": "Granit opt-in full-theme catalogue — complete shadcn/tweakcn-style themes (colours, typography, radius, shadows, density) scoped under [data-theme], layered on the @granit/ui-theme token contract. Each theme is a [data-theme] CSS block plus a descriptor; an app imports the subset it wants.",
+      "exports": [
+        {
+          "name": "UI_THEMES_CATALOG",
+          "kind": "const",
+          "signature": "const UI_THEMES_CATALOG"
+        },
+        {
+          "name": "UiThemeId",
+          "kind": "type",
+          "signature": "type UiThemeId = (typeof UI_THEMES_CATALOG)[number]['id']"
         }
       ]
     },

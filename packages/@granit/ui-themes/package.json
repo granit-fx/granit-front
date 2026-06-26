@@ -1,0 +1,22 @@
+{
+  "name": "@granit/ui-themes",
+  "description": "Granit opt-in full-theme catalogue — complete shadcn/tweakcn-style themes (colours, typography, radius, shadows, density) scoped under [data-theme], layered on the @granit/ui-theme token contract. Each theme is a [data-theme] CSS block plus a descriptor; an app imports the subset it wants.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./themes.css": "./src/themes.css",
+    "./sage-garden.css": "./src/themes/sage-garden.css",
+    "./astrovista.css": "./src/themes/astrovista.css"
+  },
+  "files": [
+    "src"
+  ],
+  "peerDependencies": {
+    "@granit/ui-theme": "workspace:*"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

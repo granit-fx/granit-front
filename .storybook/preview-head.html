@@ -1,0 +1,12 @@
+<!-- Storybook injects this into the preview iframe <head>. Load the fonts the
+     catalogue themes reference so typography differences are actually visible:
+       · default       → Inter + JetBrains Mono
+       · Sage Garden    → Antic (sans); Signifier (serif) is commercial → Georgia
+       · AstroVista     → Outfit (sans) + Merriweather (serif) + Fira Code (mono)
+     A real app loads its own fonts; this only makes the Storybook window honest. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Antic&family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Merriweather:wght@400;700&family=Outfit:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+/>

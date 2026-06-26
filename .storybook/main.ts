@@ -35,9 +35,11 @@ function buildGranitAliases(): Array<{ find: string; replacement: string }> {
       if (candidate) aliases.push({ find: `@granit/${pkgName}/${sub}`, replacement: candidate });
     }
 
-    const baseCss = path.join(pkgDir, 'src/base.css');
-    if (fs.existsSync(baseCss))
-      aliases.push({ find: `@granit/${pkgName}/base.css`, replacement: baseCss });
+    for (const cssName of ['base.css', 'themes.css'] as const) {
+      const cssPath = path.join(pkgDir, 'src', cssName);
+      if (fs.existsSync(cssPath))
+        aliases.push({ find: `@granit/${pkgName}/${cssName}`, replacement: cssPath });
+    }
 
     const index = path.join(pkgDir, 'src/index.ts');
     if (fs.existsSync(index)) aliases.push({ find: `@granit/${pkgName}`, replacement: index });

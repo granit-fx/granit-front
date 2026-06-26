@@ -1,0 +1,22 @@
+/* @granit/ui-themes — full-theme catalogue (opt-in), barrel stylesheet.
+ *
+ * Each theme is a complete shadcn/tweakcn-style look (colours, typography,
+ * radius, shadows, density) scoped under a `[data-theme]` selector, layered on
+ * the `@granit/ui-theme` token contract (`--background`, `--primary`, …) — one
+ * file per theme under `./themes/`, aggregated here.
+ *
+ * This barrel pulls in EVERY theme (use it when you want the whole catalogue,
+ * e.g. Storybook). To ship only the themes you offer, import the per-theme
+ * stylesheets instead and load just those, keeping your CSS lean:
+ *
+ *   @import 'tailwindcss';
+ *   @import '@granit/ui-theme/base.css';
+ *   @import '@granit/ui-themes/sage-garden.css';   // only what this app offers
+ *
+ * Themes are converted verbatim from shadcn-registry / tweakcn JSON (var names
+ * map 1:1 via base.css's `@theme inline` bridge). Fonts are referenced, not
+ * bundled — load them in the app (Google Fonts, @fontsource…) or they fall back.
+ */
+
+@import './themes/sage-garden.css';
+@import './themes/astrovista.css';
