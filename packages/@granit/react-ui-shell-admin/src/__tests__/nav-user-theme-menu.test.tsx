@@ -1,4 +1,5 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@granit/react-ui';
+import { COLOR_THEME_CATALOG } from '@granit/ui-theme';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -18,7 +19,13 @@ vi.mock('@granit/react-shell-core', () => ({
 const setThemeMock = vi.fn();
 const setColorThemeMock = vi.fn();
 let themeValue = 'system';
-const colorState = { colorTheme: 'blue', setColorTheme: setColorThemeMock };
+// The menu reads the offered themes as ThemeDescriptor[] from the store. Mirror a
+// real app: surface the @granit/ui-theme catalogue (includes Blue / Teal / Slate).
+const colorState = {
+  colorTheme: 'blue',
+  setColorTheme: setColorThemeMock,
+  themes: COLOR_THEME_CATALOG,
+};
 
 const { NavUserThemeMenu } = await import('../nav-user-theme-menu');
 

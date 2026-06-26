@@ -4,7 +4,12 @@ import { type ReactNode } from 'react';
 
 import { ColorThemeStoreProvider, useColorThemeStore } from '../color-theme';
 
-const THEMES = ['blue', 'teal'] as const;
+// The store now offers ThemeDescriptor[] (id/label/swatch), not bare ids — its
+// `setColorTheme` rejects ids absent from this list, so they must be descriptors.
+const THEMES = [
+  { id: 'blue', label: 'Blue', swatch: '#1e40af' },
+  { id: 'teal', label: 'Teal', swatch: '#0f766e' },
+] as const;
 
 function makeWrapper(store: ReturnType<typeof createColorThemeStore>) {
   return ({ children }: { children: ReactNode }) => (
@@ -22,7 +27,11 @@ describe('useColorThemeStore', () => {
   });
 
   it('re-renders when the store updates', () => {
-    const store = createColorThemeStore({ storageKey: 'ct2', defaultTheme: 'blue', themes: THEMES });
+    const store = createColorThemeStore({
+      storageKey: 'ct2',
+      defaultTheme: 'blue',
+      themes: THEMES,
+    });
     const { result } = renderHook(() => useColorThemeStore((s) => s.colorTheme), {
       wrapper: makeWrapper(store),
     });
