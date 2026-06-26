@@ -1,20 +1,31 @@
 import { useTranslation } from 'react-i18next';
 
+import {
+  CONTROL_CLASS,
+  MetaMultiFieldInput,
+  QueryNameCombobox,
+  useQueryFieldMetadata,
+} from './query-field-controls';
+
 import type { TableWidgetDefinition } from '@granit/analytics';
 import type { WidgetConfigFormProps } from '@granit/react-dashboard-editor';
 
 /**
  * Built-in config form for {@link TableWidgetDefinition}. Edits the
- * query binding + page size. Column visibility (`visibleColumns`) is
- * left as comma-separated input — apps wanting a column-picker dialog
- * register their own form via `composeWidgetConfigFormRegistries`.
+ * query binding, visible columns + page size.
+ *
+ * Under a `<QueryCatalogProvider>` the query field is a catalogue-backed
+ * combobox and the visible-columns picker is a multi-select sourced from the
+ * query's columns; otherwise both degrade to free-text (comma-separated for
+ * columns). Apps wanting a richer column-picker dialog register their own form
+ * via `composeWidgetConfigFormRegistries`.
  */
 export function TableConfigForm({
   widget,
   onChange,
 }: WidgetConfigFormProps<TableWidgetDefinition>) {
   const { t } = useTranslation();
-  const visibleColumnsValue = widget.visibleColumns?.join(', ') ?? '';
+  const { catalogEntries, hasCatalog, columnOptions } = useQueryFieldMetadata(widget.queryName);
 
   return (
     <div data-slot="table-config-form" className="space-y-3">
@@ -22,35 +33,27 @@ export function TableConfigForm({
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Table.QueryName.Label')}
         </span>
-        <input
-          type="text"
-          data-slot="table-query-name"
+        <QueryNameCombobox
+          slot="table-query-name"
+          datalistId="table-query-name-options"
           value={widget.queryName}
-          onChange={(event) => onChange({ ...widget, queryName: event.target.value })}
-          className="w-full rounded-md border bg-background px-3 py-1.5 text-sm"
+          onChange={(value) => onChange({ ...widget, queryName: value })}
+          entries={catalogEntries}
+          hasCatalog={hasCatalog}
         />
       </label>
       <label className="block text-sm">
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Table.VisibleColumns.Label')}
         </span>
-        <input
-          type="text"
-          data-slot="table-visible-columns"
-          value={visibleColumnsValue}
+        <MetaMultiFieldInput
+          slot="table-visible-columns"
+          values={widget.visibleColumns ?? []}
+          options={columnOptions}
           placeholder="leave empty for all columns"
-          onChange={(event) => {
-            const raw = event.target.value.trim();
-            const next =
-              raw === ''
-                ? null
-                : raw
-                    .split(',')
-                    .map((s) => s.trim())
-                    .filter((s) => s.length > 0);
-            onChange({ ...widget, visibleColumns: next });
-          }}
-          className="w-full rounded-md border bg-background px-3 py-1.5 text-sm"
+          onChange={(values) =>
+            onChange({ ...widget, visibleColumns: values.length > 0 ? values : null })
+          }
         />
       </label>
       <label className="block text-sm">
@@ -65,7 +68,7 @@ export function TableConfigForm({
           onChange={(event) =>
             onChange({ ...widget, pageSize: Number.parseInt(event.target.value, 10) || 1 })
           }
-          className="w-full rounded-md border bg-background px-3 py-1.5 text-sm"
+          className={CONTROL_CLASS}
         />
       </label>
     </div>
