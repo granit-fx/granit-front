@@ -12,7 +12,7 @@ import type { TableWidgetDefinition } from '@granit/analytics';
  * registry (definition path).
  *
  * Symmetric with `<ChartTile>` / `<PivotTile>` / `<MapTile>`: calls
- * `POST /widgets/table/render` via {@link useWidgetRender}, dispatches
+ * `POST /analytics/widgets/table/render` via {@link useWidgetRender}, dispatches
  * through `<RenderedWidget>`, leverages the same `<TableSnapshotWidget>`
  * the bundle path uses.
  */

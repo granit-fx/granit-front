@@ -10,7 +10,7 @@ export type { UseMetricOptions } from './hooks/use-metric';
 // per-widget render endpoint (P3) and uses the `useMetric` path which
 // works against `POST /metrics/{name}` — kept stable for callers
 // outside dashboards. Chart / Table / Pivot use the new
-// `POST /widgets/{kind}/render` endpoints via `useWidgetRender` (P3),
+// `POST /analytics/widgets/{kind}/render` endpoints via `useWidgetRender` (P3),
 // which keeps SSOT with the bundle path's snapshot widgets.
 export { KpiTile } from './components/kpi-tile';
 export type { KpiTileProps } from './components/kpi-tile';

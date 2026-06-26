@@ -11,7 +11,7 @@ import type { ChartWidgetDefinition } from '@granit/analytics';
  * `ChartWidgetDefinition` (`type: 'chart'`) in the analytics widget
  * registry (definition path).
  *
- * Calls `POST /widgets/chart/render` via {@link useWidgetRender}, then
+ * Calls `POST /analytics/widgets/chart/render` via {@link useWidgetRender}, then
  * dispatches the resulting envelope through `<RenderedWidget>` — same
  * snapshot widget the bundle path uses (`<ChartSnapshotWidget>`).
  * Symmetry-by-construction: zero kind-specific transformation

@@ -292,7 +292,7 @@ export async function deleteWidget(
  * {@link DashboardRenderedWidget} envelope.
  *
  * Note: `widgetsBasePath` is independent of the dashboards `basePath` — it
- * targets the per-widget API (default `/api/v1/widgets`).
+ * targets the per-widget API (default `/api/v1/analytics/widgets`).
  */
 export async function renderWidget<TDefinition extends WidgetDefinitionBase>(
   client: AxiosInstance,

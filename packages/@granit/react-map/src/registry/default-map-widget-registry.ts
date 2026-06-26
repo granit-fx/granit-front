@@ -15,7 +15,7 @@ import type { WidgetRegistry, WidgetRendererFn } from '@granit/react-dashboards'
  *       ]}
  *     >...</WidgetRegistryProvider>
  *
- * Definition-path renderer — fetches via `POST /widgets/map/render`
+ * Definition-path renderer — fetches via `POST /analytics/widgets/map/render`
  * (backend P3) through {@link useWidgetRender}, then dispatches
  * through `<RenderedWidget>` for chrome / action symmetry with the
  * bundle path's `<MapSnapshotWidget>`.

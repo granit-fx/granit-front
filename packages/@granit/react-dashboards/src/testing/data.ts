@@ -526,7 +526,7 @@ export function createDashboardsStore(): Map<string, StoredDashboard> {
 
 // ---------------------------------------------------------------------------
 // Per-kind synthetic snapshot fixtures — back the P3 single-widget render
-// endpoints (POST /widgets/{kind}/render).
+// endpoints (POST /analytics/widgets/{kind}/render).
 // ---------------------------------------------------------------------------
 
 export const SYNTHETIC_ENVELOPES: Readonly<

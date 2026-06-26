@@ -12,7 +12,7 @@ import type { MapWidgetDefinition } from '@granit/analytics';
  * (definition path).
  *
  * Symmetric with the analytics tiles (`<ChartTile>`, `<TableTile>`,
- * `<PivotTile>`): calls `POST /widgets/map/render` via
+ * `<PivotTile>`): calls `POST /analytics/widgets/map/render` via
  * {@link useWidgetRender}, dispatches through `<RenderedWidget>`,
  * leverages the same `<MapSnapshotWidget>` the bundle path uses.
  *

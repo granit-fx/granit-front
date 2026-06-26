@@ -70,9 +70,9 @@ const VIEW_SLUG_FILTERS: Readonly<Record<string, readonly string[]>> = {
  * @param baseUrl - API base path (default: `/api/v1/dashboards`)
  */
 export function createDashboardsHandlers(baseUrl = DEFAULT_BASE_PATH) {
-  // Per-widget render endpoints live on a sibling `/widgets` base — derived
+  // Per-widget render endpoints live on the analytics `/widgets` base — derived
   // from the dashboards base so a single `baseUrl` override moves both.
-  const widgetsBase = baseUrl.replace(/\/dashboards$/, '/widgets');
+  const widgetsBase = baseUrl.replace(/\/dashboards$/, '/analytics/widgets');
 
   const store = createDashboardsStore();
 
@@ -478,7 +478,7 @@ export function createDashboardsHandlers(baseUrl = DEFAULT_BASE_PATH) {
     }),
 
     // -----------------------------------------------------------------------
-    // P3 — per-widget render endpoints (POST /widgets/{kind}/render). Symmetric
+    // P3 — per-widget render endpoints (POST /analytics/widgets/{kind}/render). Symmetric
     // with the bundle path: same envelope shape, same snapshot widgets dispatched
     // by `<RenderedWidget>`. The mock synthesizes a canned snapshot per kind —
     // good enough for a live preview.

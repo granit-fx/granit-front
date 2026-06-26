@@ -12,7 +12,7 @@ import type { PivotWidgetDefinition } from '@granit/analytics';
  * registry (definition path).
  *
  * Symmetric with `<ChartTile>` / `<TableTile>` / `<MapTile>`: calls
- * `POST /widgets/pivot/render` via {@link useWidgetRender}, dispatches
+ * `POST /analytics/widgets/pivot/render` via {@link useWidgetRender}, dispatches
  * through `<RenderedWidget>`, leverages the same `<PivotSnapshotWidget>`
  * the bundle path uses.
  */

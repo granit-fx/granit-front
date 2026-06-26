@@ -6,7 +6,7 @@
 export { MapSnapshotWidget } from './snapshot/map-snapshot-widget';
 export { defaultMapSnapshotWidgetRegistry } from './snapshot/default-map-snapshot-widget-registry';
 
-// Definition-path renderer (P3) — fetches via POST /widgets/map/render
+// Definition-path renderer (P3) — fetches via POST /analytics/widgets/map/render
 export { MapTile } from './components/map-tile';
 export type { MapTileProps } from './components/map-tile';
 export { defaultMapWidgetRegistry } from './registry/default-map-widget-registry';

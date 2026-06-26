@@ -46,7 +46,7 @@ const ENVELOPE: DashboardRenderedWidget = {
 let lastBody: unknown = null;
 
 const server = setupServer(
-  http.post('http://localhost/api/v1/widgets/markdown/render', async ({ request }) => {
+  http.post('http://localhost/api/v1/analytics/widgets/markdown/render', async ({ request }) => {
     lastBody = await request.json();
     return HttpResponse.json(ENVELOPE);
   })
@@ -55,7 +55,7 @@ const server = setupServer(
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => {
   server.resetHandlers(
-    http.post('http://localhost/api/v1/widgets/markdown/render', async ({ request }) => {
+    http.post('http://localhost/api/v1/analytics/widgets/markdown/render', async ({ request }) => {
       lastBody = await request.json();
       return HttpResponse.json(ENVELOPE);
     })

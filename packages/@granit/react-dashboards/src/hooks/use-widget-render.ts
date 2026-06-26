@@ -13,7 +13,7 @@ import type {
   WidgetDefinitionBase,
 } from '@granit/dashboards';
 
-const WIDGET_RENDER_PATH = '/api/v1/widgets';
+const WIDGET_RENDER_PATH = '/api/v1/analytics/widgets';
 
 /**
  * Polling cadence per {@link RefreshHint} for the per-widget render
@@ -53,7 +53,7 @@ export interface WidgetRenderContext {
 
 /**
  * Wire-format kinds the P3 backend endpoints accept. Lowercase
- * matches the URL path slug (`/widgets/{kind}/render`) and the
+ * matches the URL path slug (`/analytics/widgets/{kind}/render`) and the
  * `WidgetDefinition.type` discriminator.
  */
 export type WidgetRenderKind = 'kpi' | 'chart' | 'table' | 'pivot' | 'map';
@@ -81,7 +81,7 @@ export interface UseWidgetRenderOptions {
 }
 
 /**
- * Calls `POST /widgets/{kind}/render` (backend P3 — symmetric with
+ * Calls `POST /analytics/widgets/{kind}/render` (backend P3 — symmetric with
  * the bundle path) and returns a single
  * {@link DashboardRenderedWidget} envelope.
  *

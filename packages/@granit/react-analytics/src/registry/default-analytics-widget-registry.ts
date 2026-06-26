@@ -13,7 +13,7 @@ import type { WidgetRegistry, WidgetRendererFn } from '@granit/react-dashboards'
  * without per-app re-registration.
  *
  * Definition-path renderers — fetch their own data via the per-kind
- * render endpoints (`POST /widgets/{kind}/render`, backend P3) and
+ * render endpoints (`POST /analytics/widgets/{kind}/render`, backend P3) and
  * dispatch through `<RenderedWidget>` for chrome / action symmetry
  * with the bundle path. KPI keeps the `useMetric` path because
  * standalone KPI tiles outside dashboards (admin pages) consume
