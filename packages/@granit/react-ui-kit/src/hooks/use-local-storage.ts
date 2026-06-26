@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { logger } from '../logger';
+
 /**
  * Persists a value in localStorage under `key` and keeps it in sync across
  * tabs via the `storage` event.  Falls back to `defaultValue` when running
@@ -44,8 +46,10 @@ export function useLocalStorage<T>(
         if (globalThis.localStorage !== undefined) {
           try {
             globalThis.localStorage.setItem(key, JSON.stringify(next));
-          } catch {
-            // quota exceeded or storage disabled — silently ignore
+          } catch (err) {
+            // Quota exceeded or storage disabled — keep the in-memory value;
+            // persistence is best-effort and must not break the UI.
+            logger.warn('Failed to persist value to localStorage', { key, err });
           }
         }
         return next;

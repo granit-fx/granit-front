@@ -1,8 +1,9 @@
 import { act, renderHook } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useDebounce } from '../hooks/use-debounce';
+import { useDebouncedValue } from '../hooks/use-debounced-value';
 
-describe('useDebounce', () => {
+describe('useDebouncedValue', () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -12,12 +13,12 @@ describe('useDebounce', () => {
   });
 
   it('should return the initial value immediately', () => {
-    const { result } = renderHook(() => useDebounce('a', 300));
+    const { result } = renderHook(() => useDebouncedValue('a', 300));
     expect(result.current).toBe('a');
   });
 
   it('should not update before the delay elapses', () => {
-    const { result, rerender } = renderHook(({ value }) => useDebounce(value, 300), {
+    const { result, rerender } = renderHook(({ value }) => useDebouncedValue(value, 300), {
       initialProps: { value: 'a' },
     });
 
@@ -29,7 +30,7 @@ describe('useDebounce', () => {
   });
 
   it('should update to the debounced value after the delay', () => {
-    const { result, rerender } = renderHook(({ value }) => useDebounce(value, 300), {
+    const { result, rerender } = renderHook(({ value }) => useDebouncedValue(value, 300), {
       initialProps: { value: 'a' },
     });
 
@@ -41,7 +42,7 @@ describe('useDebounce', () => {
   });
 
   it('should reset the timer when the value changes again (cleanup branch)', () => {
-    const { result, rerender } = renderHook(({ value }) => useDebounce(value, 300), {
+    const { result, rerender } = renderHook(({ value }) => useDebouncedValue(value, 300), {
       initialProps: { value: 'a' },
     });
 
@@ -61,5 +62,17 @@ describe('useDebounce', () => {
       vi.advanceTimersByTime(100);
     });
     expect(result.current).toBe('c');
+  });
+
+  it('should update synchronously when the delay is not positive', () => {
+    const { result, rerender } = renderHook(({ value }) => useDebouncedValue(value, 0), {
+      initialProps: { value: 'a' },
+    });
+
+    rerender({ value: 'b' });
+    act(() => {
+      vi.advanceTimersByTime(0);
+    });
+    expect(result.current).toBe('b');
   });
 });

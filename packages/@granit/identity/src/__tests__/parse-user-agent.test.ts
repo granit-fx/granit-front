@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { isHandheldUserAgent, parseUserAgent } from './parse-user-agent';
+import { isHandheldUserAgent, parseUserAgent } from '../parse-user-agent';
 
 describe('parseUserAgent', () => {
   it('should return null for empty or nullish input', () => {

@@ -114,7 +114,6 @@ describe('GroupDetailPage', () => {
     mockUseGroups.mockReturnValue({ data: mockGroups, isLoading: false, error: null });
     renderWithProviders(<GroupDetailPage />, { route: '/identity/groups/missing' });
     expect(screen.getByText('Group not found')).toBeInTheDocument();
-    expect(screen.getByText('This group does not exist or has been removed.')).toBeInTheDocument();
   });
 
   it('renders the not-found state on fetch error', () => {

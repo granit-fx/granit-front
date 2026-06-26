@@ -33,14 +33,18 @@
   },
   "devDependencies": {
     "@granit/ai-prompts": "workspace:*",
+    "@granit/api-client": "workspace:*",
     "@granit/react-ai-prompts": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
     "@granit/react-authorization": "workspace:*",
     "@granit/react-localization": "workspace:*",
     "@granit/react-ui": "workspace:*",
+    "@storybook/react-vite": "^10.4.6",
     "@tanstack/react-query": "^5.0.0",
     "i18next": "^26.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-i18next": "^17.0.0"
+    "react-i18next": "^17.0.0",
+    "react-router-dom": "^7.18.0"
   }
 }

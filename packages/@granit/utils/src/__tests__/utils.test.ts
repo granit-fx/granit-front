@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   calculatePercentage,
   cn,
+  formatCurrency,
   formatDate,
   formatDateTime,
   formatNumber,
@@ -132,5 +133,22 @@ describe('calculatePercentage', () => {
 
   it('decimals=0 behaves like Math.round', () => {
     expect(calculatePercentage(2, 3, 0)).toBe(67);
+  });
+});
+
+describe('formatCurrency', () => {
+  it('should format minor units as a locale-aware currency string', () => {
+    expect(formatCurrency(12100, 'EUR', 'en')).toBe('€121.00');
+  });
+
+  it('should respect the requested locale for separators', () => {
+    // French formatting uses a comma decimal separator and a trailing symbol.
+    const formatted = formatCurrency(123456, 'EUR', 'fr-FR');
+    expect(formatted).toContain('234,56');
+    expect(formatted).toContain('€');
+  });
+
+  it('should fall back to the runtime default locale when none is given', () => {
+    expect(formatCurrency(5000, 'USD')).toContain('50');
   });
 });

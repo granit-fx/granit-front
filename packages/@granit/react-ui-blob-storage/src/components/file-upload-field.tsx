@@ -5,6 +5,8 @@ import { cn } from '@granit/utils';
 import { File as FileIcon, Loader2, Paperclip, X } from 'lucide-react';
 import { useCallback, useRef, useState, type ChangeEvent, type ReactNode } from 'react';
 
+import { logger } from '../logger';
+
 export interface FileUploadFieldProps {
   /** Current blob id (or `null` for empty). Stored verbatim as the field value. */
   readonly value: string | null;
@@ -89,8 +91,10 @@ export function FileUploadField({
       try {
         const result = await upload({ file, containerName });
         onChange(result.blobId);
-      } catch {
-        // useBlobUpload surfaces the error through state.error.
+      } catch (err) {
+        // useBlobUpload surfaces the error to the user through state.error;
+        // this records the developer-facing detail without re-toasting.
+        logger.debug('File upload failed', { fileName: file.name, err });
       }
     },
     [upload, containerName, onChange, maxSizeBytes, t]

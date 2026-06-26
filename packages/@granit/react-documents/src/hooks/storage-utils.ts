@@ -3,6 +3,8 @@
  * hooks. These are SSR-safe: all reads return null when localStorage is absent.
  */
 
+import { logger } from '../logger';
+
 export function readJsonFromStorage<T>(key: string): T | null {
   if (globalThis.localStorage === undefined) return null;
   try {
@@ -19,7 +21,9 @@ export function writeJsonToStorage<T>(key: string, value: T): void {
   if (globalThis.localStorage === undefined) return;
   try {
     globalThis.localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // quota exceeded or storage disabled — silently ignore
+  } catch (err) {
+    // Quota exceeded or storage disabled — the preference is simply not
+    // persisted; the app keeps working with the in-memory value.
+    logger.warn('Failed to persist value to localStorage', { key, err });
   }
 }
