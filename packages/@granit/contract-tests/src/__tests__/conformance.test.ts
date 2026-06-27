@@ -352,3 +352,105 @@ describe('conformance oracle — discriminated unions', () => {
     );
   });
 });
+
+describe('conformance oracle — interface heritage (`extends`)', () => {
+  // Spec inlines every property, domain fields first then the shared audit
+  // quartet last — the shape produced when a .NET DTO appends audit columns.
+  const auditSpec: OpenApiDocument = {
+    components: {
+      schemas: {
+        Entity: {
+          type: 'object',
+          required: ['id', 'createdAt', 'createdBy', 'modifiedAt', 'modifiedBy'],
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            createdAt: { type: 'string', format: 'date-time' },
+            createdBy: { type: 'string' },
+            modifiedAt: { type: ['null', 'string'], format: 'date-time' },
+            modifiedBy: { type: ['null', 'string'] },
+          },
+        },
+      },
+    },
+  };
+  const checkEntity = (source: string) =>
+    checkSchemaConformance({
+      spec: auditSpec,
+      schemaName: 'Entity',
+      sourceText: source,
+      fileName: file,
+    });
+
+  it('flattens an inherited base so its fields satisfy the inlined spec', () => {
+    const src = `
+      type ISODateString = string & { __brand: 'iso' };
+      interface AuditFields {
+        readonly createdAt: ISODateString;
+        readonly createdBy: string;
+        readonly modifiedAt: ISODateString | null;
+        readonly modifiedBy: string | null;
+      }
+      export interface Entity extends AuditFields {
+        readonly id: string;
+      }`;
+    expect(checkEntity(src)).toEqual([]);
+  });
+
+  it('orders own members before inherited ones (trailing mixin convention)', () => {
+    // Own `id` first, inherited audit fields appended last — matches the spec
+    // order; a base-first flattening would trip the field-order rule.
+    const src = `
+      type ISODateString = string & { __brand: 'iso' };
+      interface AuditFields {
+        readonly createdAt: ISODateString;
+        readonly createdBy: string;
+        readonly modifiedAt: ISODateString | null;
+        readonly modifiedBy: string | null;
+      }
+      export interface Entity extends AuditFields {
+        readonly id: string;
+      }`;
+    expect(checkEntity(src)).not.toContainEqual(expect.objectContaining({ rule: 'field-order' }));
+  });
+
+  it('still flags a required field that neither the interface nor its base declares', () => {
+    const src = `
+      type ISODateString = string & { __brand: 'iso' };
+      interface AuditFields {
+        readonly createdAt: ISODateString;
+        readonly createdBy: string;
+        readonly modifiedAt: ISODateString | null;
+      }
+      export interface Entity extends AuditFields {
+        readonly id: string;
+      }`; // base drops modifiedBy
+    expect(checkEntity(src)).toContainEqual(
+      expect.objectContaining({ rule: 'missing-field', field: 'modifiedBy' })
+    );
+  });
+
+  it('skips an unflattening base (utility type) and checks own members only', () => {
+    // `extends Partial<X>` is not a named object decl the oracle can flatten;
+    // it must fall back to own-members-only rather than report type-missing.
+    const ownOnlySpec: OpenApiDocument = {
+      components: {
+        schemas: {
+          Entity: { type: 'object', required: ['id'], properties: { id: { type: 'string' } } },
+        },
+      },
+    };
+    const src = `
+      interface Labels { readonly name?: string; }
+      export interface Entity extends Partial<Labels> {
+        readonly id: string;
+      }`;
+    expect(
+      checkSchemaConformance({
+        spec: ownOnlySpec,
+        schemaName: 'Entity',
+        sourceText: src,
+        fileName: file,
+      })
+    ).toEqual([]);
+  });
+});

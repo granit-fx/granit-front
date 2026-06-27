@@ -236,6 +236,13 @@ interface SymbolDecl {
   readonly members?: readonly ts.TypeElement[];
   /** Present for an alias that forwards to another named type. */
   readonly aliasTarget?: ts.TypeNode;
+  /**
+   * `extends` base types of an interface (possibly generic, possibly
+   * cross-package). Flattened into the member list so a DTO that inherits
+   * shared fields (e.g. `extends AuditFields`) is checked against the full
+   * inlined spec schema rather than its own members alone.
+   */
+  readonly heritage?: readonly ts.ExpressionWithTypeArguments[];
 }
 type DeclMap = ReadonlyMap<string, SymbolDecl>;
 
@@ -269,9 +276,13 @@ function parseInfo(fileName: string, sourceText: string): FileInfo {
           : { typeParams, aliasTarget: node.type }
       );
     } else if (ts.isInterfaceDeclaration(node)) {
+      const heritage = node.heritageClauses
+        ?.filter((clause) => clause.token === ts.SyntaxKind.ExtendsKeyword)
+        .flatMap((clause) => clause.types);
       decls.set(node.name.text, {
         typeParams: node.typeParameters?.map((p) => p.name.text) ?? [],
         members: node.members,
+        heritage: heritage && heritage.length > 0 ? heritage : undefined,
       });
     } else if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
       imports.push(node.moduleSpecifier.text);
@@ -399,7 +410,37 @@ function resolveDeclMembers(
     const arg = typeArgs[i];
     if (arg) bound.set(param, arg);
   });
-  if (decl.members) return { members: decl.members, aliases: bound };
+  if (decl.members) {
+    if (!decl.heritage) return { members: decl.members, aliases: bound };
+    // Flatten `extends` bases so an inherited field (e.g. `extends AuditFields`)
+    // is checked against the inlined spec schema. Own members come FIRST, then
+    // each base in declaration order: shared mixins in this codebase (audit /
+    // concurrency stamp) are trailing fields on the .NET DTO, so the spec lists
+    // them last — own-first preserves that relative order for the field-order
+    // rule. A base the oracle cannot flatten (e.g. `extends Partial<X>`, a
+    // utility type, or an unresolved external) is skipped, preserving the
+    // pre-heritage behaviour of checking own members only rather than failing.
+    const ownNames = new Set(
+      decl.members.map((m) => m.name?.getText()).filter((n): n is string => n !== undefined)
+    );
+    const merged: ts.TypeElement[] = [...decl.members];
+    let mergedAliases: AliasMap = bound;
+    for (const base of decl.heritage) {
+      const baseResolved = resolveDeclMembers(
+        base.expression.getText(),
+        base.typeArguments ?? [],
+        decls,
+        bound,
+        depth + 1
+      );
+      if (!baseResolved) continue;
+      // Own members override inherited ones (TS semantics); skip a base field
+      // the interface redeclares so the own type/order wins.
+      merged.push(...baseResolved.members.filter((m) => !ownNames.has(m.name?.getText() ?? '')));
+      mergedAliases = new Map([...baseResolved.aliases, ...mergedAliases]);
+    }
+    return { members: merged, aliases: mergedAliases };
+  }
   if (decl.aliasTarget && ts.isTypeReferenceNode(decl.aliasTarget)) {
     return resolveDeclMembers(
       decl.aliasTarget.typeName.getText(),
