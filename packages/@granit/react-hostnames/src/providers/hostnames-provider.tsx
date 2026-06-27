@@ -1,51 +1,28 @@
-import { useOptionalGranitClient } from '@granit/react-api-client';
-import { createContext, useContext, useMemo } from 'react';
+import { createConfigProvider } from '@granit/react-api-client';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import type { AxiosInstance } from '@granit/api-client';
-import type { ReactNode } from 'react';
+import type {
+  GranitProviderConfig,
+  GranitProviderProps,
+  ResolvedGranitProviderConfig,
+} from '@granit/react-api-client';
 
 /** Configuration for the hostnames provider. */
-export interface HostnamesConfig {
-  readonly client?: AxiosInstance;
-  /** Base path for hostnames endpoints (default: `/api/hostnames`). */
-  readonly basePath?: string;
-}
+export type HostnamesConfig = GranitProviderConfig;
 
-/** Resolved configuration where all optional fields have defaults applied. */
-export interface ResolvedHostnamesConfig extends HostnamesConfig {
-  readonly client: AxiosInstance;
-  readonly basePath: string;
-}
+/** Resolved configuration where `client` and `basePath` are guaranteed present. */
+export type ResolvedHostnamesConfig = ResolvedGranitProviderConfig<HostnamesConfig>;
 
-export interface HostnamesProviderProps {
-  readonly config: HostnamesConfig;
-  readonly children: ReactNode;
-}
+export type HostnamesProviderProps = GranitProviderProps<HostnamesConfig>;
 
-const HostnamesConfigContext = createContext<ResolvedHostnamesConfig | null>(null);
+const { Provider, useConfig } = createConfigProvider<HostnamesConfig>({
+  name: 'Hostnames',
+  defaultBasePath: DEFAULT_BASE_PATH,
+});
 
 /** Provides hostnames configuration to child components and hooks. */
-export function HostnamesProvider({ config, children }: Readonly<HostnamesProviderProps>) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo<ResolvedHostnamesConfig>(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'HostnamesProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return { ...config, client, basePath: config.basePath ?? DEFAULT_BASE_PATH };
-  }, [config, contextClient]);
-  return <HostnamesConfigContext value={value}>{children}</HostnamesConfigContext>;
-}
+export const HostnamesProvider = Provider;
 
 /** Returns the hostnames configuration from the nearest `HostnamesProvider`. */
-export function useHostnamesConfig(): ResolvedHostnamesConfig {
-  const ctx = useContext(HostnamesConfigContext);
-  if (!ctx) {
-    throw new Error('useHostnamesConfig must be used within a <HostnamesProvider>');
-  }
-  return ctx;
-}
+export const useHostnamesConfig = useConfig;

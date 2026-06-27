@@ -6013,13 +6013,13 @@
       "exports": [
         {
           "name": "HostnamesProvider",
-          "kind": "function",
-          "signature": "function HostnamesProvider("
+          "kind": "const",
+          "signature": "const HostnamesProvider"
         },
         {
           "name": "useHostnamesConfig",
-          "kind": "function",
-          "signature": "function useHostnamesConfig(): ResolvedHostnamesConfig"
+          "kind": "const",
+          "signature": "const useHostnamesConfig"
         },
         {
           "name": "useHostnames",
