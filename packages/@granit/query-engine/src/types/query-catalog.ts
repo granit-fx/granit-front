@@ -17,6 +17,12 @@ export interface QueryCatalogEntryResponse {
    * `/meta` to fetch its {@link QueryMetadata}.
    */
   readonly basePath: string | null;
-  /** Human-readable label (falls back to {@link QueryCatalogEntryResponse.name} backend-side). */
-  readonly label: string;
+  /**
+   * Localization KEY for the dropdown label (NOT a resolved string) — the target
+   * entity's display key (e.g. `Entity:Party`, already translated) when the query
+   * targets a registered entity, else `Query:{name}`. Resolve it client-side via
+   * the merged i18n bundle (like `Entity:*` / `Permission:*`); fall back to a
+   * humanised last segment of {@link QueryCatalogEntryResponse.name} when unresolved.
+   */
+  readonly labelKey: string;
 }

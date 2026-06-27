@@ -87,7 +87,7 @@
         }
       },
       "QueryCatalogEntryResponse": {
-        "required": ["name", "basePath", "label"],
+        "required": ["name", "basePath", "labelKey"],
         "type": "object",
         "properties": {
           "name": {
@@ -96,7 +96,7 @@
           "basePath": {
             "type": ["null", "string"]
           },
-          "label": {
+          "labelKey": {
             "type": "string"
           }
         }

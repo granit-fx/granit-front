@@ -20,8 +20,10 @@ import {
   SelectValue,
   type ComboboxOption,
 } from '@granit/react-ui';
+import { useTranslation } from 'react-i18next';
 
 import type { QueryCatalogEntryResponse } from '@granit/query-engine';
+import type { TFunction } from 'i18next';
 
 /** CLR type names eligible for numeric aggregation (Sum/Avg/Min/Max). */
 const NUMERIC_CLR_TYPES = new Set([
@@ -107,7 +109,31 @@ const toComboboxOptions = (options: readonly FieldOption[]): ComboboxOption[] =>
 /**
  * Query name picker: a catalogue-backed combobox that also accepts an arbitrary
  * typed value, so it works with or without a `<QueryCatalogProvider>`.
+ *
+ * Entry semantics (per the `/catalog` contract): the option VALUE is the stable
+ * `name` (what we persist), the option LABEL is `t(labelKey)` resolved against the
+ * merged i18n bundle — falling back to a humanised last segment of `name` when the
+ * key is not in the bundle (`Query:*` keys are opt-in backend-side). Entries with
+ * `basePath === null` are not routed (no endpoint to load data from), so they are
+ * hidden — flip `HIDE_UNROUTED_QUERIES` to surface them disabled instead.
  */
+const HIDE_UNROUTED_QUERIES = true;
+
+/** Humanises the last dot-segment of a query name, e.g. `…CategoriesQuery` → `Categories Query`. */
+export function humanizeQueryName(name: string): string {
+  const last = name.split('.').pop() ?? name;
+  return last
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+    .trim();
+}
+
+/** Resolves a catalogue entry's display label: `t(labelKey)`, else a humanised name. */
+export function resolveQueryLabel(t: TFunction, entry: QueryCatalogEntryResponse): string {
+  const translated = t(entry.labelKey);
+  return translated === entry.labelKey ? humanizeQueryName(entry.name) : translated;
+}
+
 export function QueryNameCombobox({
   slot,
   value,
@@ -119,12 +145,17 @@ export function QueryNameCombobox({
   readonly onChange: (value: string) => void;
   readonly entries: readonly QueryCatalogEntryResponse[] | undefined;
 }) {
+  const { t } = useTranslation();
+  const options: ComboboxOption[] = (entries ?? [])
+    .filter((entry) => !HIDE_UNROUTED_QUERIES || entry.basePath !== null)
+    .map((entry) => ({ value: entry.name, label: resolveQueryLabel(t, entry) }));
+
   return (
     <Combobox
       slot={slot}
       value={value}
       onValueChange={onChange}
-      options={(entries ?? []).map((entry) => ({ value: entry.name, label: entry.label }))}
+      options={options}
       allowCustomValue
       placeholder="Select a query…"
       searchPlaceholder="Search or type a query name…"

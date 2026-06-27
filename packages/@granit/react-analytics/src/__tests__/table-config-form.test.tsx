@@ -39,7 +39,9 @@ function mockCatalogClient() {
   vi.spyOn(client, 'get').mockImplementation((url: string) => {
     if (url.endsWith('/catalog')) {
       return Promise.resolve({
-        data: [{ name: 'Granit.Test.Query', basePath: '/api/v1/patients', label: 'Patients' }],
+        data: [
+          { name: 'Granit.Test.Query', basePath: '/api/v1/patients', labelKey: 'Entity:Patient' },
+        ],
       });
     }
     if (url.endsWith('/meta')) {

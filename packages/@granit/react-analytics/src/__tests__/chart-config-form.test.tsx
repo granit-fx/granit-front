@@ -20,7 +20,7 @@ void testI18n.use(initReactI18next).init({
   fallbackLng: 'en',
   nsSeparator: false,
   keySeparator: false,
-  resources: { en: { translation: {} } },
+  resources: { en: { translation: { 'Entity:Patient': 'Patients' } } },
   interpolation: { escapeValue: false },
 });
 
@@ -42,7 +42,18 @@ function mockCatalogClient() {
   vi.spyOn(client, 'get').mockImplementation((url: string) => {
     if (url.endsWith('/catalog')) {
       return Promise.resolve({
-        data: [{ name: 'Granit.Test.Query', basePath: '/api/v1/patients', label: 'Patients' }],
+        data: [
+          // labelKey resolved via the i18n bundle.
+          { name: 'Granit.Test.Query', basePath: '/api/v1/patients', labelKey: 'Entity:Patient' },
+          // labelKey absent from the bundle → humanised last segment of the name.
+          {
+            name: 'Granit.Sales.RevenueByRegionQuery',
+            basePath: '/api/v1/revenue',
+            labelKey: 'Query:Granit.Sales.RevenueByRegionQuery',
+          },
+          // Unrouted (basePath null) → hidden from the dropdown.
+          { name: 'Granit.Test.UnroutedQuery', basePath: null, labelKey: 'Query:x' },
+        ],
       });
     }
     if (url.endsWith('/meta')) {
@@ -115,6 +126,23 @@ describe('ChartConfigForm', () => {
     await user.click(container.querySelector('[data-slot="chart-query-name"]')!);
     await user.click(await screen.findByRole('option', { name: 'Patients' }));
     expect(onChange.mock.calls.at(-1)?.[0]?.queryName).toBe('Granit.Test.Query');
+  });
+
+  it('resolves labelKey via i18n / humanises the fallback and hides unrouted queries', async () => {
+    const user = userEvent.setup();
+    const emptyChart: ChartWidgetDefinition = { ...baseChart, queryName: '' };
+    const { container } = wrap(
+      <ChartConfigForm widget={emptyChart} onChange={vi.fn()} />,
+      mockCatalogClient()
+    );
+
+    await user.click(container.querySelector('[data-slot="chart-query-name"]')!);
+    // labelKey present in the bundle → translated.
+    expect(await screen.findByRole('option', { name: 'Patients' })).toBeInTheDocument();
+    // labelKey absent → humanised last segment of the name.
+    expect(screen.getByRole('option', { name: 'Revenue By Region Query' })).toBeInTheDocument();
+    // basePath === null → hidden (its humanised label would be "Unrouted Query").
+    expect(screen.queryByRole('option', { name: 'Unrouted Query' })).toBeNull();
   });
 
   it('sources Group By from group-by fields and Field from numeric columns only', async () => {
