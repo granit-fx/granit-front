@@ -36,7 +36,7 @@ describe('CustomerBalanceProvider', () => {
   it('should throw when used outside provider', () => {
     expect(() => {
       renderHook(() => useCustomerBalanceConfig());
-    }).toThrow('useCustomerBalanceConfig must be used within a CustomerBalanceProvider');
+    }).toThrow('useCustomerBalanceConfig must be used within a <CustomerBalanceProvider>');
   });
 });
 

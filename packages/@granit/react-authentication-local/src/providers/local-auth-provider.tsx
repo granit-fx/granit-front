@@ -1,57 +1,27 @@
-import { useOptionalGranitClient } from '@granit/react-api-client';
-import { createContext, useContext, useMemo } from 'react';
+import { createConfigProvider } from '@granit/react-api-client';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import type { AxiosInstance } from '@granit/api-client';
-import type { ReactNode } from 'react';
+import type {
+  GranitProviderConfig,
+  GranitProviderProps,
+  ResolvedGranitProviderConfig,
+} from '@granit/react-api-client';
 
-export interface LocalAuthConfig {
-  /**
-   * Axios instance for API calls.
-   * Must have `withCredentials: true` — the login endpoint sets an
-   * ASP.NET Core Identity session cookie (not a token).
-   */
-  readonly client?: AxiosInstance;
-  readonly basePath?: string;
-}
+export type LocalAuthConfig = GranitProviderConfig;
 
 /**
  * LocalAuthConfig after the provider has resolved `client` from
  * `config.client` or the nearest `<GranitClientProvider>`.
  */
-export interface ResolvedLocalAuthConfig extends LocalAuthConfig {
-  readonly client: AxiosInstance;
-}
+export type ResolvedLocalAuthConfig = ResolvedGranitProviderConfig<LocalAuthConfig>;
 
-export interface LocalAuthProviderProps {
-  readonly config: LocalAuthConfig;
-  readonly children: ReactNode;
-}
+export type LocalAuthProviderProps = GranitProviderProps<LocalAuthConfig>;
 
-const LocalAuthContext = createContext<ResolvedLocalAuthConfig | null>(null);
+const { Provider, useConfig } = createConfigProvider<LocalAuthConfig>({
+  name: 'LocalAuth',
+  defaultBasePath: DEFAULT_BASE_PATH,
+});
 
-export function useLocalAuthConfig(): ResolvedLocalAuthConfig {
-  const config = useContext(LocalAuthContext);
-  if (!config) throw new Error('useLocalAuthConfig must be used within a LocalAuthProvider');
-  return config;
-}
-
-export function LocalAuthProvider({ config, children }: LocalAuthProviderProps) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'LocalAuthProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return {
-      ...config,
-      basePath: config.basePath ?? DEFAULT_BASE_PATH,
-      client,
-    };
-  }, [config, contextClient]);
-
-  return <LocalAuthContext value={value}>{children}</LocalAuthContext>;
-}
+export const LocalAuthProvider = Provider;
+export const useLocalAuthConfig = useConfig;

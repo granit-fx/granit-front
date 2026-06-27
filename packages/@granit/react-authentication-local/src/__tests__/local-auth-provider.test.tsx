@@ -40,7 +40,7 @@ describe('LocalAuthProvider', () => {
 
   it('should throw when used outside provider', () => {
     expect(() => renderHook(() => useLocalAuthConfig())).toThrowError(
-      'useLocalAuthConfig must be used within a LocalAuthProvider'
+      'useLocalAuthConfig must be used within a <LocalAuthProvider>'
     );
   });
 });

@@ -1,14 +1,15 @@
-import { useOptionalGranitClient } from '@granit/react-api-client';
-import { createContext, useContext, useMemo } from 'react';
+import { createConfigProvider } from '@granit/react-api-client';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import type { AxiosInstance } from '@granit/api-client';
-import type { ReactNode } from 'react';
+import type {
+  GranitProviderConfig,
+  GranitProviderProps,
+  ResolvedGranitProviderConfig,
+} from '@granit/react-api-client';
 
 /** Configuration for the SEPA Direct Debit provider. */
-export interface SepaDirectDebitConfig {
-  readonly client?: AxiosInstance;
+export interface SepaDirectDebitConfig extends GranitProviderConfig {
   /** Base path for SEPA Direct Debit endpoints (default: `/api/v1/sepa-direct-debit`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
@@ -20,48 +21,20 @@ export interface SepaDirectDebitConfig {
  * `basePath`. Both are guaranteed present, so hooks read them without a
  * non-null assertion.
  */
-export interface ResolvedSepaDirectDebitConfig extends SepaDirectDebitConfig {
-  readonly client: AxiosInstance;
-  readonly basePath: string;
-}
+export type ResolvedSepaDirectDebitConfig = ResolvedGranitProviderConfig<SepaDirectDebitConfig>;
 
-export interface SepaDirectDebitProviderProps {
-  readonly config: SepaDirectDebitConfig;
-  readonly children: ReactNode;
-}
+export type SepaDirectDebitProviderProps = GranitProviderProps<SepaDirectDebitConfig>;
 
-const SepaDirectDebitConfigContext = createContext<ResolvedSepaDirectDebitConfig | null>(null);
+const { Provider, useConfig } = createConfigProvider<SepaDirectDebitConfig>({
+  name: 'SepaDirectDebit',
+  defaultBasePath: DEFAULT_BASE_PATH,
+});
 
 /** Provides SEPA Direct Debit configuration to child components and hooks. */
-export function SepaDirectDebitProvider({
-  config,
-  children,
-}: Readonly<SepaDirectDebitProviderProps>) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo<ResolvedSepaDirectDebitConfig>(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'SepaDirectDebitProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return {
-      ...config,
-      basePath: config.basePath ?? DEFAULT_BASE_PATH,
-      client,
-    };
-  }, [config, contextClient]);
-  return <SepaDirectDebitConfigContext value={value}>{children}</SepaDirectDebitConfigContext>;
-}
+export const SepaDirectDebitProvider = Provider;
 
 /** Returns the SEPA Direct Debit configuration from the nearest `SepaDirectDebitProvider`. */
-export function useSepaDirectDebitConfig(): ResolvedSepaDirectDebitConfig {
-  const ctx = useContext(SepaDirectDebitConfigContext);
-  if (!ctx) {
-    throw new Error('useSepaDirectDebitConfig must be used within a SepaDirectDebitProvider');
-  }
-  return ctx;
-}
+export const useSepaDirectDebitConfig = useConfig;
 
 /** Builds a consistent React Query key for SEPA Direct Debit operations. */
 export function buildSepaDirectDebitQueryKey(

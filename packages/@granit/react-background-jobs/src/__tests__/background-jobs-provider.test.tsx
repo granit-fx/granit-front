@@ -40,6 +40,6 @@ describe('BackgroundJobsProvider', () => {
   it('should throw when used outside provider', () => {
     expect(() => {
       renderHook(() => useBackgroundJobsConfig());
-    }).toThrow('useBackgroundJobsConfig must be used within a BackgroundJobsProvider');
+    }).toThrow('useBackgroundJobsConfig must be used within a <BackgroundJobsProvider>');
   });
 });

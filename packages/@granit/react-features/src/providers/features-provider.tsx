@@ -1,14 +1,15 @@
-import { useOptionalGranitClient } from '@granit/react-api-client';
-import { createContext, useContext, useMemo } from 'react';
+import { createConfigProvider } from '@granit/react-api-client';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import type { AxiosInstance } from '@granit/api-client';
-import type { ReactNode } from 'react';
+import type {
+  GranitProviderConfig,
+  GranitProviderProps,
+  ResolvedGranitProviderConfig,
+} from '@granit/react-api-client';
 
 /** Configuration for the features provider. */
-export interface FeaturesConfig {
-  readonly client?: AxiosInstance;
+export interface FeaturesConfig extends GranitProviderConfig {
   /** Base path for features endpoints (default: `/api/v1/features`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
@@ -18,44 +19,20 @@ export interface FeaturesConfig {
  * FeaturesConfig after the provider has resolved `client` from
  * `config.client` or the nearest `<GranitClientProvider>`.
  */
-export interface ResolvedFeaturesConfig extends FeaturesConfig {
-  readonly client: AxiosInstance;
-}
+export type ResolvedFeaturesConfig = ResolvedGranitProviderConfig<FeaturesConfig>;
 
-export interface FeaturesProviderProps {
-  readonly config: FeaturesConfig;
-  readonly children: ReactNode;
-}
+export type FeaturesProviderProps = GranitProviderProps<FeaturesConfig>;
 
-const FeaturesConfigContext = createContext<ResolvedFeaturesConfig | null>(null);
+const { Provider, useConfig } = createConfigProvider<FeaturesConfig>({
+  name: 'Features',
+  defaultBasePath: DEFAULT_BASE_PATH,
+});
 
 /** Provides features configuration to child components and hooks. */
-export function FeaturesProvider({ config, children }: Readonly<FeaturesProviderProps>) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo<ResolvedFeaturesConfig>(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'FeaturesProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return {
-      ...config,
-      basePath: config.basePath ?? DEFAULT_BASE_PATH,
-      client,
-    };
-  }, [config, contextClient]);
-  return <FeaturesConfigContext value={value}>{children}</FeaturesConfigContext>;
-}
+export const FeaturesProvider = Provider;
 
 /** Returns the features configuration from the nearest `FeaturesProvider`. */
-export function useFeaturesConfig(): ResolvedFeaturesConfig {
-  const ctx = useContext(FeaturesConfigContext);
-  if (!ctx) {
-    throw new Error('useFeaturesConfig must be used within a FeaturesProvider');
-  }
-  return ctx;
-}
+export const useFeaturesConfig = useConfig;
 
 /** Builds a consistent React Query key for features operations. */
 export function buildFeaturesQueryKey(

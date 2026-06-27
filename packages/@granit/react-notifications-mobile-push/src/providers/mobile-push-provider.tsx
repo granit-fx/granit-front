@@ -1,9 +1,9 @@
-import { useOptionalGranitClient } from '@granit/react-api-client';
-import { createContext, useContext, useMemo } from 'react';
+import { createConfigProvider } from '@granit/react-api-client';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
 import type { AxiosInstance } from '@granit/api-client';
+import type { GranitProviderConfig } from '@granit/react-api-client';
 import type { ReactNode } from 'react';
 
 /** Resolved configuration exposed by {@link useMobilePushConfig}. */
@@ -27,34 +27,17 @@ export interface MobilePushProviderProps {
   readonly children: ReactNode;
 }
 
-const MobilePushConfigContext = createContext<ResolvedMobilePushProviderConfig | null>(null);
+const { Provider, useConfig } = createConfigProvider<GranitProviderConfig>({
+  name: 'MobilePush',
+  defaultBasePath: DEFAULT_BASE_PATH,
+});
 
 /** Provides mobile push configuration to child components and hooks. */
-export function MobilePushProvider({ config, children }: Readonly<MobilePushProviderProps>) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'MobilePushProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return {
-      ...config,
-      basePath: config.basePath ?? DEFAULT_BASE_PATH,
-      client,
-    };
-  }, [config, contextClient]);
-  return <MobilePushConfigContext value={value}>{children}</MobilePushConfigContext>;
-}
+export const MobilePushProvider = Provider as (
+  props: Readonly<MobilePushProviderProps>
+) => ReactNode;
 
 /** Returns the mobile push configuration from the nearest {@link MobilePushProvider}. */
-export function useMobilePushConfig(): ResolvedMobilePushProviderConfig {
-  const ctx = useContext(MobilePushConfigContext);
-  if (!ctx) {
-    throw new Error('useMobilePushConfig must be used within a MobilePushProvider');
-  }
-  return ctx;
-}
+export const useMobilePushConfig = useConfig as () => ResolvedMobilePushProviderConfig;
 
 export type { MobilePlatform } from '@granit/notifications-mobile-push';

@@ -41,6 +41,6 @@ describe('SchedulingProvider', () => {
   it('should throw when used outside provider', () => {
     expect(() => {
       renderHook(() => useSchedulingConfig());
-    }).toThrow('useSchedulingConfig must be used within a SchedulingProvider');
+    }).toThrow('useSchedulingConfig must be used within a <SchedulingProvider>');
   });
 });

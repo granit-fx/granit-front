@@ -36,7 +36,7 @@ describe('FeaturesProvider', () => {
   it('should throw when used outside provider', () => {
     expect(() => {
       renderHook(() => useFeaturesConfig());
-    }).toThrow('useFeaturesConfig must be used within a FeaturesProvider');
+    }).toThrow('useFeaturesConfig must be used within a <FeaturesProvider>');
   });
 });
 

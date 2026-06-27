@@ -1,52 +1,32 @@
-import { useOptionalGranitClient } from '@granit/react-api-client';
-import { createContext, useContext, useMemo } from 'react';
+import { createConfigProvider } from '@granit/react-api-client';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import type { AxiosInstance } from '@granit/api-client';
-import type { ReactNode } from 'react';
+import type {
+  GranitProviderConfig,
+  GranitProviderProps,
+  ResolvedGranitProviderConfig,
+} from '@granit/react-api-client';
 
 /** Configuration for the workflow provider. */
-export interface WorkflowConfig {
-  readonly client?: AxiosInstance;
+export interface WorkflowConfig extends GranitProviderConfig {
   /** Base path for workflow endpoints (default: `/api/v1/workflow`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
 }
 
 /** Resolved configuration where all optional fields have defaults applied. */
-export interface ResolvedWorkflowConfig extends WorkflowConfig {
-  readonly client: AxiosInstance;
-  readonly basePath: string;
-}
+export type ResolvedWorkflowConfig = ResolvedGranitProviderConfig<WorkflowConfig>;
 
-export interface WorkflowProviderProps {
-  readonly config: WorkflowConfig;
-  readonly children: ReactNode;
-}
+export type WorkflowProviderProps = GranitProviderProps<WorkflowConfig>;
 
-const WorkflowConfigContext = createContext<ResolvedWorkflowConfig | null>(null);
+const { Provider, useConfig } = createConfigProvider<WorkflowConfig>({
+  name: 'Workflow',
+  defaultBasePath: DEFAULT_BASE_PATH,
+});
 
 /** Provides workflow configuration to child components and hooks. */
-export function WorkflowProvider({ config, children }: Readonly<WorkflowProviderProps>) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo<ResolvedWorkflowConfig>(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'WorkflowProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return { ...config, client, basePath: config.basePath ?? DEFAULT_BASE_PATH };
-  }, [config, contextClient]);
-  return <WorkflowConfigContext value={value}>{children}</WorkflowConfigContext>;
-}
+export const WorkflowProvider = Provider;
 
 /** Returns the workflow configuration from the nearest `WorkflowProvider`. */
-export function useWorkflowConfig(): ResolvedWorkflowConfig {
-  const ctx = useContext(WorkflowConfigContext);
-  if (!ctx) {
-    throw new Error('useWorkflowConfig must be used within a <WorkflowProvider>');
-  }
-  return ctx;
-}
+export const useWorkflowConfig = useConfig;

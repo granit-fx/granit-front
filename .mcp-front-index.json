@@ -3863,25 +3863,23 @@
       "exports": [
         {
           "name": "LocalAuthProvider",
-          "kind": "function",
-          "signature": "function LocalAuthProvider("
+          "kind": "const",
+          "signature": "const LocalAuthProvider"
         },
         {
           "name": "useLocalAuthConfig",
-          "kind": "function",
-          "signature": "function useLocalAuthConfig(): ResolvedLocalAuthConfig"
+          "kind": "const",
+          "signature": "const useLocalAuthConfig"
         },
         {
           "name": "LocalAuthConfig",
-          "kind": "interface",
-          "signature": "interface LocalAuthConfig",
-          "members": []
+          "kind": "type",
+          "signature": "type LocalAuthConfig = GranitProviderConfig"
         },
         {
           "name": "LocalAuthProviderProps",
-          "kind": "interface",
-          "signature": "interface LocalAuthProviderProps",
-          "members": []
+          "kind": "type",
+          "signature": "type LocalAuthProviderProps = GranitProviderProps<LocalAuthConfig>"
         },
         {
           "name": "useLogin",
@@ -4068,13 +4066,13 @@
       "exports": [
         {
           "name": "BlobStorageProvider",
-          "kind": "function",
-          "signature": "function BlobStorageProvider("
+          "kind": "const",
+          "signature": "const BlobStorageProvider"
         },
         {
           "name": "useBlobStorageConfig",
-          "kind": "function",
-          "signature": "function useBlobStorageConfig(): ResolvedBlobStorageConfig"
+          "kind": "const",
+          "signature": "const useBlobStorageConfig"
         },
         {
           "name": "BlobImage",
@@ -4725,13 +4723,13 @@
       "exports": [
         {
           "name": "DashboardsProvider",
-          "kind": "function",
-          "signature": "function DashboardsProvider("
+          "kind": "const",
+          "signature": "const DashboardsProvider"
         },
         {
           "name": "useDashboardsConfig",
-          "kind": "function",
-          "signature": "function useDashboardsConfig(): ResolvedDashboardsConfig"
+          "kind": "const",
+          "signature": "const useDashboardsConfig"
         },
         {
           "name": "UseDashboardRenderOptions",
@@ -5991,14 +5989,13 @@
         {
           "name": "FeaturesConfig",
           "kind": "interface",
-          "signature": "interface FeaturesConfig",
+          "signature": "interface FeaturesConfig extends GranitProviderConfig",
           "members": []
         },
         {
           "name": "FeaturesProviderProps",
-          "kind": "interface",
-          "signature": "interface FeaturesProviderProps",
-          "members": []
+          "kind": "type",
+          "signature": "type FeaturesProviderProps = GranitProviderProps<FeaturesConfig>"
         },
         {
           "name": "SetFeatureOverrideVariables",
@@ -6635,13 +6632,13 @@
         },
         {
           "name": "MobilePushProvider",
-          "kind": "function",
-          "signature": "function MobilePushProvider("
+          "kind": "const",
+          "signature": "const MobilePushProvider"
         },
         {
           "name": "useMobilePushConfig",
-          "kind": "function",
-          "signature": "function useMobilePushConfig(): ResolvedMobilePushProviderConfig"
+          "kind": "const",
+          "signature": "const useMobilePushConfig"
         }
       ]
     },
@@ -6750,14 +6747,13 @@
         {
           "name": "PartiesConfig",
           "kind": "interface",
-          "signature": "interface PartiesConfig",
+          "signature": "interface PartiesConfig extends GranitProviderConfig",
           "members": []
         },
         {
           "name": "PartiesProviderProps",
-          "kind": "interface",
-          "signature": "interface PartiesProviderProps",
-          "members": []
+          "kind": "type",
+          "signature": "type PartiesProviderProps = GranitProviderProps<PartiesConfig>"
         },
         {
           "name": "PartiesListProvider",
@@ -7237,25 +7233,24 @@
       "exports": [
         {
           "name": "SchedulingProvider",
-          "kind": "function",
-          "signature": "function SchedulingProvider("
+          "kind": "const",
+          "signature": "const SchedulingProvider"
         },
         {
           "name": "useSchedulingConfig",
-          "kind": "function",
-          "signature": "function useSchedulingConfig(): ResolvedSchedulingConfig"
+          "kind": "const",
+          "signature": "const useSchedulingConfig"
         },
         {
           "name": "SchedulingConfig",
           "kind": "interface",
-          "signature": "interface SchedulingConfig",
+          "signature": "interface SchedulingConfig extends GranitProviderConfig",
           "members": []
         },
         {
           "name": "SchedulingProviderProps",
-          "kind": "interface",
-          "signature": "interface SchedulingProviderProps",
-          "members": []
+          "kind": "type",
+          "signature": "type SchedulingProviderProps = GranitProviderProps<SchedulingConfig>"
         },
         {
           "name": "buildSchedulingQueryKey",
@@ -7409,8 +7404,8 @@
       "exports": [
         {
           "name": "TaxProvider",
-          "kind": "function",
-          "signature": "function TaxProvider("
+          "kind": "const",
+          "signature": "const TaxProvider"
         },
         {
           "name": "buildTaxQueryKey",
@@ -7419,20 +7414,19 @@
         },
         {
           "name": "useTaxConfig",
-          "kind": "function",
-          "signature": "function useTaxConfig(): ResolvedTaxConfig"
+          "kind": "const",
+          "signature": "const useTaxConfig"
         },
         {
           "name": "TaxConfig",
           "kind": "interface",
-          "signature": "interface TaxConfig",
+          "signature": "interface TaxConfig extends GranitProviderConfig",
           "members": []
         },
         {
           "name": "TaxProviderProps",
-          "kind": "interface",
-          "signature": "interface TaxProviderProps",
-          "members": []
+          "kind": "type",
+          "signature": "type TaxProviderProps = GranitProviderProps<TaxConfig>"
         }
       ]
     },
@@ -11299,13 +11293,13 @@
       "exports": [
         {
           "name": "WebhooksProvider",
-          "kind": "function",
-          "signature": "function WebhooksProvider("
+          "kind": "const",
+          "signature": "const WebhooksProvider"
         },
         {
           "name": "useWebhooksConfig",
-          "kind": "function",
-          "signature": "function useWebhooksConfig(): ResolvedWebhooksConfig"
+          "kind": "const",
+          "signature": "const useWebhooksConfig"
         },
         {
           "name": "useSubscription",

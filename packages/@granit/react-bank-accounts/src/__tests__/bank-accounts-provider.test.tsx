@@ -44,7 +44,7 @@ describe('BankAccountsProvider', () => {
   it('should throw when used outside provider', () => {
     expect(() => {
       renderHook(() => useBankAccountsConfig());
-    }).toThrow('useBankAccountsConfig must be used within a BankAccountsProvider');
+    }).toThrow('useBankAccountsConfig must be used within a <BankAccountsProvider>');
   });
 
   it('should throw when no client is available', () => {

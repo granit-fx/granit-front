@@ -32,7 +32,7 @@ describe('TaxProvider', () => {
   it('should throw when used outside provider', () => {
     expect(() => {
       renderHook(() => useTaxConfig());
-    }).toThrow('useTaxConfig must be used within a TaxProvider');
+    }).toThrow('useTaxConfig must be used within a <TaxProvider>');
   });
 });
 

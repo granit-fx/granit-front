@@ -43,7 +43,7 @@ describe('PartiesProvider', () => {
 
   it('throws when used outside provider', () => {
     expect(() => renderHook(() => usePartiesConfig())).toThrow(
-      'usePartiesConfig must be used within a PartiesProvider'
+      'usePartiesConfig must be used within a <PartiesProvider>'
     );
   });
 });
