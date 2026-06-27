@@ -1387,6 +1387,9 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
+      i18next:
+        specifier: ^26.0.0
+        version: 26.3.2(typescript@6.0.3)
       msw:
         specifier: ^2.14.6
         version: 2.14.6(@types/node@26.0.0)(typescript@6.0.3)
