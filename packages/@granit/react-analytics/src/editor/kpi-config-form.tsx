@@ -1,14 +1,28 @@
 import { Datasource, isMetricDatasource, isQueryAggregateDatasource } from '@granit/dashboards';
+import { Combobox } from '@granit/react-ui';
 import { useTranslation } from 'react-i18next';
+
+import { EnumSelect, QueryNameCombobox, useQueryFieldMetadata } from './query-field-controls';
 
 import type { KpiWidgetDefinition } from '@granit/analytics';
 import type { AggregateFunction } from '@granit/dashboards';
 import type { WidgetConfigFormProps } from '@granit/react-dashboard-editor';
 
+const KIND_OPTIONS = [
+  { value: 'metric', label: 'Metric' },
+  { value: 'query-aggregate', label: 'Query aggregate' },
+] as const;
+
+const AGGREGATIONS: readonly AggregateFunction[] = ['Sum', 'Avg', 'Min', 'Max', 'Count'];
+
 /**
  * Built-in config form for {@link KpiWidgetDefinition}. v1 covers the two
  * common datasource flavours — Metric (the typical case) and
  * QueryAggregate (ad-hoc admin pages reusing the widget).
+ *
+ * The query-aggregate query field is a catalogue-backed combobox (like the
+ * chart/table/pivot forms); the metric field is a searchable combobox that
+ * also accepts a typed value (there is no metric catalogue yet).
  *
  * Telemetry datasources are out of scope for the form: those carry an
  * `entityAlias` that only makes sense in an IoT context. Apps wanting to
@@ -19,7 +33,10 @@ export function KpiConfigForm({ widget, onChange }: WidgetConfigFormProps<KpiWid
   const { t } = useTranslation();
   const { datasource } = widget;
 
-  const handleKindChange = (kind: 'metric' | 'query-aggregate') => {
+  const queryName = isQueryAggregateDatasource(datasource) ? datasource.queryName : '';
+  const { catalogEntries } = useQueryFieldMetadata(queryName);
+
+  const handleKindChange = (kind: string) => {
     if (kind === 'metric') {
       onChange({ ...widget, datasource: Datasource.metric('') });
     } else {
@@ -33,15 +50,12 @@ export function KpiConfigForm({ widget, onChange }: WidgetConfigFormProps<KpiWid
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Kpi.DatasourceKind.Label')}
         </span>
-        <select
-          data-slot="kpi-datasource-kind"
+        <EnumSelect
+          slot="kpi-datasource-kind"
           value={datasource.kind === 'iot-telemetry' ? 'metric' : datasource.kind}
-          onChange={(event) => handleKindChange(event.target.value as 'metric' | 'query-aggregate')}
-          className="w-full rounded-md border bg-background px-3 py-1.5 text-sm"
-        >
-          <option value="metric">Metric</option>
-          <option value="query-aggregate">Query aggregate</option>
-        </select>
+          options={KIND_OPTIONS}
+          onChange={handleKindChange}
+        />
       </label>
 
       {isMetricDatasource(datasource) && (
@@ -49,14 +63,14 @@ export function KpiConfigForm({ widget, onChange }: WidgetConfigFormProps<KpiWid
           <span className="mb-1 block text-muted-foreground">
             {t('Dashboard:Widget.Kpi.MetricName.Label')}
           </span>
-          <input
-            type="text"
-            data-slot="kpi-metric-name"
+          <Combobox
+            slot="kpi-metric-name"
             value={datasource.metricName}
-            onChange={(event) =>
-              onChange({ ...widget, datasource: Datasource.metric(event.target.value) })
-            }
-            className="w-full rounded-md border bg-background px-3 py-1.5 text-sm"
+            options={[]}
+            allowCustomValue
+            onValueChange={(value) => onChange({ ...widget, datasource: Datasource.metric(value) })}
+            placeholder="Select a metric…"
+            searchPlaceholder="Search or type a metric name…"
           />
         </label>
       )}
@@ -67,48 +81,41 @@ export function KpiConfigForm({ widget, onChange }: WidgetConfigFormProps<KpiWid
             <span className="mb-1 block text-muted-foreground">
               {t('Dashboard:Widget.Kpi.QueryName.Label')}
             </span>
-            <input
-              type="text"
-              data-slot="kpi-query-name"
+            <QueryNameCombobox
+              slot="kpi-query-name"
               value={datasource.queryName}
-              onChange={(event) =>
+              onChange={(value) =>
                 onChange({
                   ...widget,
                   datasource: Datasource.queryAggregate(
-                    event.target.value,
+                    value,
                     datasource.aggregation,
                     datasource.field
                   ),
                 })
               }
-              className="w-full rounded-md border bg-background px-3 py-1.5 text-sm"
+              entries={catalogEntries}
             />
           </label>
           <label className="block text-sm">
             <span className="mb-1 block text-muted-foreground">
               {t('Dashboard:Widget.Kpi.Aggregation.Label')}
             </span>
-            <select
-              data-slot="kpi-aggregation"
+            <EnumSelect
+              slot="kpi-aggregation"
               value={datasource.aggregation}
-              onChange={(event) =>
+              options={AGGREGATIONS}
+              onChange={(value) =>
                 onChange({
                   ...widget,
                   datasource: Datasource.queryAggregate(
                     datasource.queryName,
-                    event.target.value as AggregateFunction,
+                    value as AggregateFunction,
                     datasource.field
                   ),
                 })
               }
-              className="w-full rounded-md border bg-background px-3 py-1.5 text-sm"
-            >
-              <option value="Sum">Sum</option>
-              <option value="Avg">Avg</option>
-              <option value="Min">Min</option>
-              <option value="Max">Max</option>
-              <option value="Count">Count</option>
-            </select>
+            />
           </label>
         </>
       )}

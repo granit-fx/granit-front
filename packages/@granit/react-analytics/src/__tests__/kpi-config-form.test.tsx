@@ -1,5 +1,8 @@
 import { Datasource } from '@granit/dashboards';
-import { fireEvent, render } from '@testing-library/react';
+import { createTestQueryClient } from '@granit/react-testing';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { describe, expect, it, vi } from 'vitest';
@@ -20,7 +23,12 @@ void testI18n.use(initReactI18next).init({
 });
 
 function wrap(node: ReactNode) {
-  return render(<I18nextProvider i18n={testI18n}>{node}</I18nextProvider>);
+  const queryClient = createTestQueryClient();
+  return render(
+    <I18nextProvider i18n={testI18n}>
+      <QueryClientProvider client={queryClient}>{node}</QueryClientProvider>
+    </I18nextProvider>
+  );
 }
 
 const baseKpi: KpiWidgetDefinition = {
@@ -32,33 +40,41 @@ const baseKpi: KpiWidgetDefinition = {
 };
 
 describe('KpiConfigForm', () => {
-  it('shows the metric-name input when bound to a metric datasource', () => {
+  it('shows the metric combobox when bound to a metric datasource', () => {
     const { container } = wrap(<KpiConfigForm widget={baseKpi} onChange={vi.fn()} />);
     expect(container.querySelector('[data-slot="kpi-metric-name"]')).not.toBeNull();
     expect(container.querySelector('[data-slot="kpi-query-name"]')).toBeNull();
   });
 
-  it('emits an updated metric-name on change', () => {
+  it('emits a typed metric name via the searchable combobox', async () => {
+    const user = userEvent.setup();
     const onChange = vi.fn();
     const { container } = wrap(<KpiConfigForm widget={baseKpi} onChange={onChange} />);
-    const input = container.querySelector('[data-slot="kpi-metric-name"]');
-    if (!(input instanceof HTMLInputElement)) throw new Error('input not found');
-    fireEvent.change(input, { target: { value: 'Granit.Test.NewMetric' } });
-    expect(onChange.mock.calls[0]?.[0]?.datasource).toEqual(
+
+    await user.click(container.querySelector('[data-slot="kpi-metric-name"]')!);
+    await user.type(
+      await screen.findByPlaceholderText('Search or type a metric name…'),
+      'Granit.Test.NewMetric'
+    );
+    await user.click(await screen.findByRole('option', { name: /Granit\.Test\.NewMetric/ }));
+
+    expect(onChange.mock.calls.at(-1)?.[0]?.datasource).toEqual(
       Datasource.metric('Granit.Test.NewMetric')
     );
   });
 
-  it('switches to query-aggregate when the kind selector changes', () => {
+  it('switches to query-aggregate from the kind select', async () => {
+    const user = userEvent.setup();
     const onChange = vi.fn();
     const { container } = wrap(<KpiConfigForm widget={baseKpi} onChange={onChange} />);
-    const select = container.querySelector('[data-slot="kpi-datasource-kind"]');
-    if (!(select instanceof HTMLSelectElement)) throw new Error('select not found');
-    fireEvent.change(select, { target: { value: 'query-aggregate' } });
-    expect(onChange.mock.calls[0]?.[0]?.datasource?.kind).toBe('query-aggregate');
+
+    await user.click(container.querySelector('[data-slot="kpi-datasource-kind"]')!);
+    await user.click(await screen.findByRole('option', { name: 'Query aggregate' }));
+
+    expect(onChange.mock.calls.at(-1)?.[0]?.datasource?.kind).toBe('query-aggregate');
   });
 
-  it('shows query-name + aggregation inputs when bound to query-aggregate', () => {
+  it('shows the query combobox + aggregation when bound to query-aggregate', () => {
     const queryKpi: KpiWidgetDefinition = {
       ...baseKpi,
       datasource: Datasource.queryAggregate('Granit.Test.Query', 'Sum'),

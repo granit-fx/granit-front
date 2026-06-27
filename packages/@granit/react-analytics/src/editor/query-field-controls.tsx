@@ -207,7 +207,8 @@ export function EnumSelect({
 }: {
   readonly slot: string;
   readonly value: string;
-  readonly options: readonly string[];
+  /** Bare values (label === value) or explicit `{ value, label }` pairs. */
+  readonly options: readonly (string | { readonly value: string; readonly label: string })[];
   readonly onChange: (value: string) => void;
 }) {
   return (
@@ -216,11 +217,15 @@ export function EnumSelect({
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        {options.map((option) => (
-          <SelectItem key={option} value={option}>
-            {option}
-          </SelectItem>
-        ))}
+        {options.map((option) => {
+          const { value: optionValue, label } =
+            typeof option === 'string' ? { value: option, label: option } : option;
+          return (
+            <SelectItem key={optionValue} value={optionValue}>
+              {label}
+            </SelectItem>
+          );
+        })}
       </SelectContent>
     </Select>
   );
