@@ -1,14 +1,11 @@
-import { useOptionalGranitClient } from '@granit/react-api-client';
-import { createContext, useContext, useMemo } from 'react';
+import { createConfigProvider } from '@granit/react-api-client';
 
 import { DEFAULT_BASE_PATH, DEFAULT_QUERY_KEY_PREFIX } from '../constants';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { ReactNode } from 'react';
+import type { GranitProviderConfig, GranitProviderProps } from '@granit/react-api-client';
 
-export interface CmsRedirectsConfig {
-  readonly client?: AxiosInstance;
-  readonly basePath?: string;
+export interface CmsRedirectsConfig extends GranitProviderConfig {
   readonly queryKeyPrefix?: readonly string[];
 }
 
@@ -18,36 +15,20 @@ export interface ResolvedCmsRedirectsConfig extends CmsRedirectsConfig {
   readonly queryKeyPrefix: readonly string[];
 }
 
-export interface CmsRedirectsProviderProps {
-  readonly config: CmsRedirectsConfig;
-  readonly children: ReactNode;
-}
+export type CmsRedirectsProviderProps = GranitProviderProps<CmsRedirectsConfig>;
 
-const CmsRedirectsConfigContext = createContext<ResolvedCmsRedirectsConfig | null>(null);
+const { Provider, useConfig } = createConfigProvider<
+  CmsRedirectsConfig,
+  ResolvedCmsRedirectsConfig
+>({
+  name: 'CmsRedirects',
+  defaultBasePath: DEFAULT_BASE_PATH,
+  resolve: (base) => ({
+    ...base,
+    queryKeyPrefix: base.queryKeyPrefix ?? [...DEFAULT_QUERY_KEY_PREFIX],
+  }),
+});
 
-export function CmsRedirectsProvider({ config, children }: Readonly<CmsRedirectsProviderProps>) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo<ResolvedCmsRedirectsConfig>(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'CmsRedirectsProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return {
-      ...config,
-      client,
-      basePath: config.basePath ?? DEFAULT_BASE_PATH,
-      queryKeyPrefix: config.queryKeyPrefix ?? [...DEFAULT_QUERY_KEY_PREFIX],
-    };
-  }, [config, contextClient]);
-  return <CmsRedirectsConfigContext value={value}>{children}</CmsRedirectsConfigContext>;
-}
+export const CmsRedirectsProvider = Provider;
 
-export function useCmsRedirectsConfig(): ResolvedCmsRedirectsConfig {
-  const ctx = useContext(CmsRedirectsConfigContext);
-  if (!ctx) {
-    throw new Error('useCmsRedirectsConfig must be used within a CmsRedirectsProvider');
-  }
-  return ctx;
-}
+export const useCmsRedirectsConfig = useConfig;

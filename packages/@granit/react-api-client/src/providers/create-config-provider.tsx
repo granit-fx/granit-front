@@ -32,7 +32,10 @@ export interface GranitProviderProps<TConfig extends GranitProviderConfig> {
   readonly children: ReactNode;
 }
 
-export interface CreateConfigProviderOptions {
+export interface CreateConfigProviderOptions<
+  TConfig extends GranitProviderConfig,
+  TResolved extends ResolvedGranitProviderConfig<TConfig>,
+> {
   /**
    * PascalCase domain name used to build the component `displayName` and the
    * error messages (`<Name>Provider requires…`, `use<Name>Config must be used…`).
@@ -40,13 +43,26 @@ export interface CreateConfigProviderOptions {
   readonly name: string;
   /** Base path applied when `config.basePath` is omitted. */
   readonly defaultBasePath: string;
+  /**
+   * Optional hook to derive fields beyond `client`/`basePath` (e.g. default a
+   * `queryKeyPrefix`). Receives the base-resolved config (client + basePath
+   * applied) and the raw config, and returns the fully-resolved value.
+   * **Required whenever `TResolved` adds fields** beyond the base resolution —
+   * without it the provider would expose a value missing those fields.
+   */
+  readonly resolve?: (base: ResolvedGranitProviderConfig<TConfig>, raw: TConfig) => TResolved;
 }
 
-export interface ConfigProvider<TConfig extends GranitProviderConfig> {
-  /** Context provider resolving `client`/`basePath` for descendant hooks. */
+export interface ConfigProvider<
+  TConfig extends GranitProviderConfig,
+  TResolved extends ResolvedGranitProviderConfig<TConfig> = ResolvedGranitProviderConfig<TConfig>,
+> {
+  /** Context provider resolving `client`/`basePath` (and `resolve` extras) for descendant hooks. */
   readonly Provider: (props: GranitProviderProps<TConfig>) => ReactNode;
   /** Reads the resolved config from the nearest matching provider; throws if absent. */
-  readonly useConfig: () => ResolvedGranitProviderConfig<TConfig>;
+  readonly useConfig: () => TResolved;
+  /** Reads the resolved config from the nearest matching provider, or `null` if absent. */
+  readonly useOptionalConfig: () => TResolved | null;
 }
 
 /**
@@ -59,45 +75,61 @@ export interface ConfigProvider<TConfig extends GranitProviderConfig> {
  * Re-export the returned members under the package's public names so consumers
  * (e.g. showcase-admin-react) see no API change:
  *
+ * For a config that defaults extra fields, pass an explicit resolved type and a
+ * `resolve` hook:
+ *
  * @example
  * ```tsx
- * export interface HostnamesConfig extends GranitProviderConfig {
+ * export interface DocumentsConfig extends GranitProviderConfig {
  *   readonly queryKeyPrefix?: readonly string[];
  * }
- * export type ResolvedHostnamesConfig = ResolvedGranitProviderConfig<HostnamesConfig>;
+ * export interface ResolvedDocumentsConfig extends DocumentsConfig {
+ *   readonly client: AxiosInstance;
+ *   readonly basePath: string;
+ *   readonly queryKeyPrefix: readonly string[];
+ * }
  *
- * const { Provider, useConfig } = createConfigProvider<HostnamesConfig>({
- *   name: 'Hostnames',
+ * const { Provider, useConfig } = createConfigProvider<DocumentsConfig, ResolvedDocumentsConfig>({
+ *   name: 'Documents',
  *   defaultBasePath: DEFAULT_BASE_PATH,
+ *   resolve: (base) => ({ ...base, queryKeyPrefix: base.queryKeyPrefix ?? [...DEFAULT_QUERY_KEY_PREFIX] }),
  * });
- * export const HostnamesProvider = Provider;
- * export const useHostnamesConfig = useConfig;
+ * export const DocumentsProvider = Provider;
+ * export const useDocumentsConfig = useConfig;
  * ```
  */
-export function createConfigProvider<TConfig extends GranitProviderConfig>({
+export function createConfigProvider<
+  TConfig extends GranitProviderConfig,
+  TResolved extends ResolvedGranitProviderConfig<TConfig> = ResolvedGranitProviderConfig<TConfig>,
+>({
   name,
   defaultBasePath,
-}: CreateConfigProviderOptions): ConfigProvider<TConfig> {
-  type Resolved = ResolvedGranitProviderConfig<TConfig>;
-  const Context = createContext<Resolved | null>(null);
+  resolve,
+}: CreateConfigProviderOptions<TConfig, TResolved>): ConfigProvider<TConfig, TResolved> {
+  const Context = createContext<TResolved | null>(null);
   Context.displayName = `${name}ConfigContext`;
 
   function Provider({ config, children }: GranitProviderProps<TConfig>) {
     const contextClient = useOptionalGranitClient();
-    const value = useMemo<Resolved>(() => {
+    const value = useMemo<TResolved>(() => {
       const client = config.client ?? contextClient;
       if (!client) {
         throw new Error(
           `${name}Provider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.`
         );
       }
-      return { ...config, client, basePath: config.basePath ?? defaultBasePath };
+      const base = {
+        ...config,
+        client,
+        basePath: config.basePath ?? defaultBasePath,
+      } as ResolvedGranitProviderConfig<TConfig>;
+      return (resolve ? resolve(base, config) : base) as TResolved;
     }, [config, contextClient]);
     return <Context value={value}>{children}</Context>;
   }
   Provider.displayName = `${name}Provider`;
 
-  function useConfig(): Resolved {
+  function useConfig(): TResolved {
     const ctx = useContext(Context);
     if (!ctx) {
       throw new Error(`use${name}Config must be used within a <${name}Provider>`);
@@ -105,5 +137,9 @@ export function createConfigProvider<TConfig extends GranitProviderConfig>({
     return ctx;
   }
 
-  return { Provider, useConfig };
+  function useOptionalConfig(): TResolved | null {
+    return useContext(Context);
+  }
+
+  return { Provider, useConfig, useOptionalConfig };
 }

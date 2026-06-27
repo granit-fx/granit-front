@@ -53,7 +53,7 @@ describe('AccountProvider', () => {
   it('should throw when used outside provider', () => {
     expect(() => {
       renderHook(() => useAccountConfig());
-    }).toThrow('useAccountConfig must be used within an AccountProvider');
+    }).toThrow('useAccountConfig must be used within a <AccountProvider>');
   });
 });
 

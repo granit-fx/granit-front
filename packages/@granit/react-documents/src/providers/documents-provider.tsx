@@ -1,16 +1,12 @@
-import { useOptionalGranitClient } from '@granit/react-api-client';
-import { createContext, useContext, useMemo } from 'react';
+import { createConfigProvider } from '@granit/react-api-client';
 
 import { DEFAULT_BASE_PATH, DEFAULT_QUERY_KEY_PREFIX } from '../constants';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { ReactNode } from 'react';
+import type { GranitProviderConfig, GranitProviderProps } from '@granit/react-api-client';
 
 /** Configuration for the documents provider. */
-export interface DocumentsConfig {
-  readonly client?: AxiosInstance;
-  /** Base path for documents endpoints (default: `/api/v1/documents`). */
-  readonly basePath?: string;
+export interface DocumentsConfig extends GranitProviderConfig {
   readonly queryKeyPrefix?: readonly string[];
 }
 
@@ -24,41 +20,22 @@ export interface ResolvedDocumentsConfig extends DocumentsConfig {
   readonly queryKeyPrefix: readonly string[];
 }
 
-export interface DocumentsProviderProps {
-  readonly config: DocumentsConfig;
-  readonly children: ReactNode;
-}
+export type DocumentsProviderProps = GranitProviderProps<DocumentsConfig>;
 
-const DocumentsConfigContext = createContext<ResolvedDocumentsConfig | null>(null);
+const { Provider, useConfig } = createConfigProvider<DocumentsConfig, ResolvedDocumentsConfig>({
+  name: 'Documents',
+  defaultBasePath: DEFAULT_BASE_PATH,
+  resolve: (base) => ({
+    ...base,
+    queryKeyPrefix: base.queryKeyPrefix ?? [...DEFAULT_QUERY_KEY_PREFIX],
+  }),
+});
 
 /** Provides documents configuration to child components and hooks. */
-export function DocumentsProvider({ config, children }: Readonly<DocumentsProviderProps>) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo<ResolvedDocumentsConfig>(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'DocumentsProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return {
-      ...config,
-      client,
-      basePath: config.basePath ?? DEFAULT_BASE_PATH,
-      queryKeyPrefix: config.queryKeyPrefix ?? [...DEFAULT_QUERY_KEY_PREFIX],
-    };
-  }, [config, contextClient]);
-  return <DocumentsConfigContext value={value}>{children}</DocumentsConfigContext>;
-}
+export const DocumentsProvider = Provider;
 
 /** Returns the documents configuration from the nearest `DocumentsProvider`. */
-export function useDocumentsConfig(): ResolvedDocumentsConfig {
-  const ctx = useContext(DocumentsConfigContext);
-  if (!ctx) {
-    throw new Error('useDocumentsConfig must be used within a DocumentsProvider');
-  }
-  return ctx;
-}
+export const useDocumentsConfig = useConfig;
 
 /** Builds a consistent React Query key for documents operations. */
 export function buildDocumentsQueryKey(

@@ -25,7 +25,7 @@ function createWrapper(config: { client?: AxiosInstance; basePath?: string } = {
 describe('CmsProvider / useCmsConfig', () => {
   it('throws when used outside provider', () => {
     expect(() => renderHook(() => useCmsConfig())).toThrow(
-      'useCmsConfig must be used within a CmsProvider'
+      'useCmsConfig must be used within a <CmsProvider>'
     );
   });
 

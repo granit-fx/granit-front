@@ -1,14 +1,11 @@
-import { useOptionalGranitClient } from '@granit/react-api-client';
-import { createContext, useContext, useMemo } from 'react';
+import { createConfigProvider } from '@granit/react-api-client';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { ReactNode } from 'react';
+import type { GranitProviderConfig, GranitProviderProps } from '@granit/react-api-client';
 
-export interface AccountConfig {
-  readonly client?: AxiosInstance;
-  readonly basePath?: string;
+export interface AccountConfig extends GranitProviderConfig {
   readonly queryKeyPrefix?: readonly string[];
 }
 
@@ -20,19 +17,13 @@ export interface ResolvedAccountConfig extends AccountConfig {
   readonly client: AxiosInstance;
 }
 
-export interface AccountProviderProps {
-  readonly config: AccountConfig;
-  readonly children: ReactNode;
-}
+export type AccountProviderProps = GranitProviderProps<AccountConfig>;
 
 const DEFAULT_KEY_PREFIX = ['account'] as const;
 
-const AccountContext = createContext<ResolvedAccountConfig | null>(null);
-
-export function useAccountConfig(): ResolvedAccountConfig {
-  const config = useContext(AccountContext);
-  if (!config) throw new Error('useAccountConfig must be used within an AccountProvider');
-  return config;
+interface FullyResolvedAccountConfig extends ResolvedAccountConfig {
+  readonly basePath: string;
+  readonly queryKeyPrefix: readonly string[];
 }
 
 export function buildAccountQueryKey(
@@ -42,22 +33,15 @@ export function buildAccountQueryKey(
   return [...(config.queryKeyPrefix ?? DEFAULT_KEY_PREFIX), ...segments];
 }
 
-export function AccountProvider({ config, children }: AccountProviderProps) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'AccountProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return {
-      ...config,
-      basePath: config.basePath ?? DEFAULT_BASE_PATH,
-      queryKeyPrefix: config.queryKeyPrefix ?? DEFAULT_KEY_PREFIX,
-      client,
-    };
-  }, [config, contextClient]);
+const { Provider, useConfig } = createConfigProvider<AccountConfig, FullyResolvedAccountConfig>({
+  name: 'Account',
+  defaultBasePath: DEFAULT_BASE_PATH,
+  resolve: (base) => ({
+    ...base,
+    queryKeyPrefix: base.queryKeyPrefix ?? DEFAULT_KEY_PREFIX,
+  }),
+});
 
-  return <AccountContext value={value}>{children}</AccountContext>;
-}
+export const AccountProvider = Provider;
+
+export const useAccountConfig: () => ResolvedAccountConfig = useConfig;

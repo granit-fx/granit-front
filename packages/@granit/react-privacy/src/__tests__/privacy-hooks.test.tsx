@@ -82,7 +82,7 @@ describe('PrivacyProvider', () => {
       React.createElement(QueryClientProvider, { client: queryClient }, children);
 
     expect(() => renderHook(() => usePrivacyConfig(), { wrapper })).toThrow(
-      'usePrivacyConfig must be used within a PrivacyProvider'
+      'usePrivacyConfig must be used within a <PrivacyProvider>'
     );
   });
 });

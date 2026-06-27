@@ -53,7 +53,7 @@ describe('OpenIddictAdminProvider', () => {
   it('should throw when used outside provider', () => {
     expect(() => {
       renderHook(() => useAdminConfig());
-    }).toThrow('useAdminConfig must be used within an OpenIddictAdminProvider');
+    }).toThrow('useOpenIddictAdminConfig must be used within a <OpenIddictAdminProvider>');
   });
 });
 

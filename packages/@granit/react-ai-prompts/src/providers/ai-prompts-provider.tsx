@@ -3,20 +3,15 @@
 // catalogue hooks. Mirrors the @granit/react-ai-chat provider pattern.
 // ---------------------------------------------------------------------------
 
-import { useOptionalGranitClient } from '@granit/react-api-client';
-import { createContext, useContext, useMemo } from 'react';
+import { createConfigProvider } from '@granit/react-api-client';
 
 import { DEFAULT_BASE_PATH, DEFAULT_QUERY_KEY_PREFIX } from '../constants';
 
 import type { AxiosInstance } from '@granit/api-client';
-import type { ReactNode } from 'react';
+import type { GranitProviderConfig, GranitProviderProps } from '@granit/react-api-client';
 
 /** Configuration for {@link AIPromptsProvider}. */
-export interface AIPromptsConfig {
-  /** Axios client with auth, CSRF, and tenant interceptors. */
-  readonly client?: AxiosInstance;
-  /** Base path for the catalogue endpoints (default: `/api/v1/prompts`). */
-  readonly basePath?: string;
+export interface AIPromptsConfig extends GranitProviderConfig {
   /** React Query key prefix (default: `['ai-prompts']`). */
   readonly queryKeyPrefix?: readonly string[];
 }
@@ -28,38 +23,19 @@ export interface ResolvedAIPromptsConfig extends AIPromptsConfig {
   readonly queryKeyPrefix: readonly string[];
 }
 
-export interface AIPromptsProviderProps {
-  readonly config: AIPromptsConfig;
-  readonly children: ReactNode;
-}
+export type AIPromptsProviderProps = GranitProviderProps<AIPromptsConfig>;
 
-const AIPromptsConfigContext = createContext<ResolvedAIPromptsConfig | null>(null);
+const { Provider, useConfig } = createConfigProvider<AIPromptsConfig, ResolvedAIPromptsConfig>({
+  name: 'AIPrompts',
+  defaultBasePath: DEFAULT_BASE_PATH,
+  resolve: (base) => ({
+    ...base,
+    queryKeyPrefix: base.queryKeyPrefix ?? DEFAULT_QUERY_KEY_PREFIX,
+  }),
+});
 
 /** Provides catalogue configuration to child components and hooks. */
-export function AIPromptsProvider({ config, children }: Readonly<AIPromptsProviderProps>) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo<ResolvedAIPromptsConfig>(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'AIPromptsProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return {
-      ...config,
-      client,
-      basePath: config.basePath ?? DEFAULT_BASE_PATH,
-      queryKeyPrefix: config.queryKeyPrefix ?? DEFAULT_QUERY_KEY_PREFIX,
-    };
-  }, [config, contextClient]);
-  return <AIPromptsConfigContext value={value}>{children}</AIPromptsConfigContext>;
-}
+export const AIPromptsProvider = Provider;
 
-/** Returns the catalogue configuration from the nearest {@link AIPromptsProvider}. */
-export function useAIPromptsConfig(): ResolvedAIPromptsConfig {
-  const ctx = useContext(AIPromptsConfigContext);
-  if (!ctx) {
-    throw new Error('useAIPromptsConfig must be used within an AIPromptsProvider');
-  }
-  return ctx;
-}
+/** Returns the catalogue configuration from the nearest `AIPromptsProvider`. */
+export const useAIPromptsConfig = useConfig;

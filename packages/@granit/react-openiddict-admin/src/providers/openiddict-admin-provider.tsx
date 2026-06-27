@@ -1,14 +1,14 @@
-import { useOptionalGranitClient } from '@granit/react-api-client';
-import { createContext, useContext, useMemo } from 'react';
+import { createConfigProvider } from '@granit/react-api-client';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import type { AxiosInstance } from '@granit/api-client';
-import type { ReactNode } from 'react';
+import type {
+  GranitProviderConfig,
+  GranitProviderProps,
+  ResolvedGranitProviderConfig,
+} from '@granit/react-api-client';
 
-export interface OpenIddictAdminConfig {
-  readonly client?: AxiosInstance;
-  readonly basePath?: string;
+export interface OpenIddictAdminConfig extends GranitProviderConfig {
   /** Base path for authenticated (non-admin) OIDC endpoints, e.g. `/api/v1/oidc`. Used by the consent page. */
   readonly oidcBasePath?: string;
   readonly queryKeyPrefix?: readonly string[];
@@ -18,48 +18,27 @@ export interface OpenIddictAdminConfig {
  * OpenIddictAdminConfig after the provider has resolved `client` from
  * `config.client` or the nearest `<GranitClientProvider>`.
  */
-export interface ResolvedOpenIddictAdminConfig extends OpenIddictAdminConfig {
-  readonly client: AxiosInstance;
-}
+export type ResolvedOpenIddictAdminConfig = ResolvedGranitProviderConfig<OpenIddictAdminConfig>;
 
-export interface OpenIddictAdminProviderProps {
-  readonly config: OpenIddictAdminConfig;
-  readonly children: ReactNode;
-}
+export type OpenIddictAdminProviderProps = GranitProviderProps<OpenIddictAdminConfig>;
 
 const DEFAULT_KEY_PREFIX = ['openiddict-admin'] as const;
 
-const AdminContext = createContext<ResolvedOpenIddictAdminConfig | null>(null);
+const { Provider, useConfig } = createConfigProvider<OpenIddictAdminConfig>({
+  name: 'OpenIddictAdmin',
+  defaultBasePath: DEFAULT_BASE_PATH,
+  resolve: (base) => ({
+    ...base,
+    queryKeyPrefix: base.queryKeyPrefix ?? DEFAULT_KEY_PREFIX,
+  }),
+});
 
-export function useAdminConfig(): ResolvedOpenIddictAdminConfig {
-  const config = useContext(AdminContext);
-  if (!config) throw new Error('useAdminConfig must be used within an OpenIddictAdminProvider');
-  return config;
-}
+export const OpenIddictAdminProvider = Provider;
+export const useAdminConfig = useConfig;
 
 export function buildAdminQueryKey(
   config: OpenIddictAdminConfig,
   ...segments: readonly string[]
 ): readonly unknown[] {
   return [...(config.queryKeyPrefix ?? DEFAULT_KEY_PREFIX), ...segments];
-}
-
-export function OpenIddictAdminProvider({ config, children }: OpenIddictAdminProviderProps) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'OpenIddictAdminProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return {
-      ...config,
-      basePath: config.basePath ?? DEFAULT_BASE_PATH,
-      queryKeyPrefix: config.queryKeyPrefix ?? DEFAULT_KEY_PREFIX,
-      client,
-    };
-  }, [config, contextClient]);
-
-  return <AdminContext value={value}>{children}</AdminContext>;
 }

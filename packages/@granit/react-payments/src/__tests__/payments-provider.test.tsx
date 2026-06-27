@@ -36,7 +36,7 @@ describe('PaymentsProvider', () => {
   it('should throw when used outside provider', () => {
     expect(() => {
       renderHook(() => usePaymentsConfig());
-    }).toThrow('usePaymentsConfig must be used within a PaymentsProvider');
+    }).toThrow('usePaymentsConfig must be used within a <PaymentsProvider>');
   });
 });
 

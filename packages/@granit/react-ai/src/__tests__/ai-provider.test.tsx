@@ -30,6 +30,6 @@ describe('AIProvider', () => {
   it('should throw when used outside provider', () => {
     expect(() => {
       renderHook(() => useAIConfig());
-    }).toThrow('useAIConfig must be used within an AIProvider');
+    }).toThrow('useAIConfig must be used within a <AIProvider>');
   });
 });

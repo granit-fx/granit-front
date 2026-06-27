@@ -1,14 +1,14 @@
-import { useOptionalGranitClient } from '@granit/react-api-client';
-import { createContext, useContext, useMemo } from 'react';
+import { createConfigProvider } from '@granit/react-api-client';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import type { AxiosInstance } from '@granit/api-client';
-import type { ReactNode } from 'react';
+import type {
+  GranitProviderConfig,
+  GranitProviderProps,
+  ResolvedGranitProviderConfig,
+} from '@granit/react-api-client';
 
-export interface TenantAdminConfig {
-  readonly client?: AxiosInstance;
-  readonly basePath?: string;
+export interface TenantAdminConfig extends GranitProviderConfig {
   readonly queryKeyPrefix?: readonly string[];
 }
 
@@ -16,48 +16,27 @@ export interface TenantAdminConfig {
  * TenantAdminConfig after the provider has resolved `client` from
  * `config.client` or the nearest `<GranitClientProvider>`.
  */
-export interface ResolvedTenantAdminConfig extends TenantAdminConfig {
-  readonly client: AxiosInstance;
-}
+export type ResolvedTenantAdminConfig = ResolvedGranitProviderConfig<TenantAdminConfig>;
 
-export interface TenantAdminProviderProps {
-  readonly config: TenantAdminConfig;
-  readonly children: ReactNode;
-}
+export type TenantAdminProviderProps = GranitProviderProps<TenantAdminConfig>;
 
 const DEFAULT_KEY_PREFIX = ['tenant-admin'] as const;
 
-const TenantAdminContext = createContext<ResolvedTenantAdminConfig | null>(null);
+const { Provider, useConfig } = createConfigProvider<TenantAdminConfig>({
+  name: 'TenantAdmin',
+  defaultBasePath: DEFAULT_BASE_PATH,
+  resolve: (base) => ({
+    ...base,
+    queryKeyPrefix: base.queryKeyPrefix ?? DEFAULT_KEY_PREFIX,
+  }),
+});
 
-export function useTenantAdminConfig(): ResolvedTenantAdminConfig {
-  const config = useContext(TenantAdminContext);
-  if (!config) throw new Error('useTenantAdminConfig must be used within a TenantAdminProvider');
-  return config;
-}
+export const TenantAdminProvider = Provider;
+export const useTenantAdminConfig = useConfig;
 
 export function buildTenantAdminQueryKey(
   config: TenantAdminConfig,
   ...segments: readonly string[]
 ): readonly unknown[] {
   return [...(config.queryKeyPrefix ?? DEFAULT_KEY_PREFIX), ...segments];
-}
-
-export function TenantAdminProvider({ config, children }: TenantAdminProviderProps) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'TenantAdminProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return {
-      ...config,
-      basePath: config.basePath ?? DEFAULT_BASE_PATH,
-      queryKeyPrefix: config.queryKeyPrefix ?? DEFAULT_KEY_PREFIX,
-      client,
-    };
-  }, [config, contextClient]);
-
-  return <TenantAdminContext value={value}>{children}</TenantAdminContext>;
 }

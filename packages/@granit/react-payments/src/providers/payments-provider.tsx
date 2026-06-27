@@ -1,9 +1,12 @@
-import { useOptionalGranitClient } from '@granit/react-api-client';
-import { createContext, useContext, useMemo } from 'react';
+import { createConfigProvider } from '@granit/react-api-client';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import type { AxiosInstance } from '@granit/api-client';
+import type {
+  GranitProviderConfig,
+  GranitProviderProps,
+  ResolvedGranitProviderConfig,
+} from '@granit/react-api-client';
 import type { ReactNode } from 'react';
 
 /**
@@ -22,8 +25,7 @@ export interface PaymentBrandIconResolvers {
 }
 
 /** Configuration for the payments provider. */
-export interface PaymentsConfig {
-  readonly client?: AxiosInstance;
+export interface PaymentsConfig extends GranitProviderConfig {
   /** Base path for payment endpoints (default: `/api/v1/payments`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
@@ -38,53 +40,27 @@ export interface PaymentsConfig {
  * PaymentsConfig after the provider has resolved `client` from
  * `config.client` or the nearest `<GranitClientProvider>`.
  */
-export interface ResolvedPaymentsConfig extends PaymentsConfig {
-  readonly client: AxiosInstance;
-}
+export type ResolvedPaymentsConfig = ResolvedGranitProviderConfig<PaymentsConfig>;
 
-export interface PaymentsProviderProps {
-  readonly config: PaymentsConfig;
-  readonly children: ReactNode;
-}
+export type PaymentsProviderProps = GranitProviderProps<PaymentsConfig>;
 
-const PaymentsConfigContext = createContext<ResolvedPaymentsConfig | null>(null);
+const { Provider, useConfig, useOptionalConfig } = createConfigProvider<PaymentsConfig>({
+  name: 'Payments',
+  defaultBasePath: DEFAULT_BASE_PATH,
+});
 
 /** Provides payments configuration to child components and hooks. */
-export function PaymentsProvider({ config, children }: Readonly<PaymentsProviderProps>) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo<ResolvedPaymentsConfig>(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'PaymentsProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return {
-      ...config,
-      basePath: config.basePath ?? DEFAULT_BASE_PATH,
-      client,
-    };
-  }, [config, contextClient]);
-  return <PaymentsConfigContext value={value}>{children}</PaymentsConfigContext>;
-}
+export const PaymentsProvider = Provider;
 
 /** Returns the payments configuration from the nearest `PaymentsProvider`. */
-export function usePaymentsConfig(): ResolvedPaymentsConfig {
-  const ctx = useContext(PaymentsConfigContext);
-  if (!ctx) {
-    throw new Error('usePaymentsConfig must be used within a PaymentsProvider');
-  }
-  return ctx;
-}
+export const usePaymentsConfig = useConfig;
 
 /**
  * Like `usePaymentsConfig`, but returns `null` instead of throwing when no
  * `PaymentsProvider` is mounted. Lets shared primitives (e.g. the icons) read
  * optional config — such as `brandIcons` — while staying usable standalone.
  */
-export function useOptionalPaymentsConfig(): ResolvedPaymentsConfig | null {
-  return useContext(PaymentsConfigContext);
-}
+export const useOptionalPaymentsConfig = useOptionalConfig;
 
 /** Builds a consistent React Query key for payments operations. */
 export function buildPaymentsQueryKey(

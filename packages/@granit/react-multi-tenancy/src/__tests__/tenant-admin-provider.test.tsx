@@ -53,7 +53,7 @@ describe('TenantAdminProvider', () => {
   it('should throw when used outside provider', () => {
     expect(() => {
       renderHook(() => useTenantAdminConfig());
-    }).toThrow('useTenantAdminConfig must be used within a TenantAdminProvider');
+    }).toThrow('useTenantAdminConfig must be used within a <TenantAdminProvider>');
   });
 });
 
