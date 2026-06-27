@@ -6,6 +6,7 @@ import { AIWorkspaceListPage } from '../components/ai-workspace-list-page';
 import { renderWithProviders } from './test-utils';
 
 import type { AIWorkspaceListResponse } from '@granit/ai';
+import type { ReactNode } from 'react';
 
 const dataMock = vi.hoisted(() => ({
   data: { workspaces: [] } as AIWorkspaceListResponse | undefined,
@@ -40,6 +41,30 @@ vi.mock('@granit/react-ui-kit', () => ({
       toggle-grid
     </button>
   ),
+  ConfirmActionDialog: ({
+    open,
+    title,
+    description,
+    confirmLabel,
+    onConfirm,
+    isPending,
+  }: {
+    open: boolean;
+    title: ReactNode;
+    description?: ReactNode;
+    confirmLabel: ReactNode;
+    onConfirm: () => void;
+    isPending?: boolean;
+  }) =>
+    open ? (
+      <div role="alertdialog">
+        <div>{title}</div>
+        {description !== undefined && <div>{description}</div>}
+        <button type="button" onClick={onConfirm} disabled={isPending}>
+          {confirmLabel}
+        </button>
+      </div>
+    ) : null,
 }));
 
 vi.mock('@granit/ai', () => ({

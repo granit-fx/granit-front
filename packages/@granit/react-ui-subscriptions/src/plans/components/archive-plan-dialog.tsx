@@ -1,16 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { useArchivePlan } from '@granit/react-subscriptions';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  toast,
-} from '@granit/react-ui';
+import { toast } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { toEntityId } from '@granit/types';
 
 import type { PlanId } from '@granit/subscriptions';
@@ -44,29 +35,24 @@ export function ArchivePlanDialog({
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{t('Subscriptions.Plans.ArchiveTitle')}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {t('Subscriptions.Plans.ArchiveConfirm', { planName })}
-            <br />
-            <span className="mt-2 block text-sm font-medium text-destructive">
-              {t('Subscriptions.Plans.ArchiveWarning')}
-            </span>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>{t('Common.Cancel')}</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={handleConfirm}
-            disabled={archivePlan.isPending}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-          >
-            {archivePlan.isPending ? t('Common.Loading') : t('Subscriptions.Plans.Archive')}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <ConfirmActionDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      tone="destructive"
+      title={t('Subscriptions.Plans.ArchiveTitle')}
+      description={
+        <>
+          {t('Subscriptions.Plans.ArchiveConfirm', { planName })}
+          <br />
+          <span className="mt-2 block text-sm font-medium text-destructive">
+            {t('Subscriptions.Plans.ArchiveWarning')}
+          </span>
+        </>
+      }
+      confirmLabel={t('Subscriptions.Plans.Archive')}
+      busyLabel={t('Common.Loading')}
+      isPending={archivePlan.isPending}
+      onConfirm={handleConfirm}
+    />
   );
 }

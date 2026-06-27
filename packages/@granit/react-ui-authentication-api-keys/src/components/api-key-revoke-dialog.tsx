@@ -1,14 +1,5 @@
 import { useTranslation } from '@granit/react-localization';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 
 interface ApiKeyRevokeDialogProps {
   open: boolean;
@@ -28,25 +19,16 @@ export function ApiKeyRevokeDialog({
   const { t } = useTranslation();
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent data-slot="api-key-revoke-dialog">
-        <AlertDialogHeader>
-          <AlertDialogTitle>{t('ApiKeys.ConfirmRevoke')}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {t('ApiKeys.ConfirmRevokeDescription', { name: keyName })}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>{t('Common.Cancel')}</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={onConfirm}
-            disabled={isPending}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-          >
-            {t('ApiKeys.ConfirmRevoke')}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <ConfirmActionDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      data-slot="api-key-revoke-dialog"
+      tone="destructive"
+      title={t('ApiKeys.ConfirmRevoke')}
+      description={t('ApiKeys.ConfirmRevokeDescription', { name: keyName })}
+      confirmLabel={t('ApiKeys.ConfirmRevoke')}
+      isPending={isPending}
+      onConfirm={onConfirm}
+    />
   );
 }

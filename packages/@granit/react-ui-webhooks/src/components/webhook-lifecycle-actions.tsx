@@ -1,7 +1,6 @@
 import { useTranslation } from '@granit/react-localization';
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -17,6 +16,7 @@ import {
   FormMessage,
   Textarea,
 } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { WebhookSubscriptionStatus, webhooksConstraints } from '@granit/webhooks';
 import { Loader2 } from 'lucide-react';
@@ -132,42 +132,24 @@ export function WebhookLifecycleActions({
       </Button>
 
       {/* Activate dialog */}
-      <AlertDialog
+      <ConfirmActionDialog
         open={openDialog === 'activate'}
         onOpenChange={(open) => !open && setOpenDialog(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('Webhooks.Confirm.ActivateTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('Webhooks.Confirm.ActivateMessage')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('Common.Cancel')}</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirm('activate')}>
-              {t('Webhooks.Actions.Activate')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        title={t('Webhooks.Confirm.ActivateTitle')}
+        description={t('Webhooks.Confirm.ActivateMessage')}
+        confirmLabel={t('Webhooks.Actions.Activate')}
+        onConfirm={() => handleConfirm('activate')}
+      />
 
       {/* Suspend dialog */}
-      <AlertDialog
+      <ConfirmActionDialog
         open={openDialog === 'suspend'}
         onOpenChange={(open) => !open && setOpenDialog(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('Webhooks.Confirm.SuspendTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('Webhooks.Confirm.SuspendMessage')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('Common.Cancel')}</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleConfirm('suspend')}>
-              {t('Webhooks.Actions.Suspend')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        title={t('Webhooks.Confirm.SuspendTitle')}
+        description={t('Webhooks.Confirm.SuspendMessage')}
+        confirmLabel={t('Webhooks.Actions.Suspend')}
+        onConfirm={() => handleConfirm('suspend')}
+      />
 
       {/* Deactivate dialog with reason */}
       <AlertDialog
@@ -217,26 +199,15 @@ export function WebhookLifecycleActions({
       </AlertDialog>
 
       {/* Delete dialog */}
-      <AlertDialog
+      <ConfirmActionDialog
         open={openDialog === 'delete'}
         onOpenChange={(open) => !open && setOpenDialog(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('Webhooks.Confirm.DeleteTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('Webhooks.Confirm.DeleteMessage')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('Common.Cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => handleConfirm('delete')}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {t('Webhooks.Actions.Delete')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        tone="destructive"
+        title={t('Webhooks.Confirm.DeleteTitle')}
+        description={t('Webhooks.Confirm.DeleteMessage')}
+        confirmLabel={t('Webhooks.Actions.Delete')}
+        onConfirm={() => handleConfirm('delete')}
+      />
     </div>
   );
 }

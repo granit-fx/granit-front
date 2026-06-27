@@ -1,17 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { useTemplateMutations } from '@granit/react-templating';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  Button,
-  toast,
-} from '@granit/react-ui';
+import { Button, toast } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { Trash2, Upload, Undo2 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -99,27 +89,16 @@ export function TemplateLifecycleActions({ template }: Readonly<TemplateLifecycl
         )}
       </div>
 
-      <AlertDialog
+      <ConfirmActionDialog
         open={!!confirmAction}
         onOpenChange={(open) => {
           if (!open) setConfirmAction(null);
         }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {confirmAction && confirmLabels[confirmAction].title}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {confirmAction && confirmLabels[confirmAction].description}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('Common.Cancel')}</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirm}>{t('Common.Confirm')}</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        title={confirmAction && confirmLabels[confirmAction].title}
+        description={confirmAction ? confirmLabels[confirmAction].description : undefined}
+        confirmLabel={t('Common.Confirm')}
+        onConfirm={handleConfirm}
+      />
     </>
   );
 }

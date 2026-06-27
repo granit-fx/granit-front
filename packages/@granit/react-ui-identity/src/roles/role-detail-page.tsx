@@ -3,14 +3,6 @@ import { usePermissions } from '@granit/react-authorization';
 import { useAssignRole, useRoleMembers, useRemoveRole } from '@granit/react-identity';
 import { useTranslation } from '@granit/react-localization';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   Button,
   Dialog,
   DialogContent,
@@ -25,6 +17,7 @@ import {
   TableRow,
   toast,
 } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { ArrowLeft, Plus, X } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -167,29 +160,22 @@ export function RoleDetailPage() {
         </div>
       )}
 
-      <AlertDialog open={!!removeTarget} onOpenChange={(open) => !open && setRemoveTarget(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('Identity.Roles.Detail.RemoveUser', 'Remove')}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t(
-                'Identity.Roles.Detail.RemoveConfirm',
-                'Remove {{userName}} from the {{roleName}} role?',
-                {
-                  userName: `${removeTarget?.firstName} ${removeTarget?.lastName}`,
-                  roleName,
-                }
-              )}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('Common.Cancel', 'Cancel')}</AlertDialogCancel>
-            <AlertDialogAction onClick={handleRemove}>
-              {t('Identity.Roles.Detail.RemoveUser', 'Remove')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmActionDialog
+        open={!!removeTarget}
+        onOpenChange={(open) => !open && setRemoveTarget(null)}
+        title={t('Identity.Roles.Detail.RemoveUser', 'Remove')}
+        description={t(
+          'Identity.Roles.Detail.RemoveConfirm',
+          'Remove {{userName}} from the {{roleName}} role?',
+          {
+            userName: `${removeTarget?.firstName} ${removeTarget?.lastName}`,
+            roleName,
+          }
+        )}
+        confirmLabel={t('Identity.Roles.Detail.RemoveUser', 'Remove')}
+        cancelLabel={t('Common.Cancel', 'Cancel')}
+        onConfirm={handleRemove}
+      />
     </div>
   );
 }

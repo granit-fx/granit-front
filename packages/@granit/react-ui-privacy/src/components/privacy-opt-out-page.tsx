@@ -1,15 +1,6 @@
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { useOptOutStatus, useRequestOptOut } from '@granit/react-privacy';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
   Badge,
   Button,
   Card,
@@ -19,13 +10,16 @@ import {
   CardTitle,
   toast,
 } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { Loader2, ShieldOff } from 'lucide-react';
+import { useState } from 'react';
 
 export function PrivacyOptOutPage() {
   const { t } = useTranslation();
   const { data: status, isLoading } = useOptOutStatus();
   const { mutate: doOptOut, isPending } = useRequestOptOut();
   const { formatDateTime } = useDateFormatter();
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   return (
     <div data-slot="privacy-opt-out-page" className="space-y-6">
@@ -90,49 +84,42 @@ export function PrivacyOptOutPage() {
               )}
 
               {!status.isOptedOut && (
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="destructive" disabled={isPending}>
-                      {isPending ? (
-                        <Loader2 className="mr-2 size-4 animate-spin" />
-                      ) : (
-                        <ShieldOff className="mr-2 size-4" />
-                      )}
-                      {t('Privacy.OptOut.OptOutButton', 'Opt Out')}
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        {t('Privacy.OptOut.ConfirmTitle', 'Confirm Opt-Out')}
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        {t(
-                          'Privacy.OptOut.ConfirmDescription',
-                          'This will record your preference to opt out of the sale and sharing of your personal data. Depending on your jurisdiction, this action may not be reversible. Are you sure you want to proceed?'
-                        )}
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>{t('Privacy.OptOut.Cancel', 'Cancel')}</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() =>
-                          doOptOut(undefined, {
-                            onSuccess: () =>
-                              toast.success(
-                                t(
-                                  'Privacy.OptOut.SuccessToast',
-                                  'Your opt-out preference has been recorded.'
-                                )
-                              ),
-                          })
-                        }
-                      >
-                        {t('Privacy.OptOut.ConfirmButton', 'Confirm Opt-Out')}
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                <>
+                  <Button
+                    variant="destructive"
+                    disabled={isPending}
+                    onClick={() => setConfirmOpen(true)}
+                  >
+                    {isPending ? (
+                      <Loader2 className="mr-2 size-4 animate-spin" />
+                    ) : (
+                      <ShieldOff className="mr-2 size-4" />
+                    )}
+                    {t('Privacy.OptOut.OptOutButton', 'Opt Out')}
+                  </Button>
+                  <ConfirmActionDialog
+                    open={confirmOpen}
+                    onOpenChange={setConfirmOpen}
+                    title={t('Privacy.OptOut.ConfirmTitle', 'Confirm Opt-Out')}
+                    description={t(
+                      'Privacy.OptOut.ConfirmDescription',
+                      'This will record your preference to opt out of the sale and sharing of your personal data. Depending on your jurisdiction, this action may not be reversible. Are you sure you want to proceed?'
+                    )}
+                    cancelLabel={t('Privacy.OptOut.Cancel', 'Cancel')}
+                    confirmLabel={t('Privacy.OptOut.ConfirmButton', 'Confirm Opt-Out')}
+                    onConfirm={() =>
+                      doOptOut(undefined, {
+                        onSuccess: () =>
+                          toast.success(
+                            t(
+                              'Privacy.OptOut.SuccessToast',
+                              'Your opt-out preference has been recorded.'
+                            )
+                          ),
+                      })
+                    }
+                  />
+                </>
               )}
             </>
           )}

@@ -3,15 +3,6 @@ import { useTranslation } from '@granit/react-localization';
 import {
   Alert,
   AlertDescription,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
   Button,
   Separator,
   Table,
@@ -22,7 +13,9 @@ import {
   TableRow,
   toast,
 } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { ArrowLeft, Plus, Pencil, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 export function PageTreePage() {
@@ -33,6 +26,7 @@ export function PageTreePage() {
 
   const { data: pages, isLoading, isError } = usePageTree(effectiveSiteId);
   const deletePage = useDeletePage();
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; path: string } | null>(null);
 
   function handleDelete(pageId: string) {
     deletePage.mutate(
@@ -115,47 +109,41 @@ export function PageTreePage() {
                       <Pencil className="h-4 w-4" />
                     </Link>
                   </Button>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        title={t('cms:Common.Delete', 'Delete')}
-                        disabled={page.isSiteRoot}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          {t('cms:Pages.DeleteConfirm.Title', 'Delete page?')}
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          {t(
-                            'cms:Pages.DeleteConfirm.Description',
-                            'Delete "{{path}}" and all its children?',
-                            { path: page.structurePath }
-                          )}
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>{t('cms:Common.Cancel', 'Cancel')}</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDelete(page.id)}
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        >
-                          {t('cms:Common.Delete', 'Delete')}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    title={t('cms:Common.Delete', 'Delete')}
+                    disabled={page.isSiteRoot}
+                    onClick={() => setDeleteTarget({ id: page.id, path: page.structurePath })}
+                  >
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
                 </div>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+
+      <ConfirmActionDialog
+        open={deleteTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeleteTarget(null);
+        }}
+        tone="destructive"
+        title={t('cms:Pages.DeleteConfirm.Title', 'Delete page?')}
+        description={t(
+          'cms:Pages.DeleteConfirm.Description',
+          'Delete "{{path}}" and all its children?',
+          { path: deleteTarget?.path ?? '' }
+        )}
+        confirmLabel={t('cms:Common.Delete', 'Delete')}
+        cancelLabel={t('cms:Common.Cancel', 'Cancel')}
+        onConfirm={() => {
+          if (deleteTarget) handleDelete(deleteTarget.id);
+          setDeleteTarget(null);
+        }}
+      />
     </div>
   );
 }

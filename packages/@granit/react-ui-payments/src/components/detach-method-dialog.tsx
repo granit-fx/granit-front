@@ -1,16 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { useDetachPaymentMethod } from '@granit/react-payments';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  toast,
-} from '@granit/react-ui';
+import { toast } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 
 import type { PaymentMethodResponse } from '@granit/payments';
 
@@ -39,27 +30,17 @@ export function DetachMethodDialog({ open, onOpenChange, method }: DetachMethodD
   const label = method?.displayLabel ?? '';
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent data-slot="detach-method-dialog">
-        <AlertDialogHeader>
-          <AlertDialogTitle>{t('Payments.Methods.DetachTitle')}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {t('Payments.Methods.DetachConfirmation', { method: label })}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel disabled={detachMutation.isPending}>
-            {t('Common.Cancel')}
-          </AlertDialogCancel>
-          <AlertDialogAction
-            onClick={handleDetach}
-            disabled={detachMutation.isPending}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-          >
-            {detachMutation.isPending ? t('Common.Loading') : t('Payments.Methods.Detach')}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <ConfirmActionDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      data-slot="detach-method-dialog"
+      tone="destructive"
+      title={t('Payments.Methods.DetachTitle')}
+      description={t('Payments.Methods.DetachConfirmation', { method: label })}
+      confirmLabel={t('Payments.Methods.Detach')}
+      busyLabel={t('Common.Loading')}
+      isPending={detachMutation.isPending}
+      onConfirm={handleDetach}
+    />
   );
 }

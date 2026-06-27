@@ -1,18 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { useRemovePartyExternalMappingMutation } from '@granit/react-parties';
-import {
-  Badge,
-  Button,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  toast,
-} from '@granit/react-ui';
+import { Badge, Button, toast } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -83,28 +72,19 @@ export function ExternalMappingsTab({ partyId, mappings }: ExternalMappingsTabPr
 
       <AddExternalMappingDialog partyId={partyId} open={open} onOpenChange={setOpen} />
 
-      <AlertDialog open={confirmRemove !== null} onOpenChange={(o) => !o && setConfirmRemove(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('Parties.ExternalMappings.RemoveConfirmTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('Parties.ExternalMappings.RemoveConfirmDescription', {
-                provider: confirmRemove ?? '',
-              })}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={remove.isPending}>{t('Common.Cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleRemove}
-              disabled={remove.isPending}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {remove.isPending ? t('Common.Loading') : t('Common.Delete')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmActionDialog
+        open={confirmRemove !== null}
+        onOpenChange={(o) => !o && setConfirmRemove(null)}
+        tone="destructive"
+        title={t('Parties.ExternalMappings.RemoveConfirmTitle')}
+        description={t('Parties.ExternalMappings.RemoveConfirmDescription', {
+          provider: confirmRemove ?? '',
+        })}
+        confirmLabel={t('Common.Delete')}
+        busyLabel={t('Common.Loading')}
+        isPending={remove.isPending}
+        onConfirm={handleRemove}
+      />
     </div>
   );
 }

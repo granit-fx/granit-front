@@ -1,16 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { useRevokeSeat } from '@granit/react-subscriptions';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  toast,
-} from '@granit/react-ui';
+import { toast } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { toEntityId } from '@granit/types';
 
 import type { SeatResponse, SubscriptionId } from '@granit/subscriptions';
@@ -45,27 +36,18 @@ export function RevokeSeatDialog({
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{t('Subscriptions.Seats.RevokeTitle')}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {t('Subscriptions.Seats.RevokeConfirm', {
-              user: seat?.userId ?? '',
-            })}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>{t('Common.Cancel')}</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={handleConfirm}
-            disabled={revokeSeat.isPending}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-          >
-            {revokeSeat.isPending ? t('Common.Loading') : t('Subscriptions.Seats.Revoke')}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <ConfirmActionDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      tone="destructive"
+      title={t('Subscriptions.Seats.RevokeTitle')}
+      description={t('Subscriptions.Seats.RevokeConfirm', {
+        user: seat?.userId ?? '',
+      })}
+      confirmLabel={t('Subscriptions.Seats.Revoke')}
+      busyLabel={t('Common.Loading')}
+      isPending={revokeSeat.isPending}
+      onConfirm={handleConfirm}
+    />
   );
 }

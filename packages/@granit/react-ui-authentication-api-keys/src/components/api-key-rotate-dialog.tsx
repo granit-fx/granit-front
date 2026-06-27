@@ -1,14 +1,5 @@
 import { useTranslation } from '@granit/react-localization';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 
 interface ApiKeyRotateDialogProps {
   open: boolean;
@@ -28,21 +19,15 @@ export function ApiKeyRotateDialog({
   const { t } = useTranslation();
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent data-slot="api-key-rotate-dialog">
-        <AlertDialogHeader>
-          <AlertDialogTitle>{t('ApiKeys.ConfirmRotate')}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {t('ApiKeys.ConfirmRotateDescription', { name: keyName })}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>{t('Common.Cancel')}</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm} disabled={isPending}>
-            {t('ApiKeys.ConfirmRotate')}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <ConfirmActionDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      data-slot="api-key-rotate-dialog"
+      title={t('ApiKeys.ConfirmRotate')}
+      description={t('ApiKeys.ConfirmRotateDescription', { name: keyName })}
+      confirmLabel={t('ApiKeys.ConfirmRotate')}
+      isPending={isPending}
+      onConfirm={onConfirm}
+    />
   );
 }

@@ -11,20 +11,8 @@ import {
 } from '@granit/react-ai-prompts';
 import { usePermissions } from '@granit/react-authorization';
 import { useTranslation } from '@granit/react-localization';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@granit/react-ui';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { useState } from 'react';
 
 import type { CreatePromptRequest, PromptId } from '@granit/ai-prompts';
@@ -141,34 +129,20 @@ export function PromptCataloguePage() {
       </Dialog>
 
       {/* Delete confirmation */}
-      <AlertDialog
+      <ConfirmActionDialog
         open={deletingId !== null}
         onOpenChange={(open) => {
           if (!open) setDeletingId(null);
         }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {t('AiPrompts.Delete.ConfirmTitle', 'Delete this prompt?')}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('AiPrompts.Delete.ConfirmDescription', 'This cannot be undone.')}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('AiPrompts.Actions.Cancel', 'Cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                if (deletingId) remove.remove(deletingId);
-                setDeletingId(null);
-              }}
-            >
-              {t('AiPrompts.Actions.Delete', 'Delete')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        title={t('AiPrompts.Delete.ConfirmTitle', 'Delete this prompt?')}
+        description={t('AiPrompts.Delete.ConfirmDescription', 'This cannot be undone.')}
+        confirmLabel={t('AiPrompts.Actions.Delete', 'Delete')}
+        cancelLabel={t('AiPrompts.Actions.Cancel', 'Cancel')}
+        onConfirm={() => {
+          if (deletingId) remove.remove(deletingId);
+          setDeletingId(null);
+        }}
+      />
     </div>
   );
 }

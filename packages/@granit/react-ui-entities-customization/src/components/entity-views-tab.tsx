@@ -28,17 +28,9 @@ import {
   SelectTrigger,
   SelectValue,
   Spinner,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   toast,
 } from '@granit/react-ui';
-import { EmptyState } from '@granit/react-ui-kit';
+import { ConfirmActionDialog, EmptyState } from '@granit/react-ui-kit';
 import { Globe, Pencil, Pin, PinOff, Star, Trash2, Users } from 'lucide-react';
 import { useState } from 'react';
 
@@ -431,29 +423,18 @@ export function EntityViewsTab() {
         />
       )}
 
-      <AlertDialog open={deletingId !== null} onOpenChange={(open) => !open && setDeletingId(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {t('views:Delete.ConfirmTitle', { defaultValue: 'Delete this view?' })}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('views:Delete.ConfirmBody', {
-                defaultValue: 'This action cannot be undone.',
-              })}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('Common.Cancel', 'Cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleConfirmDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {t('Common.Delete', 'Delete')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmActionDialog
+        open={deletingId !== null}
+        onOpenChange={(open) => !open && setDeletingId(null)}
+        tone="destructive"
+        title={t('views:Delete.ConfirmTitle', { defaultValue: 'Delete this view?' })}
+        description={t('views:Delete.ConfirmBody', {
+          defaultValue: 'This action cannot be undone.',
+        })}
+        confirmLabel={t('Common.Delete', 'Delete')}
+        cancelLabel={t('Common.Cancel', 'Cancel')}
+        onConfirm={handleConfirmDelete}
+      />
     </>
   );
 }

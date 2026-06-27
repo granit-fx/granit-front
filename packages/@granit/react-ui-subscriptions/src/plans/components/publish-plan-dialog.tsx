@@ -1,16 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { usePublishPlan } from '@granit/react-subscriptions';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  toast,
-} from '@granit/react-ui';
+import { toast } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { toEntityId } from '@granit/types';
 
 import type { PlanId } from '@granit/subscriptions';
@@ -44,21 +35,15 @@ export function PublishPlanDialog({
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{t('Subscriptions.Plans.PublishTitle')}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {t('Subscriptions.Plans.PublishConfirm', { planName })}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>{t('Common.Cancel')}</AlertDialogCancel>
-          <AlertDialogAction onClick={handleConfirm} disabled={publishPlan.isPending}>
-            {publishPlan.isPending ? t('Common.Loading') : t('Subscriptions.Plans.Publish')}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <ConfirmActionDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={t('Subscriptions.Plans.PublishTitle')}
+      description={t('Subscriptions.Plans.PublishConfirm', { planName })}
+      confirmLabel={t('Subscriptions.Plans.Publish')}
+      busyLabel={t('Common.Loading')}
+      isPending={publishPlan.isPending}
+      onConfirm={handleConfirm}
+    />
   );
 }

@@ -1,16 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { usePublishLegalDocument } from '@granit/react-privacy';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  toast,
-} from '@granit/react-ui';
+import { toast } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 
 interface LegalDocumentPublishDialogProps {
   readonly documentId: string;
@@ -38,21 +29,15 @@ export function LegalDocumentPublishDialog({
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{t('Privacy.LegalDocuments.PublishTitle')}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {t('Privacy.LegalDocuments.PublishConfirm', { name: displayName })}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>{t('Common.Cancel')}</AlertDialogCancel>
-          <AlertDialogAction onClick={handleConfirm} disabled={publishMutation.isPending}>
-            {publishMutation.isPending ? t('Common.Loading') : t('Privacy.LegalDocuments.Publish')}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <ConfirmActionDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={t('Privacy.LegalDocuments.PublishTitle')}
+      description={t('Privacy.LegalDocuments.PublishConfirm', { name: displayName })}
+      confirmLabel={t('Privacy.LegalDocuments.Publish')}
+      busyLabel={t('Common.Loading')}
+      isPending={publishMutation.isPending}
+      onConfirm={handleConfirm}
+    />
   );
 }

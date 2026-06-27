@@ -12,14 +12,6 @@ import {
   useRescheduleScheduledAction,
 } from '@granit/react-scheduling';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   Button,
   Dialog,
   DialogContent,
@@ -31,6 +23,7 @@ import {
   Spinner,
 } from '@granit/react-ui';
 import {
+  ConfirmActionDialog,
   FilterPresets,
   QueryDataTable,
   SmartFilterBar,
@@ -209,26 +202,18 @@ function SchedulingPageContent() {
       />
 
       {/* Cancel confirmation dialog */}
-      <AlertDialog open={!!cancelTarget} onOpenChange={(open) => !open && setCancelTarget(null)}>
-        <AlertDialogContent data-slot="scheduling-cancel-dialog">
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('Scheduling.Actions.Cancel')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('Scheduling.Actions.CancelConfirm')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={cancelAction.isPending}>
-              {t('Common.Close')}
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmCancel}
-              disabled={cancelAction.isPending}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {t('Scheduling.Actions.Cancel')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmActionDialog
+        open={!!cancelTarget}
+        onOpenChange={(open) => !open && setCancelTarget(null)}
+        data-slot="scheduling-cancel-dialog"
+        tone="destructive"
+        title={t('Scheduling.Actions.Cancel')}
+        description={t('Scheduling.Actions.CancelConfirm')}
+        cancelLabel={t('Common.Close')}
+        confirmLabel={t('Scheduling.Actions.Cancel')}
+        isPending={cancelAction.isPending}
+        onConfirm={confirmCancel}
+      />
 
       {/* Reschedule dialog */}
       <Dialog open={!!rescheduleTarget} onOpenChange={(open) => !open && setRescheduleTarget(null)}>

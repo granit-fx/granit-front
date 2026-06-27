@@ -1,14 +1,5 @@
 import { useTranslation } from '@granit/react-localization';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 
 import { actionTitle, type PendingLifecycle } from './dashboard-lifecycle-types';
 
@@ -56,50 +47,37 @@ export function LifecycleConfirmDialog({
   isPending,
 }: LifecycleConfirmDialogProps) {
   const { t } = useTranslation();
+  if (!pending) {
+    return (
+      <ConfirmActionDialog
+        open={false}
+        onOpenChange={() => onCancel()}
+        data-slot="dashboard-lifecycle-confirm"
+        title=""
+        confirmLabel=""
+        onConfirm={onConfirm}
+      />
+    );
+  }
   return (
-    <AlertDialog open={pending !== null} onOpenChange={(open) => !open && onCancel()}>
-      <AlertDialogContent data-slot="dashboard-lifecycle-confirm" data-action={pending?.action}>
-        {pending ? (
-          <>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                {t(`Dashboards.List.Confirm.${actionTitle(pending.action)}.Title`, {
-                  defaultValue: LIFECYCLE_DIALOG_DEFAULTS[pending.action].title,
-                })}
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                {t(`Dashboards.List.Confirm.${actionTitle(pending.action)}.Body`, {
-                  name: pending.dashboard.name,
-                  defaultValue: LIFECYCLE_DIALOG_DEFAULTS[pending.action].body(
-                    pending.dashboard.name
-                  ),
-                })}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel disabled={isPending}>
-                {t('Common.Cancel', { defaultValue: 'Cancel' })}
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={(event) => {
-                  event.preventDefault();
-                  onConfirm();
-                }}
-                disabled={isPending}
-                className={
-                  pending.action === 'archive'
-                    ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
-                    : undefined
-                }
-              >
-                {t(`Common.${actionTitle(pending.action)}`, {
-                  defaultValue: LIFECYCLE_DIALOG_DEFAULTS[pending.action].confirm,
-                })}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </>
-        ) : null}
-      </AlertDialogContent>
-    </AlertDialog>
+    <ConfirmActionDialog
+      open
+      onOpenChange={(open) => !open && onCancel()}
+      data-slot="dashboard-lifecycle-confirm"
+      tone={pending.action === 'archive' ? 'destructive' : 'default'}
+      isPending={isPending}
+      title={t(`Dashboards.List.Confirm.${actionTitle(pending.action)}.Title`, {
+        defaultValue: LIFECYCLE_DIALOG_DEFAULTS[pending.action].title,
+      })}
+      description={t(`Dashboards.List.Confirm.${actionTitle(pending.action)}.Body`, {
+        name: pending.dashboard.name,
+        defaultValue: LIFECYCLE_DIALOG_DEFAULTS[pending.action].body(pending.dashboard.name),
+      })}
+      confirmLabel={t(`Common.${actionTitle(pending.action)}`, {
+        defaultValue: LIFECYCLE_DIALOG_DEFAULTS[pending.action].confirm,
+      })}
+      cancelLabel={t('Common.Cancel', { defaultValue: 'Cancel' })}
+      onConfirm={onConfirm}
+    />
   );
 }

@@ -7,14 +7,6 @@ import {
   useScheduledAction,
 } from '@granit/react-scheduling';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   Button,
   Card,
   CardContent,
@@ -30,7 +22,7 @@ import {
   Label,
   Spinner,
 } from '@granit/react-ui';
-import { EmptyState } from '@granit/react-ui-kit';
+import { ConfirmActionDialog, EmptyState } from '@granit/react-ui-kit';
 import { ScheduledActionStatus, SchedulingPermissions } from '@granit/scheduling';
 import { toEntityId, toISODateString } from '@granit/types';
 import { ArrowLeft, Ban, CalendarClock } from 'lucide-react';
@@ -152,26 +144,18 @@ function SchedulingDetailContent() {
       </Card>
 
       {/* Cancel dialog */}
-      <AlertDialog open={cancelOpen} onOpenChange={setCancelOpen}>
-        <AlertDialogContent data-slot="scheduling-cancel-dialog">
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('Scheduling.Actions.Cancel')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('Scheduling.Actions.CancelConfirm')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={cancelMutation.isPending}>
-              {t('Common.Close')}
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleCancel}
-              disabled={cancelMutation.isPending}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {t('Scheduling.Actions.Cancel')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmActionDialog
+        open={cancelOpen}
+        onOpenChange={setCancelOpen}
+        data-slot="scheduling-cancel-dialog"
+        tone="destructive"
+        title={t('Scheduling.Actions.Cancel')}
+        description={t('Scheduling.Actions.CancelConfirm')}
+        cancelLabel={t('Common.Close')}
+        confirmLabel={t('Scheduling.Actions.Cancel')}
+        isPending={cancelMutation.isPending}
+        onConfirm={handleCancel}
+      />
 
       {/* Reschedule dialog */}
       <Dialog open={rescheduleOpen} onOpenChange={setRescheduleOpen}>

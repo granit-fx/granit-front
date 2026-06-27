@@ -1,14 +1,6 @@
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { useDeletionRequests, useRequestDeletion } from '@granit/react-privacy';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   Button,
   Card,
   CardContent,
@@ -20,6 +12,7 @@ import {
   Textarea,
   toast,
 } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { AlertTriangle, Info, Loader2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -135,27 +128,19 @@ export function PrivacyDeletionPage() {
 
       <DeletionRequestTable />
 
-      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('Privacy.Deletion.ConfirmTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {defer
-                ? t('Privacy.Deletion.ConfirmDescriptionDeferred')
-                : t('Privacy.Deletion.ConfirmDescription')}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('Common.Cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleConfirm}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {t('Privacy.Deletion.ConfirmButton')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmActionDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        tone="destructive"
+        title={t('Privacy.Deletion.ConfirmTitle')}
+        description={
+          defer
+            ? t('Privacy.Deletion.ConfirmDescriptionDeferred')
+            : t('Privacy.Deletion.ConfirmDescription')
+        }
+        confirmLabel={t('Privacy.Deletion.ConfirmButton')}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 }

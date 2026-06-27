@@ -1,13 +1,5 @@
 import { useTranslation } from '@granit/react-localization';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   Button,
   Dialog,
   DialogContent,
@@ -22,6 +14,7 @@ import {
   Input,
   Label,
 } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { MoreHorizontal, Pencil, Pin, PinOff, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -169,29 +162,19 @@ export function ConversationListItem({
         </DialogContent>
       </Dialog>
 
-      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-        <AlertDialogContent data-slot="delete-conversation-dialog">
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('AiChat.Conversation.DeleteTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('AiChat.Conversation.DeleteDescription', { title })}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting}>{t('Common.Cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(event) => {
-                event.preventDefault();
-                void submitDelete();
-              }}
-              disabled={deleting}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {t('Common.Delete')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmActionDialog
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        data-slot="delete-conversation-dialog"
+        tone="destructive"
+        title={t('AiChat.Conversation.DeleteTitle')}
+        description={t('AiChat.Conversation.DeleteDescription', { title })}
+        confirmLabel={t('Common.Delete')}
+        isPending={deleting}
+        onConfirm={() => {
+          void submitDelete();
+        }}
+      />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 // (data grid, querying, form dialog, view switcher). export * so consumers
 // keep their previous deep-import surface through a single entrypoint.
 
+export * from './confirm-action-dialog/confirm-action-dialog';
 export * from './data-table/manual-data-table';
 export * from './form-dialog/form-dialog';
 export * from './hooks/use-copy-to-clipboard';

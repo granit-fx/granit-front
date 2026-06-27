@@ -1,13 +1,5 @@
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   Button,
   Spinner,
   Table,
@@ -17,9 +9,10 @@ import {
   TableHeader,
   TableRow,
 } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { useRevokeSigningKey, useRotateSigningKey, useSigningKeys } from '@granit/react-webhooks';
 import { WebhookSigningKeyStatus } from '@granit/webhooks';
-import { Loader2, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
 import { WebhookKeyStatusBadge } from './webhook-key-status-badge';
@@ -153,29 +146,16 @@ export function WebhookSigningKeys({
         </Table>
       )}
 
-      <AlertDialog
+      <ConfirmActionDialog
         open={keyToRevoke !== null}
         onOpenChange={(open) => !open && setKeyToRevoke(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('Webhooks.Keys.ConfirmRevokeTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('Webhooks.Keys.ConfirmRevokeMessage')}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('Common.Cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleRevokeConfirm}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {revokeMutation.isPending && <Loader2 className="mr-1 size-3.5 animate-spin" />}
-              {t('Webhooks.Keys.Revoke')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        tone="destructive"
+        title={t('Webhooks.Keys.ConfirmRevokeTitle')}
+        description={t('Webhooks.Keys.ConfirmRevokeMessage')}
+        confirmLabel={t('Webhooks.Keys.Revoke')}
+        isPending={revokeMutation.isPending}
+        onConfirm={handleRevokeConfirm}
+      />
     </div>
   );
 }

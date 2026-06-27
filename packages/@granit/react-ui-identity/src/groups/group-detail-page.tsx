@@ -3,14 +3,6 @@ import { usePermissions } from '@granit/react-authorization';
 import { useAddUserToGroup, useGroups, useRemoveUserFromGroup } from '@granit/react-identity';
 import { useTranslation } from '@granit/react-localization';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   Badge,
   Button,
   Dialog,
@@ -26,7 +18,7 @@ import {
   TableRow,
   toast,
 } from '@granit/react-ui';
-import { EmptyState } from '@granit/react-ui-kit';
+import { ConfirmActionDialog, EmptyState } from '@granit/react-ui-kit';
 import { ArrowLeft, Plus, X } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -210,31 +202,22 @@ export function GroupDetailPage() {
         </div>
       )}
 
-      <AlertDialog open={!!removeTarget} onOpenChange={(open) => !open && setRemoveTarget(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {t('Identity.Groups.Detail.RemoveMember', 'Remove')}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {t(
-                'Identity.Groups.Detail.RemoveConfirm',
-                'Remove {{userName}} from the {{groupName}} group?',
-                {
-                  userName: `${removeTarget?.firstName} ${removeTarget?.lastName}`,
-                  groupName: group?.name ?? groupId,
-                }
-              )}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('Common.Cancel', 'Cancel')}</AlertDialogCancel>
-            <AlertDialogAction onClick={handleRemove}>
-              {t('Identity.Groups.Detail.RemoveMember', 'Remove')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmActionDialog
+        open={!!removeTarget}
+        onOpenChange={(open) => !open && setRemoveTarget(null)}
+        title={t('Identity.Groups.Detail.RemoveMember', 'Remove')}
+        description={t(
+          'Identity.Groups.Detail.RemoveConfirm',
+          'Remove {{userName}} from the {{groupName}} group?',
+          {
+            userName: `${removeTarget?.firstName} ${removeTarget?.lastName}`,
+            groupName: group?.name ?? groupId,
+          }
+        )}
+        confirmLabel={t('Identity.Groups.Detail.RemoveMember', 'Remove')}
+        cancelLabel={t('Common.Cancel', 'Cancel')}
+        onConfirm={handleRemove}
+      />
     </div>
   );
 }

@@ -1,17 +1,7 @@
 import { useCleanupOrphans } from '@granit/react-blob-storage';
 import { useTranslation } from '@granit/react-localization';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  Button,
-  toast,
-} from '@granit/react-ui';
+import { Button, toast } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -51,29 +41,19 @@ export function BlobCleanupOrphansButton() {
         {t('BlobStorage.CleanupOrphans.Button', 'Cleanup orphans')}
       </Button>
 
-      <AlertDialog open={open} onOpenChange={setOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {t('BlobStorage.CleanupOrphans.DialogTitle', 'Clean up orphan blobs?')}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {t(
-                'BlobStorage.CleanupOrphans.DialogDescription',
-                'This will delete blobs stuck in "Pending" or "Uploading" state past the orphan threshold. The action is irreversible.'
-              )}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={cleanup.isPending}>
-              {t('Common.Cancel', 'Cancel')}
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirm} disabled={cleanup.isPending}>
-              {cleanup.isPending ? '…' : t('Common.Confirm', 'Confirm')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmActionDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={t('BlobStorage.CleanupOrphans.DialogTitle', 'Clean up orphan blobs?')}
+        description={t(
+          'BlobStorage.CleanupOrphans.DialogDescription',
+          'This will delete blobs stuck in "Pending" or "Uploading" state past the orphan threshold. The action is irreversible.'
+        )}
+        confirmLabel={t('Common.Confirm', 'Confirm')}
+        busyLabel="…"
+        isPending={cleanup.isPending}
+        onConfirm={handleConfirm}
+      />
     </>
   );
 }

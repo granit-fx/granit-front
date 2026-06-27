@@ -3811,6 +3811,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/settings':
         specifier: workspace:*
         version: link:../settings
@@ -3877,6 +3880,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@storybook/react-vite':
         specifier: ^10.4.6
         version: 10.4.6(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rollup@4.62.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.4)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)(vite@8.1.0(@types/node@26.0.0)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
@@ -4545,6 +4551,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -4600,6 +4609,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -4652,6 +4664,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -4713,6 +4728,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -4875,6 +4893,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -5427,6 +5448,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation

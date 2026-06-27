@@ -4,18 +4,8 @@ import {
   useArchivePartyMutation,
   useSuspendPartyMutation,
 } from '@granit/react-parties';
-import {
-  Button,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  toast,
-} from '@granit/react-ui';
+import { Button, toast } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { Archive, PauseCircle, PlayCircle } from 'lucide-react';
 import { useState } from 'react';
 
@@ -103,26 +93,17 @@ export function LifecycleActions({ partyId, status }: LifecycleActionsProps) {
         {t('Parties.Lifecycle.Archive')}
       </Button>
 
-      <AlertDialog open={dialog === 'archive'} onOpenChange={(o) => !o && setDialog(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('Parties.Lifecycle.ArchiveConfirmTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('Parties.Lifecycle.ArchiveConfirmDescription')}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={archive.isPending}>{t('Common.Cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleArchive}
-              disabled={archive.isPending}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {archive.isPending ? t('Common.Loading') : t('Parties.Lifecycle.Archive')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmActionDialog
+        open={dialog === 'archive'}
+        onOpenChange={(o) => !o && setDialog(null)}
+        tone="destructive"
+        title={t('Parties.Lifecycle.ArchiveConfirmTitle')}
+        description={t('Parties.Lifecycle.ArchiveConfirmDescription')}
+        confirmLabel={t('Parties.Lifecycle.Archive')}
+        busyLabel={t('Common.Loading')}
+        isPending={archive.isPending}
+        onConfirm={handleArchive}
+      />
     </div>
   );
 }

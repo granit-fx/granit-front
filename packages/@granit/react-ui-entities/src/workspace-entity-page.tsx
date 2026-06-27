@@ -17,22 +17,9 @@ import {
   useQueryMeta,
   useSmartFilter,
 } from '@granit/react-query-engine';
+import { Button, Skeleton, Spinner, Checkbox, toast } from '@granit/react-ui';
 import {
-  Button,
-  Skeleton,
-  Spinner,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  Checkbox,
-  toast,
-} from '@granit/react-ui';
-import {
+  ConfirmActionDialog,
   FilterPresets,
   GroupBySelector,
   QueryDataTable,
@@ -636,7 +623,7 @@ function WorkspaceEntityContent({
         bulkEndpoint
         className="sticky bottom-4 z-30 mx-auto mt-4 flex w-fit items-center gap-2 rounded-lg border bg-background px-3 py-2 shadow-lg [&_[data-granit-entity-action]]:inline-flex [&_[data-granit-entity-action]]:h-8 [&_[data-granit-entity-action]]:items-center [&_[data-granit-entity-action]]:rounded-md [&_[data-granit-entity-action]]:border [&_[data-granit-entity-action]]:bg-background [&_[data-granit-entity-action]]:px-3 [&_[data-granit-entity-action]]:text-sm [&_[data-granit-entity-action]]:font-medium [&_[data-granit-entity-action]]:hover:bg-accent [&_[data-granit-entity-action]]:disabled:opacity-50 [&_[data-granit-entity-action][data-running]]:animate-pulse [&_[data-granit-selection-bar-clear]]:inline-flex [&_[data-granit-selection-bar-clear]]:h-8 [&_[data-granit-selection-bar-clear]]:items-center [&_[data-granit-selection-bar-clear]]:rounded-md [&_[data-granit-selection-bar-clear]]:px-3 [&_[data-granit-selection-bar-clear]]:text-sm [&_[data-granit-selection-bar-clear]]:text-muted-foreground [&_[data-granit-selection-bar-clear]]:hover:bg-accent [&_[data-granit-selection-bar-summary]]:text-sm [&_[data-granit-selection-bar-summary]]:font-medium"
       />
-      <AlertDialog
+      <ConfirmActionDialog
         open={pendingConfirm !== null}
         onOpenChange={(open) => {
           if (!open && pendingConfirm) {
@@ -644,41 +631,24 @@ function WorkspaceEntityContent({
             setPendingConfirm(null);
           }
         }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {pendingConfirm?.action.confirmationKey
-                ? t(pendingConfirm.action.confirmationKey, t('Common.Confirm', 'Confirm'))
-                : t('Common.Confirm', 'Confirm')}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('Common.SelectionAction.ConfirmCount', 'Apply to {{count}} selected record(s)?', {
-                count: pendingConfirm?.count ?? 0,
-              })}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel
-              onClick={() => {
-                pendingConfirm?.resolve(false);
-                setPendingConfirm(null);
-              }}
-            >
-              {t('Common.Cancel', 'Cancel')}
-            </AlertDialogCancel>
-            <AlertDialogAction
-              variant="destructive"
-              onClick={() => {
-                pendingConfirm?.resolve(true);
-                setPendingConfirm(null);
-              }}
-            >
-              {t('Common.Confirm', 'Confirm')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        tone="destructive"
+        title={
+          pendingConfirm?.action.confirmationKey
+            ? t(pendingConfirm.action.confirmationKey, t('Common.Confirm', 'Confirm'))
+            : t('Common.Confirm', 'Confirm')
+        }
+        description={t(
+          'Common.SelectionAction.ConfirmCount',
+          'Apply to {{count}} selected record(s)?',
+          { count: pendingConfirm?.count ?? 0 }
+        )}
+        confirmLabel={t('Common.Confirm', 'Confirm')}
+        cancelLabel={t('Common.Cancel', 'Cancel')}
+        onConfirm={() => {
+          pendingConfirm?.resolve(true);
+          setPendingConfirm(null);
+        }}
+      />
     </EntityPageLayout>
   );
 }

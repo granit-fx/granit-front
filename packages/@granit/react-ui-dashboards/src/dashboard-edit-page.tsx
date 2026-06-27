@@ -33,14 +33,6 @@ import { mapWidgetCatalog, mapWidgetConfigFormRegistry } from '@granit/react-map
 import {
   Button,
   Spinner,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   Dialog,
   DialogClose,
   DialogContent,
@@ -50,6 +42,7 @@ import {
   DialogTitle,
   toast,
 } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { ArrowLeft, Plus, RotateCcw, Save, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -365,78 +358,45 @@ export function DashboardEditPage() {
         </DialogContent>
       </Dialog>
 
-      <AlertDialog
-        open={pendingAction !== null}
+      <ConfirmActionDialog
+        open={pendingAction === 'delete-widget' && selectedWidget !== undefined}
         onOpenChange={(open) => !open && setPendingAction(null)}
-      >
-        <AlertDialogContent data-slot="dashboard-edit-confirm" data-action={pendingAction}>
-          {pendingAction === 'delete-widget' && selectedWidget && (
-            <>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  {t('Dashboards.Edit.Confirm.RemoveWidget.Title', {
-                    defaultValue: 'Remove widget?',
-                  })}
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  {t('Dashboards.Edit.Confirm.RemoveWidget.Body', {
-                    slug: selectedWidget.slug,
-                    defaultValue:
-                      '“{{slug}}” will be removed from the working copy. The deletion persists when you save.',
-                  })}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>
-                  {t('Common.Cancel', { defaultValue: 'Cancel' })}
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={(event) => {
-                    event.preventDefault();
-                    handleDeleteSelected();
-                    setPendingAction(null);
-                  }}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                >
-                  {t('Common.Remove', { defaultValue: 'Remove' })}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </>
-          )}
-          {pendingAction === 'discard' && (
-            <>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  {t('Dashboards.Edit.Confirm.Discard.Title', {
-                    defaultValue: 'Discard unsaved changes?',
-                  })}
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  {t('Dashboards.Edit.Confirm.Discard.Body', {
-                    defaultValue:
-                      'Local edits will be reverted to the last saved version. This cannot be undone.',
-                  })}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>
-                  {t('Common.KeepEditing', { defaultValue: 'Keep editing' })}
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={(event) => {
-                    event.preventDefault();
-                    handleReset();
-                    setPendingAction(null);
-                  }}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                >
-                  {t('Common.Discard', { defaultValue: 'Discard' })}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </>
-          )}
-        </AlertDialogContent>
-      </AlertDialog>
+        data-slot="dashboard-edit-confirm"
+        tone="destructive"
+        title={t('Dashboards.Edit.Confirm.RemoveWidget.Title', {
+          defaultValue: 'Remove widget?',
+        })}
+        description={t('Dashboards.Edit.Confirm.RemoveWidget.Body', {
+          slug: selectedWidget?.slug,
+          defaultValue:
+            '“{{slug}}” will be removed from the working copy. The deletion persists when you save.',
+        })}
+        confirmLabel={t('Common.Remove', { defaultValue: 'Remove' })}
+        cancelLabel={t('Common.Cancel', { defaultValue: 'Cancel' })}
+        onConfirm={() => {
+          handleDeleteSelected();
+          setPendingAction(null);
+        }}
+      />
+      <ConfirmActionDialog
+        open={pendingAction === 'discard'}
+        onOpenChange={(open) => !open && setPendingAction(null)}
+        data-slot="dashboard-edit-confirm"
+        tone="destructive"
+        title={t('Dashboards.Edit.Confirm.Discard.Title', {
+          defaultValue: 'Discard unsaved changes?',
+        })}
+        description={t('Dashboards.Edit.Confirm.Discard.Body', {
+          defaultValue:
+            'Local edits will be reverted to the last saved version. This cannot be undone.',
+        })}
+        confirmLabel={t('Common.Discard', { defaultValue: 'Discard' })}
+        cancelLabel={t('Common.KeepEditing', { defaultValue: 'Keep editing' })}
+        onConfirm={() => {
+          handleReset();
+          setPendingAction(null);
+        }}
+      />
     </div>
   );
 }

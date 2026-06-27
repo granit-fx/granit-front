@@ -7,15 +7,6 @@ import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import {
   Alert,
   AlertDescription,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
   Button,
   Separator,
   Table,
@@ -26,7 +17,9 @@ import {
   TableRow,
   toast,
 } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { ArrowLeft, RefreshCw, Star, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { CmsHostnameAddForm } from './components/cms-hostname-add-form';
@@ -43,6 +36,7 @@ export function HostnamesPage() {
   const { data: hostnames, isLoading, isError } = useSiteHostnames(effectiveSiteId);
   const removeHostname = useRemoveSiteHostname(effectiveSiteId);
   const verifyHostname = useVerifySiteHostname(effectiveSiteId);
+  const [removeTarget, setRemoveTarget] = useState<SiteHostnameResponse | null>(null);
 
   function handleRemove(hostname: SiteHostnameResponse) {
     removeHostname.mutate(hostname.id, {
@@ -132,47 +126,43 @@ export function HostnamesPage() {
                   >
                     <RefreshCw className="h-4 w-4" />
                   </Button>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        disabled={hostname.isPrimary}
-                        title={t('cms:Hostnames.Actions.Remove', 'Remove')}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          {t('cms:Hostnames.RemoveConfirm.Title', 'Remove hostname?')}
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          {t(
-                            'cms:Hostnames.RemoveConfirm.Description',
-                            'Remove "{{host}}" from this site?',
-                            { host: hostname.host }
-                          )}
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>{t('cms:Common.Cancel', 'Cancel')}</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleRemove(hostname)}
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        >
-                          {t('cms:Common.Remove', 'Remove')}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={hostname.isPrimary}
+                    title={t('cms:Hostnames.Actions.Remove', 'Remove')}
+                    onClick={() => setRemoveTarget(hostname)}
+                  >
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
                 </div>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+
+      <ConfirmActionDialog
+        open={removeTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setRemoveTarget(null);
+        }}
+        tone="destructive"
+        title={t('cms:Hostnames.RemoveConfirm.Title', 'Remove hostname?')}
+        description={t(
+          'cms:Hostnames.RemoveConfirm.Description',
+          'Remove "{{host}}" from this site?',
+          {
+            host: removeTarget?.host ?? '',
+          }
+        )}
+        confirmLabel={t('cms:Common.Remove', 'Remove')}
+        cancelLabel={t('cms:Common.Cancel', 'Cancel')}
+        onConfirm={() => {
+          if (removeTarget) handleRemove(removeTarget);
+          setRemoveTarget(null);
+        }}
+      />
     </div>
   );
 }

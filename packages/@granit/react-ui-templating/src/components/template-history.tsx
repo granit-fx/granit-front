@@ -4,20 +4,8 @@ import {
   useTemplateMutations,
   useTemplatingConfig,
 } from '@granit/react-templating';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  Button,
-  Checkbox,
-  Skeleton,
-  toast,
-} from '@granit/react-ui';
+import { Button, Checkbox, Skeleton, toast } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { getRevision } from '@granit/templating';
 import { GitCompareArrows, RotateCcw } from 'lucide-react';
 import { useState } from 'react';
@@ -120,23 +108,16 @@ export function TemplateHistory({
         ))}
       </div>
 
-      <AlertDialog
+      <ConfirmActionDialog
         open={!!restoreRevisionId}
         onOpenChange={(open) => {
           if (!open) setRestoreRevisionId(null);
         }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('Templates.History.Restore')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('Templates.Confirm.Publish')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('Common.Cancel')}</AlertDialogCancel>
-            <AlertDialogAction onClick={handleRestore}>{t('Common.Confirm')}</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        title={t('Templates.History.Restore')}
+        description={t('Templates.Confirm.Publish')}
+        confirmLabel={t('Common.Confirm')}
+        onConfirm={handleRestore}
+      />
     </div>
   );
 }

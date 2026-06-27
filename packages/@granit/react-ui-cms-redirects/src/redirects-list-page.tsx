@@ -3,15 +3,6 @@ import { useTranslation } from '@granit/react-localization';
 import {
   Alert,
   AlertDescription,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
   Badge,
   Button,
   Separator,
@@ -23,6 +14,7 @@ import {
   TableRow,
   toast,
 } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { ArrowLeft, Pencil, Plus, Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -36,6 +28,7 @@ export function RedirectsListPage() {
   const { id: siteId } = useParams<{ id: string }>();
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<RedirectResponse | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; source: string } | null>(null);
 
   const { data: redirects, isLoading, isError } = useRedirects(siteId ?? '');
   const deleteRedirect = useDeleteRedirect();
@@ -180,36 +173,13 @@ export function RedirectsListPage() {
                       <ToggleLeft className="h-4 w-4 text-muted-foreground" />
                     )}
                   </Button>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="ghost" size="sm">
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          {t('cms:Redirects.DeleteConfirm.Title', 'Delete redirect?')}
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          {t(
-                            'cms:Redirects.DeleteConfirm.Description',
-                            'Delete redirect from "{{path}}"?',
-                            { path: redirect.source }
-                          )}
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>{t('cms:Common.Cancel', 'Cancel')}</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDelete(redirect.id)}
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        >
-                          {t('cms:Common.Delete', 'Delete')}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setDeleteTarget({ id: redirect.id, source: redirect.source })}
+                  >
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
                 </div>
               </TableCell>
             </TableRow>
@@ -222,6 +192,28 @@ export function RedirectsListPage() {
         onOpenChange={setFormOpen}
         siteId={siteId ?? ''}
         redirect={editing}
+      />
+
+      <ConfirmActionDialog
+        open={deleteTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeleteTarget(null);
+        }}
+        tone="destructive"
+        title={t('cms:Redirects.DeleteConfirm.Title', 'Delete redirect?')}
+        description={t(
+          'cms:Redirects.DeleteConfirm.Description',
+          'Delete redirect from "{{path}}"?',
+          {
+            path: deleteTarget?.source ?? '',
+          }
+        )}
+        confirmLabel={t('cms:Common.Delete', 'Delete')}
+        cancelLabel={t('cms:Common.Cancel', 'Cancel')}
+        onConfirm={() => {
+          if (deleteTarget) handleDelete(deleteTarget.id);
+          setDeleteTarget(null);
+        }}
       />
     </div>
   );

@@ -3,15 +3,6 @@ import { useTranslation } from '@granit/react-localization';
 import {
   Alert,
   AlertDescription,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
   Button,
   Separator,
   Table,
@@ -22,7 +13,9 @@ import {
   TableRow,
   toast,
 } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { ArrowLeft, Plus, Pencil, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 export function MenusListPage() {
@@ -34,6 +27,7 @@ export function MenusListPage() {
   // it is not filterable by siteId on the wire.
   const { data: menus, isLoading, isError } = useMenus();
   const deleteMenu = useDeleteMenu();
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; key: string } | null>(null);
 
   function handleDelete(menuId: string) {
     deleteMenu.mutate(
@@ -108,40 +102,37 @@ export function MenusListPage() {
                       <Pencil className="h-4 w-4" />
                     </Link>
                   </Button>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="ghost" size="sm">
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          {t('cms:Menus.DeleteConfirm.Title', 'Delete menu?')}
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          {t('cms:Menus.DeleteConfirm.Description', 'Delete menu "{{key}}"?', {
-                            key: menu.key,
-                          })}
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>{t('cms:Common.Cancel', 'Cancel')}</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDelete(menu.id)}
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        >
-                          {t('cms:Common.Delete', 'Delete')}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setDeleteTarget({ id: menu.id, key: menu.key })}
+                  >
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
                 </div>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+
+      <ConfirmActionDialog
+        open={deleteTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeleteTarget(null);
+        }}
+        tone="destructive"
+        title={t('cms:Menus.DeleteConfirm.Title', 'Delete menu?')}
+        description={t('cms:Menus.DeleteConfirm.Description', 'Delete menu "{{key}}"?', {
+          key: deleteTarget?.key ?? '',
+        })}
+        confirmLabel={t('cms:Common.Delete', 'Delete')}
+        cancelLabel={t('cms:Common.Cancel', 'Cancel')}
+        onConfirm={() => {
+          if (deleteTarget) handleDelete(deleteTarget.id);
+          setDeleteTarget(null);
+        }}
+      />
     </div>
   );
 }

@@ -1,16 +1,7 @@
 import { useGranitClient } from '@granit/react-api-client';
 import { useDeleteLocalizationOverride, useTranslation } from '@granit/react-localization';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  toast,
-} from '@granit/react-ui';
+import { toast } from '@granit/react-ui';
+import { ConfirmActionDialog } from '@granit/react-ui-kit';
 
 import { logger } from '../logger';
 
@@ -55,28 +46,19 @@ export function TranslationDeleteDialog({
   if (!override) return null;
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent data-slot="translation-delete-dialog">
-        <AlertDialogHeader>
-          <AlertDialogTitle>{t('Localization.DeleteDialog.Title')}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {t('Localization.DeleteDialog.Message', {
-              key: override.key,
-              culture: override.cultureName,
-            })}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>{t('Common.Cancel')}</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={handleConfirm}
-            disabled={deleteOverrideMutation.isPending}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-          >
-            {t('Common.Confirm')}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <ConfirmActionDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      data-slot="translation-delete-dialog"
+      tone="destructive"
+      title={t('Localization.DeleteDialog.Title')}
+      description={t('Localization.DeleteDialog.Message', {
+        key: override.key,
+        culture: override.cultureName,
+      })}
+      confirmLabel={t('Common.Confirm')}
+      isPending={deleteOverrideMutation.isPending}
+      onConfirm={handleConfirm}
+    />
   );
 }
