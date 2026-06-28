@@ -12,6 +12,9 @@ export const dashboardsTranslationsFr = {
     "« {{slug}} » sera retiré de la copie de travail. La suppression sera persistée à l'enregistrement.",
   'Dashboards.Edit.Confirm.RemoveWidget.Title': 'Retirer le widget ?',
   'Dashboards.Edit.EditWidget.Title': 'Modifier le widget — {{slug}}',
+  'Dashboards.Edit.IncompleteWidgets_one': '{{count}} widget requiert des champs obligatoires',
+  'Dashboards.Edit.IncompleteWidgets_other': '{{count}} widgets requièrent des champs obligatoires',
+  'Dashboards.Edit.MissingRequired': 'Obligatoire :',
   'Dashboards.Edit.SaveError':
     "Impossible d'enregistrer le dashboard. Certaines modifications ont peut-être été persistées.",
   'Dashboards.Edit.SaveSuccess': 'Dashboard enregistré',

@@ -7,6 +7,7 @@ import {
 import {
   analyticsWidgetCatalog,
   analyticsWidgetConfigFormRegistry,
+  validateWidgetConfig,
 } from '@granit/react-analytics/editor';
 import {
   addWidget,
@@ -155,6 +156,14 @@ export function DashboardEditPage() {
   const selectedWidget = selectedSlug
     ? local.widgets.find((w) => w.slug === selectedSlug)
     : undefined;
+  const selectedWidgetErrors = selectedWidget ? validateWidgetConfig(selectedWidget) : [];
+
+  // A widget with an empty required field (queryName, groupBy, a mandatory
+  // column, …) renders server-side as `status: 'Error'`. Gate Save on a
+  // complete config so the invalid widget never reaches the backend.
+  const incompleteWidgetCount = local.widgets.filter(
+    (w) => validateWidgetConfig(w).length > 0
+  ).length;
 
   const widgetDiff = diffDashboardWidgets(detail.widgets, local.widgets, detail.name);
   const widgetsDirty =
@@ -279,7 +288,20 @@ export function DashboardEditPage() {
               {t('Common.Discard', { defaultValue: 'Discard' })}
             </Button>
           )}
-          <Button size="sm" disabled={!dirty || saving} onClick={handleSave}>
+          {incompleteWidgetCount > 0 && (
+            <span data-slot="dashboard-edit-incomplete-hint" className="text-xs text-destructive">
+              {t('Dashboards.Edit.IncompleteWidgets', {
+                count: incompleteWidgetCount,
+                defaultValue_one: '{{count}} widget needs required fields',
+                defaultValue_other: '{{count}} widgets need required fields',
+              })}
+            </span>
+          )}
+          <Button
+            size="sm"
+            disabled={!dirty || saving || incompleteWidgetCount > 0}
+            onClick={handleSave}
+          >
             <Save className="mr-2 h-4 w-4" />
             {saving
               ? t('Common.Saving', { defaultValue: 'Saving…' })
@@ -339,6 +361,12 @@ export function DashboardEditPage() {
                 onChange={handleWidgetChange}
                 registry={configFormRegistry}
               />
+              {selectedWidgetErrors.length > 0 && (
+                <p data-slot="widget-config-missing-required" className="text-xs text-destructive">
+                  {t('Dashboards.Edit.MissingRequired', { defaultValue: 'Required:' })}{' '}
+                  {selectedWidgetErrors.map((error) => t(error.labelKey)).join(', ')}
+                </p>
+              )}
               <DialogFooter className="sm:justify-between">
                 <Button
                   variant="ghost"
