@@ -148,7 +148,9 @@ export function QueryNameCombobox({
   const { t } = useTranslation();
   const options: ComboboxOption[] = (entries ?? [])
     .filter((entry) => !HIDE_UNROUTED_QUERIES || entry.basePath !== null)
-    .map((entry) => ({ value: entry.name, label: resolveQueryLabel(t, entry) }));
+    .map((entry) => ({ value: entry.name, label: resolveQueryLabel(t, entry) }))
+    // Sorted by the DISPLAYED label (ascending), not the wire name.
+    .sort((a, b) => (a.label ?? '').localeCompare(b.label ?? ''));
 
   return (
     <Combobox
@@ -157,6 +159,7 @@ export function QueryNameCombobox({
       onValueChange={onChange}
       options={options}
       allowCustomValue
+      allowEmpty
       placeholder="Select a query…"
       searchPlaceholder="Search or type a query name…"
       emptyText="No matching query — type to use a custom name."

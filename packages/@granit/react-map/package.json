@@ -19,9 +19,11 @@
     "@granit/analytics": "workspace:*",
     "@granit/csp": "workspace:*",
     "@granit/dashboards": "workspace:*",
+    "@granit/react-analytics": "workspace:*",
     "@granit/react-dashboard-editor": "workspace:*",
     "@granit/react-dashboards": "workspace:*",
     "@granit/utils": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
     "dompurify": "^3.0.0",
     "leaflet": "^1.9.4",
     "leaflet.markercluster": "^1.5.3",
@@ -29,6 +31,12 @@
     "react-i18next": "^17.0.0"
   },
   "peerDependenciesMeta": {
+    "@granit/react-analytics": {
+      "optional": true
+    },
+    "@tanstack/react-query": {
+      "optional": true
+    },
     "@granit/react-dashboard-editor": {
       "optional": true
     },
@@ -63,11 +71,13 @@
     "@granit/analytics": "workspace:*",
     "@granit/csp": "workspace:*",
     "@granit/dashboards": "workspace:*",
+    "@granit/react-analytics": "workspace:*",
     "@granit/react-dashboard-editor": "workspace:*",
     "@granit/react-dashboards": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/utils": "workspace:*",
+    "@tanstack/react-query": "^5.90.5",
     "@types/leaflet": "^1.9.21",
     "@types/leaflet.markercluster": "^1.5.6",
     "dompurify": "^3.4.11",

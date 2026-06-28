@@ -2667,6 +2667,9 @@ importers:
       '@granit/dashboards':
         specifier: workspace:*
         version: link:../dashboards
+      '@granit/react-analytics':
+        specifier: workspace:*
+        version: link:../react-analytics
       '@granit/react-dashboard-editor':
         specifier: workspace:*
         version: link:../react-dashboard-editor
@@ -2682,6 +2685,9 @@ importers:
       '@granit/utils':
         specifier: workspace:*
         version: link:../utils
+      '@tanstack/react-query':
+        specifier: 5.101.1
+        version: 5.101.1(react@19.2.7)
       '@types/leaflet':
         specifier: ^1.9.21
         version: 1.9.21

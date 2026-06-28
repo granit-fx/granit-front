@@ -128,6 +128,24 @@ describe('ChartConfigForm', () => {
     expect(onChange.mock.calls.at(-1)?.[0]?.queryName).toBe('Granit.Test.Query');
   });
 
+  it('offers a — none — option and sorts queries by their displayed label', async () => {
+    const user = userEvent.setup();
+    const emptyChart: ChartWidgetDefinition = { ...baseChart, queryName: '' };
+    const { container } = wrap(
+      <ChartConfigForm widget={emptyChart} onChange={vi.fn()} />,
+      mockCatalogClient()
+    );
+
+    await user.click(container.querySelector('[data-slot="chart-query-name"]')!);
+    expect(await screen.findByRole('option', { name: '— none —' })).toBeInTheDocument();
+    const labels = screen.getAllByRole('option').map((o) => o.textContent ?? '');
+    const patients = labels.findIndex((l) => l.includes('Patients'));
+    const revenue = labels.findIndex((l) => l.includes('Revenue By Region Query'));
+    // Sorted by label asc: "Patients" before "Revenue By Region Query".
+    expect(patients).toBeGreaterThanOrEqual(0);
+    expect(patients).toBeLessThan(revenue);
+  });
+
   it('resolves labelKey via i18n / humanises the fallback and hides unrouted queries', async () => {
     const user = userEvent.setup();
     const emptyChart: ChartWidgetDefinition = { ...baseChart, queryName: '' };

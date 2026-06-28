@@ -1,10 +1,22 @@
 import { isGeographyMapPointSource, isLatLngMapPointSource } from '@granit/analytics';
+import {
+  EnumSelect,
+  MetaFieldInput,
+  MetaMultiFieldInput,
+  QueryNameCombobox,
+  useQueryFieldMetadata,
+} from '@granit/react-analytics/editor';
 import { useTranslation } from 'react-i18next';
 
 import type { MapTileLayerKind, MapWidgetDefinition } from '@granit/analytics';
 import type { WidgetConfigFormProps } from '@granit/react-dashboard-editor';
 
 const LAYER_KINDS: readonly MapTileLayerKind[] = ['Plan', 'Satellite', 'Hybrid', 'Topo', 'Custom'];
+
+const POINT_SOURCE_KINDS = [
+  { value: 'lat-lng', label: 'Lat / lng pair' },
+  { value: 'geography', label: 'PostGIS geography column' },
+] as const;
 
 /**
  * Built-in config form for {@link MapWidgetDefinition}. Edits the query
@@ -21,6 +33,7 @@ const LAYER_KINDS: readonly MapTileLayerKind[] = ['Plan', 'Satellite', 'Hybrid',
 export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWidgetDefinition>) {
   const { t } = useTranslation();
   const { pointSource } = widget;
+  const { catalogEntries, columnOptions } = useQueryFieldMetadata(widget.queryName);
 
   const handlePointSourceKindChange = (kind: 'lat-lng' | 'geography') => {
     if (kind === 'lat-lng') {
@@ -33,7 +46,6 @@ export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWid
     }
   };
 
-  const popupColumnsValue = widget.popupColumns?.join(', ') ?? '';
   const center = widget.defaultCenter;
 
   return (
@@ -42,12 +54,11 @@ export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWid
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Map.QueryName.Label')}
         </span>
-        <input
-          type="text"
-          data-slot="map-query-name"
+        <QueryNameCombobox
+          slot="map-query-name"
           value={widget.queryName}
-          onChange={(event) => onChange({ ...widget, queryName: event.target.value })}
-          className="w-full rounded-md border bg-background px-3 py-1.5 text-sm"
+          onChange={(value) => onChange({ ...widget, queryName: value })}
+          entries={catalogEntries}
         />
       </label>
 
@@ -55,17 +66,12 @@ export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWid
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Map.PointSourceKind.Label')}
         </span>
-        <select
-          data-slot="map-point-source-kind"
+        <EnumSelect
+          slot="map-point-source-kind"
           value={pointSource.kind}
-          onChange={(event) =>
-            handlePointSourceKindChange(event.target.value as 'lat-lng' | 'geography')
-          }
-          className="w-full rounded-md border bg-background px-3 py-1.5 text-sm"
-        >
-          <option value="lat-lng">Lat / lng pair</option>
-          <option value="geography">PostGIS geography column</option>
-        </select>
+          options={POINT_SOURCE_KINDS}
+          onChange={(value) => handlePointSourceKindChange(value as 'lat-lng' | 'geography')}
+        />
       </label>
 
       {isLatLngMapPointSource(pointSource) && (
@@ -74,34 +80,26 @@ export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWid
             <span className="mb-1 block text-muted-foreground">
               {t('Dashboard:Widget.Map.LatitudeColumn.Label')}
             </span>
-            <input
-              type="text"
-              data-slot="map-latitude-column"
+            <MetaFieldInput
+              slot="map-latitude-column"
               value={pointSource.latitudeColumn}
-              onChange={(event) =>
-                onChange({
-                  ...widget,
-                  pointSource: { ...pointSource, latitudeColumn: event.target.value },
-                })
+              options={columnOptions}
+              onChange={(value) =>
+                onChange({ ...widget, pointSource: { ...pointSource, latitudeColumn: value } })
               }
-              className="w-full rounded-md border bg-background px-3 py-1.5 text-sm"
             />
           </label>
           <label className="block text-sm">
             <span className="mb-1 block text-muted-foreground">
               {t('Dashboard:Widget.Map.LongitudeColumn.Label')}
             </span>
-            <input
-              type="text"
-              data-slot="map-longitude-column"
+            <MetaFieldInput
+              slot="map-longitude-column"
               value={pointSource.longitudeColumn}
-              onChange={(event) =>
-                onChange({
-                  ...widget,
-                  pointSource: { ...pointSource, longitudeColumn: event.target.value },
-                })
+              options={columnOptions}
+              onChange={(value) =>
+                onChange({ ...widget, pointSource: { ...pointSource, longitudeColumn: value } })
               }
-              className="w-full rounded-md border bg-background px-3 py-1.5 text-sm"
             />
           </label>
         </>
@@ -112,17 +110,13 @@ export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWid
           <span className="mb-1 block text-muted-foreground">
             {t('Dashboard:Widget.Map.GeographyColumn.Label')}
           </span>
-          <input
-            type="text"
-            data-slot="map-geography-column"
+          <MetaFieldInput
+            slot="map-geography-column"
             value={pointSource.geographyColumn}
-            onChange={(event) =>
-              onChange({
-                ...widget,
-                pointSource: { ...pointSource, geographyColumn: event.target.value },
-              })
+            options={columnOptions}
+            onChange={(value) =>
+              onChange({ ...widget, pointSource: { ...pointSource, geographyColumn: value } })
             }
-            className="w-full rounded-md border bg-background px-3 py-1.5 text-sm"
           />
         </label>
       )}
@@ -131,23 +125,14 @@ export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWid
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Map.PopupColumns.Label')}
         </span>
-        <input
-          type="text"
-          data-slot="map-popup-columns"
-          value={popupColumnsValue}
+        <MetaMultiFieldInput
+          slot="map-popup-columns"
+          values={widget.popupColumns ?? []}
+          options={columnOptions}
           placeholder="leave empty for no popup body"
-          onChange={(event) => {
-            const raw = event.target.value.trim();
-            const next =
-              raw === ''
-                ? null
-                : raw
-                    .split(',')
-                    .map((s) => s.trim())
-                    .filter((s) => s.length > 0);
-            onChange({ ...widget, popupColumns: next });
-          }}
-          className="w-full rounded-md border bg-background px-3 py-1.5 text-sm"
+          onChange={(values) =>
+            onChange({ ...widget, popupColumns: values.length > 0 ? values : null })
+          }
         />
       </label>
 

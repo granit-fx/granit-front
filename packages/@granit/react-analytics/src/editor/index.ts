@@ -12,6 +12,16 @@ import { TableConfigForm } from './table-config-form';
 import type { WidgetConfigForm, WidgetConfigFormRegistry } from '@granit/react-dashboard-editor';
 
 export { analyticsWidgetCatalog } from './analytics-widget-catalog';
+// Shared query-binding editor controls — reused by the map widget config form
+// (and any downstream widget that binds to a query-engine query).
+export {
+  EnumSelect,
+  MetaFieldInput,
+  MetaMultiFieldInput,
+  QueryNameCombobox,
+  useQueryFieldMetadata,
+} from './query-field-controls';
+export type { FieldOption, QueryFieldMetadata } from './query-field-controls';
 export { ChartConfigForm } from './chart-config-form';
 export { KpiConfigForm } from './kpi-config-form';
 export { PivotConfigForm } from './pivot-config-form';
