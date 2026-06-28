@@ -26,14 +26,19 @@ export type MapTileLayerKind = 'Plan' | 'Satellite' | 'Hybrid' | 'Topo' | 'Custo
  * produced by its backing query. Mirrors
  * `Granit.Analytics.Dashboards.Widgets.MapPointSource`.
  *
- * Two flavours per B7. The default {@link LatLngMapPointSource} maps to plain
+ * Three flavours. The default {@link LatLngMapPointSource} maps to plain
  * decimal columns and works on any database. The opt-in
  * {@link GeographyMapPointSource} reads a single PostGIS `geography(Point)`
- * column — unlocks server-side spatial filters but is PostGIS-only.
+ * column — unlocks server-side spatial filters but is PostGIS-only. The
+ * {@link AddressMapPointSource} carries no coordinates: the backend geocodes
+ * the address columns into points at snapshot time (prefer the lat-lng /
+ * geography flavours when rows already hold coordinates — geocoding has a
+ * cost and a per-provider rate limit).
  *
  * Wire format uses the `kind` discriminator with kebab tags (`'lat-lng'` /
- * `'geography'`) — same convention as `Datasource`. Refine a value with the
- * `isLatLngMapPointSource` / `isGeographyMapPointSource` guards.
+ * `'geography'` / `'address'`) — same convention as `Datasource`. Refine a
+ * value with the `isLatLngMapPointSource` / `isGeographyMapPointSource` /
+ * `isAddressMapPointSource` guards.
  */
 export interface LatLngMapPointSource {
   readonly kind: 'lat-lng';
@@ -49,7 +54,30 @@ export interface GeographyMapPointSource {
   readonly geographyColumn: string;
 }
 
-export type MapPointSource = LatLngMapPointSource | GeographyMapPointSource;
+/**
+ * Address-based source: the rows carry a postal address (no coordinates) and
+ * the backend geocodes it into a point at snapshot time. `localityColumn` and
+ * `countryColumn` are the geocoding floor (required); `streetColumn` and
+ * `postalCodeColumn` are optional and sharpen the result (`''` when a row has
+ * no such column). Geocoding failures drop the row from the snapshot rather
+ * than failing the whole widget.
+ */
+export interface AddressMapPointSource {
+  readonly kind: 'address';
+  /** Column carrying the street line (number + street). Optional — `''` when unmapped. */
+  readonly streetColumn: string;
+  /** Column carrying the postal / ZIP code. Optional — `''` when unmapped. */
+  readonly postalCodeColumn: string;
+  /** Column carrying the city / locality. Required. */
+  readonly localityColumn: string;
+  /** Column carrying the country (name or ISO code). Required. */
+  readonly countryColumn: string;
+}
+
+export type MapPointSource =
+  | LatLngMapPointSource
+  | GeographyMapPointSource
+  | AddressMapPointSource;
 
 /**
  * Latitude / longitude pair seeding {@link MapWidgetDefinition.defaultCenter}.

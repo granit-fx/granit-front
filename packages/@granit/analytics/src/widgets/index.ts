@@ -1,4 +1,5 @@
 export {
+  isAddressMapPointSource,
   isChartSnapshotEnvelope,
   isGeographyMapPointSource,
   isKpiSnapshotEnvelope,

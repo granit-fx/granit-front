@@ -25,6 +25,7 @@ export type { AnalyticsWidgetDefinition } from './analytics-widget';
 export type { ChartType, ChartWidgetDefinition } from './chart-widget';
 export type { KpiWidgetDefinition } from './kpi-widget';
 export type {
+  AddressMapPointSource,
   GeographyMapPointSource,
   LatLngMapPointSource,
   MapCenter,

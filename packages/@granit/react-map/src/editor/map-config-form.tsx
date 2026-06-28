@@ -1,4 +1,8 @@
-import { isGeographyMapPointSource, isLatLngMapPointSource } from '@granit/analytics';
+import {
+  isAddressMapPointSource,
+  isGeographyMapPointSource,
+  isLatLngMapPointSource,
+} from '@granit/analytics';
 import {
   EnumSelect,
   MetaFieldInput,
@@ -17,7 +21,10 @@ const LAYER_KINDS: readonly MapTileLayerKind[] = ['Plan', 'Satellite', 'Hybrid',
 const POINT_SOURCE_KINDS = [
   { value: 'lat-lng', label: 'Lat / lng pair' },
   { value: 'geography', label: 'PostGIS geography column' },
+  { value: 'address', label: 'Address (geocoded)' },
 ] as const;
+
+type PointSourceKind = (typeof POINT_SOURCE_KINDS)[number]['value'];
 
 /**
  * Built-in config form for {@link MapWidgetDefinition}. Edits the query
@@ -36,14 +43,25 @@ export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWid
   const { pointSource } = widget;
   const { catalogEntries, columnOptions } = useQueryFieldMetadata(widget.queryName);
 
-  const handlePointSourceKindChange = (kind: 'lat-lng' | 'geography') => {
+  const handlePointSourceKindChange = (kind: PointSourceKind) => {
     if (kind === 'lat-lng') {
       onChange({
         ...widget,
         pointSource: { kind: 'lat-lng', latitudeColumn: '', longitudeColumn: '' },
       });
-    } else {
+    } else if (kind === 'geography') {
       onChange({ ...widget, pointSource: { kind: 'geography', geographyColumn: '' } });
+    } else {
+      onChange({
+        ...widget,
+        pointSource: {
+          kind: 'address',
+          streetColumn: '',
+          postalCodeColumn: '',
+          localityColumn: '',
+          countryColumn: '',
+        },
+      });
     }
   };
 
@@ -73,7 +91,7 @@ export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWid
           slot="map-point-source-kind"
           value={pointSource.kind}
           options={POINT_SOURCE_KINDS}
-          onChange={(value) => handlePointSourceKindChange(value as 'lat-lng' | 'geography')}
+          onChange={(value) => handlePointSourceKindChange(value as PointSourceKind)}
         />
       </label>
 
@@ -128,6 +146,69 @@ export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWid
             }
           />
         </label>
+      )}
+
+      {isAddressMapPointSource(pointSource) && (
+        <>
+          <label className="block text-sm">
+            <span className="mb-1 block text-muted-foreground">
+              {t('Dashboard:Widget.Map.StreetColumn.Label')}
+            </span>
+            <MetaFieldInput
+              slot="map-street-column"
+              value={pointSource.streetColumn}
+              options={columnOptions}
+              allowEmpty
+              onChange={(value) =>
+                onChange({ ...widget, pointSource: { ...pointSource, streetColumn: value } })
+              }
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="mb-1 block text-muted-foreground">
+              {t('Dashboard:Widget.Map.PostalCodeColumn.Label')}
+            </span>
+            <MetaFieldInput
+              slot="map-postal-code-column"
+              value={pointSource.postalCodeColumn}
+              options={columnOptions}
+              allowEmpty
+              onChange={(value) =>
+                onChange({ ...widget, pointSource: { ...pointSource, postalCodeColumn: value } })
+              }
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="mb-1 block text-muted-foreground">
+              {t('Dashboard:Widget.Map.LocalityColumn.Label')}
+              <RequiredMark />
+            </span>
+            <MetaFieldInput
+              slot="map-locality-column"
+              value={pointSource.localityColumn}
+              options={columnOptions}
+              required
+              onChange={(value) =>
+                onChange({ ...widget, pointSource: { ...pointSource, localityColumn: value } })
+              }
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="mb-1 block text-muted-foreground">
+              {t('Dashboard:Widget.Map.CountryColumn.Label')}
+              <RequiredMark />
+            </span>
+            <MetaFieldInput
+              slot="map-country-column"
+              value={pointSource.countryColumn}
+              options={columnOptions}
+              required
+              onChange={(value) =>
+                onChange({ ...widget, pointSource: { ...pointSource, countryColumn: value } })
+              }
+            />
+          </label>
+        </>
       )}
 
       <label className="block text-sm">

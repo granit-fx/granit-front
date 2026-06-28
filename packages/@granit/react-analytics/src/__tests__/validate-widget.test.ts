@@ -103,4 +103,34 @@ describe('validateWidgetConfig', () => {
       []
     );
   });
+
+  it('requires locality + country for an address source; street + postal code are optional', () => {
+    expect(
+      fields(
+        map({
+          pointSource: {
+            kind: 'address',
+            streetColumn: '',
+            postalCodeColumn: '',
+            localityColumn: '',
+            countryColumn: '',
+          },
+        })
+      )
+    ).toEqual(['localityColumn', 'countryColumn']);
+    // Street + postal code empty is fine once locality + country are set.
+    expect(
+      fields(
+        map({
+          pointSource: {
+            kind: 'address',
+            streetColumn: '',
+            postalCodeColumn: '',
+            localityColumn: 'City',
+            countryColumn: 'Country',
+          },
+        })
+      )
+    ).toEqual([]);
+  });
 });

@@ -20,6 +20,7 @@ export type {
   Trend,
   ValueKind,
   // Widgets — catalog declarations + snapshot envelopes consumed by @granit/dashboards
+  AddressMapPointSource,
   AggregateFunction,
   AnalyticsWidgetDefinition,
   ChartBucket,
@@ -52,6 +53,7 @@ export type {
 
 // Widgets — runtime type guards
 export {
+  isAddressMapPointSource,
   isChartSnapshotEnvelope,
   isGeographyMapPointSource,
   isKpiSnapshotEnvelope,

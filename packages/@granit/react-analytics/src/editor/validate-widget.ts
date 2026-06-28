@@ -13,7 +13,11 @@
 // validate as complete.
 // ---------------------------------------------------------------------------
 
-import { isGeographyMapPointSource, isLatLngMapPointSource } from '@granit/analytics';
+import {
+  isAddressMapPointSource,
+  isGeographyMapPointSource,
+  isLatLngMapPointSource,
+} from '@granit/analytics';
 import { isMetricDatasource, isQueryAggregateDatasource } from '@granit/dashboards';
 
 import type {
@@ -95,6 +99,12 @@ function validateMap(widget: MapWidgetDefinition): WidgetConfigError[] {
       field: 'geographyColumn',
       labelKey: 'Dashboard:Widget.Map.GeographyColumn.Label',
     });
+  } else if (isAddressMapPointSource(pointSource)) {
+    // Locality + country are the geocoding floor; street + postal code are optional.
+    if (blank(pointSource.localityColumn))
+      errors.push({ field: 'localityColumn', labelKey: 'Dashboard:Widget.Map.LocalityColumn.Label' });
+    if (blank(pointSource.countryColumn))
+      errors.push({ field: 'countryColumn', labelKey: 'Dashboard:Widget.Map.CountryColumn.Label' });
   }
   return errors;
 }

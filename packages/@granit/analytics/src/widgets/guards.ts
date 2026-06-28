@@ -4,6 +4,7 @@
 // ---------------------------------------------------------------------------
 
 import type {
+  AddressMapPointSource,
   ChartSnapshotEnvelope,
   GeographyMapPointSource,
   KpiSnapshotEnvelope,
@@ -65,4 +66,9 @@ export function isGeographyMapPointSource(
   source: MapPointSource
 ): source is GeographyMapPointSource {
   return source.kind === 'geography';
+}
+
+/** Narrows a {@link MapPointSource} to the geocoded-address flavour. */
+export function isAddressMapPointSource(source: MapPointSource): source is AddressMapPointSource {
+  return source.kind === 'address';
 }
