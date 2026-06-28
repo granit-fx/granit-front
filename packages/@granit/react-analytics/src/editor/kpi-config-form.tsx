@@ -2,7 +2,12 @@ import { Datasource, isMetricDatasource, isQueryAggregateDatasource } from '@gra
 import { Combobox } from '@granit/react-ui';
 import { useTranslation } from 'react-i18next';
 
-import { EnumSelect, QueryNameCombobox, useQueryFieldMetadata } from './query-field-controls';
+import {
+  EnumSelect,
+  QueryNameCombobox,
+  RequiredMark,
+  useQueryFieldMetadata,
+} from './query-field-controls';
 
 import type { KpiWidgetDefinition } from '@granit/analytics';
 import type { AggregateFunction } from '@granit/dashboards';
@@ -62,12 +67,14 @@ export function KpiConfigForm({ widget, onChange }: WidgetConfigFormProps<KpiWid
         <label className="block text-sm">
           <span className="mb-1 block text-muted-foreground">
             {t('Dashboard:Widget.Kpi.MetricName.Label')}
+            <RequiredMark />
           </span>
           <Combobox
             slot="kpi-metric-name"
             value={datasource.metricName}
             options={[]}
             allowCustomValue
+            required
             onValueChange={(value) => onChange({ ...widget, datasource: Datasource.metric(value) })}
             placeholder="Select a metric…"
             searchPlaceholder="Search or type a metric name…"
@@ -80,10 +87,12 @@ export function KpiConfigForm({ widget, onChange }: WidgetConfigFormProps<KpiWid
           <label className="block text-sm">
             <span className="mb-1 block text-muted-foreground">
               {t('Dashboard:Widget.Kpi.QueryName.Label')}
+              <RequiredMark />
             </span>
             <QueryNameCombobox
               slot="kpi-query-name"
               value={datasource.queryName}
+              required
               onChange={(value) =>
                 onChange({
                   ...widget,

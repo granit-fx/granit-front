@@ -19,9 +19,13 @@ export {
   MetaFieldInput,
   MetaMultiFieldInput,
   QueryNameCombobox,
+  RequiredMark,
   useQueryFieldMetadata,
 } from './query-field-controls';
 export type { FieldOption, QueryFieldMetadata } from './query-field-controls';
+// Required-field validation so a host can gate Save on a complete config.
+export { isWidgetConfigComplete, validateWidgetConfig } from './validate-widget';
+export type { WidgetConfigError } from './validate-widget';
 export { ChartConfigForm } from './chart-config-form';
 export { KpiConfigForm } from './kpi-config-form';
 export { PivotConfigForm } from './pivot-config-form';

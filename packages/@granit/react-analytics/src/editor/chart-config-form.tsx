@@ -4,6 +4,7 @@ import {
   EnumSelect,
   MetaFieldInput,
   QueryNameCombobox,
+  RequiredMark,
   useQueryFieldMetadata,
 } from './query-field-controls';
 
@@ -40,24 +41,27 @@ export function ChartConfigForm({
       <label className="block text-sm">
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Chart.QueryName.Label')}
+          <RequiredMark />
         </span>
         <QueryNameCombobox
           slot="chart-query-name"
           value={widget.queryName}
           onChange={(value) => onChange({ ...widget, queryName: value })}
           entries={catalogEntries}
+          required
         />
       </label>
       <label className="block text-sm">
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Chart.GroupBy.Label')}
+          <RequiredMark />
         </span>
         <MetaFieldInput
           slot="chart-group-by"
           value={widget.groupBy}
           options={groupByOptions}
-          allowEmpty
           onChange={(value) => onChange({ ...widget, groupBy: value })}
+          required
         />
       </label>
       <label className="block text-sm">
@@ -71,10 +75,11 @@ export function ChartConfigForm({
           onChange={(value) => onChange({ ...widget, aggregation: value as AggregateFunction })}
         />
       </label>
-      {/* Field is required for everything except Count. The label hints at it. */}
+      {/* Field is required for everything except Count (then it must be empty). */}
       <label className="block text-sm">
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Chart.Field.Label')}
+          {!isCount && <RequiredMark />}
         </span>
         <MetaFieldInput
           slot="chart-field"
@@ -82,6 +87,7 @@ export function ChartConfigForm({
           options={fieldOptions}
           disabled={isCount}
           allowEmpty
+          required={!isCount}
           onChange={(value) => onChange({ ...widget, field: value === '' ? null : value })}
         />
       </label>

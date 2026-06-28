@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import {
   MetaMultiFieldInput,
   QueryNameCombobox,
+  RequiredMark,
   useQueryFieldMetadata,
 } from './query-field-controls';
 
@@ -32,12 +33,14 @@ export function TableConfigForm({
       <label className="block text-sm">
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Table.QueryName.Label')}
+          <RequiredMark />
         </span>
         <QueryNameCombobox
           slot="table-query-name"
           value={widget.queryName}
           onChange={(value) => onChange({ ...widget, queryName: value })}
           entries={catalogEntries}
+          required
         />
       </label>
       <label className="block text-sm">

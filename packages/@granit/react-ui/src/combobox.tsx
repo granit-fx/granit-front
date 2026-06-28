@@ -28,6 +28,12 @@ interface ComboboxBaseProps {
   /** Let the typed search term be committed as a value not present in {@link options}. */
   readonly allowCustomValue?: boolean;
   readonly disabled?: boolean;
+  /**
+   * Marks the control as required: when it currently holds no value the trigger
+   * gets `aria-invalid` + a destructive border, signalling the field must be
+   * filled. Purely presentational — enforcement (blocking save) is the host's.
+   */
+  readonly required?: boolean;
   readonly className?: string;
   readonly id?: string;
   /** `data-slot` placed on the trigger button (test / styling hook). */
@@ -60,12 +66,15 @@ export function Combobox({
   allowCustomValue = false,
   allowEmpty = false,
   disabled = false,
+  required = false,
   className,
   id,
   slot,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState('');
+
+  const invalid = required && !value;
 
   const commit = (next: string) => {
     onValueChange(next);
@@ -86,11 +95,13 @@ export function Combobox({
           role="combobox"
           aria-expanded={open}
           disabled={disabled}
+          aria-invalid={invalid || undefined}
           id={id}
           data-slot={slot}
           className={cn(
             'w-full justify-between font-normal',
             !value && 'text-muted-foreground',
+            invalid && 'border-destructive',
             className
           )}
         >
@@ -160,12 +171,15 @@ export function ComboboxMulti({
   emptyText = 'No results.',
   allowCustomValue = false,
   disabled = false,
+  required = false,
   className,
   id,
   slot,
 }: ComboboxMultiProps) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState('');
+
+  const invalid = required && values.length === 0;
 
   const toggle = (next: string) => {
     onValuesChange(
@@ -189,11 +203,13 @@ export function ComboboxMulti({
           role="combobox"
           aria-expanded={open}
           disabled={disabled}
+          aria-invalid={invalid || undefined}
           id={id}
           data-slot={slot}
           className={cn(
             'w-full justify-between font-normal',
             values.length === 0 && 'text-muted-foreground',
+            invalid && 'border-destructive',
             className
           )}
         >

@@ -5,6 +5,7 @@ import {
   MetaFieldInput,
   MetaMultiFieldInput,
   QueryNameCombobox,
+  RequiredMark,
   useQueryFieldMetadata,
 } from './query-field-controls';
 
@@ -32,28 +33,34 @@ export function PivotConfigForm({
   const { t } = useTranslation();
   const { catalogEntries, groupByOptions, fieldOptions } = useQueryFieldMetadata(widget.queryName);
 
+  const isCount = widget.valueAggregation === 'Count';
+
   return (
     <div data-slot="pivot-config-form" className="space-y-3">
       <label className="block text-sm">
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Pivot.QueryName.Label')}
+          <RequiredMark />
         </span>
         <QueryNameCombobox
           slot="pivot-query-name"
           value={widget.queryName}
           onChange={(value) => onChange({ ...widget, queryName: value })}
           entries={catalogEntries}
+          required
         />
       </label>
       <label className="block text-sm">
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Pivot.RowFields.Label')}
+          <RequiredMark />
         </span>
         <MetaMultiFieldInput
           slot="pivot-row-fields"
           values={widget.rowFields}
           options={groupByOptions}
           onChange={(values) => onChange({ ...widget, rowFields: values })}
+          required
         />
       </label>
       <label className="block text-sm">
@@ -70,13 +77,15 @@ export function PivotConfigForm({
       <label className="block text-sm">
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Pivot.ValueField.Label')}
+          {!isCount && <RequiredMark />}
         </span>
         <MetaFieldInput
           slot="pivot-value-field"
           value={widget.valueField ?? ''}
           options={fieldOptions}
-          disabled={widget.valueAggregation === 'Count'}
+          disabled={isCount}
           allowEmpty
+          required={!isCount}
           onChange={(value) => onChange({ ...widget, valueField: value === '' ? null : value })}
         />
       </label>

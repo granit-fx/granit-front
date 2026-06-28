@@ -128,7 +128,7 @@ describe('ChartConfigForm', () => {
     expect(onChange.mock.calls.at(-1)?.[0]?.queryName).toBe('Granit.Test.Query');
   });
 
-  it('offers a — none — option and sorts queries by their displayed label', async () => {
+  it('sorts queries by their displayed label (ascending)', async () => {
     const user = userEvent.setup();
     const emptyChart: ChartWidgetDefinition = { ...baseChart, queryName: '' };
     const { container } = wrap(
@@ -137,7 +137,7 @@ describe('ChartConfigForm', () => {
     );
 
     await user.click(container.querySelector('[data-slot="chart-query-name"]')!);
-    expect(await screen.findByRole('option', { name: '— none —' })).toBeInTheDocument();
+    await screen.findByRole('option', { name: 'Patients' });
     const labels = screen.getAllByRole('option').map((o) => o.textContent ?? '');
     const patients = labels.findIndex((l) => l.includes('Patients'));
     const revenue = labels.findIndex((l) => l.includes('Revenue By Region Query'));
@@ -161,15 +161,6 @@ describe('ChartConfigForm', () => {
     expect(screen.getByRole('option', { name: 'Revenue By Region Query' })).toBeInTheDocument();
     // basePath === null → hidden (its humanised label would be "Unrouted Query").
     expect(screen.queryByRole('option', { name: 'Unrouted Query' })).toBeNull();
-  });
-
-  it('clears Group By via the "— none —" option', async () => {
-    const user = userEvent.setup();
-    const onChange = vi.fn();
-    const { container } = wrap(<ChartConfigForm widget={baseChart} onChange={onChange} />);
-    await user.click(container.querySelector('[data-slot="chart-group-by"]')!);
-    await user.click(await screen.findByRole('option', { name: '— none —' }));
-    expect(onChange.mock.calls.at(-1)?.[0]?.groupBy).toBe('');
   });
 
   it('sources Group By from group-by fields and Field from numeric columns only', async () => {

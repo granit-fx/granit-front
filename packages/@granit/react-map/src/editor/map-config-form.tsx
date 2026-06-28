@@ -4,6 +4,7 @@ import {
   MetaFieldInput,
   MetaMultiFieldInput,
   QueryNameCombobox,
+  RequiredMark,
   useQueryFieldMetadata,
 } from '@granit/react-analytics/editor';
 import { useTranslation } from 'react-i18next';
@@ -53,12 +54,14 @@ export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWid
       <label className="block text-sm">
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Map.QueryName.Label')}
+          <RequiredMark />
         </span>
         <QueryNameCombobox
           slot="map-query-name"
           value={widget.queryName}
           onChange={(value) => onChange({ ...widget, queryName: value })}
           entries={catalogEntries}
+          required
         />
       </label>
 
@@ -79,11 +82,13 @@ export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWid
           <label className="block text-sm">
             <span className="mb-1 block text-muted-foreground">
               {t('Dashboard:Widget.Map.LatitudeColumn.Label')}
+              <RequiredMark />
             </span>
             <MetaFieldInput
               slot="map-latitude-column"
               value={pointSource.latitudeColumn}
               options={columnOptions}
+              required
               onChange={(value) =>
                 onChange({ ...widget, pointSource: { ...pointSource, latitudeColumn: value } })
               }
@@ -92,11 +97,13 @@ export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWid
           <label className="block text-sm">
             <span className="mb-1 block text-muted-foreground">
               {t('Dashboard:Widget.Map.LongitudeColumn.Label')}
+              <RequiredMark />
             </span>
             <MetaFieldInput
               slot="map-longitude-column"
               value={pointSource.longitudeColumn}
               options={columnOptions}
+              required
               onChange={(value) =>
                 onChange({ ...widget, pointSource: { ...pointSource, longitudeColumn: value } })
               }
@@ -109,11 +116,13 @@ export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWid
         <label className="block text-sm">
           <span className="mb-1 block text-muted-foreground">
             {t('Dashboard:Widget.Map.GeographyColumn.Label')}
+            <RequiredMark />
           </span>
           <MetaFieldInput
             slot="map-geography-column"
             value={pointSource.geographyColumn}
             options={columnOptions}
+            required
             onChange={(value) =>
               onChange({ ...widget, pointSource: { ...pointSource, geographyColumn: value } })
             }

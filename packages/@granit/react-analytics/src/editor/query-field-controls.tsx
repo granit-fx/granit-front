@@ -106,6 +106,15 @@ export function splitFields(raw: string): string[] {
 const toComboboxOptions = (options: readonly FieldOption[]): ComboboxOption[] =>
   options.map((option) => ({ value: option.name, label: option.label }));
 
+/** Red asterisk appended to a required field's label. Decorative (aria-hidden). */
+export function RequiredMark() {
+  return (
+    <span aria-hidden className="text-destructive">
+      {' *'}
+    </span>
+  );
+}
+
 /**
  * Query name picker: a catalogue-backed combobox that also accepts an arbitrary
  * typed value, so it works with or without a `<QueryCatalogProvider>`.
@@ -139,11 +148,13 @@ export function QueryNameCombobox({
   value,
   onChange,
   entries,
+  required = false,
 }: {
   readonly slot: string;
   readonly value: string;
   readonly onChange: (value: string) => void;
   readonly entries: readonly QueryCatalogEntryResponse[] | undefined;
+  readonly required?: boolean;
 }) {
   const { t } = useTranslation();
   const options: ComboboxOption[] = (entries ?? [])
@@ -159,7 +170,7 @@ export function QueryNameCombobox({
       onValueChange={onChange}
       options={options}
       allowCustomValue
-      allowEmpty
+      required={required}
       placeholder="Select a query…"
       searchPlaceholder="Search or type a query name…"
       emptyText="No matching query — type to use a custom name."
@@ -179,6 +190,7 @@ export function MetaFieldInput({
   onChange,
   disabled = false,
   allowEmpty = false,
+  required = false,
 }: {
   readonly slot: string;
   readonly value: string;
@@ -186,6 +198,7 @@ export function MetaFieldInput({
   readonly onChange: (value: string) => void;
   readonly disabled?: boolean;
   readonly allowEmpty?: boolean;
+  readonly required?: boolean;
 }) {
   return (
     <Combobox
@@ -196,6 +209,7 @@ export function MetaFieldInput({
       allowCustomValue
       allowEmpty={allowEmpty}
       disabled={disabled}
+      required={required}
       placeholder="Select a field…"
       searchPlaceholder="Search or type a field…"
     />
@@ -212,12 +226,14 @@ export function MetaMultiFieldInput({
   options,
   onChange,
   placeholder,
+  required = false,
 }: {
   readonly slot: string;
   readonly values: readonly string[];
   readonly options: readonly FieldOption[];
   readonly onChange: (values: string[]) => void;
   readonly placeholder?: string;
+  readonly required?: boolean;
 }) {
   return (
     <ComboboxMulti
@@ -226,6 +242,7 @@ export function MetaMultiFieldInput({
       onValuesChange={onChange}
       options={toComboboxOptions(options)}
       allowCustomValue
+      required={required}
       placeholder={placeholder ?? 'Select fields…'}
       searchPlaceholder="Search or type a field…"
     />
