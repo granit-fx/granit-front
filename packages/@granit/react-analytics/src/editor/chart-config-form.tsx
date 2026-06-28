@@ -56,6 +56,7 @@ export function ChartConfigForm({
           slot="chart-group-by"
           value={widget.groupBy}
           options={groupByOptions}
+          allowEmpty
           onChange={(value) => onChange({ ...widget, groupBy: value })}
         />
       </label>

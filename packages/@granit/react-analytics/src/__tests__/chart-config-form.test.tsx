@@ -145,6 +145,15 @@ describe('ChartConfigForm', () => {
     expect(screen.queryByRole('option', { name: 'Unrouted Query' })).toBeNull();
   });
 
+  it('clears Group By via the "— none —" option', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const { container } = wrap(<ChartConfigForm widget={baseChart} onChange={onChange} />);
+    await user.click(container.querySelector('[data-slot="chart-group-by"]')!);
+    await user.click(await screen.findByRole('option', { name: '— none —' }));
+    expect(onChange.mock.calls.at(-1)?.[0]?.groupBy).toBe('');
+  });
+
   it('sources Group By from group-by fields and Field from numeric columns only', async () => {
     const user = userEvent.setup();
     const { container } = wrap(
