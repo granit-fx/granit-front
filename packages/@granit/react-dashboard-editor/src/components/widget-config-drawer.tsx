@@ -52,6 +52,24 @@ export function WidgetConfigDrawer({
         <h2 className="text-base font-semibold">{widget.slug}</h2>
         {header}
       </div>
+      <label className="mb-3 block text-sm">
+        <span className="mb-1 block text-muted-foreground">
+          {t('Dashboard:Widget.Title.Label', { defaultValue: 'Title' })}
+        </span>
+        <input
+          type="text"
+          data-slot="widget-title"
+          value={widget.titleLocalizationKey ?? ''}
+          onChange={(event) =>
+            onChange({
+              ...widget,
+              titleLocalizationKey: event.target.value === '' ? undefined : event.target.value,
+            })
+          }
+          placeholder={t('Dashboard:Widget.Title.Placeholder', { defaultValue: 'Widget title' })}
+          className="w-full rounded-md border bg-background px-3 py-1.5 text-sm"
+        />
+      </label>
       {Form ? (
         <Form widget={widget} onChange={onChange} />
       ) : (

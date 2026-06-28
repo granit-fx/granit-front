@@ -18,6 +18,7 @@ export {
 } from './hooks/use-dashboard-render';
 export type { UseDashboardRenderOptions } from './hooks/use-dashboard-render';
 export { useDashboardWidget } from './hooks/use-dashboard-widget';
+export { resolveWidgetTitle } from './lib/resolve-widget-title';
 export { useWidgetRender, widgetRenderQueryKey } from './hooks/use-widget-render';
 export type {
   UseWidgetRenderOptions,

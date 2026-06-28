@@ -101,6 +101,36 @@ describe('WidgetConfigDrawer', () => {
     });
   });
 
+  it('edits the widget title (titleLocalizationKey) common to every kind', () => {
+    const onChange = vi.fn();
+    const { container } = wrap(
+      <WidgetConfigDrawer
+        widget={markdownWidget}
+        onChange={onChange}
+        registry={defaultWidgetConfigFormRegistry}
+      />
+    );
+    const input = container.querySelector('[data-slot="widget-title"]');
+    if (!(input instanceof HTMLInputElement)) throw new Error('title input not found');
+    fireEvent.change(input, { target: { value: 'Cancellations over time' } });
+    expect(onChange.mock.calls[0]?.[0]?.titleLocalizationKey).toBe('Cancellations over time');
+  });
+
+  it('clears the title to undefined when emptied', () => {
+    const onChange = vi.fn();
+    const titled = { ...markdownWidget, titleLocalizationKey: 'My title' };
+    const { container } = wrap(
+      <WidgetConfigDrawer
+        widget={titled}
+        onChange={onChange}
+        registry={defaultWidgetConfigFormRegistry}
+      />
+    );
+    const input = container.querySelector('[data-slot="widget-title"]') as HTMLInputElement;
+    fireEvent.change(input, { target: { value: '' } });
+    expect(onChange.mock.calls[0]?.[0]?.titleLocalizationKey).toBeUndefined();
+  });
+
   it('routes a text widget through the text form and edits the style enum', () => {
     const onChange = vi.fn();
     const { container } = wrap(

@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
+import { resolveWidgetTitle } from '../lib/resolve-widget-title';
 import { useWidgetRegistry } from '../registry/widget-registry-context';
 
 import { useDashboardContext } from './dashboard-context';
@@ -48,12 +49,13 @@ export function WidgetRenderer({ widget, framed = true }: WidgetRendererProps) {
   // definition bridge from a stored dashboard); fall back to the composed
   // `Widget:{Dashboard}.{Slug}.Title` convention for hand-authored
   // definitions (catalog previews / fixtures) that don't carry one.
+  // A free-text title typed in the editor renders verbatim (resolveWidgetTitle).
   const titleKey =
     widget.titleLocalizationKey ??
     (dashboardCtx
       ? `Widget:${dashboardCtx.dashboardName}.${widget.slug}.Title`
       : `Widget:${widget.slug}.Title`);
-  const title = t(titleKey, { defaultValue: '' });
+  const title = resolveWidgetTitle(t, titleKey);
 
   return <WidgetCard title={title || undefined}>{body}</WidgetCard>;
 }

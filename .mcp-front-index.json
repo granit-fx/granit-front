@@ -4740,6 +4740,11 @@
           "signature": "function useDashboardWidget( dashboardId: string, widgetId: string ): UseQueryResult<DashboardRenderedWidget>"
         },
         {
+          "name": "resolveWidgetTitle",
+          "kind": "function",
+          "signature": "function resolveWidgetTitle(t: TFunction, key: string | undefined): string"
+        },
+        {
           "name": "useWidgetRender",
           "kind": "function",
           "signature": "function useWidgetRender<TDefinition extends WidgetDefinitionBase>( kind: WidgetRenderKind, definition: TDefinition, context: WidgetRenderContext ="

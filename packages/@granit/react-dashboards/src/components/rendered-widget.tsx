@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { useWidgetTriggerHandler } from '../hooks/use-widget-trigger-handler';
+import { resolveWidgetTitle } from '../lib/resolve-widget-title';
 import { useSnapshotWidgetRegistry } from '../registry/snapshot-widget-registry-context';
 
 import { WidgetCard } from './widget-card';
@@ -83,10 +84,9 @@ export function RenderedWidget({ widget, framed = true }: RenderedWidgetProps) {
 
   if (!framed) return body;
 
-  // Empty translation = no header (i18n returns the key by default
-  // when a `defaultValue` is supplied; we explicitly request '' so a
-  // missing key collapses cleanly).
-  const title = t(widget.titleLocalizationKey, { defaultValue: '' });
+  // Translate the title key; a free-text title typed in the editor renders
+  // verbatim, while an unresolved `Namespace:…` key collapses to no header.
+  const title = resolveWidgetTitle(t, widget.titleLocalizationKey);
   return <WidgetCard title={title || undefined}>{body}</WidgetCard>;
 }
 
