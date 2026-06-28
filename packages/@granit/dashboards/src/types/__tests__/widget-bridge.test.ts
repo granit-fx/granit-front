@@ -70,6 +70,8 @@ describe('widgetInstanceToDefinition', () => {
       id: WIDGET_ID,
       widgetType: 'Markdown',
       position: 0,
+      x: 4,
+      y: 3,
       width: 12,
       height: 1,
       titleLocalizationKey: `Widget:${DASHBOARD_NAME}.Banner`,
@@ -82,6 +84,8 @@ describe('widgetInstanceToDefinition', () => {
     expect(widget.slug).toBe('Banner');
     expect(widget.type).toBe('markdown');
     expect(widget.position).toBe(0);
+    expect(widget.x).toBe(4);
+    expect(widget.y).toBe(3);
     expect(widget.size).toEqual({ width: 12, height: 1 });
     expect(widget.contentLocalizationKey).toBe('Widget:Demo.Banner.Content');
   });
@@ -91,6 +95,8 @@ describe('widgetInstanceToDefinition', () => {
       id: WIDGET_ID,
       widgetType: 'Text',
       position: 0,
+      x: 0,
+      y: 0,
       width: 3,
       height: 1,
       titleLocalizationKey: `Widget:${DASHBOARD_NAME}.Note`,
@@ -108,6 +114,8 @@ describe('widgetInstanceToDefinition', () => {
       id: WIDGET_ID,
       widgetType: 'Markdown',
       position: 1,
+      x: 0,
+      y: 0,
       width: 6,
       height: 1,
       titleLocalizationKey: `Widget:${DASHBOARD_NAME}.Broken`,
@@ -141,6 +149,8 @@ describe('dashboardDetailToDefinition', () => {
           widgetType: 'Markdown',
           position: 0,
           width: 12,
+          x: 0,
+          y: 0,
           height: 1,
           titleLocalizationKey: `Widget:${DASHBOARD_NAME}.Banner`,
           metricName: null,
@@ -241,7 +251,29 @@ describe('widgetDefinitionToAddRequest', () => {
 });
 
 describe('widgetDefinitionToUpdateRequest', () => {
-  it('emits the 5 editable fields the backend accepts on PUT', () => {
+  it('emits the editable fields the backend accepts on PUT (incl. grid coords)', () => {
+    const widget: MarkdownWidgetDefinition = {
+      slug: 'Banner',
+      type: 'markdown',
+      position: 1,
+      x: 4,
+      y: 2,
+      size: { width: 6, height: 2 },
+      contentLocalizationKey: 'Widget:Demo.Banner.Content',
+    };
+    const request = widgetDefinitionToUpdateRequest(widget, DASHBOARD_NAME);
+    expect(request).toEqual({
+      position: 1,
+      x: 4,
+      y: 2,
+      width: 6,
+      height: 2,
+      titleLocalizationKey: `Widget:${DASHBOARD_NAME}.Banner`,
+      configJson: JSON.stringify({ contentLocalizationKey: 'Widget:Demo.Banner.Content' }),
+    });
+  });
+
+  it('defaults grid coords to 0 when the definition omits x/y', () => {
     const widget: MarkdownWidgetDefinition = {
       slug: 'Banner',
       type: 'markdown',
@@ -250,13 +282,8 @@ describe('widgetDefinitionToUpdateRequest', () => {
       contentLocalizationKey: 'Widget:Demo.Banner.Content',
     };
     const request = widgetDefinitionToUpdateRequest(widget, DASHBOARD_NAME);
-    expect(request).toEqual({
-      position: 1,
-      width: 6,
-      height: 2,
-      titleLocalizationKey: `Widget:${DASHBOARD_NAME}.Banner`,
-      configJson: JSON.stringify({ contentLocalizationKey: 'Widget:Demo.Banner.Content' }),
-    });
+    expect(request.x).toBe(0);
+    expect(request.y).toBe(0);
   });
 });
 
@@ -275,6 +302,8 @@ describe('KPI configJson bridge (bare-Datasource contract)', () => {
       id: WIDGET_ID,
       widgetType: 'Kpi',
       position: 2,
+      x: 0,
+      y: 0,
       width: 3,
       height: 2,
       titleLocalizationKey: `Widget:${DASHBOARD_NAME}.UnpaidCount`,
@@ -312,6 +341,8 @@ describe('round-trip: instance → definition → addRequest → instance-shaped
       id: WIDGET_ID,
       widgetType: 'Kpi',
       position: 2,
+      x: 0,
+      y: 0,
       width: 3,
       height: 1,
       titleLocalizationKey: `Widget:${DASHBOARD_NAME}.UnpaidCount`,
@@ -344,6 +375,8 @@ describe('diffDashboardWidgets', () => {
       id: `id-${slug}`,
       widgetType: 'Markdown',
       position,
+      x: 0,
+      y: 0,
       width: 12,
       height: 1,
       titleLocalizationKey: `Widget:${DASHBOARD_NAME}.${slug}`,

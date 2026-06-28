@@ -40,6 +40,8 @@ export const STRUCTURAL_WIDGET_FIELDS = Object.freeze([
   'slug',
   'type',
   'position',
+  'x',
+  'y',
   'size',
   'requiredPermission',
   // Persisted as a top-level column, not inside `configJson` — kept out of
@@ -187,6 +189,8 @@ export function widgetInstanceToDefinition(
     // PascalCase widgetType → lowercase definition `type` discriminator.
     type: instance.widgetType.charAt(0).toLowerCase() + instance.widgetType.slice(1),
     position: instance.position,
+    x: instance.x,
+    y: instance.y,
     size: { width: instance.width, height: instance.height },
     // Carry the persisted title key verbatim so the editor resolves the
     // actual stored title instead of recomposing a convention that may
@@ -243,6 +247,8 @@ export function widgetDefinitionToAddRequest(
   return {
     widgetType: widget.type.charAt(0).toUpperCase() + widget.type.slice(1),
     position: widget.position,
+    x: widget.x ?? 0,
+    y: widget.y ?? 0,
     width: widget.size.width,
     height: widget.size.height,
     titleLocalizationKey:
@@ -268,6 +274,8 @@ export function widgetDefinitionToUpdateRequest(
 ): UpdateWidgetRequest {
   return {
     position: widget.position,
+    x: widget.x ?? 0,
+    y: widget.y ?? 0,
     width: widget.size.width,
     height: widget.size.height,
     titleLocalizationKey:
@@ -308,8 +316,8 @@ export interface DashboardWidgetDiff {
  * with the local state.
  *
  * Matching is by slug. A widget is considered "updated" when any of its
- * `position` / `width` / `height` / `titleLocalizationKey` /
- * `configJson` projections differ from the server snapshot — same five
+ * `position` / `x` / `y` / `width` / `height` / `titleLocalizationKey` /
+ * `configJson` projections differ from the server snapshot — the same
  * fields the backend's `UpdateWidgetRequest` carries.
  *
  * No-ops are filtered out — a widget whose local + server state match
@@ -341,6 +349,8 @@ export function diffDashboardWidgets(
     const request = widgetDefinitionToUpdateRequest(local, dashboardName);
     if (
       request.position !== server.position ||
+      request.x !== server.x ||
+      request.y !== server.y ||
       request.width !== server.width ||
       request.height !== server.height ||
       request.titleLocalizationKey !== server.titleLocalizationKey ||

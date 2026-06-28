@@ -21,8 +21,21 @@ export interface WidgetDefinitionBase {
   readonly slug: string;
   /** JSON discriminator. Built-ins: `markdown` | `image` | `text`. */
   readonly type: string;
-  /** Dense-ranked grid order — 0-based, contiguous within the dashboard. */
+  /**
+   * Dense-ranked grid order — 0-based, contiguous within the dashboard.
+   * Legacy ordering key, kept for backward compatibility; the coordinate
+   * layout ({@link x} / {@link y} + {@link size}) is authoritative when present.
+   */
   readonly position: number;
+  /**
+   * Grid column of the widget's top-left cell (0-based). Optional on
+   * hand-authored definitions (catalog previews / fixtures); the editor
+   * populates it from the persisted layout or on placement. Round-trips to
+   * the wire `x` field.
+   */
+  readonly x?: number;
+  /** Grid row of the widget's top-left cell (0-based). See {@link x}. */
+  readonly y?: number;
   /** Width / height in grid cells. */
   readonly size: WidgetSize;
   /**

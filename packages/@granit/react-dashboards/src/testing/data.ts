@@ -460,12 +460,49 @@ export interface StoredDashboard extends Omit<Mutable<DashboardDetailResponse>, 
   widgets: Mutable<WidgetInstanceResponse>[];
 }
 
+/**
+ * First-fit dense packer mirroring the backend's coordinate backfill: walks
+ * widgets in declared order and drops each at the first free (x, y) cell on a
+ * `columns`-wide grid. Lets the mock store expose realistic grid coordinates
+ * for dashboards whose definitions predate the x/y layout fields.
+ */
+function packGridCoordinates(
+  widgets: readonly { size: { width: number; height: number } }[],
+  columns: number
+): readonly { x: number; y: number }[] {
+  const occupied = new Set<string>();
+  const fits = (x: number, y: number, w: number, h: number): boolean => {
+    if (x + w > columns) return false;
+    for (let dy = 0; dy < h; dy++) {
+      for (let dx = 0; dx < w; dx++) {
+        if (occupied.has(`${x + dx},${y + dy}`)) return false;
+      }
+    }
+    return true;
+  };
+  return widgets.map(({ size }) => {
+    const w = Math.min(size.width, columns);
+    const h = size.height;
+    for (let y = 0; ; y++) {
+      for (let x = 0; x + w <= columns; x++) {
+        if (fits(x, y, w, h)) {
+          for (let dy = 0; dy < h; dy++) {
+            for (let dx = 0; dx < w; dx++) occupied.add(`${x + dx},${y + dy}`);
+          }
+          return { x, y };
+        }
+      }
+    }
+  });
+}
+
 function seedStoredDashboard(
   id: string,
   definition: DashboardDefinition,
   status: StoredDashboard['status'],
   widgetIdBase: number
 ): StoredDashboard {
+  const coords = packGridCoordinates(definition.widgets, definition.layout.columns);
   return {
     id,
     name: definition.name,
@@ -487,6 +524,8 @@ function seedStoredDashboard(
         id: `${id.slice(0, -3)}${(widgetIdBase + index).toString(16).padStart(3, '0')}`,
         widgetType: widget.type.charAt(0).toUpperCase() + widget.type.slice(1),
         position: widget.position,
+        x: widget.x ?? coords[index]?.x ?? 0,
+        y: widget.y ?? coords[index]?.y ?? 0,
         width: widget.size.width,
         height: widget.size.height,
         titleLocalizationKey: `Widget:${definition.name}.${widget.slug}`,

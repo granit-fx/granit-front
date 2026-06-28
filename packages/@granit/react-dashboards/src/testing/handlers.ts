@@ -444,6 +444,8 @@ export function createDashboardsHandlers(baseUrl = DEFAULT_BASE_PATH) {
         id: newGuid(),
         widgetType: body.widgetType,
         position: body.position,
+        x: body.x,
+        y: body.y,
         width: body.width,
         height: body.height,
         titleLocalizationKey: body.titleLocalizationKey,
@@ -462,6 +464,8 @@ export function createDashboardsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       if (!widget) return notFound(String(params.widgetId));
       const body = (await request.json()) as UpdateWidgetRequest;
       widget.position = body.position;
+      widget.x = body.x;
+      widget.y = body.y;
       widget.width = body.width;
       widget.height = body.height;
       widget.titleLocalizationKey = body.titleLocalizationKey;
