@@ -88,7 +88,12 @@ describe('query-api', () => {
   it('getQueryCatalog calls GET /catalog', async () => {
     const client = createMockClient();
     const catalog = [
-      { name: 'Granit.Test.Query', basePath: '/api/v1/patients', labelKey: 'Entity:Patient' },
+      {
+        moduleName: 'Test',
+        name: 'Granit.Test.Query',
+        basePath: '/api/v1/patients',
+        labelKey: 'Entity:Patient',
+      },
     ];
     vi.mocked(client.get).mockResolvedValueOnce({ data: catalog });
     const result = await getQueryCatalog(client, '/api/v1');

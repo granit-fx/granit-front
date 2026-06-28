@@ -40,7 +40,12 @@ function mockCatalogClient() {
     if (url.endsWith('/catalog')) {
       return Promise.resolve({
         data: [
-          { name: 'Granit.Test.Query', basePath: '/api/v1/patients', labelKey: 'Entity:Patient' },
+          {
+            moduleName: 'Test',
+            name: 'Granit.Test.Query',
+            basePath: '/api/v1/patients',
+            labelKey: 'Entity:Patient',
+          },
         ],
       });
     }

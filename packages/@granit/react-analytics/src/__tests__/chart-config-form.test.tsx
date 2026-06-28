@@ -20,7 +20,8 @@ void testI18n.use(initReactI18next).init({
   fallbackLng: 'en',
   nsSeparator: false,
   keySeparator: false,
-  resources: { en: { translation: { 'Entity:Patient': 'Patients' } } },
+  // `Sales` is a module-name i18n key (→ `Ventes`); `Test` is absent → raw fallback.
+  resources: { en: { translation: { 'Entity:Patient': 'Patients', Sales: 'Ventes' } } },
   interpolation: { escapeValue: false },
 });
 
@@ -44,15 +45,26 @@ function mockCatalogClient() {
       return Promise.resolve({
         data: [
           // labelKey resolved via the i18n bundle.
-          { name: 'Granit.Test.Query', basePath: '/api/v1/patients', labelKey: 'Entity:Patient' },
+          {
+            moduleName: 'Test',
+            name: 'Granit.Test.Query',
+            basePath: '/api/v1/patients',
+            labelKey: 'Entity:Patient',
+          },
           // labelKey absent from the bundle → humanised last segment of the name.
           {
+            moduleName: 'Sales',
             name: 'Granit.Sales.RevenueByRegionQuery',
             basePath: '/api/v1/revenue',
             labelKey: 'Query:Granit.Sales.RevenueByRegionQuery',
           },
           // Unrouted (basePath null) → hidden from the dropdown.
-          { name: 'Granit.Test.UnroutedQuery', basePath: null, labelKey: 'Query:x' },
+          {
+            moduleName: 'Test',
+            name: 'Granit.Test.UnroutedQuery',
+            basePath: null,
+            labelKey: 'Query:x',
+          },
         ],
       });
     }
@@ -128,7 +140,7 @@ describe('ChartConfigForm', () => {
     expect(onChange.mock.calls.at(-1)?.[0]?.queryName).toBe('Granit.Test.Query');
   });
 
-  it('sorts queries by their displayed label (ascending)', async () => {
+  it('groups queries under their module heading, resolving moduleName via i18n', async () => {
     const user = userEvent.setup();
     const emptyChart: ChartWidgetDefinition = { ...baseChart, queryName: '' };
     const { container } = wrap(
@@ -138,10 +150,13 @@ describe('ChartConfigForm', () => {
 
     await user.click(container.querySelector('[data-slot="chart-query-name"]')!);
     await screen.findByRole('option', { name: 'Patients' });
+    // moduleName is an i18n key: 'Sales' → 'Ventes'; 'Test' is absent → raw fallback.
+    expect(screen.getByText('Ventes')).toBeInTheDocument();
+    expect(screen.getByText('Test')).toBeInTheDocument();
     const labels = screen.getAllByRole('option').map((o) => o.textContent ?? '');
-    const patients = labels.findIndex((l) => l.includes('Patients'));
-    const revenue = labels.findIndex((l) => l.includes('Revenue By Region Query'));
-    // Sorted by label asc: "Patients" before "Revenue By Region Query".
+    const patients = labels.findIndex((l) => l.includes('Patients')); // module 'Test'
+    const revenue = labels.findIndex((l) => l.includes('Revenue By Region Query')); // 'Ventes'
+    // Groups ordered by the RESOLVED heading asc: 'Test' before 'Ventes'.
     expect(patients).toBeGreaterThanOrEqual(0);
     expect(patients).toBeLessThan(revenue);
   });

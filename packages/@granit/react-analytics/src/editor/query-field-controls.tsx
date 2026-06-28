@@ -122,9 +122,13 @@ export function RequiredMark() {
  * Entry semantics (per the `/catalog` contract): the option VALUE is the stable
  * `name` (what we persist), the option LABEL is `t(labelKey)` resolved against the
  * merged i18n bundle — falling back to a humanised last segment of `name` when the
- * key is not in the bundle (`Query:*` keys are opt-in backend-side). Entries with
- * `basePath === null` are not routed (no endpoint to load data from), so they are
- * hidden — flip `HIDE_UNROUTED_QUERIES` to surface them disabled instead.
+ * key is not in the bundle (`Query:*` keys are opt-in backend-side). Options are
+ * grouped under their module heading — `moduleName` is itself an i18n key, resolved
+ * via the merged bundle (falling back to the raw value when absent) — with groups
+ * ordered alphabetically by that resolved heading and queries sorted by their
+ * resolved label within each. Entries with `basePath === null` are not routed (no
+ * endpoint to load data from), so they are hidden — flip `HIDE_UNROUTED_QUERIES`
+ * to surface them disabled instead.
  */
 const HIDE_UNROUTED_QUERIES = true;
 
@@ -143,6 +147,16 @@ export function resolveQueryLabel(t: TFunction, entry: QueryCatalogEntryResponse
   return translated === entry.labelKey ? humanizeQueryName(entry.name) : translated;
 }
 
+/**
+ * Resolves a module group heading: `moduleName` is itself an i18n key, so
+ * `t(moduleName)` against the merged bundle, falling back to the raw module name
+ * when the key is absent (`t` returns the key unchanged under the framework's
+ * `keySeparator: false`).
+ */
+export function resolveModuleLabel(t: TFunction, moduleName: string): string {
+  return t(moduleName) || moduleName;
+}
+
 export function QueryNameCombobox({
   slot,
   value,
@@ -159,9 +173,18 @@ export function QueryNameCombobox({
   const { t } = useTranslation();
   const options: ComboboxOption[] = (entries ?? [])
     .filter((entry) => !HIDE_UNROUTED_QUERIES || entry.basePath !== null)
-    .map((entry) => ({ value: entry.name, label: resolveQueryLabel(t, entry) }))
-    // Sorted by the DISPLAYED label (ascending), not the wire name.
-    .sort((a, b) => (a.label ?? '').localeCompare(b.label ?? ''));
+    .map((entry) => ({
+      value: entry.name,
+      label: resolveQueryLabel(t, entry),
+      group: resolveModuleLabel(t, entry.moduleName),
+    }))
+    // Grouped by the RESOLVED module heading; within each, by the DISPLAYED label
+    // (not the wire name). Sorting by group first makes the headings appear
+    // alphabetically by their resolved (localised) text.
+    .sort(
+      (a, b) =>
+        (a.group ?? '').localeCompare(b.group ?? '') || (a.label ?? '').localeCompare(b.label ?? '')
+    );
 
   return (
     <Combobox

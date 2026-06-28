@@ -18,6 +18,48 @@ import { Popover, PopoverContent, PopoverTrigger } from './popover.js';
 export interface ComboboxOption {
   readonly value: string;
   readonly label?: string;
+  /**
+   * Optional heading the option is filed under. When any option carries a
+   * `group`, the single-select {@link Combobox} renders one headed section per
+   * distinct group (in first-seen order — sort `options` to control it). Options
+   * without a `group` fall under an unheaded leading section. Ignored by
+   * {@link ComboboxMulti}, which always renders a flat list.
+   */
+  readonly group?: string;
+}
+
+interface ComboboxGroup {
+  readonly key: string;
+  readonly heading?: string;
+  readonly options: readonly ComboboxOption[];
+}
+
+/**
+ * Partitions options into ordered headed sections. With no `group` on any
+ * option, returns a single unheaded section (the historical flat layout);
+ * otherwise one section per distinct `group`, in first-seen order.
+ */
+function groupOptions(options: readonly ComboboxOption[]): readonly ComboboxGroup[] {
+  if (!options.some((option) => option.group != null)) {
+    return [{ key: '', options }];
+  }
+  const order: string[] = [];
+  const byGroup = new Map<string, ComboboxOption[]>();
+  for (const option of options) {
+    const heading = option.group ?? '';
+    let bucket = byGroup.get(heading);
+    if (!bucket) {
+      bucket = [];
+      byGroup.set(heading, bucket);
+      order.push(heading);
+    }
+    bucket.push(option);
+  }
+  return order.map((heading) => ({
+    key: heading,
+    heading: heading || undefined,
+    options: byGroup.get(heading)!,
+  }));
 }
 
 interface ComboboxBaseProps {
@@ -85,6 +127,7 @@ export function Combobox({
   const trimmed = search.trim();
   const showCustom =
     allowCustomValue && trimmed.length > 0 && !options.some((option) => option.value === trimmed);
+  const groups = groupOptions(options);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -114,37 +157,43 @@ export function Combobox({
           <CommandInput placeholder={searchPlaceholder} value={search} onValueChange={setSearch} />
           <CommandList>
             <CommandEmpty>{emptyText}</CommandEmpty>
-            <CommandGroup>
-              {allowEmpty && (
+            {allowEmpty && (
+              <CommandGroup>
                 <CommandItem value="__none__" onSelect={() => commit('')}>
                   <CheckIcon
                     className={cn('mr-2 size-4', value === '' ? 'opacity-100' : 'opacity-0')}
                   />
                   <span className="text-muted-foreground">— none —</span>
                 </CommandItem>
-              )}
-              {options.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  value={option.label ?? option.value}
-                  onSelect={() => commit(option.value)}
-                >
-                  <CheckIcon
-                    className={cn(
-                      'mr-2 size-4',
-                      value === option.value ? 'opacity-100' : 'opacity-0'
-                    )}
-                  />
-                  {option.label ?? option.value}
-                </CommandItem>
-              ))}
-              {showCustom && (
+              </CommandGroup>
+            )}
+            {groups.map((group) => (
+              <CommandGroup key={group.key} heading={group.heading}>
+                {group.options.map((option) => (
+                  <CommandItem
+                    key={option.value}
+                    value={option.label ?? option.value}
+                    onSelect={() => commit(option.value)}
+                  >
+                    <CheckIcon
+                      className={cn(
+                        'mr-2 size-4',
+                        value === option.value ? 'opacity-100' : 'opacity-0'
+                      )}
+                    />
+                    {option.label ?? option.value}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            ))}
+            {showCustom && (
+              <CommandGroup>
                 <CommandItem value={trimmed} onSelect={() => commit(trimmed)}>
                   <CheckIcon className="mr-2 size-4 opacity-0" />
                   Use “{trimmed}”
                 </CommandItem>
-              )}
-            </CommandGroup>
+              </CommandGroup>
+            )}
           </CommandList>
         </Command>
       </PopoverContent>

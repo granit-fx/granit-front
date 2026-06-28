@@ -9,6 +9,17 @@
  * `queryName`.
  */
 export interface QueryCatalogEntryResponse {
+  /**
+   * Owning module of the query (e.g. `Auditing`, `Identity.Local`) — derived
+   * backend-side from the query's namespace. A localization KEY for the module
+   * group heading (NOT a pre-resolved string): resolve it client-side against the
+   * merged i18n bundle (like `labelKey` / `Entity:*`), falling back to the raw
+   * value when the key is absent. Sibling queries share it (e.g.
+   * `Granit.Auditing.AuditEntryQuery` and `Granit.Auditing.AuditEntityChangeQuery`
+   * both yield `Auditing`); the catalogue is returned ordered by `moduleName` then
+   * {@link QueryCatalogEntryResponse.name}.
+   */
+  readonly moduleName: string;
   /** Wire identifier of the query (e.g. `Granit.Invoicing.InvoiceQuery`). */
   readonly name: string;
   /**

@@ -35,7 +35,12 @@ describe('useQueryCatalog', () => {
   it('fetches the catalogue from the provider root', async () => {
     const client = axios.create();
     const catalog = [
-      { name: 'Granit.Test.Query', basePath: '/api/v1/patients', labelKey: 'Entity:Patient' },
+      {
+        moduleName: 'Test',
+        name: 'Granit.Test.Query',
+        basePath: '/api/v1/patients',
+        labelKey: 'Entity:Patient',
+      },
     ];
     vi.spyOn(client, 'get').mockResolvedValue({ data: catalog });
 
