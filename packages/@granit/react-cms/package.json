@@ -21,7 +21,7 @@
     "@granit/types": "workspace:*",
     "@granit/utils": "workspace:*",
     "@puckeditor/core": "^0.21.3",
-    "@tanstack/react-query": "^5.0.0"
+    "@tanstack/react-query": "^5.101.2"
   },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
@@ -33,7 +33,7 @@
     "@granit/types": "workspace:*",
     "@granit/utils": "workspace:*",
     "@puckeditor/core": "^0.21.0",
-    "@tanstack/react-query": "^5.0.0",
+    "@tanstack/react-query": "^5.101.2",
     "lucide-react": "^1.0.0",
     "msw": "^2.12.0",
     "react": "^19.0.0"
