@@ -138,35 +138,36 @@ const formRegistry = composeWidgetConfigFormRegistries(
 
 ## Public API
 
-| Symbol                              | Kind      | Purpose                                                                 |
-| ----------------------------------- | --------- | ----------------------------------------------------------------------- |
-| `EditableDashboard`                 | component | Controlled coordinate grid: free drag-move + resize, emits `onChange`   |
-| `EditableDashboardProps`            | type      | `{ definition, onChange, className?, rowHeight?, catalog? }`            |
-| `SortableWidgetCell`                | component | One grid cell: spreads react-grid-layout props + a drag handle          |
-| `SortableWidgetCellProps`           | type      | Cell props (`id`/slug, `dragHandleClassName`, div attrs)                |
-| `WidgetPalette`                     | component | Click-to-add toolbar listing catalog entries; calls `onAdd(entry)`      |
-| `WidgetPaletteProps`                | type      | `{ catalog, onAdd, className? }`                                        |
-| `WidgetConfigDrawer`                | component | Picks the registered form for `widget.type` and renders it              |
-| `WidgetConfigDrawerProps`           | type      | `{ widget, onChange, registry, className?, header? }`                   |
-| `MarkdownConfigForm`                | component | Built-in form for `MarkdownWidgetDefinition` (edits its content key)    |
-| `TextConfigForm`                    | component | Built-in form for `TextWidgetDefinition` (content key + `style` enum)   |
-| `ImageConfigForm`                   | component | Built-in form for `ImageWidgetDefinition` (source, alt key, `fit`)      |
-| `reorderWidgets`                    | fn        | Pure: move source slug to target slug, dense-rerank `position`          |
-| `resizeWidget`                      | fn        | Pure: clamp + apply a new size to one widget by slug                    |
-| `toGridLayout`                      | fn        | Pure: project widgets → react-grid-layout items (packs missing x/y)     |
-| `fromGridLayout`                    | fn        | Pure: fold a grid layout back into a definition (re-derives `position`) |
-| `MAX_HEIGHT_ROWS`                   | const     | Resize height cap in grid rows (12)                                     |
-| `addWidget`                         | fn        | Pure: append a widget from a catalog entry (mints a unique slug)        |
-| `removeWidget`                      | fn        | Pure: drop a widget by slug, dense-rerank the rest                      |
-| `updateWidget`                      | fn        | Pure: replace a widget by slug, preserving its slug + position          |
-| `composeCatalogs`                   | fn        | Merge catalog arrays; later entries win on `type` collision (frozen)    |
-| `defaultWidgetCatalog`              | const     | Framework-shipped catalog: markdown / text / image entries (frozen)     |
-| `WidgetCatalogEntry`                | type      | Palette descriptor: `type`, label key, icon key, default size, factory  |
-| `composeWidgetConfigFormRegistries` | fn        | Merge form registries; later entries win on `type` collision (frozen)   |
-| `defaultWidgetConfigFormRegistry`   | const     | Framework-shipped form registry for markdown / text / image (frozen)    |
-| `WidgetConfigForm`                  | type      | `ComponentType<WidgetConfigFormProps<T>>` — a kind-specific form        |
-| `WidgetConfigFormProps`             | type      | `{ widget, onChange }` passed to every config form                      |
-| `WidgetConfigFormRegistry`          | type      | `Readonly<Record<type, WidgetConfigForm>>`                              |
+| Symbol                              | Kind      | Purpose                                                                  |
+| ----------------------------------- | --------- | ------------------------------------------------------------------------ |
+| `EditableDashboard`                 | component | Controlled coordinate grid: free drag-move + resize, emits `onChange`    |
+| `EditableDashboardProps`            | type      | `{ definition, onChange, className?, rowHeight?, catalog?, on*Widget? }` |
+| `SortableWidgetCell`                | component | One grid cell: spreads react-grid-layout props + drag handle + toolbar   |
+| `SortableWidgetCellProps`           | type      | Cell props (`id`/slug, `dragHandleClassName`, `onEdit/Duplicate/Delete`) |
+| `WidgetPalette`                     | component | Click-to-add toolbar listing catalog entries; calls `onAdd(entry)`       |
+| `WidgetPaletteProps`                | type      | `{ catalog, onAdd, className? }`                                         |
+| `WidgetConfigDrawer`                | component | Picks the registered form for `widget.type` and renders it               |
+| `WidgetConfigDrawerProps`           | type      | `{ widget, onChange, registry, className?, header? }`                    |
+| `MarkdownConfigForm`                | component | Built-in form for `MarkdownWidgetDefinition` (edits its content key)     |
+| `TextConfigForm`                    | component | Built-in form for `TextWidgetDefinition` (content key + `style` enum)    |
+| `ImageConfigForm`                   | component | Built-in form for `ImageWidgetDefinition` (source, alt key, `fit`)       |
+| `reorderWidgets`                    | fn        | Pure: move source slug to target slug, dense-rerank `position`           |
+| `resizeWidget`                      | fn        | Pure: clamp + apply a new size to one widget by slug                     |
+| `toGridLayout`                      | fn        | Pure: project widgets → react-grid-layout items (packs missing x/y)      |
+| `fromGridLayout`                    | fn        | Pure: fold a grid layout back into a definition (re-derives `position`)  |
+| `MAX_HEIGHT_ROWS`                   | const     | Resize height cap in grid rows (12)                                      |
+| `addWidget`                         | fn        | Pure: append a widget from a catalog entry (mints a unique slug)         |
+| `duplicateWidget`                   | fn        | Pure: clone a widget by slug (fresh slug, appended, re-derives meta)     |
+| `removeWidget`                      | fn        | Pure: drop a widget by slug, dense-rerank the rest                       |
+| `updateWidget`                      | fn        | Pure: replace a widget by slug, preserving its slug + position           |
+| `composeCatalogs`                   | fn        | Merge catalog arrays; later entries win on `type` collision (frozen)     |
+| `defaultWidgetCatalog`              | const     | Framework-shipped catalog: markdown / text / image entries (frozen)      |
+| `WidgetCatalogEntry`                | type      | Palette descriptor: `type`, label key, icon key, default size, factory   |
+| `composeWidgetConfigFormRegistries` | fn        | Merge form registries; later entries win on `type` collision (frozen)    |
+| `defaultWidgetConfigFormRegistry`   | const     | Framework-shipped form registry for markdown / text / image (frozen)     |
+| `WidgetConfigForm`                  | type      | `ComponentType<WidgetConfigFormProps<T>>` — a kind-specific form         |
+| `WidgetConfigFormProps`             | type      | `{ widget, onChange }` passed to every config form                       |
+| `WidgetConfigFormRegistry`          | type      | `Readonly<Record<type, WidgetConfigForm>>`                               |
 
 ## Caveats
 

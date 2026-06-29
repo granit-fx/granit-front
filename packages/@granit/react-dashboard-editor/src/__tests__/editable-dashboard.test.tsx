@@ -1,5 +1,5 @@
 import { defaultWidgetRegistry, WidgetRegistryProvider } from '@granit/react-dashboards';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { describe, expect, it, vi } from 'vitest';
@@ -68,7 +68,7 @@ describe('EditableDashboard — initial render', () => {
     const { container } = wrap(<EditableDashboard definition={definition} onChange={vi.fn()} />);
     const handles = container.querySelectorAll('[data-slot="sortable-widget-handle"]');
     expect(handles).toHaveLength(2);
-    expect(handles[0]?.getAttribute('aria-label')).toBe('Drag widget A');
+    expect(handles[0]?.getAttribute('aria-label')).toBe('Move widget A');
     // The handle carries the class the grid's dragConfig.handle selector targets.
     expect(handles[0]?.classList.contains('granit-drag-handle')).toBe(true);
   });
@@ -94,5 +94,44 @@ describe('EditableDashboard — initial render', () => {
     const firstCell = container.querySelector('[data-slot="editable-dashboard-cell"]');
     const handles = firstCell?.querySelectorAll('[data-slot="sortable-widget-resize-handle"]');
     expect(handles?.length).toBe(8);
+  });
+});
+
+describe('EditableDashboard — hover action toolbar', () => {
+  it('renders no toolbar when no action callbacks are wired', () => {
+    const { container } = wrap(<EditableDashboard definition={definition} onChange={vi.fn()} />);
+    expect(container.querySelector('[data-slot="widget-action-toolbar"]')).toBeNull();
+  });
+
+  it('shows only the actions whose callbacks are supplied', () => {
+    const { container } = wrap(
+      <EditableDashboard definition={definition} onChange={vi.fn()} onEditWidget={vi.fn()} />
+    );
+    const firstCell = container.querySelector('[data-slot="editable-dashboard-cell"]');
+    expect(firstCell?.querySelector('[data-slot="widget-action-edit"]')).not.toBeNull();
+    expect(firstCell?.querySelector('[data-slot="widget-action-duplicate"]')).toBeNull();
+    expect(firstCell?.querySelector('[data-slot="widget-action-delete"]')).toBeNull();
+  });
+
+  it('invokes each action with the widget slug', () => {
+    const onEditWidget = vi.fn();
+    const onDuplicateWidget = vi.fn();
+    const onDeleteWidget = vi.fn();
+    const { container } = wrap(
+      <EditableDashboard
+        definition={definition}
+        onChange={vi.fn()}
+        onEditWidget={onEditWidget}
+        onDuplicateWidget={onDuplicateWidget}
+        onDeleteWidget={onDeleteWidget}
+      />
+    );
+    const firstCell = container.querySelector('[data-slot="editable-dashboard-cell"]');
+    fireEvent.click(firstCell!.querySelector('[data-slot="widget-action-edit"]')!);
+    fireEvent.click(firstCell!.querySelector('[data-slot="widget-action-duplicate"]')!);
+    fireEvent.click(firstCell!.querySelector('[data-slot="widget-action-delete"]')!);
+    expect(onEditWidget).toHaveBeenCalledWith('A');
+    expect(onDuplicateWidget).toHaveBeenCalledWith('A');
+    expect(onDeleteWidget).toHaveBeenCalledWith('A');
   });
 });

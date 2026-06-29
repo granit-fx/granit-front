@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { removeWidget, updateWidget } from '../lib/update-widget';
+import { duplicateWidget, removeWidget, updateWidget } from '../lib/update-widget';
 
 import type { DashboardDefinition, MarkdownWidgetDefinition } from '@granit/dashboards';
 
@@ -105,6 +105,49 @@ describe('removeWidget', () => {
   it('does not mutate the input definition', () => {
     const before = definition.widgets;
     removeWidget(definition, 'A');
+    expect(definition.widgets).toBe(before);
+  });
+});
+
+describe('duplicateWidget', () => {
+  it('appends a clone with a fresh unique slug and the next dense position', () => {
+    const next = duplicateWidget(definition, 'A');
+    expect(next.widgets).toHaveLength(4);
+    const clone = next.widgets[3];
+    expect(clone?.slug).toBe('Markdown1'); // minted off the source type
+    expect(clone?.position).toBe(3);
+    expect((clone as MarkdownWidgetDefinition).contentLocalizationKey).toBe('Widget:A.Content');
+  });
+
+  it('drops titleLocalizationKey and x/y so the clone re-derives them', () => {
+    const withMeta: DashboardDefinition = {
+      ...definition,
+      widgets: [
+        {
+          slug: 'A',
+          type: 'markdown',
+          position: 0,
+          x: 3,
+          y: 1,
+          size: { width: 6, height: 1 },
+          contentLocalizationKey: 'Widget:A.Content',
+          titleLocalizationKey: 'Widget:Test.A',
+        },
+      ],
+    };
+    const clone = duplicateWidget(withMeta, 'A').widgets[1];
+    expect(clone?.x).toBeUndefined();
+    expect(clone?.y).toBeUndefined();
+    expect(clone?.titleLocalizationKey).toBeUndefined();
+  });
+
+  it('returns the input unchanged when the slug is not found', () => {
+    expect(duplicateWidget(definition, 'MISSING')).toBe(definition);
+  });
+
+  it('does not mutate the input definition', () => {
+    const before = definition.widgets;
+    duplicateWidget(definition, 'A');
     expect(definition.widgets).toBe(before);
   });
 });

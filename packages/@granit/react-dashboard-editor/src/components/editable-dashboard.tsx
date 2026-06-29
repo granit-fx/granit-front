@@ -56,6 +56,15 @@ export interface EditableDashboardProps {
    * omitted (or a widget's type is absent), the floor is `1x1`.
    */
   readonly catalog?: readonly WidgetCatalogEntry[];
+  /**
+   * Per-widget hover-toolbar actions, called with the widget `slug`. Each
+   * button appears only when its handler is supplied. Headless by design — the
+   * parent owns behaviour (open a config drawer, confirm + `removeWidget`,
+   * `duplicateWidget`, …).
+   */
+  readonly onEditWidget?: (slug: string) => void;
+  readonly onDuplicateWidget?: (slug: string) => void;
+  readonly onDeleteWidget?: (slug: string) => void;
 }
 
 export function EditableDashboard({
@@ -64,6 +73,9 @@ export function EditableDashboard({
   className,
   rowHeight,
   catalog,
+  onEditWidget,
+  onDuplicateWidget,
+  onDeleteWidget,
 }: EditableDashboardProps) {
   const breakpoint = useDashboardBreakpoint();
 
@@ -133,6 +145,9 @@ export function EditableDashboard({
               key={widget.slug}
               id={widget.slug}
               dragHandleClassName={DRAG_HANDLE_CLASS}
+              onEdit={onEditWidget ? () => onEditWidget(widget.slug) : undefined}
+              onDuplicate={onDuplicateWidget ? () => onDuplicateWidget(widget.slug) : undefined}
+              onDelete={onDeleteWidget ? () => onDeleteWidget(widget.slug) : undefined}
             >
               <WidgetRenderer widget={widget} />
             </SortableWidgetCell>

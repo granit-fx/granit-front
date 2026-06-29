@@ -114,7 +114,7 @@ export function composeCatalogs(
  * - `markdown` → `Markdown1` (none) / `Markdown2` (`Markdown1` exists)
  * - `kpi` → `Kpi1`
  */
-function nextUniqueSlug(type: string, existing: ReadonlySet<string>): string {
+export function nextUniqueSlug(type: string, existing: ReadonlySet<string>): string {
   const prefix = type.charAt(0).toUpperCase() + type.slice(1);
   for (let i = 1; ; i++) {
     const candidate = `${prefix}${i}`;

@@ -4708,6 +4708,11 @@
           "members": []
         },
         {
+          "name": "duplicateWidget",
+          "kind": "function",
+          "signature": "function duplicateWidget( definition: DashboardDefinition, slug: string ): DashboardDefinition"
+        },
+        {
           "name": "removeWidget",
           "kind": "function",
           "signature": "function removeWidget(definition: DashboardDefinition, slug: string): DashboardDefinition"
