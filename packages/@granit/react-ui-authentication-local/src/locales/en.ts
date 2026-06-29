@@ -122,7 +122,6 @@ export const authLocalTranslationsEn = {
   'Auth.Register.ConfirmPasswordPlaceholder': 'Re-enter your password',
   'Auth.Register.Disabled': 'Registration disabled',
   'Auth.Register.DisabledMessage': 'Registration is currently disabled.',
-  'Auth.Register.EmailAlreadyExists': 'An account with this email already exists.',
   'Auth.Register.EmailLabel': 'Email address',
   'Auth.Register.EmailPlaceholder': 'admin@example.com',
   'Auth.Register.FirstNameLabel': 'First name',

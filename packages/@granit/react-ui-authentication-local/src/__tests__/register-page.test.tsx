@@ -65,11 +65,11 @@ describe('RegisterPage', () => {
     });
   });
 
-  it('should show error on duplicate email (409)', async () => {
-    mockMutateAsync.mockRejectedValueOnce({
-      isAxiosError: true,
-      response: { status: 409 },
-    });
+  it('should not leak account existence on a duplicate email (anti-enumeration)', async () => {
+    // The backend returns 202 Accepted for an already-registered email, so the
+    // response is indistinguishable from a fresh signup. The UI must show the
+    // same "check your email" confirmation and never reveal the account exists.
+    mockMutateAsync.mockResolvedValueOnce(undefined);
     const { user } = renderPage();
 
     await user.type(screen.getByLabelText(/email address/i), 'existing@test.com');
@@ -78,8 +78,9 @@ describe('RegisterPage', () => {
     await user.click(screen.getByRole('button', { name: /create account/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/already exists/i)).toBeInTheDocument();
+      expect(screen.getByText(/check your email/i)).toBeInTheDocument();
     });
+    expect(screen.queryByText(/already exists/i)).not.toBeInTheDocument();
   });
 
   it('should show disabled message when registration returns 403', async () => {
@@ -99,10 +100,10 @@ describe('RegisterPage', () => {
     });
   });
 
-  it('should show a validation error on a 400 response', async () => {
+  it('should show a validation error on a 422 response', async () => {
     mockMutateAsync.mockRejectedValueOnce({
       isAxiosError: true,
-      response: { status: 400 },
+      response: { status: 422 },
     });
     const { user } = renderPage();
 

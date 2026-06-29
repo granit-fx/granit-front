@@ -112,9 +112,10 @@ function RegisterForm() {
     } catch (err: unknown) {
       if (isAxiosError(err) && err.response?.status === 403) {
         setServerError(t('Auth.Register.Disabled'));
-      } else if (isAxiosError(err) && err.response?.status === 409) {
-        setServerError(t('Auth.Register.EmailAlreadyExists'));
-      } else if (isAxiosError(err) && err.response?.status === 400) {
+      } else if (isAxiosError(err) && err.response?.status === 422) {
+        // FluentValidation failures (invalid email, weak password) surface as 422.
+        // A duplicate email is NOT an error here: the backend returns 202 by design
+        // (anti-enumeration), which the success path already handles.
         setServerError(t('Auth.Register.ValidationError'));
       } else {
         setServerError(t('Auth.Register.UnexpectedError'));

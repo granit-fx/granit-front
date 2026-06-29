@@ -128,7 +128,6 @@ export const authLocalTranslationsFr: Record<keyof AuthLocalTranslations, string
   'Auth.Register.ConfirmPasswordPlaceholder': 'Saisissez à nouveau votre mot de passe',
   'Auth.Register.Disabled': 'Inscription désactivée',
   'Auth.Register.DisabledMessage': "L'inscription est actuellement désactivée.",
-  'Auth.Register.EmailAlreadyExists': 'Un compte avec cette adresse email existe déjà.',
   'Auth.Register.EmailLabel': 'Adresse email',
   'Auth.Register.EmailPlaceholder': 'admin@exemple.com',
   'Auth.Register.FirstNameLabel': 'Prénom',
