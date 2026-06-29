@@ -529,6 +529,19 @@ export const CONTRACTS: readonly ModuleContract[] = [
     types: ['MonitoringHealthResponse', 'ServiceHealthResponse'],
   },
   {
+    // Capability-gated endpoints — both routes (`/autocomplete`, `/reverse`) are
+    // served by `api/` functions. `GeocodeMatchPrecision` is a standalone string
+    // enum, verified indirectly via the `precision` field it backs.
+    slug: 'geocoding',
+    package: 'geocoding',
+    types: [
+      'GeocodingSuggestionResponse',
+      'GeocodingAutocompleteResponse',
+      'GeocodingReverseResponse',
+    ],
+    checkEndpoints: true,
+  },
+  {
     slug: 'hostnames',
     package: 'hostnames',
     types: [

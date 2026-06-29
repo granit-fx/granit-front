@@ -771,6 +771,15 @@ importers:
         specifier: workspace:*
         version: link:../testing
 
+  packages/@granit/geocoding:
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+
   packages/@granit/hostnames:
     devDependencies:
       '@granit/api-client':
@@ -2485,6 +2494,43 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+
+  packages/@granit/react-geocoding:
+    dependencies:
+      '@tanstack/react-query':
+        specifier: 5.101.2
+        version: 5.101.2(react@19.2.7)
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@26.0.1)(typescript@6.0.3)
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+      react-i18next:
+        specifier: ^17.0.0
+        version: 17.0.8(i18next@26.3.3(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/geocoding':
+        specifier: workspace:*
+        version: link:../geocoding
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/react-ui':
+        specifier: workspace:*
+        version: link:../react-ui
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/utils':
+        specifier: workspace:*
+        version: link:../utils
 
   packages/@granit/react-hostnames:
     dependencies:

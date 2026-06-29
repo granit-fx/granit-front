@@ -1765,6 +1765,27 @@
       ]
     },
     {
+      "name": "@granit/geocoding",
+      "description": "Framework-agnostic types and HTTP client for Granit geocoding (address autocomplete + reverse)",
+      "exports": [
+        {
+          "name": "GeocodeMatchPrecision",
+          "kind": "type",
+          "signature": "type GeocodeMatchPrecision = 'Rooftop' | 'Street' | 'Locality'"
+        },
+        {
+          "name": "getAddressSuggestions",
+          "kind": "function",
+          "signature": "async function getAddressSuggestions( client: AxiosInstance, basePath: string, params: GeocodingAutocompleteParams, signal?: AbortSignal ): Promise<GeocodingAutocompleteResponse>"
+        },
+        {
+          "name": "getReverseGeocode",
+          "kind": "function",
+          "signature": "async function getReverseGeocode( client: AxiosInstance, basePath: string, params: GeocodingReverseParams, signal?: AbortSignal ): Promise<GeocodingReverseResponse>"
+        }
+      ]
+    },
+    {
       "name": "@granit/hostnames",
       "description": "Managed hostname types and API functions — mirrors Granit.Hostnames .NET contract",
       "exports": [
@@ -6013,6 +6034,61 @@
           "name": "SetFeatureOverrideVariables",
           "kind": "type",
           "signature": "type SetFeatureOverrideVariables = { readonly name: string; readonly request: SetFeatureOverrideRequest; }"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-geocoding",
+      "description": "React bindings for @granit/geocoding — GeocodingProvider, hooks and AddressAutocompleteInput",
+      "exports": [
+        {
+          "name": "useAddressSuggestions",
+          "kind": "function",
+          "signature": "function useAddressSuggestions( search: string, options: UseAddressSuggestionsOptions ="
+        },
+        {
+          "name": "useReverseGeocode",
+          "kind": "function",
+          "signature": "function useReverseGeocode( coordinate: Coordinate | null, options:"
+        },
+        {
+          "name": "Coordinate",
+          "kind": "interface",
+          "signature": "interface Coordinate",
+          "members": []
+        },
+        {
+          "name": "UseReverseGeocodeResult",
+          "kind": "interface",
+          "signature": "interface UseReverseGeocodeResult",
+          "members": []
+        },
+        {
+          "name": "useDebouncedValue",
+          "kind": "function",
+          "signature": "function useDebouncedValue<T>(value: T, delayMs: number): T"
+        },
+        {
+          "name": "AddressAutocompleteInput",
+          "kind": "function",
+          "signature": "function AddressAutocompleteInput(props: AddressAutocompleteInputProps): ReactElement"
+        },
+        {
+          "name": "AddressAutocompleteInputProps",
+          "kind": "interface",
+          "signature": "interface AddressAutocompleteInputProps extends Pick<",
+          "members": []
+        },
+        {
+          "name": "AddressPrecisionBadge",
+          "kind": "function",
+          "signature": "function AddressPrecisionBadge("
+        },
+        {
+          "name": "AddressPrecisionBadgeProps",
+          "kind": "interface",
+          "signature": "interface AddressPrecisionBadgeProps",
+          "members": []
         }
       ]
     },

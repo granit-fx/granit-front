@@ -1,0 +1,310 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "geocoding",
+    "version": "1"
+  },
+  "paths": {
+    "/geocoding/autocomplete": {
+      "get": {
+        "tags": ["Geocoding"],
+        "summary": "Suggests addresses for a partial query (typeahead).",
+        "description": "Returns ranked address suggestions for the partial text. Mapped only when an autocomplete-capable provider is registered. High-volume (per-keystroke): the host should apply a per-principal rate-limit policy.",
+        "operationId": "GeocodeAutocomplete",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeocodingAutocompleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/geocoding/reverse": {
+      "get": {
+        "tags": ["Geocoding"],
+        "summary": "Reverse-geocodes a coordinate to the nearest address.",
+        "description": "Returns the postal address nearest the given latitude/longitude. Mapped only when a reverse-capable provider is registered.",
+        "operationId": "GeocodeReverse",
+        "parameters": [
+          {
+            "name": "Lat",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+              "type": ["number", "string"],
+              "format": "double"
+            }
+          },
+          {
+            "name": "Lon",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+              "type": ["number", "string"],
+              "format": "double"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeocodingReverseResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GeocodeMatchPrecision": {
+        "enum": ["Rooftop", "Street", "Locality"],
+        "description": "Granularity of a geocoding match, derived from the provider response (e.g. Nominatim\n`addresstype`/`place_rank`, Photon feature `type`). Drives whether a result is treated\nas AddressGeocodingStatus.Resolved or AddressGeocodingStatus.Approximate."
+      },
+      "GeocodingAutocompleteResponse": {
+        "required": ["suggestions"],
+        "type": "object",
+        "properties": {
+          "suggestions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GeocodingSuggestionResponse"
+            }
+          }
+        }
+      },
+      "GeocodingReverseResponse": {
+        "required": ["street", "postalCode", "locality", "country", "precision"],
+        "type": "object",
+        "properties": {
+          "street": {
+            "type": ["null", "string"]
+          },
+          "postalCode": {
+            "type": ["null", "string"]
+          },
+          "locality": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "precision": {
+            "$ref": "#/components/schemas/GeocodeMatchPrecision"
+          }
+        }
+      },
+      "GeocodingSuggestionResponse": {
+        "required": [
+          "label",
+          "street",
+          "postalCode",
+          "locality",
+          "country",
+          "latitude",
+          "longitude"
+        ],
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "street": {
+            "type": ["null", "string"]
+          },
+          "postalCode": {
+            "type": ["null", "string"]
+          },
+          "locality": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "latitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": ["null", "number", "string"],
+            "format": "double"
+          },
+          "longitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": ["null", "number", "string"],
+            "format": "double"
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Geocoding"
+    }
+  ]
+}
