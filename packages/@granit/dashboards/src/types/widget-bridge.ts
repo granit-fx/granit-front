@@ -180,7 +180,21 @@ export function widgetInstanceToDefinition(
   // `widget.datasource` undefined and crashes `<KpiTile>`. KPI `actions` are
   // not part of `configJson` (no server-side Actions column for KPI), so they
   // don't round-trip through detail/edit — consistent with the backend.
-  const fields = instance.widgetType === 'Kpi' ? { datasource: parsed } : parsed;
+  // Chart / Table / Pivot / Map carry `queryName` as a denormalized column.
+  // Treat that column as the source of truth and overlay it onto the parsed
+  // config so the editor's Query field stays populated even for dashboards
+  // persisted before the backend started writing `queryName` into `configJson`.
+  // Side-effect, by design: for such a legacy dashboard the local widget now
+  // carries `queryName` while the server `configJson` does not, so the next
+  // `diffDashboardWidgets` marks it `updated` (recomputed `configJson` differs).
+  // This only persists on an explicit save and heals the stored record — not a
+  // bug. KPI is unchanged: its query lives inside the serialized `datasource`.
+  const fields =
+    instance.widgetType === 'Kpi'
+      ? { datasource: parsed }
+      : instance.queryName !== null
+        ? { ...parsed, queryName: instance.queryName }
+        : parsed;
   const widget: WidgetDefinitionBase & Readonly<Record<string, unknown>> = {
     ...fields,
     slug,

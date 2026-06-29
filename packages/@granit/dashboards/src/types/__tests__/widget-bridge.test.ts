@@ -44,6 +44,15 @@ interface MapWidgetStub extends WidgetDefinitionBase {
   };
 }
 
+interface ChartWidgetStub extends WidgetDefinitionBase {
+  readonly type: 'chart';
+  readonly queryName: string;
+  readonly groupBy: string;
+  readonly aggregation: string;
+  readonly field: string | null;
+  readonly chartType: string;
+}
+
 const DASHBOARD_NAME = 'Granit.Showcase.Demo';
 const ID = '8c6b1e10-0000-4000-8000-000000000001';
 const WIDGET_ID = '8c6b1e10-0000-0000-0000-000000000010';
@@ -123,6 +132,54 @@ describe('widgetInstanceToDefinition', () => {
     const widget = widgetInstanceToDefinition(instance, DASHBOARD_NAME);
     expect(widget.slug).toBe('Broken');
     expect(widget.type).toBe('markdown');
+  });
+
+  it('reads queryName from configJson for a query-backed widget (backend-corrected path)', () => {
+    const instance: WidgetInstanceResponse = {
+      id: WIDGET_ID,
+      widgetType: 'Chart',
+      x: 0,
+      y: 0,
+      width: 6,
+      height: 3,
+      titleLocalizationKey: `Widget:${DASHBOARD_NAME}.Cancellations`,
+      metricName: null,
+      queryName: 'Granit.Subscriptions.SubscriptionsQuery',
+      configJson: JSON.stringify({
+        queryName: 'Granit.Subscriptions.SubscriptionsQuery',
+        groupBy: 'Week',
+        aggregation: 'Count',
+        field: null,
+        chartType: 'Line',
+      }),
+      requiredPermission: null,
+    };
+    const widget = widgetInstanceToDefinition(instance, DASHBOARD_NAME) as ChartWidgetStub;
+    expect(widget.queryName).toBe('Granit.Subscriptions.SubscriptionsQuery');
+  });
+
+  it('falls back to the denormalized queryName column when configJson omits it (legacy dashboard)', () => {
+    const instance: WidgetInstanceResponse = {
+      id: WIDGET_ID,
+      widgetType: 'Chart',
+      x: 0,
+      y: 0,
+      width: 6,
+      height: 3,
+      titleLocalizationKey: `Widget:${DASHBOARD_NAME}.Cancellations`,
+      metricName: null,
+      // The denormalized column carries the query; the legacy configJson does not.
+      queryName: 'Granit.Subscriptions.SubscriptionsQuery',
+      configJson: JSON.stringify({
+        groupBy: 'Week',
+        aggregation: 'Count',
+        field: null,
+        chartType: 'Line',
+      }),
+      requiredPermission: null,
+    };
+    const widget = widgetInstanceToDefinition(instance, DASHBOARD_NAME) as ChartWidgetStub;
+    expect(widget.queryName).toBe('Granit.Subscriptions.SubscriptionsQuery');
   });
 });
 
