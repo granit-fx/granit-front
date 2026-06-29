@@ -7,11 +7,10 @@ import type { ComponentType } from 'react';
  * widget definition + an `onChange` callback emitting a fresh widget
  * whose extra fields the form has mutated.
  *
- * `slug` / `position` / `size` are deliberately NOT editable through this
- * surface — the drawer owns kind-specific fields only. Slug is immutable
- * (composes the localization key + drives DnD identity); position is
- * owned by `reorderWidgets`; size is owned by the (future) resize gesture
- * + the catalog's `defaultSize`.
+ * `slug` / `position` / `size` / `x` / `y` are deliberately NOT editable
+ * through this surface — the drawer owns kind-specific fields only. Slug is
+ * immutable (composes the localization key + drives the grid item identity);
+ * placement and size are owned by the grid layout + the catalog's `defaultSize`.
  *
  * `T` is constrained to `WidgetDefinitionBase` (not `WidgetDefinition`) so
  * downstream packages can type their forms against their own concrete

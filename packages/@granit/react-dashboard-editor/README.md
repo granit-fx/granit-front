@@ -151,8 +151,6 @@ const formRegistry = composeWidgetConfigFormRegistries(
 | `MarkdownConfigForm`                | component | Built-in form for `MarkdownWidgetDefinition` (edits its content key)     |
 | `TextConfigForm`                    | component | Built-in form for `TextWidgetDefinition` (content key + `style` enum)    |
 | `ImageConfigForm`                   | component | Built-in form for `ImageWidgetDefinition` (source, alt key, `fit`)       |
-| `reorderWidgets`                    | fn        | Pure: move source slug to target slug, dense-rerank `position`           |
-| `resizeWidget`                      | fn        | Pure: clamp + apply a new size to one widget by slug                     |
 | `toGridLayout`                      | fn        | Pure: project widgets → react-grid-layout items (packs missing x/y)      |
 | `fromGridLayout`                    | fn        | Pure: fold a grid layout back into a definition (re-derives `position`)  |
 | `MAX_HEIGHT_ROWS`                   | const     | Resize height cap in grid rows (12)                                      |

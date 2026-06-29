@@ -6,8 +6,8 @@ import type { DashboardDefinition, WidgetDefinition } from '@granit/dashboards';
  * Pure helper: returns a new {@link DashboardDefinition} with the widget
  * matching `slug` replaced by `next`. The replacement preserves the
  * existing `slug` + `position` (callers can't accidentally rename or
- * reorder a widget through the config drawer — those are owned by
- * {@link reorderWidgets} / {@link addWidget}).
+ * reorder a widget through the config drawer — placement is owned by the
+ * grid layout, slug minting by {@link addWidget}).
  *
  * Slug not found → returns the input definition unchanged. This keeps the
  * editor pipeline idempotent under late-arriving onChange callbacks (e.g.

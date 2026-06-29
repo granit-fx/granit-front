@@ -17,9 +17,7 @@ export { ImageConfigForm } from './components/forms/image-config-form';
 export { MarkdownConfigForm } from './components/forms/markdown-config-form';
 export { TextConfigForm } from './components/forms/text-config-form';
 
-// Pure helpers — exported for tests + custom palette / DnD wrappers
-export { reorderWidgets } from './lib/reorder-widgets';
-export { resizeWidget } from './lib/resize-widget';
+// Pure helpers — exported for tests + custom palette / grid wrappers.
 // react-grid-layout bridge — for apps composing their own grid surface.
 export { fromGridLayout, MAX_HEIGHT_ROWS, toGridLayout } from './lib/grid-layout-bridge';
 export {

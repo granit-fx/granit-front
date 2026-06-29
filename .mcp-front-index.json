@@ -4677,16 +4677,6 @@
           "signature": "function TextConfigForm("
         },
         {
-          "name": "reorderWidgets",
-          "kind": "function",
-          "signature": "function reorderWidgets( definition: DashboardDefinition, sourceSlug: string, targetSlug: string ): DashboardDefinition"
-        },
-        {
-          "name": "resizeWidget",
-          "kind": "function",
-          "signature": "function resizeWidget( definition: DashboardDefinition, slug: string, size: WidgetSize, minSize: WidgetSize ="
-        },
-        {
           "name": "fromGridLayout",
           "kind": "function",
           "signature": "function fromGridLayout( layout: Layout, definition: DashboardDefinition ): DashboardDefinition"
