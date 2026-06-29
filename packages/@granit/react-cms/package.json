@@ -20,7 +20,7 @@
     "@granit/testing": "workspace:*",
     "@granit/types": "workspace:*",
     "@granit/utils": "workspace:*",
-    "@puckeditor/core": "^0.21.3",
+    "@puckeditor/core": "^0.22.0",
     "@tanstack/react-query": "^5.101.2"
   },
   "peerDependencies": {

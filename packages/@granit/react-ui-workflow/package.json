@@ -19,7 +19,7 @@
     "@granit/react-workflow": "workspace:*",
     "@granit/utils": "workspace:*",
     "@granit/workflow": "workspace:*",
-    "lucide-react": "^1.21.0",
+    "lucide-react": "^1.22.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -42,7 +42,7 @@
     "@storybook/react-vite": "^10.4.6",
     "@tanstack/react-query": "^5.101.2",
     "i18next": "^26.3.3",
-    "lucide-react": "^1.21.0",
+    "lucide-react": "^1.22.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^17.0.0",
