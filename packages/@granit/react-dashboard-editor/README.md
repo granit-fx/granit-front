@@ -45,6 +45,19 @@ declare these peers:
   behind `<EditableDashboard>`. Its stylesheet is **not** imported (a CSS
   side-effect import breaks workspace `tsc -r`); the editor inlines the
   essential rules itself.
+
+  > **Vite consumers:** `react-grid-layout` bundles `react-draggable`, whose
+  > drag handlers read `process.env.DRAGGABLE_DEBUG` at runtime. Vite's dep
+  > optimizer only auto-replaces `process.env.NODE_ENV`, so this reference reaches
+  > the browser and throws `process is not defined` on the first drag. Add a
+  > static replacement to your Vite config:
+  >
+  > ```ts
+  > export default defineConfig({
+  >   define: { 'process.env.DRAGGABLE_DEBUG': 'false' },
+  > });
+  > ```
+
 - `react-i18next` (`^17`) — `<WidgetPalette>`, `<WidgetConfigDrawer>`, and the
   built-in config forms resolve labels via `useTranslation()`.
 - `react` (`^19`).
