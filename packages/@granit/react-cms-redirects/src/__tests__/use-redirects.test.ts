@@ -67,7 +67,7 @@ describe('useRedirects', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listRedirects).toHaveBeenCalledWith(client, '', 'site-1');
+    expect(listRedirects).toHaveBeenCalledWith(client, '/api/cms/redirects', 'site-1');
     expect(result.current.data).toEqual([redirect]);
   });
 
@@ -93,7 +93,7 @@ describe('useRedirect', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getRedirect).toHaveBeenCalledWith(client, '', redirect.id);
+    expect(getRedirect).toHaveBeenCalledWith(client, '/api/cms/redirects', redirect.id);
   });
 });
 
@@ -112,7 +112,7 @@ describe('useRedirectsGrid', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(getRedirectsGrid).toHaveBeenCalledWith(
       client,
-      '',
+      '/api/cms/redirects',
       { page: 1, pageSize: 25 },
       expect.objectContaining({ signal: expect.any(AbortSignal) })
     );
@@ -133,7 +133,7 @@ describe('useRedirectSettings', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getRedirectSettings).toHaveBeenCalledWith(client, '', 'site-1');
+    expect(getRedirectSettings).toHaveBeenCalledWith(client, '/api/cms/redirects', 'site-1');
   });
 });
 
@@ -151,7 +151,7 @@ describe('useRedirectPreview', () => {
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(previewRedirect).toHaveBeenCalledWith(client, '', 'site-1', {
+    expect(previewRedirect).toHaveBeenCalledWith(client, '/api/cms/redirects', 'site-1', {
       path: '/old',
       culture: 'fr',
     });

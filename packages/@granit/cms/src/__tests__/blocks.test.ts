@@ -40,7 +40,7 @@ describe('getBlockCatalog', () => {
 
     const result = await getBlockCatalog(client, basePath);
 
-    expect(client.get).toHaveBeenCalledWith(`${basePath}/api/cms/blocks`);
+    expect(client.get).toHaveBeenCalledWith(`${basePath}/blocks`);
     expect(result).toEqual(catalog);
   });
 });
@@ -52,7 +52,7 @@ describe('getPublicBlockCatalog', () => {
 
     const result = await getPublicBlockCatalog(client, basePath);
 
-    expect(client.get).toHaveBeenCalledWith(`${basePath}/api/cms/blocks/public`, undefined);
+    expect(client.get).toHaveBeenCalledWith(`${basePath}/blocks/public`, undefined);
     expect(result).toEqual(catalog);
   });
 
@@ -64,7 +64,7 @@ describe('getPublicBlockCatalog', () => {
     // by the renderer (which augments RequestInit). The forwarding mechanism is identical.
     await getPublicBlockCatalog(client, basePath, { cache: 'force-cache' });
 
-    expect(client.get).toHaveBeenCalledWith(`${basePath}/api/cms/blocks/public`, {
+    expect(client.get).toHaveBeenCalledWith(`${basePath}/blocks/public`, {
       fetchOptions: { cache: 'force-cache' },
     });
   });
@@ -88,7 +88,7 @@ describe('resolveBlockData', () => {
 
     const result = await resolveBlockData(client, basePath, req);
 
-    expect(client.post).toHaveBeenCalledWith(`${basePath}/api/cms/blocks/data`, req, undefined);
+    expect(client.post).toHaveBeenCalledWith(`${basePath}/blocks/data`, req, undefined);
     expect(result).toEqual(resp);
   });
 
@@ -98,7 +98,7 @@ describe('resolveBlockData', () => {
 
     await resolveBlockData(client, basePath, req, { cache: 'no-store' });
 
-    expect(client.post).toHaveBeenCalledWith(`${basePath}/api/cms/blocks/data`, req, {
+    expect(client.post).toHaveBeenCalledWith(`${basePath}/blocks/data`, req, {
       fetchOptions: { cache: 'no-store' },
     });
   });

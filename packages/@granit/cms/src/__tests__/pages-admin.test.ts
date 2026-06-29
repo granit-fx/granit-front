@@ -67,7 +67,7 @@ describe('getPageTree', () => {
 
     const result = await getPageTree(client, BASE, 'site-1');
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/pages/tree`, {
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/pages/tree`, {
       headers: { 'X-Granit-Site': 'site-1' },
     });
     expect(result).toEqual([treeNode]);
@@ -83,7 +83,7 @@ describe('listPages', () => {
 
     await listPages(client, BASE, { page: 1, pageSize: 20 });
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/pages?page=1&pageSize=20`, undefined);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/pages?page=1&pageSize=20`, undefined);
   });
 });
 
@@ -94,7 +94,7 @@ describe('getPage', () => {
 
     const result = await getPage(client, BASE, 'page-1');
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1`);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/pages/page-1`);
     expect(result).toEqual(page);
   });
 });
@@ -107,7 +107,7 @@ describe('createPage', () => {
     const request = { parentId: 'parent-1', slugSegment: 'home', layoutKey: null };
     const result = await createPage(client, BASE, request);
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/pages`, request);
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/pages`, request);
     expect(result).toEqual(page);
   });
 });
@@ -122,7 +122,7 @@ describe('updatePage', () => {
       concurrencyStamp: 'stamp-1',
     });
 
-    expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1`, {
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/pages/page-1`, {
       slugSegment: 'new-home',
       concurrencyStamp: 'stamp-1',
     });
@@ -139,7 +139,7 @@ describe('updatePageTranslation', () => {
       title: 'Accueil',
     });
 
-    expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1/translations/fr`, {
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/pages/page-1/translations/fr`, {
       urlSlug: 'accueil',
       title: 'Accueil',
     });
@@ -156,7 +156,7 @@ describe('movePage', () => {
       concurrencyStamp: 'stamp-1',
     });
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1/move`, {
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/pages/page-1/move`, {
       newParentId: 'parent-1',
       concurrencyStamp: 'stamp-1',
     });
@@ -170,7 +170,7 @@ describe('deletePage', () => {
 
     await deletePage(client, BASE, 'page-1');
 
-    expect(client.delete).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1`);
+    expect(client.delete).toHaveBeenCalledWith(`${BASE}/pages/page-1`);
   });
 });
 
@@ -202,7 +202,7 @@ describe('listPageVersions', () => {
 
     const result = await listPageVersions(client, BASE, 'page-1');
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1/versions`);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/pages/page-1/versions`);
     expect(result).toEqual([version]);
   });
 });
@@ -214,7 +214,7 @@ describe('publishPage', () => {
 
     await publishPage(client, BASE, 'page-1');
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1/publish`);
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/pages/page-1/publish`);
   });
 });
 
@@ -225,7 +225,7 @@ describe('unpublishPage', () => {
 
     await unpublishPage(client, BASE, 'page-1');
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1/unpublish`);
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/pages/page-1/unpublish`);
   });
 });
 
@@ -236,6 +236,6 @@ describe('rollbackPage', () => {
 
     await rollbackPage(client, BASE, 'page-1', 'v-1');
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/pages/page-1/rollback/v-1`);
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/pages/page-1/rollback/v-1`);
   });
 });

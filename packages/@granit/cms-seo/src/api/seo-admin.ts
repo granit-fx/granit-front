@@ -30,7 +30,7 @@ export async function getSeoMetadata(
 ): Promise<SeoMetadataResponse | null> {
   const { siteId, contentType, contentId, culture } = params;
   const res = await client.get<SeoMetadataResponse>(
-    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}`,
+    `${basePath}/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}`,
     { validateStatus: (s) => s === 200 || s === 404 }
   );
   return res.status === 404 ? null : res.data;
@@ -53,7 +53,7 @@ export async function upsertSeoMetadata(
 ): Promise<SeoMetadataResponse> {
   const { siteId, contentType, contentId, culture } = params;
   const res = await client.put<SeoMetadataResponse>(
-    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}`,
+    `${basePath}/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}`,
     request
   );
   return res.data;
@@ -75,7 +75,7 @@ export async function deleteSeoMetadata(
 ): Promise<void> {
   const { siteId, contentType, contentId, culture } = params;
   await client.delete(
-    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}`
+    `${basePath}/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}`
   );
 }
 
@@ -89,7 +89,7 @@ export async function getSeoDefaults(
   siteId: string
 ): Promise<SiteSeoDefaultsResponse | null> {
   const res = await client.get<SiteSeoDefaultsResponse>(
-    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/defaults`,
+    `${basePath}/sites/${encodeURIComponent(siteId)}/defaults`,
     { validateStatus: (s) => s === 200 || s === 404 }
   );
   return res.status === 404 ? null : res.data;
@@ -103,7 +103,7 @@ export async function updateSeoDefaults(
   request: SiteSeoDefaultsRequest
 ): Promise<SiteSeoDefaultsResponse> {
   const res = await client.put<SiteSeoDefaultsResponse>(
-    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/defaults`,
+    `${basePath}/sites/${encodeURIComponent(siteId)}/defaults`,
     request
   );
   return res.data;
@@ -122,7 +122,7 @@ export async function listSeoMetadata(
 ): Promise<PagedResult<SeoMetadataListItem>> {
   const qs = params ? serializeQueryRequest(params) : '';
   const suffix = qs ? `?${qs}` : '';
-  const url = `${basePath}/api/cms/seo/metadata${suffix}`;
+  const url = `${basePath}/metadata${suffix}`;
   const res = await client.get<PagedResult<SeoMetadataListItem>>(url, options);
   return res.data;
 }
@@ -133,9 +133,7 @@ export async function invalidateSitemap(
   basePath: string,
   siteId: string
 ): Promise<void> {
-  await client.post(
-    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/sitemap/invalidate`
-  );
+  await client.post(`${basePath}/sites/${encodeURIComponent(siteId)}/sitemap/invalidate`);
 }
 
 /** `GET .../metadata/{contentType}/{contentId}/{culture}/preview/serp`. Requires `Cms.Seo.Read`. */
@@ -151,7 +149,7 @@ export async function getSerpPreview(
 ): Promise<SerpPreviewResponse | null> {
   const { siteId, contentType, contentId, culture } = params;
   const res = await client.get<SerpPreviewResponse>(
-    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}/preview/serp`,
+    `${basePath}/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}/preview/serp`,
     { validateStatus: (s) => s === 200 || s === 204 }
   );
   return res.status === 204 ? null : res.data;
@@ -170,7 +168,7 @@ export async function getOgCardPreview(
 ): Promise<OgPreviewResponse | null> {
   const { siteId, contentType, contentId, culture } = params;
   const res = await client.get<OgPreviewResponse>(
-    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}/preview/og`,
+    `${basePath}/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}/preview/og`,
     { validateStatus: (s) => s === 200 || s === 204 }
   );
   return res.status === 204 ? null : res.data;
@@ -193,7 +191,7 @@ export async function getJsonLdPreview(
 ): Promise<string | null> {
   const { siteId, contentType, contentId, culture } = params;
   const res = await client.get<string>(
-    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}/preview/jsonld`,
+    `${basePath}/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}/preview/jsonld`,
     { responseType: 'text', validateStatus: (s) => s === 200 || s === 204 }
   );
   return res.status === 204 ? null : res.data;

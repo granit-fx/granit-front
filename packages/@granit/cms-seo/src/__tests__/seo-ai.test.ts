@@ -61,7 +61,7 @@ describe('suggestSeo', () => {
     };
     const result = await suggestSeo(client, BASE, request);
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/seo/ai/suggest`, request);
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/ai/suggest`, request);
     expect(result).toEqual(response);
   });
 });
@@ -74,7 +74,7 @@ describe('listSeoSuggestions', () => {
 
     const result = await listSeoSuggestions(client, BASE, { status: 'Pending', skip: 0, take: 25 });
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/seo/ai/suggestions`, {
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/ai/suggestions`, {
       params: { status: 'Pending', skip: 0, take: 25 },
     });
     expect(result).toEqual(response);
@@ -96,7 +96,7 @@ describe('getSeoSuggestionDiff', () => {
 
     const result = await getSeoSuggestionDiff(client, BASE, 'sug-1');
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/seo/ai/suggestions/sug-1/diff`);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/ai/suggestions/sug-1/diff`);
     expect(result).toEqual(diff);
   });
 });
@@ -111,7 +111,7 @@ describe('applySeoSuggestion', () => {
       fields: 'Title, Description',
     });
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/seo/ai/suggestions/sug-1/apply`, {
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/ai/suggestions/sug-1/apply`, {
       fields: 'Title, Description',
     });
     expect(result).toEqual(applied);
@@ -126,7 +126,7 @@ describe('rejectSeoSuggestion', () => {
 
     await rejectSeoSuggestion(client, BASE, 'sug-1', { reason: 'Not relevant' });
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/seo/ai/suggestions/sug-1/reject`, {
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/ai/suggestions/sug-1/reject`, {
       reason: 'Not relevant',
     });
   });
@@ -137,7 +137,7 @@ describe('rejectSeoSuggestion', () => {
 
     await rejectSeoSuggestion(client, BASE, 'sug-1');
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/seo/ai/suggestions/sug-1/reject`, {});
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/ai/suggestions/sug-1/reject`, {});
   });
 });
 
@@ -149,7 +149,7 @@ describe('triggerBulkSeoAudit', () => {
     await triggerBulkSeoAudit(client, BASE, 'site-1');
 
     expect(client.post).toHaveBeenCalledWith(
-      `${BASE}/api/cms/seo/ai/sites/site-1/audit`,
+      `${BASE}/ai/sites/site-1/audit`,
       null,
       expect.objectContaining({})
     );

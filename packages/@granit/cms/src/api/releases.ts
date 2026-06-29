@@ -18,7 +18,7 @@ export async function listReleases(
   params?: ListReleasesParams,
   options?: { readonly signal?: AbortSignal }
 ): Promise<PagedResult<ReleaseResponse>> {
-  return getPage<ReleaseResponse>(client, `${basePath}/api/cms/releases`, params ?? {}, options);
+  return getPage<ReleaseResponse>(client, `${basePath}/releases`, params ?? {}, options);
 }
 
 /** `GET /api/cms/releases/{id}`. Requires `Cms.Releases.Read`. */
@@ -27,9 +27,7 @@ export async function getRelease(
   basePath: string,
   id: string
 ): Promise<ReleaseResponse> {
-  const res = await client.get<ReleaseResponse>(
-    `${basePath}/api/cms/releases/${encodeURIComponent(id)}`
-  );
+  const res = await client.get<ReleaseResponse>(`${basePath}/releases/${encodeURIComponent(id)}`);
   return res.data;
 }
 
@@ -39,7 +37,7 @@ export async function createRelease(
   basePath: string,
   request: CreateReleaseRequest
 ): Promise<ReleaseResponse> {
-  const res = await client.post<ReleaseResponse>(`${basePath}/api/cms/releases`, request);
+  const res = await client.post<ReleaseResponse>(`${basePath}/releases`, request);
   return res.data;
 }
 
@@ -51,7 +49,7 @@ export async function updateRelease(
   request: UpdateReleaseRequest
 ): Promise<ReleaseResponse> {
   const res = await client.put<ReleaseResponse>(
-    `${basePath}/api/cms/releases/${encodeURIComponent(id)}`,
+    `${basePath}/releases/${encodeURIComponent(id)}`,
     request
   );
   return res.data;
@@ -65,7 +63,7 @@ export async function addReleaseAction(
   request: AddReleaseActionRequest
 ): Promise<ReleaseResponse> {
   const res = await client.post<ReleaseResponse>(
-    `${basePath}/api/cms/releases/${encodeURIComponent(id)}/actions`,
+    `${basePath}/releases/${encodeURIComponent(id)}/actions`,
     request
   );
   return res.data;
@@ -79,7 +77,7 @@ export async function removeReleaseAction(
   actionId: string
 ): Promise<ReleaseResponse> {
   const res = await client.delete<ReleaseResponse>(
-    `${basePath}/api/cms/releases/${encodeURIComponent(id)}/actions/${encodeURIComponent(actionId)}`
+    `${basePath}/releases/${encodeURIComponent(id)}/actions/${encodeURIComponent(actionId)}`
   );
   return res.data;
 }
@@ -92,7 +90,7 @@ export async function scheduleRelease(
   request: ScheduleReleaseRequest
 ): Promise<ReleaseResponse> {
   const res = await client.post<ReleaseResponse>(
-    `${basePath}/api/cms/releases/${encodeURIComponent(id)}/schedule`,
+    `${basePath}/releases/${encodeURIComponent(id)}/schedule`,
     request
   );
   return res.data;
@@ -105,7 +103,7 @@ export async function cancelRelease(
   id: string
 ): Promise<ReleaseResponse> {
   const res = await client.post<ReleaseResponse>(
-    `${basePath}/api/cms/releases/${encodeURIComponent(id)}/cancel`
+    `${basePath}/releases/${encodeURIComponent(id)}/cancel`
   );
   return res.data;
 }
@@ -117,7 +115,7 @@ export async function publishRelease(
   id: string
 ): Promise<ReleaseResponse> {
   const res = await client.post<ReleaseResponse>(
-    `${basePath}/api/cms/releases/${encodeURIComponent(id)}/publish`
+    `${basePath}/releases/${encodeURIComponent(id)}/publish`
   );
   return res.data;
 }

@@ -52,7 +52,7 @@ describe('useAddSiteHostname', () => {
     result.current.mutate({ host: 'example.com', isPrimary: true });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(addSiteHostname).toHaveBeenCalledWith(client, '', 'site-1', {
+    expect(addSiteHostname).toHaveBeenCalledWith(client, '/api/cms', 'site-1', {
       host: 'example.com',
       isPrimary: true,
     });
@@ -74,7 +74,7 @@ describe('useRemoveSiteHostname', () => {
     result.current.mutate(hostname.id);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(removeSiteHostname).toHaveBeenCalledWith(client, '', 'site-1', hostname.id);
+    expect(removeSiteHostname).toHaveBeenCalledWith(client, '/api/cms', 'site-1', hostname.id);
   });
 });
 
@@ -93,7 +93,7 @@ describe('useVerifySiteHostname', () => {
     result.current.mutate(hostname.id);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(verifySiteHostname).toHaveBeenCalledWith(client, '', 'site-1', hostname.id);
+    expect(verifySiteHostname).toHaveBeenCalledWith(client, '/api/cms', 'site-1', hostname.id);
     expect(result.current.data).toEqual(hostname);
   });
 });

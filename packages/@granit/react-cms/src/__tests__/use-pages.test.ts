@@ -71,7 +71,7 @@ describe('usePageTree', () => {
     const { result } = renderHook(() => usePageTree('site-1'), { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getPageTree).toHaveBeenCalledWith(client, '', 'site-1');
+    expect(getPageTree).toHaveBeenCalledWith(client, '/api/cms', 'site-1');
   });
 
   it('is disabled when siteId is empty', () => {
@@ -104,7 +104,7 @@ describe('usePages', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(listPages).toHaveBeenCalledWith(
       client,
-      '',
+      '/api/cms',
       { page: 1, pageSize: 20 },
       expect.objectContaining({ signal: expect.any(AbortSignal) })
     );
@@ -123,7 +123,7 @@ describe('usePage', () => {
     const { result } = renderHook(() => usePage('page-1'), { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getPage).toHaveBeenCalledWith(client, '', 'page-1');
+    expect(getPage).toHaveBeenCalledWith(client, '/api/cms', 'page-1');
   });
 
   it('is disabled when id is empty', () => {
@@ -148,6 +148,6 @@ describe('usePageVersions', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listPageVersions).toHaveBeenCalledWith(client, '', 'page-1');
+    expect(listPageVersions).toHaveBeenCalledWith(client, '/api/cms', 'page-1');
   });
 });

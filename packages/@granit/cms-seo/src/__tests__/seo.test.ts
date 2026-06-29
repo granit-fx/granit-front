@@ -59,7 +59,7 @@ describe('getEffectiveSeo', () => {
     });
 
     expect(client.get).toHaveBeenCalledWith(
-      `${basePath}/api/cms/seo/sites/site-1/metadata/CmsPage/page-1/fr/effective`,
+      `${basePath}/sites/site-1/metadata/CmsPage/page-1/fr/effective`,
       { params: { contentTitle: 'À propos', contentDescription: undefined } }
     );
     expect(result).toEqual(sampleSeo);
@@ -82,7 +82,7 @@ describe('getSitemap', () => {
     const result = await getSitemap(client, basePath, 'site-1');
 
     expect(client.get).toHaveBeenCalledWith(
-      `${basePath}/api/cms/seo/sites/site-1/sitemap.xml`,
+      `${basePath}/sites/site-1/sitemap.xml`,
       expect.objectContaining({ responseType: 'text' })
     );
     expect(result).toEqual({
@@ -105,7 +105,7 @@ describe('getSitemap', () => {
     const result = await getSitemap(client, basePath, 'site-1', { ifNoneMatch: '"v1"' });
 
     expect(client.get).toHaveBeenCalledWith(
-      `${basePath}/api/cms/seo/sites/site-1/sitemap.xml`,
+      `${basePath}/sites/site-1/sitemap.xml`,
       expect.objectContaining({ headers: { 'If-None-Match': '"v1"' } })
     );
     expect(result.status).toBe(304);
@@ -120,7 +120,7 @@ describe('getSitemap', () => {
     await getSitemap(client, basePath, 'site-1', { fetchOptions: { cache: 'force-cache' } });
 
     expect(client.get).toHaveBeenCalledWith(
-      `${basePath}/api/cms/seo/sites/site-1/sitemap.xml`,
+      `${basePath}/sites/site-1/sitemap.xml`,
       expect.objectContaining({ fetchOptions: { cache: 'force-cache' } })
     );
   });
@@ -134,7 +134,7 @@ describe('getSitemapFile', () => {
     const result = await getSitemapFile(client, basePath, 'site-1', 'sitemap-1.xml');
 
     expect(client.get).toHaveBeenCalledWith(
-      `${basePath}/api/cms/seo/sites/site-1/sitemap/sitemap-1.xml`,
+      `${basePath}/sites/site-1/sitemap/sitemap-1.xml`,
       expect.objectContaining({ responseType: 'text' })
     );
     expect(result.status).toBe(200);
@@ -164,7 +164,7 @@ describe('getRobotsTxt', () => {
     const result = await getRobotsTxt(client, basePath, 'site-1');
 
     expect(client.get).toHaveBeenCalledWith(
-      `${basePath}/api/cms/seo/sites/site-1/robots.txt`,
+      `${basePath}/sites/site-1/robots.txt`,
       expect.objectContaining({ responseType: 'text' })
     );
     expect(result.body).toContain('User-agent');
@@ -178,7 +178,7 @@ describe('getRobotsTxt', () => {
     await getRobotsTxt(client, basePath, 'site-1', { fetchOptions: { cache: 'force-cache' } });
 
     expect(client.get).toHaveBeenCalledWith(
-      `${basePath}/api/cms/seo/sites/site-1/robots.txt`,
+      `${basePath}/sites/site-1/robots.txt`,
       expect.objectContaining({ fetchOptions: { cache: 'force-cache' } })
     );
   });

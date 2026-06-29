@@ -93,7 +93,7 @@ describe('useCreatePage', () => {
     result.current.mutate({ parentId: 'parent-1', slugSegment: 'home', layoutKey: null });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(createPage).toHaveBeenCalledWith(client, '', {
+    expect(createPage).toHaveBeenCalledWith(client, '/api/cms', {
       parentId: 'parent-1',
       slugSegment: 'home',
       layoutKey: null,
@@ -117,7 +117,7 @@ describe('useUpdatePage', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(updatePage).toHaveBeenCalledWith(client, '', 'page-1', {
+    expect(updatePage).toHaveBeenCalledWith(client, '/api/cms', 'page-1', {
       slugSegment: 'new-home',
       concurrencyStamp: 'stamp-1',
     });
@@ -143,7 +143,7 @@ describe('useUpdatePageTranslation', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(updatePageTranslation).toHaveBeenCalledWith(client, '', 'page-1', 'fr', {
+    expect(updatePageTranslation).toHaveBeenCalledWith(client, '/api/cms', 'page-1', 'fr', {
       urlSlug: 'accueil',
       title: 'Accueil',
     });
@@ -167,7 +167,7 @@ describe('useMovePage', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(movePage).toHaveBeenCalledWith(client, '', 'page-1', {
+    expect(movePage).toHaveBeenCalledWith(client, '/api/cms', 'page-1', {
       newParentId: 'parent-1',
       concurrencyStamp: 'stamp-1',
     });
@@ -187,7 +187,7 @@ describe('useDeletePage', () => {
     result.current.mutate({ id: 'page-1', siteId: 'site-1' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(deletePage).toHaveBeenCalledWith(client, '', 'page-1');
+    expect(deletePage).toHaveBeenCalledWith(client, '/api/cms', 'page-1');
   });
 });
 
@@ -221,7 +221,7 @@ describe('usePublishPage', () => {
     result.current.mutate('page-1');
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(publishPage).toHaveBeenCalledWith(client, '', 'page-1');
+    expect(publishPage).toHaveBeenCalledWith(client, '/api/cms', 'page-1');
   });
 });
 
@@ -238,7 +238,7 @@ describe('useUnpublishPage', () => {
     result.current.mutate('page-1');
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(unpublishPage).toHaveBeenCalledWith(client, '', 'page-1');
+    expect(unpublishPage).toHaveBeenCalledWith(client, '/api/cms', 'page-1');
   });
 });
 
@@ -255,6 +255,6 @@ describe('useRollbackPage', () => {
     result.current.mutate({ id: 'page-1', versionId: 'v-1' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(rollbackPage).toHaveBeenCalledWith(client, '', 'page-1', 'v-1');
+    expect(rollbackPage).toHaveBeenCalledWith(client, '/api/cms', 'page-1', 'v-1');
   });
 });

@@ -14,7 +14,7 @@ import type { SiteHostnameAvailabilityResponse, SiteHostnameResponse } from '../
 
 const BASE = 'https://cms.example.com';
 const SITE_ID = 'site-1';
-const HOSTNAMES_BASE = `${BASE}/api/cms/sites/site-1/hostnames`;
+const HOSTNAMES_BASE = `${BASE}/sites/site-1/hostnames`;
 
 const hostname: SiteHostnameResponse = {
   id: 'h-1',

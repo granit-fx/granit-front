@@ -46,7 +46,7 @@ describe('useCreateSite', () => {
     result.current.mutate({ slug: 'acme', defaultCulture: 'fr', allowedCultures: ['fr'] });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(createSite).toHaveBeenCalledWith(client, '', {
+    expect(createSite).toHaveBeenCalledWith(client, '/api/cms', {
       slug: 'acme',
       defaultCulture: 'fr',
       allowedCultures: ['fr'],
@@ -74,7 +74,7 @@ describe('useUpdateSite', () => {
     result.current.mutate({ id: site.id, request });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(updateSite).toHaveBeenCalledWith(client, '', site.id, request);
+    expect(updateSite).toHaveBeenCalledWith(client, '/api/cms', site.id, request);
   });
 });
 
@@ -91,6 +91,6 @@ describe('useDeleteSite', () => {
     result.current.mutate(site.id);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(deleteSite).toHaveBeenCalledWith(client, '', site.id);
+    expect(deleteSite).toHaveBeenCalledWith(client, '/api/cms', site.id);
   });
 });

@@ -32,7 +32,7 @@ describe('CmsProvider / useCmsConfig', () => {
   it('returns resolved config with injected client and default basePath', () => {
     const { result } = renderHook(() => useCmsConfig(), { wrapper: createWrapper() });
     expect(result.current.client).toBe(mockClient);
-    expect(result.current.basePath).toBe('');
+    expect(result.current.basePath).toBe('/api/cms');
     expect(result.current.queryKeyPrefix).toEqual(['cms']);
   });
 

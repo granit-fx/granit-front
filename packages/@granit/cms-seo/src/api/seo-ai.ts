@@ -20,7 +20,7 @@ export async function suggestSeo(
   basePath: string,
   request: SeoSuggestRequest
 ): Promise<SeoSuggestResponse> {
-  const res = await client.post<SeoSuggestResponse>(`${basePath}/api/cms/seo/ai/suggest`, request);
+  const res = await client.post<SeoSuggestResponse>(`${basePath}/ai/suggest`, request);
   return res.data;
 }
 
@@ -30,10 +30,7 @@ export async function listSeoSuggestions(
   basePath: string,
   params?: ListSeoSuggestionsParams
 ): Promise<SeoSuggestionListResponse> {
-  const res = await client.get<SeoSuggestionListResponse>(
-    `${basePath}/api/cms/seo/ai/suggestions`,
-    { params }
-  );
+  const res = await client.get<SeoSuggestionListResponse>(`${basePath}/ai/suggestions`, { params });
   return res.data;
 }
 
@@ -44,7 +41,7 @@ export async function getSeoSuggestionDiff(
   id: string
 ): Promise<SeoSuggestionDiff> {
   const res = await client.get<SeoSuggestionDiff>(
-    `${basePath}/api/cms/seo/ai/suggestions/${encodeURIComponent(id)}/diff`
+    `${basePath}/ai/suggestions/${encodeURIComponent(id)}/diff`
   );
   return res.data;
 }
@@ -61,7 +58,7 @@ export async function applySeoSuggestion(
   request: SeoSuggestionApplyRequest
 ): Promise<SeoSuggestionResponse> {
   const res = await client.post<SeoSuggestionResponse>(
-    `${basePath}/api/cms/seo/ai/suggestions/${encodeURIComponent(id)}/apply`,
+    `${basePath}/ai/suggestions/${encodeURIComponent(id)}/apply`,
     request
   );
   return res.data;
@@ -75,7 +72,7 @@ export async function rejectSeoSuggestion(
   request?: RejectSeoAiRequest
 ): Promise<SeoSuggestionResponse> {
   const res = await client.post<SeoSuggestionResponse>(
-    `${basePath}/api/cms/seo/ai/suggestions/${encodeURIComponent(id)}/reject`,
+    `${basePath}/ai/suggestions/${encodeURIComponent(id)}/reject`,
     request ?? {}
   );
   return res.data;
@@ -90,7 +87,7 @@ export async function triggerBulkSeoAudit(
   basePath: string,
   siteId: string
 ): Promise<void> {
-  await client.post(`${basePath}/api/cms/seo/ai/sites/${encodeURIComponent(siteId)}/audit`, null, {
+  await client.post(`${basePath}/ai/sites/${encodeURIComponent(siteId)}/audit`, null, {
     validateStatus: (s) => s === 202,
   });
 }

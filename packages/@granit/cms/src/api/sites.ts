@@ -16,7 +16,7 @@ export async function listSites(
   params?: ListSitesParams,
   options?: { readonly signal?: AbortSignal }
 ): Promise<PagedResult<SiteResponse>> {
-  return getPage<SiteResponse>(client, `${basePath}/api/cms/sites`, params ?? {}, options);
+  return getPage<SiteResponse>(client, `${basePath}/sites`, params ?? {}, options);
 }
 
 /** `GET /api/cms/sites/{id}`. Requires `Cms.Sites.Read`. */
@@ -25,7 +25,7 @@ export async function getSite(
   basePath: string,
   id: string
 ): Promise<SiteResponse> {
-  const res = await client.get<SiteResponse>(`${basePath}/api/cms/sites/${encodeURIComponent(id)}`);
+  const res = await client.get<SiteResponse>(`${basePath}/sites/${encodeURIComponent(id)}`);
   return res.data;
 }
 
@@ -35,7 +35,7 @@ export async function createSite(
   basePath: string,
   request: CreateSiteRequest
 ): Promise<SiteResponse> {
-  const res = await client.post<SiteResponse>(`${basePath}/api/cms/sites`, request);
+  const res = await client.post<SiteResponse>(`${basePath}/sites`, request);
   return res.data;
 }
 
@@ -47,7 +47,7 @@ export async function updateSite(
   request: UpdateSiteRequest
 ): Promise<SiteResponse> {
   const res = await client.put<SiteResponse>(
-    `${basePath}/api/cms/sites/${encodeURIComponent(id)}`,
+    `${basePath}/sites/${encodeURIComponent(id)}`,
     request
   );
   return res.data;
@@ -59,5 +59,5 @@ export async function deleteSite(
   basePath: string,
   id: string
 ): Promise<void> {
-  await client.delete(`${basePath}/api/cms/sites/${encodeURIComponent(id)}`);
+  await client.delete(`${basePath}/sites/${encodeURIComponent(id)}`);
 }

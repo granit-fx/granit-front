@@ -7,7 +7,7 @@ import type { AxiosInstance } from '@granit/api-client';
 
 /** Builds the base URL for a site's hostname collection. */
 function siteHostnamesBase(basePath: string, siteId: string): string {
-  return `${basePath}/api/cms/sites/${encodeURIComponent(siteId)}/hostnames`;
+  return `${basePath}/sites/${encodeURIComponent(siteId)}/hostnames`;
 }
 
 /**

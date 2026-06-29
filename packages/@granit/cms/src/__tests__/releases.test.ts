@@ -45,7 +45,7 @@ describe('listReleases', () => {
 
     const result = await listReleases(client, BASE);
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/releases`, undefined);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/releases`, undefined);
     expect(result).toEqual(response);
   });
 
@@ -57,10 +57,7 @@ describe('listReleases', () => {
 
     await listReleases(client, BASE, { page: 1, pageSize: 20 });
 
-    expect(client.get).toHaveBeenCalledWith(
-      `${BASE}/api/cms/releases?page=1&pageSize=20`,
-      undefined
-    );
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/releases?page=1&pageSize=20`, undefined);
   });
 });
 
@@ -71,7 +68,7 @@ describe('getRelease', () => {
 
     const result = await getRelease(client, BASE, 'rel-1');
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/releases/rel-1`);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/releases/rel-1`);
     expect(result).toEqual(release);
   });
 });
@@ -84,7 +81,7 @@ describe('createRelease', () => {
     const request = { siteId: 'site-1', name: 'Sprint 42' };
     const result = await createRelease(client, BASE, request);
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/releases`, request);
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/releases`, request);
     expect(result).toEqual(release);
   });
 });
@@ -100,7 +97,7 @@ describe('updateRelease', () => {
       concurrencyStamp: 'stamp-1',
     });
 
-    expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/releases/rel-1`, {
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/releases/rel-1`, {
       name: 'Sprint 42 rev2',
       concurrencyStamp: 'stamp-1',
     });
@@ -121,7 +118,7 @@ describe('addReleaseAction', () => {
     };
     const result = await addReleaseAction(client, BASE, 'rel-1', request);
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/releases/rel-1/actions`, request);
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/releases/rel-1/actions`, request);
     expect(result).toEqual(release);
   });
 });
@@ -133,7 +130,7 @@ describe('removeReleaseAction', () => {
 
     const result = await removeReleaseAction(client, BASE, 'rel-1', 'action-1');
 
-    expect(client.delete).toHaveBeenCalledWith(`${BASE}/api/cms/releases/rel-1/actions/action-1`);
+    expect(client.delete).toHaveBeenCalledWith(`${BASE}/releases/rel-1/actions/action-1`);
     expect(result).toEqual(release);
   });
 });
@@ -151,7 +148,7 @@ describe('scheduleRelease', () => {
     };
     const result = await scheduleRelease(client, BASE, 'rel-1', request);
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/releases/rel-1/schedule`, request);
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/releases/rel-1/schedule`, request);
     expect(result).toEqual(scheduled);
   });
 });
@@ -164,7 +161,7 @@ describe('cancelRelease', () => {
 
     const result = await cancelRelease(client, BASE, 'rel-1');
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/releases/rel-1/cancel`);
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/releases/rel-1/cancel`);
     expect(result).toEqual(cancelled);
   });
 });
@@ -177,7 +174,7 @@ describe('publishRelease', () => {
 
     const result = await publishRelease(client, BASE, 'rel-1');
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/releases/rel-1/publish`);
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/releases/rel-1/publish`);
     expect(result).toEqual(executed);
   });
 });

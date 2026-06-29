@@ -46,7 +46,7 @@ describe('useCreateMenu', () => {
     result.current.mutate({ siteId: 'site-1', key: 'main', title: 'Main navigation' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(createMenu).toHaveBeenCalledWith(client, '', {
+    expect(createMenu).toHaveBeenCalledWith(client, '/api/cms', {
       siteId: 'site-1',
       key: 'main',
       title: 'Main navigation',
@@ -67,7 +67,7 @@ describe('useUpdateMenu', () => {
     result.current.mutate({ id: menu.id, request: { title: 'Primary nav', items: [] } });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(updateMenu).toHaveBeenCalledWith(client, '', menu.id, {
+    expect(updateMenu).toHaveBeenCalledWith(client, '/api/cms', menu.id, {
       title: 'Primary nav',
       items: [],
     });
@@ -87,6 +87,6 @@ describe('useDeleteMenu', () => {
     result.current.mutate({ id: menu.id, siteId: menu.siteId });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(deleteMenu).toHaveBeenCalledWith(client, '', menu.id);
+    expect(deleteMenu).toHaveBeenCalledWith(client, '/api/cms', menu.id);
   });
 });

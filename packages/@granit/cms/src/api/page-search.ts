@@ -3,7 +3,7 @@ import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Public, site-scoped page search (anonymous).
- * `GET {basePath}/api/cms/search?q={q}&culture={culture}&page=&pageSize=`
+ * `GET {basePath}/search?q={q}&culture={culture}&page=&pageSize=`
  * + `X-Granit-Site: {siteId}` header — only the current site's pages are returned.
  */
 export async function searchPages(
@@ -12,7 +12,7 @@ export async function searchPages(
   siteId: string,
   params: PageSearchParams
 ): Promise<PageSearchPageResponse> {
-  const res = await client.get<PageSearchPageResponse>(`${basePath}/api/cms/search`, {
+  const res = await client.get<PageSearchPageResponse>(`${basePath}/search`, {
     params: {
       q: params.q,
       culture: params.culture,
@@ -26,7 +26,7 @@ export async function searchPages(
 
 /**
  * Admin page search across every site the caller's tenant owns.
- * `GET {basePath}/api/cms/pages/search?q={q}&culture={culture}&page=&pageSize=`
+ * `GET {basePath}/pages/search?q={q}&culture={culture}&page=&pageSize=`
  * Requires `Cms.Pages.Read`. No site filter — admin search spans the whole CMS.
  */
 export async function searchPagesAdmin(
@@ -34,7 +34,7 @@ export async function searchPagesAdmin(
   basePath: string,
   params: PageSearchParams
 ): Promise<PageSearchPageResponse> {
-  const res = await client.get<PageSearchPageResponse>(`${basePath}/api/cms/pages/search`, {
+  const res = await client.get<PageSearchPageResponse>(`${basePath}/pages/search`, {
     params: {
       q: params.q,
       culture: params.culture,

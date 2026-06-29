@@ -47,7 +47,7 @@ describe('useSiteHostnames', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listSiteHostnames).toHaveBeenCalledWith(client, '', 'site-1');
+    expect(listSiteHostnames).toHaveBeenCalledWith(client, '/api/cms', 'site-1');
     expect(result.current.data).toEqual([hostname]);
   });
 
@@ -74,7 +74,12 @@ describe('useSiteHostnameAvailability', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(checkSiteHostnameAvailability).toHaveBeenCalledWith(client, '', 'site-1', 'example.com');
+    expect(checkSiteHostnameAvailability).toHaveBeenCalledWith(
+      client,
+      '/api/cms',
+      'site-1',
+      'example.com'
+    );
     expect(result.current.data).toEqual(avail);
   });
 

@@ -56,7 +56,7 @@ describe('useReleases', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(listReleases).toHaveBeenCalledWith(
       client,
-      '',
+      '/api/cms',
       { page: 1, pageSize: 20 },
       expect.objectContaining({ signal: expect.any(AbortSignal) })
     );
@@ -75,7 +75,7 @@ describe('useRelease', () => {
     const { result } = renderHook(() => useRelease(release.id), { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getRelease).toHaveBeenCalledWith(client, '', release.id);
+    expect(getRelease).toHaveBeenCalledWith(client, '/api/cms', release.id);
   });
 
   it('is disabled when id is empty', () => {

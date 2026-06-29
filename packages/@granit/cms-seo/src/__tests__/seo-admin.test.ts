@@ -26,7 +26,7 @@ import type {
 
 const BASE = 'https://cms.example.com';
 const PARAMS = { siteId: 'site-1', contentType: 'page', contentId: 'page-1', culture: 'fr' };
-const META_URL = `${BASE}/api/cms/seo/sites/site-1/metadata/page/page-1/fr`;
+const META_URL = `${BASE}/sites/site-1/metadata/page/page-1/fr`;
 
 const robots: RobotsDirective = {
   index: true,
@@ -138,7 +138,7 @@ describe('getSeoDefaults', () => {
 
     const result = await getSeoDefaults(client, BASE, 'site-1');
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/seo/sites/site-1/defaults`, {
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/sites/site-1/defaults`, {
       validateStatus: expect.any(Function),
     });
     expect(result).toEqual(defaults);
@@ -161,7 +161,7 @@ describe('updateSeoDefaults', () => {
 
     await updateSeoDefaults(client, BASE, 'site-1', { siteName: 'Updated' });
 
-    expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/seo/sites/site-1/defaults`, {
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/sites/site-1/defaults`, {
       siteName: 'Updated',
     });
   });
@@ -192,7 +192,7 @@ describe('listSeoMetadata', () => {
     const result = await listSeoMetadata(client, BASE, { quickFilters: ['MissingDescription'] });
 
     expect(client.get).toHaveBeenCalledWith(
-      `${BASE}/api/cms/seo/metadata?quickFilters=MissingDescription`,
+      `${BASE}/metadata?quickFilters=MissingDescription`,
       undefined
     );
     expect(result).toEqual(response);
@@ -206,7 +206,7 @@ describe('listSeoMetadata', () => {
 
     await listSeoMetadata(client, BASE);
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/seo/metadata`, undefined);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/metadata`, undefined);
   });
 });
 
@@ -217,7 +217,7 @@ describe('invalidateSitemap', () => {
 
     await invalidateSitemap(client, BASE, 'site-1');
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/seo/sites/site-1/sitemap/invalidate`);
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/sites/site-1/sitemap/invalidate`);
   });
 });
 

@@ -22,7 +22,7 @@ export async function getPageTree(
   basePath: string,
   siteId: string
 ): Promise<readonly PageTreeNodeResponse[]> {
-  const res = await client.get<readonly PageTreeNodeResponse[]>(`${basePath}/api/cms/pages/tree`, {
+  const res = await client.get<readonly PageTreeNodeResponse[]>(`${basePath}/pages/tree`, {
     headers: { 'X-Granit-Site': siteId },
   });
   return res.data;
@@ -35,7 +35,7 @@ export async function listPages(
   params?: ListPagesParams,
   options?: { readonly signal?: AbortSignal }
 ): Promise<PagedResult<PageResponse>> {
-  return getResultsPage<PageResponse>(client, `${basePath}/api/cms/pages`, params ?? {}, options);
+  return getResultsPage<PageResponse>(client, `${basePath}/pages`, params ?? {}, options);
 }
 
 /** `GET /api/cms/pages/{id}`. Requires `Cms.Pages.Read`. */
@@ -44,7 +44,7 @@ export async function getPage(
   basePath: string,
   id: string
 ): Promise<PageResponse> {
-  const res = await client.get<PageResponse>(`${basePath}/api/cms/pages/${encodeURIComponent(id)}`);
+  const res = await client.get<PageResponse>(`${basePath}/pages/${encodeURIComponent(id)}`);
   return res.data;
 }
 
@@ -54,7 +54,7 @@ export async function createPage(
   basePath: string,
   request: CreatePageRequest
 ): Promise<PageResponse> {
-  const res = await client.post<PageResponse>(`${basePath}/api/cms/pages`, request);
+  const res = await client.post<PageResponse>(`${basePath}/pages`, request);
   return res.data;
 }
 
@@ -66,7 +66,7 @@ export async function updatePage(
   request: UpdatePageRequest
 ): Promise<PageResponse> {
   const res = await client.put<PageResponse>(
-    `${basePath}/api/cms/pages/${encodeURIComponent(id)}`,
+    `${basePath}/pages/${encodeURIComponent(id)}`,
     request
   );
   return res.data;
@@ -81,7 +81,7 @@ export async function updatePageTranslation(
   request: UpdatePageTranslationRequest
 ): Promise<PageResponse> {
   const res = await client.put<PageResponse>(
-    `${basePath}/api/cms/pages/${encodeURIComponent(id)}/translations/${encodeURIComponent(culture)}`,
+    `${basePath}/pages/${encodeURIComponent(id)}/translations/${encodeURIComponent(culture)}`,
     request
   );
   return res.data;
@@ -94,7 +94,7 @@ export async function movePage(
   id: string,
   request: MovePageRequest
 ): Promise<void> {
-  await client.post(`${basePath}/api/cms/pages/${encodeURIComponent(id)}/move`, request);
+  await client.post(`${basePath}/pages/${encodeURIComponent(id)}/move`, request);
 }
 
 /** `DELETE /api/cms/pages/{id}`. Requires `Cms.Pages.Manage`. Returns `204`. */
@@ -103,7 +103,7 @@ export async function deletePage(
   basePath: string,
   id: string
 ): Promise<void> {
-  await client.delete(`${basePath}/api/cms/pages/${encodeURIComponent(id)}`);
+  await client.delete(`${basePath}/pages/${encodeURIComponent(id)}`);
 }
 
 /**
@@ -119,7 +119,7 @@ export async function saveDraft(
   request: SaveDraftRequest
 ): Promise<SaveDraftResult> {
   const res = await client.put<PageVersionSummaryResponse | PageDraftConflictResponse>(
-    `${basePath}/api/cms/pages/${encodeURIComponent(id)}/draft/${encodeURIComponent(culture)}`,
+    `${basePath}/pages/${encodeURIComponent(id)}/draft/${encodeURIComponent(culture)}`,
     request,
     { validateStatus: (s) => s === 200 || s === 409 }
   );
@@ -136,7 +136,7 @@ export async function listPageVersions(
   id: string
 ): Promise<readonly PageVersionSummaryResponse[]> {
   const res = await client.get<readonly PageVersionSummaryResponse[]>(
-    `${basePath}/api/cms/pages/${encodeURIComponent(id)}/versions`
+    `${basePath}/pages/${encodeURIComponent(id)}/versions`
   );
   return res.data;
 }
@@ -147,7 +147,7 @@ export async function publishPage(
   basePath: string,
   id: string
 ): Promise<void> {
-  await client.post(`${basePath}/api/cms/pages/${encodeURIComponent(id)}/publish`);
+  await client.post(`${basePath}/pages/${encodeURIComponent(id)}/publish`);
 }
 
 /** `POST /api/cms/pages/{id}/unpublish`. Requires `Cms.Pages.Publish`. */
@@ -156,7 +156,7 @@ export async function unpublishPage(
   basePath: string,
   id: string
 ): Promise<void> {
-  await client.post(`${basePath}/api/cms/pages/${encodeURIComponent(id)}/unpublish`);
+  await client.post(`${basePath}/pages/${encodeURIComponent(id)}/unpublish`);
 }
 
 /**
@@ -170,6 +170,6 @@ export async function rollbackPage(
   versionId: string
 ): Promise<void> {
   await client.post(
-    `${basePath}/api/cms/pages/${encodeURIComponent(id)}/rollback/${encodeURIComponent(versionId)}`
+    `${basePath}/pages/${encodeURIComponent(id)}/rollback/${encodeURIComponent(versionId)}`
   );
 }

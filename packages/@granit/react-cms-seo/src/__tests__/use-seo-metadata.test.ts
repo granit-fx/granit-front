@@ -109,7 +109,7 @@ describe('useSeoMetadata', () => {
     const { result } = renderHook(() => useSeoMetadata(KEY), { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getSeoMetadata).toHaveBeenCalledWith(client, '', KEY);
+    expect(getSeoMetadata).toHaveBeenCalledWith(client, '/api/cms/seo', KEY);
     expect(result.current.data).toEqual(metadata);
   });
 
@@ -165,7 +165,10 @@ describe('useEffectiveSeo', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getEffectiveSeo).toHaveBeenCalledWith(client, '', { ...KEY, contentTitle: 'Seed' });
+    expect(getEffectiveSeo).toHaveBeenCalledWith(client, '/api/cms/seo', {
+      ...KEY,
+      contentTitle: 'Seed',
+    });
   });
 });
 
@@ -183,7 +186,7 @@ describe('useSeoDefaults', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getSeoDefaults).toHaveBeenCalledWith(client, '', 'site-1');
+    expect(getSeoDefaults).toHaveBeenCalledWith(client, '/api/cms/seo', 'site-1');
   });
 
   it('is disabled when siteId is empty', () => {
@@ -215,7 +218,7 @@ describe('useSeoMetadataAudit', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(listSeoMetadata).toHaveBeenCalledWith(
       client,
-      '',
+      '/api/cms/seo',
       undefined,
       expect.objectContaining({})
     );
@@ -239,7 +242,7 @@ describe('useSerpPreview', () => {
     const { result } = renderHook(() => useSerpPreview(KEY), { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getSerpPreview).toHaveBeenCalledWith(client, '', KEY);
+    expect(getSerpPreview).toHaveBeenCalledWith(client, '/api/cms/seo', KEY);
   });
 });
 
@@ -262,7 +265,7 @@ describe('useOgCardPreview', () => {
     const { result } = renderHook(() => useOgCardPreview(KEY), { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getOgCardPreview).toHaveBeenCalledWith(client, '', KEY);
+    expect(getOgCardPreview).toHaveBeenCalledWith(client, '/api/cms/seo', KEY);
   });
 });
 
@@ -279,6 +282,6 @@ describe('useJsonLdPreview', () => {
     const { result } = renderHook(() => useJsonLdPreview(KEY), { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getJsonLdPreview).toHaveBeenCalledWith(client, '', KEY);
+    expect(getJsonLdPreview).toHaveBeenCalledWith(client, '/api/cms/seo', KEY);
   });
 });

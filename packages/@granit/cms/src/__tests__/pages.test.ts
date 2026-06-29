@@ -44,7 +44,7 @@ describe('getPageByPath', () => {
     });
 
     expect(client.get).toHaveBeenCalledWith(
-      `${basePath}/api/cms/pages/by-path`,
+      `${basePath}/pages/by-path`,
       expect.objectContaining({
         params: { culture: 'fr', path: '/a-propos' },
         headers: { 'X-Granit-Site': 'site-1' },
@@ -88,7 +88,7 @@ describe('mintPreviewToken', () => {
 
     const result = await mintPreviewToken(client, basePath, 'page-1', req);
 
-    expect(client.post).toHaveBeenCalledWith(`${basePath}/api/cms/pages/page-1/preview-token`, req);
+    expect(client.post).toHaveBeenCalledWith(`${basePath}/pages/page-1/preview-token`, req);
     expect(result).toEqual(resp);
   });
 });
@@ -100,7 +100,7 @@ describe('resolvePreview', () => {
 
     const result = await resolvePreview(client, basePath, 'tok_abc');
 
-    expect(client.get).toHaveBeenCalledWith(`${basePath}/api/cms/preview/resolve`, {
+    expect(client.get).toHaveBeenCalledWith(`${basePath}/preview/resolve`, {
       params: { token: 'tok_abc' },
     });
     expect(result).toEqual(sampleDraft);

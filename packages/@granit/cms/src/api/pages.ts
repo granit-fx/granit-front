@@ -8,7 +8,7 @@ import type { AxiosInstance, RequestFetchOptions } from '@granit/api-client';
 
 /**
  * Resolves a published page by per-culture path.
- * `GET {basePath}/api/cms/pages/by-path?culture={culture}&path={path}`
+ * `GET {basePath}/pages/by-path?culture={culture}&path={path}`
  * + `X-Granit-Site: {siteId}` header.
  *
  * Returns `null` on 404 (draft, archived, or unknown path).
@@ -22,7 +22,7 @@ export async function getPageByPath(
   fetchOptions?: RequestFetchOptions
 ): Promise<PublishedPageResponse | null> {
   try {
-    const response = await client.get<PublishedPageResponse>(`${basePath}/api/cms/pages/by-path`, {
+    const response = await client.get<PublishedPageResponse>(`${basePath}/pages/by-path`, {
       params: { culture: params.culture, path: params.path },
       headers: { 'X-Granit-Site': params.siteId },
       ...(fetchOptions ? { fetchOptions } : {}),
@@ -36,7 +36,7 @@ export async function getPageByPath(
 
 /**
  * Mints a signed preview token for a page draft (admin-gated).
- * `POST {basePath}/api/cms/pages/{pageId}/preview-token`
+ * `POST {basePath}/pages/{pageId}/preview-token`
  */
 export async function mintPreviewToken(
   client: AxiosInstance,
@@ -45,7 +45,7 @@ export async function mintPreviewToken(
   request: MintPreviewTokenRequest
 ): Promise<MintPreviewTokenResponse> {
   const response = await client.post<MintPreviewTokenResponse>(
-    `${basePath}/api/cms/pages/${encodeURIComponent(pageId)}/preview-token`,
+    `${basePath}/pages/${encodeURIComponent(pageId)}/preview-token`,
     request
   );
   return response.data;
@@ -53,7 +53,7 @@ export async function mintPreviewToken(
 
 /**
  * Resolves a preview token into the corresponding draft content (anonymous, token-gated).
- * `GET {basePath}/api/cms/preview/resolve?token={token}`
+ * `GET {basePath}/preview/resolve?token={token}`
  *
  * Returns `null` on 401 (invalid/expired token) or 404.
  *
@@ -67,10 +67,10 @@ export async function resolvePreview(
   fetchOptions?: RequestFetchOptions
 ): Promise<DraftPagePreviewResponse | null> {
   try {
-    const response = await client.get<DraftPagePreviewResponse>(
-      `${basePath}/api/cms/preview/resolve`,
-      { params: { token }, ...(fetchOptions ? { fetchOptions } : {}) }
-    );
+    const response = await client.get<DraftPagePreviewResponse>(`${basePath}/preview/resolve`, {
+      params: { token },
+      ...(fetchOptions ? { fetchOptions } : {}),
+    });
     return response.data;
   } catch (err: unknown) {
     if (isAxios401Or404(err)) return null;

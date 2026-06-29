@@ -59,7 +59,7 @@ describe('useCreateRedirect', () => {
     result.current.mutate({ siteId: 'site-1', request });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(createRedirect).toHaveBeenCalledWith(client, '', 'site-1', request);
+    expect(createRedirect).toHaveBeenCalledWith(client, '/api/cms/redirects', 'site-1', request);
     expect(result.current.data).toEqual(mutationResult);
   });
 
@@ -90,7 +90,7 @@ describe('useUpdateRedirect', () => {
     result.current.mutate({ id: redirect.id, request });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(updateRedirect).toHaveBeenCalledWith(client, '', redirect.id, request);
+    expect(updateRedirect).toHaveBeenCalledWith(client, '/api/cms/redirects', redirect.id, request);
   });
 });
 
@@ -105,7 +105,7 @@ describe('useDeleteRedirect', () => {
     result.current.mutate({ id: redirect.id, siteId: redirect.siteId });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(deleteRedirect).toHaveBeenCalledWith(client, '', redirect.id);
+    expect(deleteRedirect).toHaveBeenCalledWith(client, '/api/cms/redirects', redirect.id);
   });
 });
 
@@ -124,6 +124,11 @@ describe('useUpdateRedirectSettings', () => {
     result.current.mutate({ siteId: 'site-1', request });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(updateRedirectSettings).toHaveBeenCalledWith(client, '', 'site-1', request);
+    expect(updateRedirectSettings).toHaveBeenCalledWith(
+      client,
+      '/api/cms/redirects',
+      'site-1',
+      request
+    );
   });
 });

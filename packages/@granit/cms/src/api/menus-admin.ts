@@ -16,7 +16,7 @@ export async function listMenus(
   params?: ListMenusParams,
   options?: { readonly signal?: AbortSignal }
 ): Promise<PagedResult<MenuResponse>> {
-  return getPage<MenuResponse>(client, `${basePath}/api/cms/menus`, params ?? {}, options);
+  return getPage<MenuResponse>(client, `${basePath}/menus`, params ?? {}, options);
 }
 
 /** `GET /api/cms/menus/{id}`. Requires `Cms.Menus.Read`. */
@@ -25,7 +25,7 @@ export async function getMenu(
   basePath: string,
   id: string
 ): Promise<MenuResponse> {
-  const res = await client.get<MenuResponse>(`${basePath}/api/cms/menus/${encodeURIComponent(id)}`);
+  const res = await client.get<MenuResponse>(`${basePath}/menus/${encodeURIComponent(id)}`);
   return res.data;
 }
 
@@ -35,7 +35,7 @@ export async function createMenu(
   basePath: string,
   request: CreateMenuRequest
 ): Promise<MenuResponse> {
-  const res = await client.post<MenuResponse>(`${basePath}/api/cms/menus`, request);
+  const res = await client.post<MenuResponse>(`${basePath}/menus`, request);
   return res.data;
 }
 
@@ -47,7 +47,7 @@ export async function updateMenu(
   request: UpdateMenuRequest
 ): Promise<MenuResponse> {
   const res = await client.put<MenuResponse>(
-    `${basePath}/api/cms/menus/${encodeURIComponent(id)}`,
+    `${basePath}/menus/${encodeURIComponent(id)}`,
     request
   );
   return res.data;
@@ -59,5 +59,5 @@ export async function deleteMenu(
   basePath: string,
   id: string
 ): Promise<void> {
-  await client.delete(`${basePath}/api/cms/menus/${encodeURIComponent(id)}`);
+  await client.delete(`${basePath}/menus/${encodeURIComponent(id)}`);
 }

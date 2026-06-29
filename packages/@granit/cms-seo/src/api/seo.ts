@@ -3,7 +3,7 @@ import type { AxiosInstance, RequestFetchOptions } from '@granit/api-client';
 
 /**
  * Fetches the cascade-resolved, render-ready SEO for a content item.
- * `GET {basePath}/api/cms/seo/sites/{siteId}/metadata/{contentType}/{contentId}/{culture}/effective`
+ * `GET {basePath}/sites/{siteId}/metadata/{contentType}/{contentId}/{culture}/effective`
  *
  * `contentTitle` and `contentDescription` seed the cascade when no explicit
  * title/description row exists for the content item.
@@ -25,7 +25,7 @@ export async function getEffectiveSeo(
 ): Promise<EffectiveSeoResponse> {
   const { siteId, contentType, contentId, culture, contentTitle, contentDescription } = params;
   const response = await client.get<EffectiveSeoResponse>(
-    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}/effective`,
+    `${basePath}/sites/${encodeURIComponent(siteId)}/metadata/${encodeURIComponent(contentType)}/${encodeURIComponent(contentId)}/${encodeURIComponent(culture)}/effective`,
     { params: { contentTitle, contentDescription }, ...(fetchOptions ? { fetchOptions } : {}) }
   );
   return response.data;
@@ -85,7 +85,7 @@ function rawDocumentConfig(opts: RawDocumentOptions | undefined, allow404: boole
 
 /**
  * Public, anonymous sitemap document for a site (index or single urlset).
- * `GET {basePath}/api/cms/seo/sites/{siteId}/sitemap.xml` — returns raw XML.
+ * `GET {basePath}/sites/{siteId}/sitemap.xml` — returns raw XML.
  *
  * Supports conditional GET: pass `opts.ifNoneMatch` to relay the upstream `ETag`
  * and short-circuit on `304`. See {@link RawDocumentResult}.
@@ -97,7 +97,7 @@ export async function getSitemap(
   opts?: RawDocumentOptions
 ): Promise<RawDocumentResult> {
   const res = await client.get<string>(
-    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/sitemap.xml`,
+    `${basePath}/sites/${encodeURIComponent(siteId)}/sitemap.xml`,
     rawDocumentConfig(opts, false)
   );
   return toRawDocumentResult(res);
@@ -105,7 +105,7 @@ export async function getSitemap(
 
 /**
  * A named child sitemap file referenced by the sitemap index.
- * `GET {basePath}/api/cms/seo/sites/{siteId}/sitemap/{file}` — returns raw XML,
+ * `GET {basePath}/sites/{siteId}/sitemap/{file}` — returns raw XML,
  * `status: 404` (with `body: null`) when the file does not exist.
  *
  * Supports conditional GET via `opts.ifNoneMatch`. See {@link RawDocumentResult}.
@@ -118,7 +118,7 @@ export async function getSitemapFile(
   opts?: RawDocumentOptions
 ): Promise<RawDocumentResult> {
   const res = await client.get<string>(
-    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/sitemap/${encodeURIComponent(file)}`,
+    `${basePath}/sites/${encodeURIComponent(siteId)}/sitemap/${encodeURIComponent(file)}`,
     rawDocumentConfig(opts, true)
   );
   return toRawDocumentResult(res);
@@ -126,7 +126,7 @@ export async function getSitemapFile(
 
 /**
  * Public, anonymous `robots.txt` for a site.
- * `GET {basePath}/api/cms/seo/sites/{siteId}/robots.txt` — returns raw text.
+ * `GET {basePath}/sites/{siteId}/robots.txt` — returns raw text.
  *
  * Supports conditional GET via `opts.ifNoneMatch`. See {@link RawDocumentResult}.
  */
@@ -137,7 +137,7 @@ export async function getRobotsTxt(
   opts?: RawDocumentOptions
 ): Promise<RawDocumentResult> {
   const res = await client.get<string>(
-    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/robots.txt`,
+    `${basePath}/sites/${encodeURIComponent(siteId)}/robots.txt`,
     rawDocumentConfig(opts, false)
   );
   return toRawDocumentResult(res);
@@ -145,7 +145,7 @@ export async function getRobotsTxt(
 
 /**
  * Public, anonymous PWA web app manifest for a site.
- * `GET {basePath}/api/cms/seo/sites/{siteId}/manifest.webmanifest` — returns the
+ * `GET {basePath}/sites/{siteId}/manifest.webmanifest` — returns the
  * raw `application/manifest+json` text, `status: 404` (with `body: null`) when no
  * manifest is set.
  *
@@ -158,7 +158,7 @@ export async function getManifest(
   opts?: RawDocumentOptions
 ): Promise<RawDocumentResult> {
   const res = await client.get<string>(
-    `${basePath}/api/cms/seo/sites/${encodeURIComponent(siteId)}/manifest.webmanifest`,
+    `${basePath}/sites/${encodeURIComponent(siteId)}/manifest.webmanifest`,
     rawDocumentConfig(opts, true)
   );
   return toRawDocumentResult(res);

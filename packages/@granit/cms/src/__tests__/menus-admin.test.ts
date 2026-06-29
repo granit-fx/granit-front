@@ -32,7 +32,7 @@ describe('listMenus', () => {
 
     const result = await listMenus(client, BASE);
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/menus`, undefined);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/menus`, undefined);
     expect(result).toEqual(response);
   });
 
@@ -44,7 +44,7 @@ describe('listMenus', () => {
 
     await listMenus(client, BASE, { page: 1, pageSize: 20 });
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/menus?page=1&pageSize=20`, undefined);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/menus?page=1&pageSize=20`, undefined);
   });
 });
 
@@ -55,7 +55,7 @@ describe('getMenu', () => {
 
     const result = await getMenu(client, BASE, 'menu-1');
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/menus/menu-1`);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/menus/menu-1`);
     expect(result).toEqual(menu);
   });
 });
@@ -68,7 +68,7 @@ describe('createMenu', () => {
     const request = { siteId: 'site-1', key: 'main', title: 'Main navigation' };
     const result = await createMenu(client, BASE, request);
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/menus`, request);
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/menus`, request);
     expect(result).toEqual(menu);
   });
 });
@@ -82,7 +82,7 @@ describe('updateMenu', () => {
     const request = { title: 'Primary nav', items: [] };
     const result = await updateMenu(client, BASE, 'menu-1', request);
 
-    expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/menus/menu-1`, request);
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/menus/menu-1`, request);
     expect(result).toEqual(updated);
   });
 });
@@ -94,6 +94,6 @@ describe('deleteMenu', () => {
 
     await deleteMenu(client, BASE, 'menu-1');
 
-    expect(client.delete).toHaveBeenCalledWith(`${BASE}/api/cms/menus/menu-1`);
+    expect(client.delete).toHaveBeenCalledWith(`${BASE}/menus/menu-1`);
   });
 });

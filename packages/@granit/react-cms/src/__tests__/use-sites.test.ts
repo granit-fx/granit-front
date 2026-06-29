@@ -54,7 +54,7 @@ describe('useSites', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(listSites).toHaveBeenCalledWith(
       client,
-      '',
+      '/api/cms',
       undefined,
       expect.objectContaining({ signal: expect.any(AbortSignal) })
     );
@@ -77,7 +77,7 @@ describe('useSites', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(listSites).toHaveBeenCalledWith(
       client,
-      '',
+      '/api/cms',
       { page: 1, pageSize: 10 },
       expect.objectContaining({ signal: expect.any(AbortSignal) })
     );
@@ -96,7 +96,7 @@ describe('useSite', () => {
     const { result } = renderHook(() => useSite(site.id), { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getSite).toHaveBeenCalledWith(client, '', site.id);
+    expect(getSite).toHaveBeenCalledWith(client, '/api/cms', site.id);
     expect(result.current.data).toEqual(site);
   });
 

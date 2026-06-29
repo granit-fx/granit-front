@@ -20,7 +20,7 @@ describe('resolveRedirect', () => {
     });
 
     expect(client.get).toHaveBeenCalledWith(
-      `${basePath}/api/cms/redirects/resolve`,
+      `${basePath}/resolve`,
       expect.objectContaining({
         params: { path: '/old-path', culture: 'fr' },
         headers: { 'X-Granit-Site': 'site-1' },
@@ -53,7 +53,7 @@ describe('resolveRedirect', () => {
     );
 
     expect(client.get).toHaveBeenCalledWith(
-      `${basePath}/api/cms/redirects/resolve`,
+      `${basePath}/resolve`,
       expect.objectContaining({ fetchOptions: { cache: 'force-cache' } })
     );
   });

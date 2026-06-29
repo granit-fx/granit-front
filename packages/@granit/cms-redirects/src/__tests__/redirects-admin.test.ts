@@ -50,7 +50,7 @@ describe('listRedirects', () => {
 
     const result = await listRedirects(client, BASE, SITE);
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/sites/${SITE}/redirects`);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/sites/${SITE}/redirects`);
     expect(result).toEqual([redirect]);
   });
 
@@ -60,7 +60,7 @@ describe('listRedirects', () => {
 
     await listRedirects(client, BASE, 'a/b');
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/sites/a%2Fb/redirects`);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/sites/a%2Fb/redirects`);
   });
 });
 
@@ -71,7 +71,7 @@ describe('getRedirect', () => {
 
     const result = await getRedirect(client, BASE, 'redir-1');
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/redir-1`);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/redir-1`);
     expect(result).toEqual(redirect);
   });
 });
@@ -84,10 +84,7 @@ describe('createRedirect', () => {
     const request: RedirectCreateRequest = { source: '/old', target: '/new' };
     const result = await createRedirect(client, BASE, SITE, request);
 
-    expect(client.post).toHaveBeenCalledWith(
-      `${BASE}/api/cms/redirects/sites/${SITE}/redirects`,
-      request
-    );
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/sites/${SITE}/redirects`, request);
     expect(result).toEqual(mutationResult);
   });
 });
@@ -104,7 +101,7 @@ describe('updateRedirect', () => {
     const request: RedirectUpdateRequest = { target: '/newer' };
     const result = await updateRedirect(client, BASE, 'redir-1', request);
 
-    expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/redir-1`, request);
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/redir-1`, request);
     expect(result).toEqual(updated);
   });
 });
@@ -116,7 +113,7 @@ describe('deleteRedirect', () => {
 
     await deleteRedirect(client, BASE, 'redir-1');
 
-    expect(client.delete).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/redir-1`);
+    expect(client.delete).toHaveBeenCalledWith(`${BASE}/redir-1`);
   });
 });
 
@@ -128,7 +125,7 @@ describe('getRedirectSettings', () => {
 
     const result = await getRedirectSettings(client, BASE, SITE);
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/sites/${SITE}/settings`);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/sites/${SITE}/settings`);
     expect(result).toEqual(settings);
   });
 });
@@ -141,7 +138,7 @@ describe('updateRedirectSettings', () => {
 
     const result = await updateRedirectSettings(client, BASE, SITE, { autoRedirectOnMove: false });
 
-    expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/sites/${SITE}/settings`, {
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/sites/${SITE}/settings`, {
       autoRedirectOnMove: false,
     });
     expect(result).toEqual(settings);
@@ -160,7 +157,7 @@ describe('previewRedirect', () => {
 
     const result = await previewRedirect(client, BASE, SITE, { path: '/old', culture: 'fr' });
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/redirects/sites/${SITE}/preview`, {
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/sites/${SITE}/preview`, {
       params: { path: '/old', culture: 'fr' },
     });
     expect(result).toEqual(preview);
@@ -178,10 +175,7 @@ describe('getRedirectsGrid', () => {
 
     const result = await getRedirectsGrid(client, BASE, { page: 1, pageSize: 25 });
 
-    expect(client.get).toHaveBeenCalledWith(
-      `${BASE}/api/cms/redirects/grid?page=1&pageSize=25`,
-      undefined
-    );
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/grid?page=1&pageSize=25`, undefined);
     expect(result).toEqual(page);
   });
 });

@@ -67,7 +67,10 @@ describe('useCreateRelease', () => {
     result.current.mutate({ siteId: 'site-1', name: 'Sprint 1' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(createRelease).toHaveBeenCalledWith(client, '', { siteId: 'site-1', name: 'Sprint 1' });
+    expect(createRelease).toHaveBeenCalledWith(client, '/api/cms', {
+      siteId: 'site-1',
+      name: 'Sprint 1',
+    });
   });
 });
 
@@ -87,7 +90,7 @@ describe('useUpdateRelease', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(updateRelease).toHaveBeenCalledWith(client, '', release.id, {
+    expect(updateRelease).toHaveBeenCalledWith(client, '/api/cms', release.id, {
       name: 'Sprint 1 v2',
       concurrencyStamp: stamp,
     });
@@ -114,7 +117,7 @@ describe('useAddReleaseAction', () => {
     result.current.mutate({ id: release.id, request: req });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(addReleaseAction).toHaveBeenCalledWith(client, '', release.id, req);
+    expect(addReleaseAction).toHaveBeenCalledWith(client, '/api/cms', release.id, req);
   });
 });
 
@@ -133,7 +136,7 @@ describe('useRemoveReleaseAction', () => {
     result.current.mutate({ id: release.id, actionId: 'action-1' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(removeReleaseAction).toHaveBeenCalledWith(client, '', release.id, 'action-1');
+    expect(removeReleaseAction).toHaveBeenCalledWith(client, '/api/cms', release.id, 'action-1');
   });
 });
 
@@ -155,7 +158,7 @@ describe('useScheduleRelease', () => {
     result.current.mutate({ id: release.id, request: req });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(scheduleRelease).toHaveBeenCalledWith(client, '', release.id, req);
+    expect(scheduleRelease).toHaveBeenCalledWith(client, '/api/cms', release.id, req);
   });
 });
 
@@ -172,7 +175,7 @@ describe('useCancelRelease', () => {
     result.current.mutate(release.id);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(cancelRelease).toHaveBeenCalledWith(client, '', release.id);
+    expect(cancelRelease).toHaveBeenCalledWith(client, '/api/cms', release.id);
   });
 });
 
@@ -189,6 +192,6 @@ describe('usePublishRelease', () => {
     result.current.mutate(release.id);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(publishRelease).toHaveBeenCalledWith(client, '', release.id);
+    expect(publishRelease).toHaveBeenCalledWith(client, '/api/cms', release.id);
   });
 });

@@ -37,7 +37,7 @@ describe('listSites', () => {
 
     const result = await listSites(client, BASE);
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/sites`, undefined);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/sites`, undefined);
     expect(result).toEqual(response);
   });
 
@@ -49,7 +49,7 @@ describe('listSites', () => {
 
     await listSites(client, BASE, { page: 1, pageSize: 10 });
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/sites?page=1&pageSize=10`, undefined);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/sites?page=1&pageSize=10`, undefined);
   });
 });
 
@@ -60,7 +60,7 @@ describe('getSite', () => {
 
     const result = await getSite(client, BASE, 'site-1');
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/api/cms/sites/site-1`);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/sites/site-1`);
     expect(result).toEqual(site);
   });
 });
@@ -73,7 +73,7 @@ describe('createSite', () => {
     const request = { slug: 'acme', defaultCulture: 'fr', allowedCultures: ['fr', 'en'] };
     const result = await createSite(client, BASE, request);
 
-    expect(client.post).toHaveBeenCalledWith(`${BASE}/api/cms/sites`, request);
+    expect(client.post).toHaveBeenCalledWith(`${BASE}/sites`, request);
     expect(result).toEqual(site);
   });
 });
@@ -93,7 +93,7 @@ describe('updateSite', () => {
     };
     const result = await updateSite(client, BASE, 'site-1', request);
 
-    expect(client.put).toHaveBeenCalledWith(`${BASE}/api/cms/sites/site-1`, request);
+    expect(client.put).toHaveBeenCalledWith(`${BASE}/sites/site-1`, request);
     expect(result).toEqual(updated);
   });
 });
@@ -105,6 +105,6 @@ describe('deleteSite', () => {
 
     await deleteSite(client, BASE, 'site-1');
 
-    expect(client.delete).toHaveBeenCalledWith(`${BASE}/api/cms/sites/site-1`);
+    expect(client.delete).toHaveBeenCalledWith(`${BASE}/sites/site-1`);
   });
 });

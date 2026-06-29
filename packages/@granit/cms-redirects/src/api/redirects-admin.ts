@@ -13,7 +13,7 @@ import type {
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
-const ROOT = '/api/cms/redirects';
+const ROOT = '';
 
 /**
  * `GET {basePath}/api/cms/redirects/sites/{siteId}/redirects` — flat list of a site's

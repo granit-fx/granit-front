@@ -92,7 +92,7 @@ describe('useUpsertSeoMetadata', () => {
     result.current.mutate({ key: KEY, request: { title: 'Test' } });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(upsertSeoMetadata).toHaveBeenCalledWith(client, '', KEY, { title: 'Test' });
+    expect(upsertSeoMetadata).toHaveBeenCalledWith(client, '/api/cms/seo', KEY, { title: 'Test' });
   });
 });
 
@@ -109,7 +109,7 @@ describe('useDeleteSeoMetadata', () => {
     result.current.mutate(KEY);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(deleteSeoMetadata).toHaveBeenCalledWith(client, '', KEY);
+    expect(deleteSeoMetadata).toHaveBeenCalledWith(client, '/api/cms/seo', KEY);
   });
 });
 
@@ -127,7 +127,9 @@ describe('useUpdateSeoDefaults', () => {
     result.current.mutate({ siteId: 'site-1', request: { siteName: 'ACME' } });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(updateSeoDefaults).toHaveBeenCalledWith(client, '', 'site-1', { siteName: 'ACME' });
+    expect(updateSeoDefaults).toHaveBeenCalledWith(client, '/api/cms/seo', 'site-1', {
+      siteName: 'ACME',
+    });
   });
 });
 
@@ -144,6 +146,6 @@ describe('useInvalidateSitemap', () => {
     result.current.mutate('site-1');
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(invalidateSitemap).toHaveBeenCalledWith(client, '', 'site-1');
+    expect(invalidateSitemap).toHaveBeenCalledWith(client, '/api/cms/seo', 'site-1');
   });
 });

@@ -56,7 +56,7 @@ describe('useMenus', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(listMenus).toHaveBeenCalledWith(
       client,
-      '',
+      '/api/cms',
       { page: 1, pageSize: 20 },
       expect.objectContaining({ signal: expect.any(AbortSignal) })
     );
@@ -75,7 +75,7 @@ describe('useMenu', () => {
     const { result } = renderHook(() => useMenu(menu.id), { wrapper: createWrapper(client) });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getMenu).toHaveBeenCalledWith(client, '', menu.id);
+    expect(getMenu).toHaveBeenCalledWith(client, '/api/cms', menu.id);
   });
 
   it('is disabled when id is empty', () => {

@@ -3,7 +3,7 @@ import type { AxiosInstance } from '@granit/api-client';
 
 /**
  * Records or refreshes the caller's presence in the page-editing room.
- * `POST {basePath}/api/cms/pages/{id}/editing/heartbeat` + `X-Granit-Site: {siteId}`.
+ * `POST {basePath}/pages/{id}/editing/heartbeat` + `X-Granit-Site: {siteId}`.
  * Idempotent. Requires `Cms.Pages.Manage`. Returns the active editors.
  */
 export async function sendPageEditingHeartbeat(
@@ -13,7 +13,7 @@ export async function sendPageEditingHeartbeat(
   id: string
 ): Promise<PageEditingPresenceResponse> {
   const res = await client.post<PageEditingPresenceResponse>(
-    `${basePath}/api/cms/pages/${encodeURIComponent(id)}/editing/heartbeat`,
+    `${basePath}/pages/${encodeURIComponent(id)}/editing/heartbeat`,
     undefined,
     { headers: { 'X-Granit-Site': siteId } }
   );
@@ -22,7 +22,7 @@ export async function sendPageEditingHeartbeat(
 
 /**
  * Lists the editors currently in the page-editing room (freshest first).
- * `GET {basePath}/api/cms/pages/{id}/editing` + `X-Granit-Site: {siteId}`.
+ * `GET {basePath}/pages/{id}/editing` + `X-Granit-Site: {siteId}`.
  * Requires `Cms.Pages.Read`.
  */
 export async function getPageEditingPresence(
@@ -32,7 +32,7 @@ export async function getPageEditingPresence(
   id: string
 ): Promise<PageEditingPresenceResponse> {
   const res = await client.get<PageEditingPresenceResponse>(
-    `${basePath}/api/cms/pages/${encodeURIComponent(id)}/editing`,
+    `${basePath}/pages/${encodeURIComponent(id)}/editing`,
     { headers: { 'X-Granit-Site': siteId } }
   );
   return res.data;
@@ -40,7 +40,7 @@ export async function getPageEditingPresence(
 
 /**
  * Removes the caller from the page-editing room (e.g. on tab close).
- * `DELETE {basePath}/api/cms/pages/{id}/editing` + `X-Granit-Site: {siteId}`.
+ * `DELETE {basePath}/pages/{id}/editing` + `X-Granit-Site: {siteId}`.
  * Requires `Cms.Pages.Manage`. Returns `204 NoContent`.
  */
 export async function leavePageEditing(
@@ -49,7 +49,7 @@ export async function leavePageEditing(
   siteId: string,
   id: string
 ): Promise<void> {
-  await client.delete(`${basePath}/api/cms/pages/${encodeURIComponent(id)}/editing`, {
+  await client.delete(`${basePath}/pages/${encodeURIComponent(id)}/editing`, {
     headers: { 'X-Granit-Site': siteId },
   });
 }

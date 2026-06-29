@@ -71,7 +71,7 @@ describe('useSeoSuggestions', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listSeoSuggestions).toHaveBeenCalledWith(client, '', { status: 'Pending' });
+    expect(listSeoSuggestions).toHaveBeenCalledWith(client, '/api/cms/seo', { status: 'Pending' });
   });
 });
 
@@ -94,7 +94,7 @@ describe('useSeoSuggestionDiff', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(getSeoSuggestionDiff).toHaveBeenCalledWith(client, '', suggestion.id);
+    expect(getSeoSuggestionDiff).toHaveBeenCalledWith(client, '/api/cms/seo', suggestion.id);
   });
 
   it('is disabled when id is empty', () => {
@@ -130,7 +130,7 @@ describe('useSuggestSeo', () => {
     result.current.mutate(req);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(suggestSeo).toHaveBeenCalledWith(client, '', req);
+    expect(suggestSeo).toHaveBeenCalledWith(client, '/api/cms/seo', req);
   });
 });
 
@@ -149,7 +149,9 @@ describe('useApplySeoSuggestion', () => {
     result.current.mutate({ id: suggestion.id, request: { fields: 'Title' } });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(applySeoSuggestion).toHaveBeenCalledWith(client, '', suggestion.id, { fields: 'Title' });
+    expect(applySeoSuggestion).toHaveBeenCalledWith(client, '/api/cms/seo', suggestion.id, {
+      fields: 'Title',
+    });
   });
 });
 
@@ -168,7 +170,7 @@ describe('useRejectSeoSuggestion', () => {
     result.current.mutate({ id: suggestion.id, request: { reason: 'Not relevant' } });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(rejectSeoSuggestion).toHaveBeenCalledWith(client, '', suggestion.id, {
+    expect(rejectSeoSuggestion).toHaveBeenCalledWith(client, '/api/cms/seo', suggestion.id, {
       reason: 'Not relevant',
     });
   });
@@ -189,6 +191,6 @@ describe('useTriggerBulkSeoAudit', () => {
     result.current.mutate('site-1');
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(triggerBulkSeoAudit).toHaveBeenCalledWith(client, '', 'site-1');
+    expect(triggerBulkSeoAudit).toHaveBeenCalledWith(client, '/api/cms/seo', 'site-1');
   });
 });

@@ -38,7 +38,7 @@ describe('resolveMenu', () => {
       culture: 'fr',
     });
 
-    expect(client.get).toHaveBeenCalledWith(`${basePath}/api/cms/menus/resolve`, {
+    expect(client.get).toHaveBeenCalledWith(`${basePath}/menus/resolve`, {
       params: { key: 'main', culture: 'fr' },
       headers: { 'X-Granit-Site': 'site-1' },
     });

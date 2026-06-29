@@ -3,7 +3,7 @@ import type { AxiosInstance, RequestFetchOptions } from '@granit/api-client';
 
 /**
  * Resolves a request path to its redirect target (public, anonymous).
- * `GET {basePath}/api/cms/redirects/resolve?path={path}&culture={culture}`
+ * `GET {basePath}/resolve?path={path}&culture={culture}`
  * + `X-Granit-Site: {siteId}` header — the backend scopes by site via `ICurrentSite`,
  * NOT a query parameter.
  *
@@ -18,14 +18,11 @@ export async function resolveRedirect(
   params: { siteId: string; path: string; culture?: string },
   fetchOptions?: RequestFetchOptions
 ): Promise<ResolveResponse | null> {
-  const response = await client.get<ResolveResponse | null>(
-    `${basePath}/api/cms/redirects/resolve`,
-    {
-      params: { path: params.path, culture: params.culture },
-      headers: { 'X-Granit-Site': params.siteId },
-      validateStatus: (s) => s === 200 || s === 204,
-      ...(fetchOptions ? { fetchOptions } : {}),
-    }
-  );
+  const response = await client.get<ResolveResponse | null>(`${basePath}/resolve`, {
+    params: { path: params.path, culture: params.culture },
+    headers: { 'X-Granit-Site': params.siteId },
+    validateStatus: (s) => s === 200 || s === 204,
+    ...(fetchOptions ? { fetchOptions } : {}),
+  });
   return response.status === 204 ? null : (response.data ?? null);
 }
