@@ -33,7 +33,8 @@ export const analyticsWidgetCatalog: readonly WidgetCatalogEntry[] = Object.free
     iconKey: 'kpi',
     // Two rows so the framed tile fits its header + value without clipping.
     defaultSize: { width: 3, height: 2 },
-    minSize: { width: 2, height: 2 },
+    // A single cell is enough for the header + value once it can shrink.
+    minSize: { width: 1, height: 1 },
     createDefaultWidget: (slug): KpiWidgetDefinition => ({
       slug,
       type: 'kpi',
