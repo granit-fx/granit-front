@@ -1,9 +1,27 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
 import { DashboardViewPage } from '../dashboard-view-page';
 
 import { renderDashboards } from './test-utils';
+
+// The composer is exercised by its own suite; here we only assert the view
+// page's read↔edit toggle wiring, so stub it to a marker.
+vi.mock('../components/dashboard-composer', () => ({
+  DashboardComposer: ({
+    dashboardId,
+    onExit,
+  }: {
+    readonly dashboardId: string;
+    readonly onExit: () => void;
+  }) => (
+    <div data-slot="dashboard-composer" data-dashboard-id={dashboardId}>
+      <button type="button" data-slot="composer-exit" onClick={onExit}>
+        exit
+      </button>
+    </div>
+  ),
+}));
 
 const detail = {
   id: '8c6b1e10-0000-4000-8000-000000000001',
@@ -47,6 +65,30 @@ describe('DashboardViewPage', () => {
     renderDashboards(<DashboardViewPage />);
 
     expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
+  });
+
+  it('toggles to the inline composer on Edit and back out on exit', () => {
+    useDashboardDetail.mockReturnValue({ data: detail, isLoading: false });
+    renderDashboards(<DashboardViewPage />);
+
+    // Read mode first: rendered surface, no composer.
+    expect(document.querySelector('[data-slot="rendered-dashboard"]')).toBeInTheDocument();
+    expect(document.querySelector('[data-slot="dashboard-composer"]')).not.toBeInTheDocument();
+
+    fireEvent.click(document.querySelector('[data-slot="dashboard-view-edit-toggle"]')!);
+
+    // Edit mode: composer mounted inline (same page, no navigation), read surface gone.
+    const page = document.querySelector('[data-slot="dashboard-view-page"]');
+    expect(page?.getAttribute('data-mode')).toBe('edit');
+    expect(document.querySelector('[data-slot="dashboard-composer"]')).toBeInTheDocument();
+    expect(document.querySelector('[data-slot="rendered-dashboard"]')).not.toBeInTheDocument();
+
+    // Exiting drops back to read mode in place.
+    fireEvent.click(document.querySelector('[data-slot="composer-exit"]')!);
+    expect(
+      document.querySelector('[data-slot="dashboard-view-page"]')?.getAttribute('data-mode')
+    ).toBe('view');
+    expect(document.querySelector('[data-slot="rendered-dashboard"]')).toBeInTheDocument();
   });
 
   it('renders a not-found empty state when the dashboard is missing', () => {

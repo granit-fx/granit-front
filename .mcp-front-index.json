@@ -8853,6 +8853,17 @@
           "signature": "function DashboardViewPage()"
         },
         {
+          "name": "DashboardComposer",
+          "kind": "function",
+          "signature": "function DashboardComposer("
+        },
+        {
+          "name": "DashboardComposerProps",
+          "kind": "interface",
+          "signature": "interface DashboardComposerProps",
+          "members": []
+        },
+        {
           "name": "StatusBadge",
           "kind": "function",
           "signature": "function StatusBadge("

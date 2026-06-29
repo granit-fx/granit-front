@@ -7,6 +7,8 @@
 export { DashboardListPage } from './dashboard-list-page';
 export { DashboardEditPage } from './dashboard-edit-page';
 export { DashboardViewPage } from './dashboard-view-page';
+export { DashboardComposer } from './components/dashboard-composer';
+export type { DashboardComposerProps } from './components/dashboard-composer';
 
 // Public components
 export { StatusBadge } from './components/dashboard-status-badge';

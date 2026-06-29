@@ -3,27 +3,32 @@ import { useTranslation } from '@granit/react-localization';
 import { Button, Spinner } from '@granit/react-ui';
 import { EmptyState } from '@granit/react-ui-kit';
 import { ArrowLeft, LayoutDashboard, Pencil } from 'lucide-react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { DashboardComposer } from './components/dashboard-composer';
 import { StatusBadge } from './components/dashboard-status-badge';
 
 /**
- * Read-mode page for a single persisted dashboard. The list page
- * ({@link DashboardListPage}) links here to *visualize* a dashboard, while
- * `/dashboards/manage/:id/edit` ({@link DashboardEditPage}) opens the composer.
+ * Single-dashboard page with an **inline edit toggle** (Grafana/luzmo style).
  *
- * - **Load** — `useDashboardDetail(id)` supplies the chrome (name, status,
- *   category) and the grid geometry (`layoutColumns` / `layoutRowHeight`).
- * - **Render** — `<RenderedDashboard>` issues the single
- *   `POST /dashboards/{id}/render` round-trip and dispatches each widget
- *   snapshot through the registries composed at the app root. Grid columns
- *   and row height are piped from the detail so the rendered layout matches
- *   the one persisted by the editor.
+ * - **Read mode** — `useDashboardDetail(id)` supplies the chrome (name, status,
+ *   category) and grid geometry; `<RenderedDashboard>` issues the single
+ *   `POST /dashboards/{id}/render` round-trip. The "Edit" button flips to edit
+ *   mode in place — no navigation.
+ * - **Edit mode** — mounts the shared {@link DashboardComposer} (free
+ *   drag/resize, hover toolbar, Save/Discard). Exiting drops straight back to
+ *   read mode on the same page; the post-save cache invalidation refreshes the
+ *   rendered view automatically.
+ *
+ * The standalone `/dashboards/manage/:id/edit` route ({@link DashboardEditPage})
+ * mounts the same composer for deep links / bookmarks.
  */
 export function DashboardViewPage() {
   const { id = '' } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [editing, setEditing] = useState(false);
 
   const dashboardId = decodeURIComponent(id);
   const { data: detail, isLoading } = useDashboardDetail(dashboardId);
@@ -51,9 +56,22 @@ export function DashboardViewPage() {
     );
   }
 
+  if (editing) {
+    return (
+      <div data-slot="dashboard-view-page" data-mode="edit" data-dashboard-id={detail.id}>
+        <DashboardComposer
+          dashboardId={dashboardId}
+          onExit={() => setEditing(false)}
+          exitLabel={t('Dashboards.View.BackToView', { defaultValue: 'Back to view' })}
+        />
+      </div>
+    );
+  }
+
   return (
     <div
       data-slot="dashboard-view-page"
+      data-mode="view"
       data-dashboard-id={detail.id}
       data-dashboard-status={detail.status}
       className="space-y-4"
@@ -72,9 +90,10 @@ export function DashboardViewPage() {
           </div>
         </div>
         <Button
+          data-slot="dashboard-view-edit-toggle"
           variant="outline"
           size="sm"
-          onClick={() => navigate(`/dashboards/manage/${encodeURIComponent(dashboardId)}/edit`)}
+          onClick={() => setEditing(true)}
         >
           <Pencil className="mr-2 h-4 w-4" />
           {t('Common.Edit', { defaultValue: 'Edit' })}
