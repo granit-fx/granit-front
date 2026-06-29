@@ -37,6 +37,6 @@
     "@granit/react-ui": "workspace:*",
     "@granit/settings": "workspace:*",
     "@storybook/react-vite": "^10.4.6",
-    "@tanstack/react-query": "^5.101.2"
+    "@tanstack/react-query": "^5.0.0"
   }
 }
