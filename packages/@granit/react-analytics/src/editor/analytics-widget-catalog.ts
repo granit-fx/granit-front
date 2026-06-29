@@ -34,10 +34,9 @@ export const analyticsWidgetCatalog: readonly WidgetCatalogEntry[] = Object.free
     // Two rows so the framed tile fits its header + value without clipping.
     defaultSize: { width: 3, height: 2 },
     minSize: { width: 2, height: 2 },
-    createDefaultWidget: (slug, position): KpiWidgetDefinition => ({
+    createDefaultWidget: (slug): KpiWidgetDefinition => ({
       slug,
       type: 'kpi',
-      position,
       size: { width: 3, height: 2 },
       // Empty metric name — the user binds it in the config form. The
       // backend rejects empty metricName at construction, so a fresh
@@ -52,10 +51,9 @@ export const analyticsWidgetCatalog: readonly WidgetCatalogEntry[] = Object.free
     iconKey: 'chart',
     defaultSize: { width: 6, height: 3 },
     minSize: { width: 3, height: 2 },
-    createDefaultWidget: (slug, position): ChartWidgetDefinition => ({
+    createDefaultWidget: (slug): ChartWidgetDefinition => ({
       slug,
       type: 'chart',
-      position,
       size: { width: 6, height: 3 },
       queryName: '',
       groupBy: '',
@@ -70,10 +68,9 @@ export const analyticsWidgetCatalog: readonly WidgetCatalogEntry[] = Object.free
     iconKey: 'table',
     defaultSize: { width: 6, height: 3 },
     minSize: { width: 3, height: 2 },
-    createDefaultWidget: (slug, position): TableWidgetDefinition => ({
+    createDefaultWidget: (slug): TableWidgetDefinition => ({
       slug,
       type: 'table',
-      position,
       size: { width: 6, height: 3 },
       queryName: '',
       visibleColumns: null,
@@ -86,10 +83,9 @@ export const analyticsWidgetCatalog: readonly WidgetCatalogEntry[] = Object.free
     iconKey: 'pivot',
     defaultSize: { width: 6, height: 3 },
     minSize: { width: 3, height: 2 },
-    createDefaultWidget: (slug, position): PivotWidgetDefinition => ({
+    createDefaultWidget: (slug): PivotWidgetDefinition => ({
       slug,
       type: 'pivot',
-      position,
       size: { width: 6, height: 3 },
       queryName: '',
       rowFields: [],

@@ -53,8 +53,8 @@ export interface DashboardLayout {
   readonly widgetSizes?: Readonly<Record<string, WidgetSize>>;
   /**
    * Optional slug ordering — when present, overrides the widget's
-   * `position` for this layout. Widgets not listed are appended in
-   * declared `position` order.
+   * the widget's declared order for this layout. Widgets not listed are appended
+   * in their declared order.
    */
   readonly widgetOrder?: readonly string[];
   /**

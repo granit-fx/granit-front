@@ -45,7 +45,7 @@ function renderDashboard(definition: DashboardDefinition) {
 }
 
 describe('Dashboard', () => {
-  it('renders widgets in `position` order with their declared size', () => {
+  it('renders widgets in grid-coordinate (y,x) order with their declared size', () => {
     const { container } = renderDashboard({
       name: 'Test',
       category: 'General',
@@ -56,7 +56,8 @@ describe('Dashboard', () => {
         {
           slug: 'Hello',
           type: 'text',
-          position: 1,
+          x: 0,
+          y: 1,
           size: { width: 6, height: 1 },
           contentLocalizationKey: 'Widget:Test.Hello',
           style: 'Body',
@@ -64,7 +65,8 @@ describe('Dashboard', () => {
         {
           slug: 'Heading',
           type: 'markdown',
-          position: 0,
+          x: 0,
+          y: 0,
           size: { width: 6, height: 1 },
           contentLocalizationKey: 'Widget:Test.Heading',
         },
@@ -76,7 +78,7 @@ describe('Dashboard', () => {
 
     const cells = container.querySelectorAll('[data-slot="dashboard-cell"]');
     expect(cells).toHaveLength(2);
-    // The cell with `position: 0` (Heading) renders first in DOM.
+    // The cell at y:0 (Heading) renders first in DOM.
     expect(cells[0]?.getAttribute('data-widget-slug')).toBe('Heading');
     expect(cells[1]?.getAttribute('data-widget-slug')).toBe('Hello');
   });
@@ -105,7 +107,8 @@ describe('Dashboard', () => {
         {
           slug: 'Foo',
           type: 'analytics-kpi',
-          position: 0,
+          x: 0,
+          y: 0,
           size: { width: 3, height: 1 },
           metric: 'foo',
         } as never,
@@ -126,7 +129,8 @@ describe('Dashboard', () => {
         {
           slug: 'Caption',
           type: 'text',
-          position: 0,
+          x: 0,
+          y: 0,
           size: { width: 6, height: 1 },
           contentLocalizationKey: 'Widget:Test.Caption',
           style: 'Caption',

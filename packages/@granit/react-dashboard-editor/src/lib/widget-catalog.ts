@@ -40,10 +40,9 @@ export interface WidgetCatalogEntry {
    */
   readonly minSize?: WidgetSize;
   /**
-   * Factory producing a fresh widget for this kind. Receives the slug +
-   * position {@link addWidget} computed for it; the factory fills in the
-   * kind-specific fields (content localization key, source URL, query
-   * name, etc.).
+   * Factory producing a fresh widget for this kind. Receives the slug
+   * {@link addWidget} minted for it; the factory fills in the kind-specific
+   * fields (content localization key, source URL, query name, etc.).
    *
    * Return type is the open `WidgetDefinitionBase` rather than the closed
    * {@link WidgetDefinition} union so downstream packages can return
@@ -52,11 +51,11 @@ export interface WidgetCatalogEntry {
    * extend the base but don't satisfy the open
    * `Readonly<Record<string, unknown>>` half of the framework union.
    *
-   * Factories should NOT pre-generate `slug` / `position` themselves —
-   * those two fields are owned by {@link addWidget} so unique-slug
-   * generation stays centralized.
+   * Factories should NOT pre-generate the `slug` themselves — it is owned by
+   * {@link addWidget} so unique-slug generation stays centralized. Placement
+   * (`x` / `y`) is left to the grid, which packs new widgets into free cells.
    */
-  readonly createDefaultWidget: (slug: string, position: number) => WidgetDefinitionBase;
+  readonly createDefaultWidget: (slug: string) => WidgetDefinitionBase;
 }
 
 /**
@@ -129,7 +128,7 @@ export function nextUniqueSlug(type: string, existing: ReadonlySet<string>): str
  *
  * - A slug minted via {@link nextUniqueSlug} so it doesn't clash with
  *   existing ones.
- * - `position` = `widgets.length` — appended to the end of the dense rank.
+ * - no `x` / `y` — appended last; the grid first-fit-packs it into a free cell.
  * - `size` = `entry.defaultSize` (the factory's `size` is overridden so
  *   apps can't accidentally desync it from the catalog default).
  *
@@ -142,18 +141,16 @@ export function addWidget<TDefinition extends { readonly widgets: readonly Widge
 ): TDefinition {
   const existingSlugs = new Set(definition.widgets.map((w) => w.slug));
   const slug = nextUniqueSlug(entry.type, existingSlugs);
-  const position = definition.widgets.length;
-  const created = entry.createDefaultWidget(slug, position);
-  // Cast to the open `WidgetDefinition` union after stamping the
-  // editor-owned fields (slug / position / size). Downstream factories
-  // return concrete `WidgetDefinitionBase` extensions which don't satisfy
-  // the union's open `Record<string, unknown>` half, but are still valid
-  // wire shapes — the runtime contract is enforced by the renderer
-  // registry, not the type.
+  const created = entry.createDefaultWidget(slug);
+  // Cast to the open `WidgetDefinition` union after stamping the editor-owned
+  // fields (slug / size). The new widget carries no `x` / `y` — the grid
+  // first-fit-packs it into a free cell. Downstream factories return concrete
+  // `WidgetDefinitionBase` extensions which don't satisfy the union's open
+  // `Record<string, unknown>` half, but are still valid wire shapes — the
+  // runtime contract is enforced by the renderer registry, not the type.
   const widget = {
     ...created,
     slug,
-    position,
     size: entry.defaultSize,
   } as WidgetDefinition;
   return { ...definition, widgets: [...definition.widgets, widget] };
@@ -180,10 +177,9 @@ export const defaultWidgetCatalog: readonly WidgetCatalogEntry[] = Object.freeze
     iconKey: 'markdown',
     defaultSize: WIDGET_SIZE.FULL_WIDTH_ROW,
     minSize: { width: 2, height: 1 },
-    createDefaultWidget: (slug, position) => ({
+    createDefaultWidget: (slug) => ({
       slug,
       type: 'markdown',
-      position,
       size: WIDGET_SIZE.FULL_WIDTH_ROW,
       contentLocalizationKey: `Widget:${slug}.Content`,
     }),
@@ -194,10 +190,9 @@ export const defaultWidgetCatalog: readonly WidgetCatalogEntry[] = Object.freeze
     iconKey: 'text',
     defaultSize: { width: 3, height: 1 },
     minSize: { width: 2, height: 1 },
-    createDefaultWidget: (slug, position) => ({
+    createDefaultWidget: (slug) => ({
       slug,
       type: 'text',
-      position,
       size: { width: 3, height: 1 },
       contentLocalizationKey: `Widget:${slug}.Content`,
       style: 'Body',
@@ -209,10 +204,9 @@ export const defaultWidgetCatalog: readonly WidgetCatalogEntry[] = Object.freeze
     iconKey: 'image',
     defaultSize: WIDGET_SIZE.MEDIA_TILE,
     minSize: { width: 2, height: 2 },
-    createDefaultWidget: (slug, position) => ({
+    createDefaultWidget: (slug) => ({
       slug,
       type: 'image',
-      position,
       size: WIDGET_SIZE.MEDIA_TILE,
       source: '',
       altLocalizationKey: `Widget:${slug}.Alt`,

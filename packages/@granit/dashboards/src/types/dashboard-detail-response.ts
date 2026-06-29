@@ -21,6 +21,6 @@ export interface DashboardDetailResponse {
   readonly layoutColumns: number;
   /** Grid row height in CSS pixels at the base viewport. */
   readonly layoutRowHeight: number;
-  /** Widgets pinned on the dashboard, in declared `position` order. */
+  /** Widgets pinned on the dashboard, ordered by grid coordinate (y, then x). */
   readonly widgets: readonly WidgetInstanceResponse[];
 }

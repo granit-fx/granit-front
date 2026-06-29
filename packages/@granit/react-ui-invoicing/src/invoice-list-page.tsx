@@ -16,7 +16,6 @@ import type { KpiWidgetDefinition } from '@granit/analytics';
 const UNPAID_COUNT_KPI: KpiWidgetDefinition = {
   slug: 'UnpaidCount',
   type: 'kpi',
-  position: 0,
   size: WIDGET_SIZE.SMALL_KPI,
   datasource: Datasource.metric('Granit.Invoicing.UnpaidInvoiceCountMetric'),
 };
@@ -24,7 +23,6 @@ const UNPAID_COUNT_KPI: KpiWidgetDefinition = {
 const UNPAID_TOTAL_KPI: KpiWidgetDefinition = {
   slug: 'UnpaidTotal',
   type: 'kpi',
-  position: 1,
   size: WIDGET_SIZE.SMALL_KPI,
   datasource: Datasource.metric('Granit.Invoicing.UnpaidInvoiceTotalMetric'),
 };

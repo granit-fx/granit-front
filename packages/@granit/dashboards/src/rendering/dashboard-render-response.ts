@@ -97,8 +97,10 @@ export interface DashboardRenderedWidget {
    * side. Used for the `key` prop + `data-widget-slug` attributes.
    */
   readonly slug: string;
-  /** Dense-ranked grid order — 0-based, contiguous. */
-  readonly position: number;
+  /** Grid column of the widget's top-left cell (0-based). */
+  readonly x: number;
+  /** Grid row of the widget's top-left cell (0-based). */
+  readonly y: number;
   /** Grid columns occupied by the widget. */
   readonly width: number;
   /** Grid rows occupied by the widget. */

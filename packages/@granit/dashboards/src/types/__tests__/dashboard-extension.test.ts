@@ -32,7 +32,6 @@ const view: DashboardView = {
     {
       slug: 'Banner',
       type: 'markdown',
-      position: 0,
       size: { width: 12, height: 1 },
       contentLocalizationKey: 'Widget:View.Banner',
     },

@@ -50,9 +50,8 @@ export function toGridLayout(
  * Folds a `react-grid-layout` layout back into a {@link DashboardDefinition}.
  *
  * Widgets are matched by `slug`, their `x` / `y` / `size` updated from the
- * layout, and `position` re-derived from the visual order (top-to-bottom,
- * then left-to-right) so the legacy dense-rank stays consistent with the
- * coordinate layout for a save round-trip.
+ * layout, and the widget array re-ordered by visual position (top-to-bottom,
+ * then left-to-right) so a save round-trip stays consistent with the grid.
  *
  * Returns the **same** definition reference when nothing changed, letting
  * callers skip a no-op `onChange` (react-grid-layout fires `onLayoutChange`
@@ -67,11 +66,10 @@ export function fromGridLayout(
 
   let changed = false;
   const widgets: WidgetDefinition[] = [];
-  for (const [index, item] of ordered.entries()) {
+  for (const item of ordered) {
     const widget = bySlug.get(item.i);
     if (!widget) continue;
     if (
-      widget.position !== index ||
       widget.x !== item.x ||
       widget.y !== item.y ||
       widget.size.width !== item.w ||
@@ -81,7 +79,6 @@ export function fromGridLayout(
     }
     widgets.push({
       ...widget,
-      position: index,
       x: item.x,
       y: item.y,
       size: { width: item.w, height: item.h },

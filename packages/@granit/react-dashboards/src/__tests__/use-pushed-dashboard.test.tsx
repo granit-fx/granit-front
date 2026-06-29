@@ -143,7 +143,8 @@ describe('applyStreamSnapshot', () => {
     const merged = applyStreamSnapshot(KPI_WIDGET, event);
     expect(merged).toMatchObject({
       slug: KPI_WIDGET.slug,
-      position: KPI_WIDGET.position,
+      x: KPI_WIDGET.x,
+      y: KPI_WIDGET.y,
       width: KPI_WIDGET.width,
       height: KPI_WIDGET.height,
       titleLocalizationKey: KPI_WIDGET.titleLocalizationKey,

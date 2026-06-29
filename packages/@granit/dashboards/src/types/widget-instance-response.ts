@@ -15,12 +15,6 @@ export interface WidgetInstanceResponse {
    * (`Markdown` / `Image` / `Text` / `Kpi` / `Chart` / `Table` / `Pivot` / `Map` / ...).
    */
   readonly widgetType: string;
-  /**
-   * Dense-ranked grid order — 0-based. Legacy ordering key, kept for
-   * backward compatibility; the authoritative layout is now {@link x} /
-   * {@link y} plus {@link width} / {@link height}.
-   */
-  readonly position: number;
   /** Grid column of the widget's top-left cell (0-based). */
   readonly x: number;
   /** Grid row of the widget's top-left cell (0-based). */

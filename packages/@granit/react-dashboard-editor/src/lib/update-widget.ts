@@ -5,9 +5,9 @@ import type { DashboardDefinition, WidgetDefinition } from '@granit/dashboards';
 /**
  * Pure helper: returns a new {@link DashboardDefinition} with the widget
  * matching `slug` replaced by `next`. The replacement preserves the
- * existing `slug` + `position` (callers can't accidentally rename or
- * reorder a widget through the config drawer — placement is owned by the
- * grid layout, slug minting by {@link addWidget}).
+ * existing `slug` + grid placement (`x` / `y`) — callers can't accidentally
+ * rename or move a widget through the config drawer; placement is owned by the
+ * grid layout, slug minting by {@link addWidget}.
  *
  * Slug not found → returns the input definition unchanged. This keeps the
  * editor pipeline idempotent under late-arriving onChange callbacks (e.g.
@@ -22,7 +22,7 @@ export function updateWidget(
   if (index === -1) return definition;
   const current = definition.widgets[index];
   if (!current) return definition;
-  const merged: WidgetDefinition = { ...next, slug: current.slug, position: current.position };
+  const merged: WidgetDefinition = { ...next, slug: current.slug, x: current.x, y: current.y };
   const widgets = [...definition.widgets];
   widgets[index] = merged;
   return { ...definition, widgets };
@@ -30,19 +30,14 @@ export function updateWidget(
 
 /**
  * Pure helper: returns a new {@link DashboardDefinition} with the widget
- * matching `slug` removed and remaining widgets re-ranked into a dense
- * 0-based `position` sequence — same invariant the backend enforces on
- * `WidgetInstance.Position`.
+ * matching `slug` removed. Remaining widgets keep their grid coordinates.
  *
  * Slug not found → returns the input definition unchanged.
  */
 export function removeWidget(definition: DashboardDefinition, slug: string): DashboardDefinition {
   const remaining = definition.widgets.filter((w) => w.slug !== slug);
   if (remaining.length === definition.widgets.length) return definition;
-  const repositioned = [...remaining]
-    .sort((a, b) => a.position - b.position)
-    .map((widget, index) => ({ ...widget, position: index }));
-  return { ...definition, widgets: repositioned };
+  return { ...definition, widgets: remaining };
 }
 
 /**
@@ -54,8 +49,7 @@ export function removeWidget(definition: DashboardDefinition, slug: string): Das
  *   `Widget:{Dashboard}.{newSlug}` for it on save (rather than pointing at the
  *   source's title),
  * - drops `x` / `y` so the editor first-fit-packs it into a free cell instead
- *   of overlapping the source,
- * - takes the next dense `position` (appended last).
+ *   of overlapping the source (appended last in the widget pool).
  *
  * Slug not found → returns the input definition unchanged.
  */
@@ -73,7 +67,6 @@ export function duplicateWidget(
   const clone: Record<string, unknown> = {
     ...source,
     slug: newSlug,
-    position: definition.widgets.length,
   };
   delete clone['titleLocalizationKey'];
   delete clone['x'];

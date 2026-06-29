@@ -150,15 +150,14 @@ export function RenderedDashboard({
 
   const gridStyle: CSSProperties = {
     display: 'grid',
-    gridAutoFlow: 'dense',
     gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
     gridAutoRows: `${rowHeight}px`,
     gap: '1rem',
   };
 
-  // Bundle widgets arrive in `position` order (backend invariant), so
-  // we iterate verbatim. The structural fields (`width`, `height`)
-  // drive per-cell `gridColumn` / `gridRow` spans.
+  // Bundle widgets carry explicit grid coordinates (`x` / `y`) plus
+  // `width` / `height`, so each cell is placed at its exact column/row —
+  // matching what the editor (react-grid-layout) persisted.
   return (
     <DashboardViewProvider
       value={{ currentView: query.data.activeViewName, setCurrentView: setView }}
@@ -180,9 +179,10 @@ export function RenderedDashboard({
 }
 
 function RenderedDashboardCell({ widget }: { readonly widget: DashboardRenderedWidget }) {
+  // CSS grid lines are 1-based; widget coordinates are 0-based.
   const cellStyle: CSSProperties = {
-    gridColumn: `span ${widget.width}`,
-    gridRow: `span ${widget.height}`,
+    gridColumn: `${widget.x + 1} / span ${widget.width}`,
+    gridRow: `${widget.y + 1} / span ${widget.height}`,
   };
   return (
     <div

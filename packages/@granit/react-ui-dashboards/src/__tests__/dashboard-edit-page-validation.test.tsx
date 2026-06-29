@@ -39,7 +39,8 @@ vi.mock('@granit/react-dashboards', async (importOriginal) => {
           {
             id: '8c6b1e10-0000-0000-0000-000000000020',
             widgetType: 'Chart',
-            position: 0,
+            x: 0,
+            y: 0,
             width: 6,
             height: 3,
             titleLocalizationKey: 'Widget:Granit.Showcase.Incomplete.Sales',

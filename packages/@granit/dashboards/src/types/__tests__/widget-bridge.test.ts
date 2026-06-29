@@ -69,7 +69,6 @@ describe('widgetInstanceToDefinition', () => {
     const instance: WidgetInstanceResponse = {
       id: WIDGET_ID,
       widgetType: 'Markdown',
-      position: 0,
       x: 4,
       y: 3,
       width: 12,
@@ -83,7 +82,6 @@ describe('widgetInstanceToDefinition', () => {
     const widget = widgetInstanceToDefinition(instance, DASHBOARD_NAME) as MarkdownWidgetDefinition;
     expect(widget.slug).toBe('Banner');
     expect(widget.type).toBe('markdown');
-    expect(widget.position).toBe(0);
     expect(widget.x).toBe(4);
     expect(widget.y).toBe(3);
     expect(widget.size).toEqual({ width: 12, height: 1 });
@@ -94,7 +92,6 @@ describe('widgetInstanceToDefinition', () => {
     const instance: WidgetInstanceResponse = {
       id: WIDGET_ID,
       widgetType: 'Text',
-      position: 0,
       x: 0,
       y: 0,
       width: 3,
@@ -113,7 +110,6 @@ describe('widgetInstanceToDefinition', () => {
     const instance: WidgetInstanceResponse = {
       id: WIDGET_ID,
       widgetType: 'Markdown',
-      position: 1,
       x: 0,
       y: 0,
       width: 6,
@@ -127,7 +123,6 @@ describe('widgetInstanceToDefinition', () => {
     const widget = widgetInstanceToDefinition(instance, DASHBOARD_NAME);
     expect(widget.slug).toBe('Broken');
     expect(widget.type).toBe('markdown');
-    expect(widget.position).toBe(1);
   });
 });
 
@@ -147,7 +142,6 @@ describe('dashboardDetailToDefinition', () => {
         {
           id: WIDGET_ID,
           widgetType: 'Markdown',
-          position: 0,
           width: 12,
           x: 0,
           y: 0,
@@ -190,7 +184,6 @@ describe('widgetDefinitionToAddRequest', () => {
     const widget: MarkdownWidgetDefinition = {
       slug: 'Banner',
       type: 'markdown',
-      position: 0,
       size: { width: 12, height: 1 },
       contentLocalizationKey: 'Widget:Demo.Banner.Content',
     };
@@ -208,7 +201,6 @@ describe('widgetDefinitionToAddRequest', () => {
     const widget: KpiWidgetStub = {
       slug: 'UnpaidCount',
       type: 'kpi',
-      position: 0,
       size: { width: 3, height: 1 },
       datasource: { kind: 'metric', metricName: 'Granit.Invoicing.UnpaidInvoiceCountMetric' },
     };
@@ -221,7 +213,6 @@ describe('widgetDefinitionToAddRequest', () => {
     const widget: KpiWidgetStub = {
       slug: 'TotalRevenue',
       type: 'kpi',
-      position: 0,
       size: { width: 3, height: 1 },
       datasource: {
         kind: 'query-aggregate',
@@ -239,7 +230,6 @@ describe('widgetDefinitionToAddRequest', () => {
     const widget: MapWidgetStub = {
       slug: 'Branches',
       type: 'map',
-      position: 0,
       size: { width: 6, height: 4 },
       queryName: 'Granit.Test.Branches',
       pointSource: { kind: 'lat-lng', latitudeColumn: 'Lat', longitudeColumn: 'Lng' },
@@ -255,7 +245,6 @@ describe('widgetDefinitionToUpdateRequest', () => {
     const widget: MarkdownWidgetDefinition = {
       slug: 'Banner',
       type: 'markdown',
-      position: 1,
       x: 4,
       y: 2,
       size: { width: 6, height: 2 },
@@ -263,7 +252,6 @@ describe('widgetDefinitionToUpdateRequest', () => {
     };
     const request = widgetDefinitionToUpdateRequest(widget, DASHBOARD_NAME);
     expect(request).toEqual({
-      position: 1,
       x: 4,
       y: 2,
       width: 6,
@@ -277,7 +265,6 @@ describe('widgetDefinitionToUpdateRequest', () => {
     const widget: MarkdownWidgetDefinition = {
       slug: 'Banner',
       type: 'markdown',
-      position: 1,
       size: { width: 6, height: 2 },
       contentLocalizationKey: 'Widget:Demo.Banner.Content',
     };
@@ -301,7 +288,6 @@ describe('KPI configJson bridge (bare-Datasource contract)', () => {
     const instance: WidgetInstanceResponse = {
       id: WIDGET_ID,
       widgetType: 'Kpi',
-      position: 2,
       x: 0,
       y: 0,
       width: 3,
@@ -325,7 +311,6 @@ describe('KPI configJson bridge (bare-Datasource contract)', () => {
     const widget: KpiWidgetStub = {
       slug: 'UnpaidCount',
       type: 'kpi',
-      position: 2,
       size: { width: 3, height: 2 },
       datasource: { kind: 'metric', metricName: 'Granit.Invoicing.UnpaidInvoiceCountMetric' },
     };
@@ -340,7 +325,6 @@ describe('round-trip: instance → definition → addRequest → instance-shaped
     const original: WidgetInstanceResponse = {
       id: WIDGET_ID,
       widgetType: 'Kpi',
-      position: 2,
       x: 0,
       y: 0,
       width: 3,
@@ -358,7 +342,6 @@ describe('round-trip: instance → definition → addRequest → instance-shaped
     const definition = widgetInstanceToDefinition(original, DASHBOARD_NAME);
     const addRequest = widgetDefinitionToAddRequest(definition, DASHBOARD_NAME);
     expect(addRequest.widgetType).toBe(original.widgetType);
-    expect(addRequest.position).toBe(original.position);
     expect(addRequest.width).toBe(original.width);
     expect(addRequest.height).toBe(original.height);
     expect(addRequest.titleLocalizationKey).toBe(original.titleLocalizationKey);
@@ -370,13 +353,12 @@ describe('round-trip: instance → definition → addRequest → instance-shaped
 });
 
 describe('diffDashboardWidgets', () => {
-  function makeServerInstance(slug: string, position: number): WidgetInstanceResponse {
+  function makeServerInstance(slug: string, y = 0): WidgetInstanceResponse {
     return {
       id: `id-${slug}`,
       widgetType: 'Markdown',
-      position,
       x: 0,
-      y: 0,
+      y,
       width: 12,
       height: 1,
       titleLocalizationKey: `Widget:${DASHBOARD_NAME}.${slug}`,
@@ -387,11 +369,12 @@ describe('diffDashboardWidgets', () => {
     };
   }
 
-  function makeLocalWidget(slug: string, position: number): WidgetDefinition {
+  function makeLocalWidget(slug: string, y = 0): WidgetDefinition {
     return {
       slug,
       type: 'markdown',
-      position,
+      x: 0,
+      y,
       size: { width: 12, height: 1 },
       contentLocalizationKey: `Widget:${DASHBOARD_NAME}.${slug}`,
     } satisfies MarkdownWidgetDefinition;
@@ -410,7 +393,7 @@ describe('diffDashboardWidgets', () => {
     expect(diff.removed).toEqual([{ slug: 'Banner', widgetId: 'id-Banner' }]);
   });
 
-  it('classifies position changes as `updated`', () => {
+  it('classifies grid-coordinate changes as `updated`', () => {
     const diff = diffDashboardWidgets(
       [makeServerInstance('Banner', 0)],
       [makeLocalWidget('Banner', 1)],
@@ -418,7 +401,7 @@ describe('diffDashboardWidgets', () => {
     );
     expect(diff.updated).toHaveLength(1);
     expect(diff.updated[0]?.widgetId).toBe('id-Banner');
-    expect(diff.updated[0]?.request.position).toBe(1);
+    expect(diff.updated[0]?.request.y).toBe(1);
   });
 
   it('emits zero ops when local + server match exactly (no-op idempotency)', () => {

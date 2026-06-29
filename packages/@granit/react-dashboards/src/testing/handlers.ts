@@ -154,7 +154,8 @@ export function createDashboardsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       id: `00000000-0000-4000-8000-${kind.padStart(12, '0')}`,
       widgetType: fixture.widgetType,
       slug,
-      position: 0,
+      x: 0,
+      y: 0,
       width: 6,
       height: 3,
       titleLocalizationKey: `Widget:Granit.Showcase.Preview.${slug}`,
@@ -443,7 +444,6 @@ export function createDashboardsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const widget: WidgetInstanceResponse = {
         id: newGuid(),
         widgetType: body.widgetType,
-        position: body.position,
         x: body.x,
         y: body.y,
         width: body.width,
@@ -463,7 +463,6 @@ export function createDashboardsHandlers(baseUrl = DEFAULT_BASE_PATH) {
       const widget = dashboard.widgets.find((w) => w.id === String(params.widgetId));
       if (!widget) return notFound(String(params.widgetId));
       const body = (await request.json()) as UpdateWidgetRequest;
-      widget.position = body.position;
       widget.x = body.x;
       widget.y = body.y;
       widget.width = body.width;

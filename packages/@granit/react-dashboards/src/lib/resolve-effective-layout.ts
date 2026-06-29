@@ -120,7 +120,7 @@ function applyWidgetOrder(
   order: readonly string[] | null
 ): readonly WidgetDefinition[] {
   if (!order || order.length === 0) {
-    return [...widgets].sort((a, b) => a.position - b.position);
+    return [...widgets].sort(byGridCoordinate);
   }
   const bySlug = new Map(widgets.map((w) => [w.slug, w] as const));
   const ordered: WidgetDefinition[] = [];
@@ -131,8 +131,17 @@ function applyWidgetOrder(
       bySlug.delete(slug);
     }
   }
-  // Trailing widgets (declared but not in the explicit order) keep their
-  // declared `position` order.
-  const trailing = [...bySlug.values()].sort((a, b) => a.position - b.position);
+  // Trailing widgets (declared but not in the explicit order) fall back to
+  // grid-coordinate order (top-to-bottom, then left-to-right).
+  const trailing = [...bySlug.values()].sort(byGridCoordinate);
   return [...ordered, ...trailing];
+}
+
+/**
+ * Orders widgets by grid coordinate — top-to-bottom (`y`), then left-to-right
+ * (`x`). Hand-authored definitions without coordinates collapse to `(0, 0)` and
+ * keep their declared array order (stable sort).
+ */
+function byGridCoordinate(a: WidgetDefinition, b: WidgetDefinition): number {
+  return (a.y ?? 0) - (b.y ?? 0) || (a.x ?? 0) - (b.x ?? 0);
 }

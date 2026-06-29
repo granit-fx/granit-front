@@ -22,12 +22,6 @@ export interface WidgetDefinitionBase {
   /** JSON discriminator. Built-ins: `markdown` | `image` | `text`. */
   readonly type: string;
   /**
-   * Dense-ranked grid order — 0-based, contiguous within the dashboard.
-   * Legacy ordering key, kept for backward compatibility; the coordinate
-   * layout ({@link x} / {@link y} + {@link size}) is authoritative when present.
-   */
-  readonly position: number;
-  /**
    * Grid column of the widget's top-left cell (0-based). Optional on
    * hand-authored definitions (catalog previews / fixtures); the editor
    * populates it from the persisted layout or on placement. Round-trips to
@@ -137,9 +131,7 @@ export interface TextWidgetDefinition extends WidgetDefinitionBase {
  * generic {@link WidgetDefinition} below.
  */
 export type FrameworkWidgetDefinition =
-  | MarkdownWidgetDefinition
-  | ImageWidgetDefinition
-  | TextWidgetDefinition;
+  MarkdownWidgetDefinition | ImageWidgetDefinition | TextWidgetDefinition;
 
 /**
  * Open-ended widget definition — accepts any `type` string plus the

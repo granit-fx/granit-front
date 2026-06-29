@@ -14,21 +14,18 @@ const definition: DashboardDefinition = {
     {
       slug: 'A',
       type: 'markdown',
-      position: 0,
       size: { width: 6, height: 1 },
       contentLocalizationKey: 'Widget:A.Content',
     },
     {
       slug: 'B',
       type: 'markdown',
-      position: 1,
       size: { width: 6, height: 1 },
       contentLocalizationKey: 'Widget:B.Content',
     },
     {
       slug: 'C',
       type: 'markdown',
-      position: 2,
       size: { width: 12, height: 1 },
       contentLocalizationKey: 'Widget:C.Content',
     },
@@ -40,7 +37,6 @@ describe('updateWidget', () => {
     const next = updateWidget(definition, 'B', {
       slug: 'B',
       type: 'markdown',
-      position: 1,
       size: { width: 6, height: 1 },
       contentLocalizationKey: 'Widget:B.NewContent',
     } satisfies MarkdownWidgetDefinition);
@@ -48,24 +44,21 @@ describe('updateWidget', () => {
     expect(updated.contentLocalizationKey).toBe('Widget:B.NewContent');
   });
 
-  it('preserves the existing slug + position even when the patch attempts to change them', () => {
+  it('preserves the existing slug even when the patch attempts to change it', () => {
     const next = updateWidget(definition, 'B', {
       slug: 'RENAMED',
       type: 'markdown',
-      position: 99,
       size: { width: 6, height: 1 },
       contentLocalizationKey: 'Widget:B.NewContent',
     } satisfies MarkdownWidgetDefinition);
     const updated = next.widgets[1];
     expect(updated?.slug).toBe('B');
-    expect(updated?.position).toBe(1);
   });
 
   it('returns the input unchanged when the slug is not found', () => {
     const next = updateWidget(definition, 'MISSING', {
       slug: 'MISSING',
       type: 'markdown',
-      position: 0,
       size: { width: 6, height: 1 },
       contentLocalizationKey: 'Widget:Missing.Content',
     } satisfies MarkdownWidgetDefinition);
@@ -77,7 +70,6 @@ describe('updateWidget', () => {
     updateWidget(definition, 'A', {
       slug: 'A',
       type: 'markdown',
-      position: 0,
       size: { width: 6, height: 1 },
       contentLocalizationKey: 'Widget:A.NewContent',
     } satisfies MarkdownWidgetDefinition);
@@ -92,9 +84,9 @@ describe('removeWidget', () => {
     expect(next.widgets.map((w) => w.slug)).toEqual(['A', 'C']);
   });
 
-  it('re-ranks remaining widgets into a dense 0-based position sequence', () => {
+  it('keeps the remaining widgets in order', () => {
     const next = removeWidget(definition, 'A');
-    expect(next.widgets.map((w) => w.position)).toEqual([0, 1]);
+    expect(next.widgets.map((w) => w.slug)).toEqual(['B', 'C']);
   });
 
   it('returns the input unchanged when the slug is not found', () => {
@@ -110,12 +102,11 @@ describe('removeWidget', () => {
 });
 
 describe('duplicateWidget', () => {
-  it('appends a clone with a fresh unique slug and the next dense position', () => {
+  it('appends a clone with a fresh unique slug', () => {
     const next = duplicateWidget(definition, 'A');
     expect(next.widgets).toHaveLength(4);
     const clone = next.widgets[3];
     expect(clone?.slug).toBe('Markdown1'); // minted off the source type
-    expect(clone?.position).toBe(3);
     expect((clone as MarkdownWidgetDefinition).contentLocalizationKey).toBe('Widget:A.Content');
   });
 
@@ -126,7 +117,6 @@ describe('duplicateWidget', () => {
         {
           slug: 'A',
           type: 'markdown',
-          position: 0,
           x: 3,
           y: 1,
           size: { width: 6, height: 1 },

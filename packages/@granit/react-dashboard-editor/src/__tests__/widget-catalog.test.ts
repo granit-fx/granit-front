@@ -27,10 +27,9 @@ describe('resolveWidgetMinSize', () => {
       labelLocalizationKey: 'k',
       defaultSize: { width: 3, height: 2 },
       minSize: { width: 2, height: 2 },
-      createDefaultWidget: (slug, position) => ({
+      createDefaultWidget: (slug) => ({
         slug,
         type: 'kpi',
-        position,
         size: { width: 3, height: 2 },
       }),
     },
@@ -54,10 +53,9 @@ describe('resolveWidgetMinSize', () => {
         type: 'bare',
         labelLocalizationKey: 'b',
         defaultSize: { width: 2, height: 2 },
-        createDefaultWidget: (slug, position) => ({
+        createDefaultWidget: (slug) => ({
           slug,
           type: 'bare',
-          position,
           size: { width: 2, height: 2 },
         }),
       },
@@ -77,7 +75,6 @@ describe('defaultWidgetCatalog', () => {
       const created = entry.createDefaultWidget('Tmp', 0);
       expect(created.type).toBe(entry.type);
       expect(created.slug).toBe('Tmp');
-      expect(created.position).toBe(0);
     }
   });
 });
@@ -87,10 +84,9 @@ describe('composeCatalogs', () => {
     type: 'a',
     labelLocalizationKey: 'a.label',
     defaultSize: { width: 1, height: 1 },
-    createDefaultWidget: (slug, position) => ({
+    createDefaultWidget: (slug) => ({
       slug,
       type: 'a',
-      position,
       size: { width: 1, height: 1 },
     }),
   };
@@ -98,10 +94,9 @@ describe('composeCatalogs', () => {
     type: 'b',
     labelLocalizationKey: 'b.label',
     defaultSize: { width: 2, height: 1 },
-    createDefaultWidget: (slug, position) => ({
+    createDefaultWidget: (slug) => ({
       slug,
       type: 'b',
-      position,
       size: { width: 2, height: 1 },
     }),
   };
@@ -128,11 +123,10 @@ describe('addWidget', () => {
   const markdownEntry = defaultWidgetCatalog.find((e) => e.type === 'markdown');
   const textEntry = defaultWidgetCatalog.find((e) => e.type === 'text');
 
-  it('appends a new widget at the next position', () => {
+  it('appends a new widget to the pool', () => {
     if (!markdownEntry) throw new Error('markdown entry missing');
     const next = addWidget(baseDefinition, markdownEntry);
     expect(next.widgets).toHaveLength(1);
-    expect(next.widgets[0]?.position).toBe(0);
     expect(next.widgets[0]?.type).toBe('markdown');
   });
 
@@ -152,14 +146,12 @@ describe('addWidget', () => {
         {
           slug: 'Markdown1',
           type: 'markdown',
-          position: 0,
           size: { width: 12, height: 1 },
           contentLocalizationKey: 'Widget:Markdown1.Content',
         },
         {
           slug: 'Markdown3',
           type: 'markdown',
-          position: 1,
           size: { width: 12, height: 1 },
           contentLocalizationKey: 'Widget:Markdown3.Content',
         },
@@ -174,10 +166,9 @@ describe('addWidget', () => {
     const rogueEntry: WidgetCatalogEntry = {
       ...textEntry,
       defaultSize: { width: 4, height: 2 },
-      createDefaultWidget: (slug, position) => ({
+      createDefaultWidget: (slug) => ({
         slug,
         type: 'text',
-        position,
         // The factory accidentally returns a different size — addWidget
         // must re-stamp it from the catalog entry to keep the two in sync.
         size: { width: 99, height: 99 },

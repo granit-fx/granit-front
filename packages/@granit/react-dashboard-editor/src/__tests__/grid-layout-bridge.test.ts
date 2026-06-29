@@ -4,15 +4,10 @@ import { fromGridLayout, MAX_HEIGHT_ROWS, toGridLayout } from '../lib/grid-layou
 
 import type { DashboardDefinition, WidgetDefinition } from '@granit/dashboards';
 
-function widget(
-  slug: string,
-  position: number,
-  extra: Partial<WidgetDefinition> = {}
-): WidgetDefinition {
+function widget(slug: string, extra: Partial<WidgetDefinition> = {}): WidgetDefinition {
   return {
     slug,
     type: 'text',
-    position,
     size: { width: 6, height: 1 },
     contentLocalizationKey: `Widget:Test.${slug}`,
     style: 'Body',
@@ -26,7 +21,7 @@ const definition: DashboardDefinition = {
   isSystem: false,
   version: '1.0.0',
   layout: { columns: 12, rowHeight: 80 },
-  widgets: [widget('A', 0), widget('B', 1)],
+  widgets: [widget('A'), widget('B')],
 };
 
 describe('toGridLayout', () => {
@@ -39,17 +34,14 @@ describe('toGridLayout', () => {
   });
 
   it('honours explicit x/y and caps height at MAX_HEIGHT_ROWS', () => {
-    const layout = toGridLayout(
-      [widget('A', 0, { x: 3, y: 2, size: { width: 4, height: 99 } })],
-      12
-    );
+    const layout = toGridLayout([widget('A', { x: 3, y: 2, size: { width: 4, height: 99 } })], 12);
     expect(layout[0]).toMatchObject({ x: 3, y: 2, w: 4 });
     expect(layout[0]?.maxH).toBe(MAX_HEIGHT_ROWS);
   });
 });
 
 describe('fromGridLayout', () => {
-  it('updates x/y/size and re-derives position from visual (y,x) order', () => {
+  it('updates x/y/size and re-orders widgets by visual (y,x) order', () => {
     const moved = fromGridLayout(
       [
         { i: 'A', x: 0, y: 2, w: 6, h: 1 },
@@ -57,11 +49,11 @@ describe('fromGridLayout', () => {
       ],
       definition
     );
-    // B is now above A → B gets position 0, A position 1.
+    // B is now above A → B comes first in the widget array.
     expect(moved.widgets.map((w) => w.slug)).toEqual(['B', 'A']);
-    expect(moved.widgets[0]).toMatchObject({ slug: 'B', position: 0, x: 0, y: 0 });
+    expect(moved.widgets[0]).toMatchObject({ slug: 'B', x: 0, y: 0 });
     expect(moved.widgets[0]?.size).toEqual({ width: 12, height: 2 });
-    expect(moved.widgets[1]).toMatchObject({ slug: 'A', position: 1, x: 0, y: 2 });
+    expect(moved.widgets[1]).toMatchObject({ slug: 'A', x: 0, y: 2 });
   });
 
   it('returns the same reference for a no-op layout (no spurious onChange)', () => {
@@ -70,8 +62,8 @@ describe('fromGridLayout', () => {
         { i: 'A', x: 0, y: 0, w: 6, h: 1 },
         { i: 'B', x: 6, y: 0, w: 6, h: 1 },
       ],
-      { ...definition, widgets: [widget('A', 0, { x: 0, y: 0 }), widget('B', 1, { x: 6, y: 0 })] }
+      { ...definition, widgets: [widget('A', { x: 0, y: 0 }), widget('B', { x: 6, y: 0 })] }
     );
-    expect(same.widgets[0]).toMatchObject({ x: 0, y: 0, position: 0 });
+    expect(same.widgets[0]).toMatchObject({ x: 0, y: 0 });
   });
 });

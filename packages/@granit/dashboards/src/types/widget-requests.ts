@@ -12,8 +12,6 @@
 export interface AddWidgetRequest {
   /** PascalCase widget-kind discriminator (matches `WidgetInstanceResponse.widgetType`). */
   readonly widgetType: string;
-  /** Legacy dense-ranked order, kept for backward compatibility. */
-  readonly position: number;
   /** Grid column of the widget's top-left cell (0-based). */
   readonly x: number;
   /** Grid row of the widget's top-left cell (0-based). */
@@ -39,8 +37,6 @@ export interface AddWidgetRequest {
  * edit.
  */
 export interface UpdateWidgetRequest {
-  /** Legacy dense-ranked order, kept for backward compatibility. */
-  readonly position: number;
   /** Grid column of the widget's top-left cell (0-based). */
   readonly x: number;
   /** Grid row of the widget's top-left cell (0-based). */

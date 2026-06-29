@@ -6,7 +6,7 @@
 // on shape:
 //
 // - `WidgetInstanceResponse` (persistence) — id-keyed, structural fields
-//   first-class (id / widgetType / position / width / height /
+//   first-class (id / widgetType / x / y / width / height /
 //   titleLocalizationKey + denormalized metricName / queryName), kind-
 //   specific fields packed into a `configJson` string.
 //
@@ -39,7 +39,6 @@ import type { DashboardDefinition, WidgetDefinition, WidgetDefinitionBase } from
 export const STRUCTURAL_WIDGET_FIELDS = Object.freeze([
   'slug',
   'type',
-  'position',
   'x',
   'y',
   'size',
@@ -95,8 +94,7 @@ function denormalizeReferences(widget: WidgetDefinitionBase): {
   const w = widget as unknown as Readonly<Record<string, unknown>>;
   if (widget.type === 'kpi') {
     const datasource = w['datasource'] as
-      | { kind?: string; metricName?: string; queryName?: string }
-      | undefined;
+      { kind?: string; metricName?: string; queryName?: string } | undefined;
     if (datasource?.kind === 'metric') {
       return { metricName: datasource.metricName ?? null, queryName: null };
     }
@@ -166,7 +164,7 @@ function configJsonToWidgetFields(configJson: string): Readonly<Record<string, u
  * from `titleLocalizationKey`.
  *
  * Robust to malformed `configJson`: returns a minimal widget shape
- * (slug + type + position + size) when the JSON can't be parsed.
+ * (slug + type + x / y + size) when the JSON can't be parsed.
  */
 export function widgetInstanceToDefinition(
   instance: WidgetInstanceResponse,
@@ -188,7 +186,6 @@ export function widgetInstanceToDefinition(
     slug,
     // PascalCase widgetType → lowercase definition `type` discriminator.
     type: instance.widgetType.charAt(0).toLowerCase() + instance.widgetType.slice(1),
-    position: instance.position,
     x: instance.x,
     y: instance.y,
     size: { width: instance.width, height: instance.height },
@@ -246,7 +243,6 @@ export function widgetDefinitionToAddRequest(
   const { metricName, queryName } = denormalizeReferences(widget);
   return {
     widgetType: widget.type.charAt(0).toUpperCase() + widget.type.slice(1),
-    position: widget.position,
     x: widget.x ?? 0,
     y: widget.y ?? 0,
     width: widget.size.width,
@@ -273,7 +269,6 @@ export function widgetDefinitionToUpdateRequest(
   dashboardName: string
 ): UpdateWidgetRequest {
   return {
-    position: widget.position,
     x: widget.x ?? 0,
     y: widget.y ?? 0,
     width: widget.size.width,
@@ -290,7 +285,7 @@ export function widgetDefinitionToUpdateRequest(
 
 /**
  * Operations a {@link diffDashboardWidgets} run produces. Apply in the
- * order: removed → added → updated. Removing first frees position
+ * order: removed → added → updated. Removing first frees grid
  * slots; adding next mints fresh ids; updating last persists the
  * surviving widgets' final state.
  *
@@ -316,7 +311,7 @@ export interface DashboardWidgetDiff {
  * with the local state.
  *
  * Matching is by slug. A widget is considered "updated" when any of its
- * `position` / `x` / `y` / `width` / `height` / `titleLocalizationKey` /
+ * `x` / `y` / `width` / `height` / `titleLocalizationKey` /
  * `configJson` projections differ from the server snapshot — the same
  * fields the backend's `UpdateWidgetRequest` carries.
  *
@@ -348,7 +343,6 @@ export function diffDashboardWidgets(
     }
     const request = widgetDefinitionToUpdateRequest(local, dashboardName);
     if (
-      request.position !== server.position ||
       request.x !== server.x ||
       request.y !== server.y ||
       request.width !== server.width ||

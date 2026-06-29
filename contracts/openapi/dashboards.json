@@ -840,7 +840,7 @@
       "post": {
         "tags": ["Dashboards - Widgets"],
         "summary": "Adds a widget instance to the dashboard.",
-        "description": "Pins a new widget into the dashboard's widget pool. The widget id is allocated server-side. FluentValidation runs first (non-empty type / title / config; non-negative position and grid coordinates X / Y; positive width and height); the domain guards stay as defense-in-depth and surface as 422 if hit. Returns 201 with the new widget payload, or 404 when the parent dashboard is not in the current tenant's scope.",
+        "description": "Pins a new widget into the dashboard's widget pool. The widget id is allocated server-side. FluentValidation runs first (non-empty type / title / config; non-negative grid coordinates X / Y; positive width and height); the domain guards stay as defense-in-depth and surface as 422 if hit. Returns 201 with the new widget payload, or 404 when the parent dashboard is not in the current tenant's scope.",
         "operationId": "AddDashboardWidget",
         "parameters": [
           {
@@ -942,7 +942,7 @@
       "put": {
         "tags": ["Dashboards - Widgets"],
         "summary": "Updates a widget's layout, title and config.",
-        "description": "Full replacement of the widget's editable fields: Position, X, Y, Width, Height, TitleLocalizationKey, ConfigJson. WidgetType, MetricName, QueryName and RequiredPermission stay immutable — switching widget kind or rebinding to a different metric/query is delete + add, not edit. Returns 200 with the updated widget, 404 when the dashboard or the widget id is not in scope, or 422 when the domain guards reject the input.",
+        "description": "Full replacement of the widget's editable fields: X, Y, Width, Height, TitleLocalizationKey, ConfigJson. WidgetType, MetricName, QueryName and RequiredPermission stay immutable — switching widget kind or rebinding to a different metric/query is delete + add, not edit. Returns 200 with the updated widget, 404 when the dashboard or the widget id is not in scope, or 422 when the domain guards reject the input.",
         "operationId": "UpdateDashboardWidget",
         "parameters": [
           {
@@ -1129,7 +1129,6 @@
       "AddWidgetRequest": {
         "required": [
           "widgetType",
-          "position",
           "x",
           "y",
           "width",
@@ -1142,11 +1141,6 @@
           "widgetType": {
             "maxLength": 100,
             "type": "string"
-          },
-          "position": {
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32"
           },
           "x": {
             "minimum": 0,
@@ -1351,7 +1345,8 @@
           "id",
           "widgetType",
           "slug",
-          "position",
+          "x",
+          "y",
           "width",
           "height",
           "titleLocalizationKey",
@@ -1376,7 +1371,11 @@
           "slug": {
             "type": "string"
           },
-          "position": {
+          "x": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "y": {
             "type": "integer",
             "format": "int32"
           },
@@ -1707,14 +1706,9 @@
         "enum": ["Static", "Dynamic", "Realtime"]
       },
       "UpdateWidgetRequest": {
-        "required": ["position", "x", "y", "width", "height", "titleLocalizationKey", "configJson"],
+        "required": ["x", "y", "width", "height", "titleLocalizationKey", "configJson"],
         "type": "object",
         "properties": {
-          "position": {
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32"
-          },
           "x": {
             "minimum": 0,
             "type": "integer",
@@ -1776,7 +1770,6 @@
         "required": [
           "id",
           "widgetType",
-          "position",
           "x",
           "y",
           "width",
@@ -1795,10 +1788,6 @@
           },
           "widgetType": {
             "type": "string"
-          },
-          "position": {
-            "type": "integer",
-            "format": "int32"
           },
           "x": {
             "type": "integer",

@@ -27,10 +27,9 @@ export const mapWidgetCatalog: readonly WidgetCatalogEntry[] = Object.freeze([
     iconKey: 'map',
     defaultSize: { width: 6, height: 4 },
     minSize: { width: 3, height: 3 },
-    createDefaultWidget: (slug, position): MapWidgetDefinition => ({
+    createDefaultWidget: (slug): MapWidgetDefinition => ({
       slug,
       type: 'map',
-      position,
       size: { width: 6, height: 4 },
       queryName: '',
       pointSource: { kind: 'lat-lng', latitudeColumn: '', longitudeColumn: '' },
