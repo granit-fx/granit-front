@@ -25,6 +25,19 @@ const GRID_CSS = `
   z-index: 2;
   user-select: none;
 }
+[data-slot="editable-dashboard"] .react-grid-item::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border: 1px solid var(--color-border, #d1d5db);
+  border-radius: 0.75rem;
+  opacity: 0;
+  transition: opacity 120ms ease;
+  pointer-events: none;
+  z-index: 4;
+}
+[data-slot="editable-dashboard"] .react-grid-item:hover::before,
+[data-slot="editable-dashboard"] .react-grid-item.resizing::before { opacity: 1; }
 [data-slot="editable-dashboard"] .react-resizable-handle {
   position: absolute;
   width: 16px;
@@ -40,12 +53,24 @@ const GRID_CSS = `
   content: "";
   position: absolute;
   inset: 50% auto auto 50%;
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   transform: translate(-50%, -50%);
-  border-radius: 9999px;
-  background: var(--color-primary, #6366f1);
+  border-radius: 3px;
+  background: var(--color-muted-foreground, #9ca3af);
   box-shadow: 0 0 0 2px var(--color-card, #fff);
+}
+[data-slot="editable-dashboard"] .react-resizable-handle-n::after,
+[data-slot="editable-dashboard"] .react-resizable-handle-s::after {
+  width: 18px;
+  height: 5px;
+  border-radius: 9999px;
+}
+[data-slot="editable-dashboard"] .react-resizable-handle-e::after,
+[data-slot="editable-dashboard"] .react-resizable-handle-w::after {
+  width: 5px;
+  height: 18px;
+  border-radius: 9999px;
 }
 [data-slot="editable-dashboard"] .react-resizable-handle-se { bottom: 0; right: 0; cursor: se-resize; }
 [data-slot="editable-dashboard"] .react-resizable-handle-sw { bottom: 0; left: 0; cursor: sw-resize; }
@@ -55,6 +80,15 @@ const GRID_CSS = `
 [data-slot="editable-dashboard"] .react-resizable-handle-s { bottom: 0; left: 50%; margin-left: -8px; cursor: s-resize; }
 [data-slot="editable-dashboard"] .react-resizable-handle-e { right: 0; top: 50%; margin-top: -8px; cursor: e-resize; }
 [data-slot="editable-dashboard"] .react-resizable-handle-w { left: 0; top: 50%; margin-top: -8px; cursor: w-resize; }
+/* Anchor each grip onto the widget edge/corner so it sits on the frame line. */
+[data-slot="editable-dashboard"] .react-resizable-handle-se::after { inset: auto 0 0 auto; transform: translate(50%, 50%); }
+[data-slot="editable-dashboard"] .react-resizable-handle-sw::after { inset: auto auto 0 0; transform: translate(-50%, 50%); }
+[data-slot="editable-dashboard"] .react-resizable-handle-ne::after { inset: 0 0 auto auto; transform: translate(50%, -50%); }
+[data-slot="editable-dashboard"] .react-resizable-handle-nw::after { inset: 0 auto auto 0; transform: translate(-50%, -50%); }
+[data-slot="editable-dashboard"] .react-resizable-handle-n::after { inset: 0 auto auto 50%; transform: translate(-50%, -50%); }
+[data-slot="editable-dashboard"] .react-resizable-handle-s::after { inset: auto auto 0 50%; transform: translate(-50%, 50%); }
+[data-slot="editable-dashboard"] .react-resizable-handle-e::after { inset: 50% 0 auto auto; transform: translate(50%, -50%); }
+[data-slot="editable-dashboard"] .react-resizable-handle-w::after { inset: 50% auto auto 0; transform: translate(-50%, -50%); }
 `;
 
 export function GridStyles() {
