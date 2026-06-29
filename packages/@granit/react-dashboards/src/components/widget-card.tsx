@@ -15,7 +15,7 @@ export interface WidgetCardProps {
 }
 
 export function WidgetCard({ title, children, className }: WidgetCardProps) {
-  const root = ['flex h-full flex-col gap-3 rounded-xl border bg-card p-4 shadow-sm', className]
+  const root = ['flex h-full flex-col gap-2 rounded-xl border bg-card p-3 shadow-sm', className]
     .filter(Boolean)
     .join(' ');
 
