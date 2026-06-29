@@ -65,6 +65,8 @@ export type {
 } from './widget-definition';
 export { WIDGET_SIZE } from './widget-size';
 export type { WidgetSize } from './widget-size';
+export { packWidgetCoordinates, resolveWidgetCoordinates } from './grid-coordinates';
+export type { GridCoordinate } from './grid-coordinates';
 
 // ---------------------------------------------------------------------------
 // Lifecycle / persistence DTOs (B4-write — Granit.Dashboards.Endpoints).

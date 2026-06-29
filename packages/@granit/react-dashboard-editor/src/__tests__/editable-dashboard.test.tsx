@@ -64,24 +64,35 @@ describe('EditableDashboard — initial render', () => {
     expect(cells[1]?.getAttribute('data-widget-slug')).toBe('B');
   });
 
-  it('mounts a sortable handle button on every cell with an aria-label', () => {
+  it('mounts a drag handle on every cell with an aria-label', () => {
     const { container } = wrap(<EditableDashboard definition={definition} onChange={vi.fn()} />);
     const handles = container.querySelectorAll('[data-slot="sortable-widget-handle"]');
     expect(handles).toHaveLength(2);
     expect(handles[0]?.getAttribute('aria-label')).toBe('Drag widget A');
+    // The handle carries the class the grid's dragConfig.handle selector targets.
+    expect(handles[0]?.classList.contains('granit-drag-handle')).toBe(true);
   });
 
-  it('respects layout.columns on the grid template', () => {
+  it('renders a react-grid-layout surface under the editable-dashboard slot', () => {
     const { container } = wrap(<EditableDashboard definition={definition} onChange={vi.fn()} />);
     const root = container.querySelector('[data-slot="editable-dashboard"]');
-    expect(root).toHaveStyle({ gridTemplateColumns: 'repeat(12, minmax(0, 1fr))' });
+    expect(root?.querySelector('.react-grid-layout')).not.toBeNull();
   });
 
-  it('honors the rowHeight prop override', () => {
+  it('drives cell height from the row height (1-row widget = rowHeight px)', () => {
     const { container } = wrap(
       <EditableDashboard definition={definition} onChange={vi.fn()} rowHeight={120} />
     );
-    const root = container.querySelector('[data-slot="editable-dashboard"]');
-    expect(root).toHaveStyle({ gridAutoRows: '120px' });
+    const cell = container.querySelector<HTMLElement>('[data-slot="editable-dashboard-cell"]');
+    // react-grid-layout sizes the item from rowHeight × h (1 row here) — no
+    // DOM measurement involved, so it's deterministic in JSDOM.
+    expect(cell?.style.height).toBe('120px');
+  });
+
+  it('exposes eight resize handles per cell (corners + edges)', () => {
+    const { container } = wrap(<EditableDashboard definition={definition} onChange={vi.fn()} />);
+    const firstCell = container.querySelector('[data-slot="editable-dashboard-cell"]');
+    const handles = firstCell?.querySelectorAll('[data-slot="sortable-widget-resize-handle"]');
+    expect(handles?.length).toBe(8);
   });
 });

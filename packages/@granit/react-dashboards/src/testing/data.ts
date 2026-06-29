@@ -15,7 +15,12 @@
 //
 // Mock data typed against `@granit/dashboards` wire contracts.
 
-import { Datasource, WIDGET_SIZE, widgetDefinitionToAddRequest } from '@granit/dashboards';
+import {
+  Datasource,
+  resolveWidgetCoordinates,
+  WIDGET_SIZE,
+  widgetDefinitionToAddRequest,
+} from '@granit/dashboards';
 
 import type {
   DashboardCatalogEntryResponse,
@@ -460,49 +465,16 @@ export interface StoredDashboard extends Omit<Mutable<DashboardDetailResponse>, 
   widgets: Mutable<WidgetInstanceResponse>[];
 }
 
-/**
- * First-fit dense packer mirroring the backend's coordinate backfill: walks
- * widgets in declared order and drops each at the first free (x, y) cell on a
- * `columns`-wide grid. Lets the mock store expose realistic grid coordinates
- * for dashboards whose definitions predate the x/y layout fields.
- */
-function packGridCoordinates(
-  widgets: readonly { size: { width: number; height: number } }[],
-  columns: number
-): readonly { x: number; y: number }[] {
-  const occupied = new Set<string>();
-  const fits = (x: number, y: number, w: number, h: number): boolean => {
-    if (x + w > columns) return false;
-    for (let dy = 0; dy < h; dy++) {
-      for (let dx = 0; dx < w; dx++) {
-        if (occupied.has(`${x + dx},${y + dy}`)) return false;
-      }
-    }
-    return true;
-  };
-  return widgets.map(({ size }) => {
-    const w = Math.min(size.width, columns);
-    const h = size.height;
-    for (let y = 0; ; y++) {
-      for (let x = 0; x + w <= columns; x++) {
-        if (fits(x, y, w, h)) {
-          for (let dy = 0; dy < h; dy++) {
-            for (let dx = 0; dx < w; dx++) occupied.add(`${x + dx},${y + dy}`);
-          }
-          return { x, y };
-        }
-      }
-    }
-  });
-}
-
 function seedStoredDashboard(
   id: string,
   definition: DashboardDefinition,
   status: StoredDashboard['status'],
   widgetIdBase: number
 ): StoredDashboard {
-  const coords = packGridCoordinates(definition.widgets, definition.layout.columns);
+  // First-fit pack mirrors the backend coordinate backfill so the mock store
+  // exposes realistic x/y for sample dashboards whose definitions predate the
+  // grid-coordinate fields.
+  const coords = resolveWidgetCoordinates(definition.widgets, definition.layout.columns);
   return {
     id,
     name: definition.name,

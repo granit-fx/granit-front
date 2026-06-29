@@ -4,7 +4,7 @@ This file lists the third-party libraries used by the **granit-front** project
 along with their respective licenses. It is updated whenever an external
 dependency is added or modified.
 
-Last updated: 2026-06-24
+Last updated: 2026-06-29
 
 ---
 
@@ -12,7 +12,7 @@ Last updated: 2026-06-24
 
 | License    | Package count |
 | ---------- | ------------- |
-| MIT        | 46            |
+| MIT        | 49            |
 | Apache-2.0 | 15            |
 
 ---
@@ -62,9 +62,12 @@ Last updated: 2026-06-24
 | prettier                        | 3.8.4   | Copyright (c) James Long                   |
 | react                           | 19.2.7  | Copyright (c) Meta Platforms, Inc.         |
 | react-dom                       | 19.2.7  | Copyright (c) Meta Platforms, Inc.         |
+| react-draggable                 | 4.7.0   | Copyright (c) React Grid Layout Authors    |
+| react-grid-layout               | 2.2.3   | Copyright (c) React Grid Layout Authors    |
 | react-hook-form                 | 7.80.0  | Copyright (c) react-hook-form Contributors |
 | react-i18next                   | 17.0.8  | Copyright (c) i18next Contributors         |
 | react-markdown                  | 9.1.0   | Copyright (c) Espen Hovlandsdal            |
+| react-resizable                 | 3.1.3   | Copyright (c) React Grid Layout Authors    |
 | remark-gfm                      | 4.0.1   | Copyright (c) Titus Wormer                 |
 | tailwind-merge                  | 3.6.0   | Copyright (c) Dany Castillo                |
 | tsup                            | 8.5.1   | Copyright (c) EGOIST                       |

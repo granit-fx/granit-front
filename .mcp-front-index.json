@@ -4615,7 +4615,7 @@
     },
     {
       "name": "@granit/react-dashboard-editor",
-      "description": "React dashboard editor primitives for Granit — drag-and-drop reorderable widget grid built on dnd-kit. Pairs with the read-mode <RenderedDashboard> from @granit/react-dashboards. Frontend half of EPIC #1366 story B5-C (dashboard composer).",
+      "description": "React dashboard editor primitives for Granit — coordinate-grid widget editor (free drag/resize) built on react-grid-layout. Pairs with the read-mode <RenderedDashboard> from @granit/react-dashboards. Frontend half of EPIC #1366 story B5-C (dashboard composer).",
       "exports": [
         {
           "name": "EditableDashboard",
@@ -4636,7 +4636,7 @@
         {
           "name": "SortableWidgetCellProps",
           "kind": "interface",
-          "signature": "interface SortableWidgetCellProps",
+          "signature": "interface SortableWidgetCellProps extends Omit<ComponentPropsWithRef<'div'>, 'id'>",
           "members": []
         },
         {
@@ -4685,6 +4685,21 @@
           "name": "resizeWidget",
           "kind": "function",
           "signature": "function resizeWidget( definition: DashboardDefinition, slug: string, size: WidgetSize, minSize: WidgetSize ="
+        },
+        {
+          "name": "fromGridLayout",
+          "kind": "function",
+          "signature": "function fromGridLayout( layout: Layout, definition: DashboardDefinition ): DashboardDefinition"
+        },
+        {
+          "name": "MAX_HEIGHT_ROWS",
+          "kind": "const",
+          "signature": "const MAX_HEIGHT_ROWS"
+        },
+        {
+          "name": "toGridLayout",
+          "kind": "function",
+          "signature": "function toGridLayout( widgets: readonly WidgetDefinition[], columns: number, catalog?: readonly WidgetCatalogEntry[] ): LayoutItem[]"
         },
         {
           "name": "WidgetCatalogEntry",

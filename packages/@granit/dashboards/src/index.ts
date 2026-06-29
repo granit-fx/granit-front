@@ -15,7 +15,9 @@ export {
   isTenantContextResolver,
   isUserSelectionResolver,
   isViewEntityResolver,
+  packWidgetCoordinates,
   parseDurationToMs,
+  resolveWidgetCoordinates,
   WIDGET_SIZE,
 } from './types/index';
 export type {
@@ -38,6 +40,7 @@ export type {
   EntityAlias,
   EntityAliasResolver,
   FrameworkWidgetDefinition,
+  GridCoordinate,
   ImageFit,
   ImageWidgetDefinition,
   MarkdownWidgetDefinition,

@@ -1,74 +1,59 @@
 import {
-  closestCenter,
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from '@dnd-kit/core';
-import {
-  rectSortingStrategy,
-  SortableContext,
-  sortableKeyboardCoordinates,
-} from '@dnd-kit/sortable';
-import {
   DashboardContextProvider,
   resolveEffectiveLayout,
   useDashboardBreakpoint,
   WidgetRenderer,
 } from '@granit/react-dashboards';
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { GridLayout } from 'react-grid-layout';
 
-import { reorderWidgets } from '../lib/reorder-widgets';
-import { resizeWidget } from '../lib/resize-widget';
-import { resolveWidgetMinSize, type WidgetCatalogEntry } from '../lib/widget-catalog';
+import { fromGridLayout, toGridLayout } from '../lib/grid-layout-bridge';
+import { type WidgetCatalogEntry } from '../lib/widget-catalog';
 
+import { GridStyles } from './grid-styles';
 import { SortableWidgetCell } from './sortable-widget-cell';
 
-import type { DashboardDefinition, WidgetDefinition, WidgetSize } from '@granit/dashboards';
+import type { DashboardDefinition } from '@granit/dashboards';
+import type { ReactNode, Ref } from 'react';
+import type { Layout, ResizeHandleAxis } from 'react-grid-layout';
 
-const GRID_GAP_PX = 16;
+const GRID_MARGIN_PX = 16;
+const DRAG_HANDLE_CLASS = 'granit-drag-handle';
+/** Fallback container width before the ResizeObserver reports a real one (SSR / JSDOM). */
+const FALLBACK_WIDTH_PX = 1200;
+/** Eight resize handles — corners + edge midpoints, matching the luzmo/Grafana affordance. */
+const RESIZE_HANDLES: readonly ResizeHandleAxis[] = ['s', 'w', 'e', 'n', 'sw', 'nw', 'se', 'ne'];
 
 /**
- * Editor-mode dashboard. Mirrors the read-mode `<Dashboard>` from
- * `@granit/react-dashboards` (auto-flow CSS grid, widgets fill cells in
- * `position` order, each spans its declared `size.width × size.height`),
- * with these editor extras:
+ * Editor-mode dashboard. Renders the widget pool on a coordinate grid
+ * (`react-grid-layout`) with free placement and multi-edge resize:
  *
- * - **dnd-kit-driven reorder**: each cell is a sortable item keyed by its
- *   `slug`. A small drag handle on the top-left initiates the gesture; the
- *   widget body itself stays interactive (links, popovers, click actions).
- * - **Drag-resize**: a bottom-right corner handle resizes the cell on
- *   pointer drag, snapping to integer grid cells. Width clamped to
- *   `[1, layout.columns]`, height to `[1, 12]`.
- * - **`onChange` callback**: emits a fresh `DashboardDefinition` whose
- *   widgets carry recomputed `position` ranks (0-based, contiguous) — ready
- *   to round-trip through the backend's widget-CRUD endpoints without a
- *   normalisation pass.
+ * - **Drag-to-move** via a dedicated handle on each cell (the grid's
+ *   `dragConfig.handle` selector), leaving the widget body interactive.
+ * - **Resize** from any of the eight handles (corners + edges), snapped to
+ *   grid cells, clamped to the catalog's per-kind minimum and a 12-row max.
+ * - **`onChange`** fires a fresh {@link DashboardDefinition} whose widgets carry
+ *   updated `x` / `y` / `size` plus a re-derived dense `position`, ready to
+ *   round-trip through the widget-CRUD endpoints.
  *
- * Apps drive saves via React Query mutations on the parent — the editor
- * stays presentational. The same widget registry the read-mode `<Dashboard>`
- * consumes drives the renderers here, so a kind that doesn't ship a
- * renderer surfaces the framework's "Unknown widget type" placeholder
- * (no special editor-side fallback).
+ * Coordinates absent from the definition (hand-authored dashboards / fixtures)
+ * are first-fit-packed on the fly, so existing dashboards render unchanged.
+ * The same widget registry the read-mode `<RenderedDashboard>` uses drives the
+ * renderers here.
  */
 export interface EditableDashboardProps {
   readonly definition: DashboardDefinition;
   /**
-   * Fires after a successful drag-end or drag-resize. Consumers update
-   * local state + invalidate / persist via their own pipeline.
+   * Fires after a drag-move or resize settles. Consumers update local state +
+   * persist via their own pipeline. Never fired for no-op layout events.
    */
   readonly onChange: (next: DashboardDefinition) => void;
   readonly className?: string;
   /** Override the row height (in pixels). Falls back to `definition.layout.rowHeight`. */
   readonly rowHeight?: number;
   /**
-   * Widget catalog driving per-kind minimum sizes for the drag-resize
-   * clamp. When omitted (or a widget's type is absent), the floor is
-   * {@link DEFAULT_MIN_WIDGET_SIZE} (`1x1`) — the historical behaviour.
-   * Pass the same composed catalog the palette uses so a KPI can't be
-   * shrunk below the space its value needs, etc.
+   * Widget catalog driving per-kind minimum sizes for the resize clamp. When
+   * omitted (or a widget's type is absent), the floor is `1x1`.
    */
   readonly catalog?: readonly WidgetCatalogEntry[];
 }
@@ -86,127 +71,90 @@ export function EditableDashboard({
     () => resolveEffectiveLayout(definition.layout, definition.widgets, breakpoint),
     [definition.layout, definition.widgets, breakpoint]
   );
-  const sortableIds = useMemo(() => orderedWidgets.map((w) => w.slug), [orderedWidgets]);
 
-  // PointerSensor with a small activation distance so click-on-handle
-  // doesn't accidentally start a drag every time the user grabs the cell.
-  // KeyboardSensor wires arrow-key reorder for keyboard-only operators.
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  const gridLayout = useMemo(
+    () => toGridLayout(orderedWidgets, layout.columns, catalog),
+    [orderedWidgets, layout.columns, catalog]
   );
 
   const effectiveRowHeight = rowHeight ?? layout.rowHeight;
 
-  const gridStyle: CSSProperties = {
-    display: 'grid',
-    gridAutoFlow: 'dense',
-    gridTemplateColumns: `repeat(${layout.columns}, minmax(0, 1fr))`,
-    gridAutoRows: `${effectiveRowHeight}px`,
-    gap: `${GRID_GAP_PX}px`,
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-    const next = reorderWidgets(definition, String(active.id), String(over.id));
-    if (next !== definition) onChange(next);
-  };
-
-  // Live container width drives the column-px metric for resize gestures.
-  // ResizeObserver fires on mount + whenever the parent reflows (sidebar
-  // toggle, viewport resize, etc.) so the resize gesture stays accurate.
-  const gridRef = useRef<HTMLDivElement | null>(null);
-  const [columnPx, setColumnPx] = useState(0);
+  // Live container width drives react-grid-layout's column maths. ResizeObserver
+  // fires on mount + whenever the parent reflows; we fall back to a sane width
+  // until it reports (SSR / JSDOM, where ResizeObserver is absent).
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const [width, setWidth] = useState(0);
   useEffect(() => {
-    const element = gridRef.current;
-    // ResizeObserver is unavailable in JSDOM and old SSR runtimes —
-    // skip silently so the editor still renders (resize handle just
-    // won't move; reorder + everything else still works).
+    const element = wrapperRef.current;
     if (!element || typeof ResizeObserver === 'undefined') return;
     const observer = new ResizeObserver((entries) => {
-      const entry = entries[0];
-      if (!entry) return;
-      const totalWidth = entry.contentRect.width;
-      const cellsTotalGap = (layout.columns - 1) * GRID_GAP_PX;
-      setColumnPx((totalWidth - cellsTotalGap) / layout.columns);
+      const next = entries[0]?.contentRect.width;
+      if (next) setWidth(next);
     });
     observer.observe(element);
     return () => observer.disconnect();
-  }, [layout.columns]);
+  }, []);
 
-  const handleResize = (slug: string, size: WidgetSize, minSize: WidgetSize) => {
-    const next = resizeWidget(definition, slug, size, minSize);
-    if (next !== definition) onChange(next);
+  // Persist on settled user gestures only — NOT on `onLayoutChange`, which
+  // also fires on mount and on every width reflow. With a controlled `layout`
+  // prop driven by `definition`, handling `onLayoutChange` would feed every
+  // mount-time normalisation straight back into `onChange` and loop.
+  const handleSettle = (next: Layout) => {
+    const updated = fromGridLayout(next, definition);
+    if (updated !== definition) onChange(updated);
   };
 
   return (
     <DashboardContextProvider value={{ dashboardName: definition.name }}>
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={sortableIds} strategy={rectSortingStrategy}>
-          <div
-            ref={gridRef}
-            data-slot="editable-dashboard"
-            data-dashboard-name={definition.name}
-            data-breakpoint={breakpoint}
-            className={className}
-            style={gridStyle}
-          >
-            {orderedWidgets.map((widget) => {
-              const minSize = resolveWidgetMinSize(catalog, widget.type);
-              return (
-                <EditableCell
-                  key={widget.slug}
-                  widget={widget}
-                  columnPx={columnPx}
-                  rowPx={effectiveRowHeight}
-                  maxColumns={layout.columns}
-                  minSize={minSize}
-                  onResize={(size) => handleResize(widget.slug, size, minSize)}
-                />
-              );
-            })}
-          </div>
-        </SortableContext>
-      </DndContext>
+      <div
+        ref={wrapperRef}
+        data-slot="editable-dashboard"
+        data-dashboard-name={definition.name}
+        data-breakpoint={breakpoint}
+        className={className}
+      >
+        <GridStyles />
+        <GridLayout
+          width={width || FALLBACK_WIDTH_PX}
+          layout={gridLayout}
+          onDragStop={handleSettle}
+          onResizeStop={handleSettle}
+          gridConfig={{
+            cols: layout.columns,
+            rowHeight: effectiveRowHeight,
+            margin: [GRID_MARGIN_PX, GRID_MARGIN_PX],
+            containerPadding: [0, 0],
+          }}
+          dragConfig={{ handle: `.${DRAG_HANDLE_CLASS}`, threshold: 5 }}
+          resizeConfig={{ handles: RESIZE_HANDLES, handleComponent: renderResizeHandle }}
+        >
+          {orderedWidgets.map((widget) => (
+            <SortableWidgetCell
+              key={widget.slug}
+              id={widget.slug}
+              dragHandleClassName={DRAG_HANDLE_CLASS}
+            >
+              <WidgetRenderer widget={widget} />
+            </SortableWidgetCell>
+          ))}
+        </GridLayout>
+      </div>
     </DashboardContextProvider>
   );
 }
 
-function EditableCell({
-  widget,
-  columnPx,
-  rowPx,
-  maxColumns,
-  minSize,
-  onResize,
-}: {
-  readonly widget: WidgetDefinition;
-  readonly columnPx: number;
-  readonly rowPx: number;
-  readonly maxColumns: number;
-  readonly minSize: WidgetSize;
-  readonly onResize: (size: WidgetSize) => void;
-}) {
-  const cellStyle: CSSProperties = {
-    gridColumn: `span ${widget.size.width}`,
-    gridRow: `span ${widget.size.height}`,
-  };
+/**
+ * Custom resize handle — positioned + themed by {@link GridStyles} (we can't
+ * import react-grid-layout's stylesheet in workspace source). The grid attaches
+ * its resize listener to `ref`.
+ */
+function renderResizeHandle(axis: ResizeHandleAxis, ref: Ref<HTMLElement>): ReactNode {
   return (
-    <div data-slot="editable-dashboard-cell" data-widget-slug={widget.slug} style={cellStyle}>
-      <SortableWidgetCell
-        id={widget.slug}
-        size={widget.size}
-        columnPx={columnPx}
-        rowPx={rowPx}
-        gapPx={GRID_GAP_PX}
-        maxWidth={maxColumns}
-        minWidth={minSize.width}
-        minHeight={minSize.height}
-        onResize={onResize}
-      >
-        <WidgetRenderer widget={widget} />
-      </SortableWidgetCell>
-    </div>
+    <span
+      ref={ref as Ref<HTMLSpanElement>}
+      className={`react-resizable-handle react-resizable-handle-${axis}`}
+      data-slot="sortable-widget-resize-handle"
+      aria-hidden
+    />
   );
 }

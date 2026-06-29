@@ -1,6 +1,6 @@
 {
   "name": "@granit/react-dashboard-editor",
-  "description": "React dashboard editor primitives for Granit — drag-and-drop reorderable widget grid built on dnd-kit. Pairs with the read-mode <RenderedDashboard> from @granit/react-dashboards. Frontend half of EPIC #1366 story B5-C (dashboard composer).",
+  "description": "React dashboard editor primitives for Granit — coordinate-grid widget editor (free drag/resize) built on react-grid-layout. Pairs with the read-mode <RenderedDashboard> from @granit/react-dashboards. Frontend half of EPIC #1366 story B5-C (dashboard composer).",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -20,6 +20,7 @@
     "@granit/dashboards": "workspace:*",
     "@granit/react-dashboards": "workspace:*",
     "react": "^19.0.0",
+    "react-grid-layout": "^2.2.3",
     "react-i18next": "^17.0.0"
   },
   "publishConfig": {
@@ -38,6 +39,7 @@
     "@granit/dashboards": "workspace:*",
     "@granit/react-dashboards": "workspace:*",
     "@granit/react-testing": "workspace:*",
-    "@granit/testing": "workspace:*"
+    "@granit/testing": "workspace:*",
+    "react-grid-layout": "^2.2.3"
   }
 }
