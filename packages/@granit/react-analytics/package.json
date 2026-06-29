@@ -27,7 +27,7 @@
     "@granit/query-engine": "workspace:*",
     "@granit/types": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
-    "i18next": "^26.0.0",
+    "i18next": "^26.3.3",
     "lucide-react": "^1.0.0",
     "msw": "^2.12.0",
     "react": "^19.0.0",
@@ -71,7 +71,7 @@
     "@granit/query-engine": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/types": "workspace:*",
-    "i18next": "^26.0.0",
+    "i18next": "^26.3.3",
     "msw": "^2.14.6"
   }
 }
