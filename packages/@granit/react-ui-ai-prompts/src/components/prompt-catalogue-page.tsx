@@ -1,7 +1,5 @@
 import { AIPromptsPermissions } from '@granit/ai-prompts';
 import {
-  PromptCatalogue,
-  PromptForm,
   useCreatePrompt,
   useCustomisePrompt,
   useDeletePrompt,
@@ -15,12 +13,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@granit/react-
 import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { useState } from 'react';
 
+import { PromptCatalogue } from './prompt-catalogue';
+import { PromptForm } from './prompt-form';
+
 import type { CreatePromptRequest, PromptId } from '@granit/ai-prompts';
 
 type Editing =
-  | { readonly mode: 'create' }
-  | { readonly mode: 'edit'; readonly id: PromptId }
-  | null;
+  { readonly mode: 'create' } | { readonly mode: 'edit'; readonly id: PromptId } | null;
 
 /**
  * Prompt catalogue management page: list with Customise (system) / Edit-Delete

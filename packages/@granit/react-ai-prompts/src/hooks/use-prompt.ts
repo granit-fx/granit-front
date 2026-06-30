@@ -1,9 +1,12 @@
 import { getPrompt } from '@granit/ai-prompts';
 import { useQuery } from '@tanstack/react-query';
 
+import { logger } from '../logger';
 import { useAIPromptsConfig } from '../providers/ai-prompts-provider';
 
 import { promptKeys } from './query-keys';
+
+const log = logger.child('Detail');
 
 import type { PromptId, PromptResponse } from '@granit/ai-prompts';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -20,7 +23,10 @@ export function usePrompt(
   const config = useAIPromptsConfig();
   return useQuery({
     queryKey: promptKeys.detail(config.queryKeyPrefix, id ?? ('' as PromptId)),
-    queryFn: () => getPrompt(config.client, config.basePath, id as PromptId),
+    queryFn: () => {
+      log.debug('Fetching prompt detail', { id });
+      return getPrompt(config.client, config.basePath, id as PromptId);
+    },
     enabled: (options?.enabled ?? true) && id !== null,
   });
 }

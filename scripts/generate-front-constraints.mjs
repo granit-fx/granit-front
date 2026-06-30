@@ -108,6 +108,12 @@ const TARGETS = [
     schemaPattern: /Request$/,
   },
   {
+    spec: 'ai-prompts.json',
+    pkg: 'ai-prompts',
+    exportName: 'aiPromptsConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
     spec: 'parties.json',
     pkg: 'parties',
     exportName: 'partiesConstraints',

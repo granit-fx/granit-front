@@ -78,6 +78,21 @@
       "description": "AI workspace management, chat completion, embedding generation, and usage tracking types and API functions — mirrors Granit.AI.Endpoints .NET",
       "exports": [
         {
+          "name": "AI_CAPABILITY_EXTENSIONS",
+          "kind": "const",
+          "signature": "const AI_CAPABILITY_EXTENSIONS"
+        },
+        {
+          "name": "AI_WORKSPACE_KINDS",
+          "kind": "const",
+          "signature": "const AI_WORKSPACE_KINDS"
+        },
+        {
+          "name": "AI_WORKSPACE_LIMITS",
+          "kind": "const",
+          "signature": "const AI_WORKSPACE_LIMITS"
+        },
+        {
           "name": "listAIProviderModels",
           "kind": "function",
           "signature": "async function listAIProviderModels( client: AxiosInstance, basePath: string, providerName: string ): Promise<readonly AIProviderModelResponse[]>"
@@ -143,6 +158,11 @@
           "name": "AIPromptsPermissions",
           "kind": "const",
           "signature": "const AIPromptsPermissions"
+        },
+        {
+          "name": "aiPromptsConstraints",
+          "kind": "const",
+          "signature": "const aiPromptsConstraints"
         }
       ]
     },
@@ -3217,7 +3237,7 @@
     },
     {
       "name": "@granit/react-ai-prompts",
-      "description": "React bindings for @granit/ai-prompts — AIPromptsProvider, prompt catalogue CRUD + customise hooks, the / picker hook + popover, an icon picker, and the catalogue manager UI",
+      "description": "Headless React bindings for @granit/ai-prompts — AIPromptsProvider, prompt catalogue CRUD + customise hooks, the / picker hook, query-key factory, the framework-agnostic PromptIcon glyph renderer + registry, and the i18n bundles. The styled catalogue / form / picker UI lives in @granit/react-ui-ai-prompts.",
       "exports": [
         {
           "name": "AIPromptsProvider",
@@ -3308,56 +3328,6 @@
           "name": "PromptIconProps",
           "kind": "interface",
           "signature": "interface PromptIconProps",
-          "members": []
-        },
-        {
-          "name": "IconPicker",
-          "kind": "function",
-          "signature": "function IconPicker("
-        },
-        {
-          "name": "IconPickerProps",
-          "kind": "interface",
-          "signature": "interface IconPickerProps",
-          "members": []
-        },
-        {
-          "name": "PromptForm",
-          "kind": "function",
-          "signature": "function PromptForm("
-        },
-        {
-          "name": "PromptFormProps",
-          "kind": "interface",
-          "signature": "interface PromptFormProps",
-          "members": []
-        },
-        {
-          "name": "PromptFormValues",
-          "kind": "interface",
-          "signature": "interface PromptFormValues",
-          "members": []
-        },
-        {
-          "name": "PromptCatalogue",
-          "kind": "function",
-          "signature": "function PromptCatalogue("
-        },
-        {
-          "name": "PromptCatalogueProps",
-          "kind": "interface",
-          "signature": "interface PromptCatalogueProps",
-          "members": []
-        },
-        {
-          "name": "PromptPicker",
-          "kind": "function",
-          "signature": "function PromptPicker("
-        },
-        {
-          "name": "PromptPickerProps",
-          "kind": "interface",
-          "signature": "interface PromptPickerProps",
           "members": []
         }
       ]
@@ -8089,12 +8059,93 @@
     },
     {
       "name": "@granit/react-ui-ai-prompts",
-      "description": "Granit admin UI for the AI Prompts module — the prompt-catalogue management page (list with customise / edit / delete affordances, a create-and-edit dialog form and a delete confirmation). Composes @granit/react-ai-prompts (headless) with the foundation UI packages and gates management actions with @granit/react-authorization.",
+      "description": "Granit admin UI for the AI Prompts module — the styled catalogue list, the spec-driven create/edit prompt form, the icon picker, the / prompt picker, and the catalogue management page (create-and-edit dialog form plus a delete confirmation). Composes @granit/react-ai-prompts (headless) with the foundation UI packages, derives form validation from the OpenAPI contract via @granit/react-validation, and gates management actions with @granit/react-authorization.",
       "exports": [
         {
           "name": "PromptCataloguePage",
           "kind": "function",
           "signature": "function PromptCataloguePage()"
+        },
+        {
+          "name": "PromptCatalogue",
+          "kind": "function",
+          "signature": "function PromptCatalogue("
+        },
+        {
+          "name": "PromptCatalogueProps",
+          "kind": "interface",
+          "signature": "interface PromptCatalogueProps",
+          "members": []
+        },
+        {
+          "name": "PromptForm",
+          "kind": "function",
+          "signature": "function PromptForm("
+        },
+        {
+          "name": "PromptFormProps",
+          "kind": "interface",
+          "signature": "interface PromptFormProps",
+          "members": []
+        },
+        {
+          "name": "PromptPicker",
+          "kind": "function",
+          "signature": "function PromptPicker("
+        },
+        {
+          "name": "PromptPickerProps",
+          "kind": "interface",
+          "signature": "interface PromptPickerProps",
+          "members": []
+        },
+        {
+          "name": "IconPicker",
+          "kind": "function",
+          "signature": "function IconPicker("
+        },
+        {
+          "name": "IconPickerProps",
+          "kind": "interface",
+          "signature": "interface IconPickerProps",
+          "members": []
+        },
+        {
+          "name": "createPromptResolver",
+          "kind": "function",
+          "signature": "function createPromptResolver( mode: 'create' | 'edit', t: TranslateFn ): Resolver<PromptFormValues>"
+        },
+        {
+          "name": "PromptFormValues",
+          "kind": "interface",
+          "signature": "interface PromptFormValues",
+          "members": [
+            {
+              "name": "name",
+              "kind": "property",
+              "signature": "name: string"
+            },
+            {
+              "name": "shortDescription",
+              "kind": "property",
+              "signature": "shortDescription: string"
+            },
+            {
+              "name": "content",
+              "kind": "property",
+              "signature": "content: string"
+            },
+            {
+              "name": "icon",
+              "kind": "property",
+              "signature": "icon: string | null"
+            },
+            {
+              "name": "iconColor",
+              "kind": "property",
+              "signature": "iconColor: string | null"
+            }
+          ]
         }
       ]
     },

@@ -143,6 +143,9 @@ function addUsageRecord(
     timestamp: toISODateString(new Date().toISOString()),
     duration,
     conversationId: null,
+    promptVersion: null,
+    promptTemplateName: null,
+    promptTemplateVersion: null,
   });
 }
 
@@ -400,7 +403,7 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
         systemPrompt: body.systemPrompt ?? null,
         temperature: body.temperature ?? null,
         maxOutputTokens: body.maxOutputTokens ?? null,
-        activated: body.activated,
+        activated: body.activated ?? existing.activated,
       };
 
       workspaces = workspaces.map((w) => (w.key === key ? updated : w));
@@ -451,16 +454,20 @@ export function createAIHandlers(baseUrl = '/api/v1/ai') {
 
       addUsageRecord(usageRecords, ws, inputTokens, outputTokens, 0.0012, 'USD', '00:00:00.350');
 
+      // Native ASP.NET SSE wire shape: one JSON `AIChatStreamEvent` per `data:`
+      // frame discriminated by `type` (delta/usage), no `event:` name, no `[DONE]`
+      // sentinel — end-of-stream is the stream closing.
       const encoder = new TextEncoder();
       const stream = new ReadableStream({
         start(controller) {
-          controller.enqueue(encoder.encode(`data: {"content":"${mockContent}"}\n\n`));
+          controller.enqueue(
+            encoder.encode(`data: ${JSON.stringify({ type: 'delta', content: mockContent })}\n\n`)
+          );
           controller.enqueue(
             encoder.encode(
-              `event: usage\ndata: {"inputTokens":${inputTokens},"outputTokens":${outputTokens}}\n\n`
+              `data: ${JSON.stringify({ type: 'usage', inputTokens, outputTokens })}\n\n`
             )
           );
-          controller.enqueue(encoder.encode('data: [DONE]\n\n'));
           controller.close();
         },
       });

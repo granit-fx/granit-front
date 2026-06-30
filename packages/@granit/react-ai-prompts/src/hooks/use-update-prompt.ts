@@ -2,9 +2,12 @@ import { updatePrompt } from '@granit/ai-prompts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
+import { logger } from '../logger';
 import { useAIPromptsConfig } from '../providers/ai-prompts-provider';
 
 import { promptKeys } from './query-keys';
+
+const log = logger.child('Update');
 
 import type { PromptId, PromptResponse, UpdatePromptRequest } from '@granit/ai-prompts';
 
@@ -33,6 +36,8 @@ export function useUpdatePrompt(): UseUpdatePromptReturn {
     mutationFn: ({ id, request }: UpdatePromptVariables) =>
       updatePrompt(config.client, config.basePath, id, request),
     onSuccess: (_data, { id }) => {
+      log.info('Updated prompt', { id });
+      log.debug('Invalidating catalogue list, picker, and detail', { id });
       queryClient
         .invalidateQueries({ queryKey: promptKeys.list(config.queryKeyPrefix) })
         .catch(() => undefined);

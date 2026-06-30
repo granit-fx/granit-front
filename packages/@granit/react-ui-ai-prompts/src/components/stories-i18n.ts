@@ -1,7 +1,7 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import { aiPromptsAdminTranslationsEn } from './locales';
+import { aiPromptsAdminTranslationsEn } from '../locales';
 
 // Shared i18next instance for Storybook stories. Mirrors the runtime flat-key
 // setup (separators disabled) and bundles the package's own AiPrompts.* admin

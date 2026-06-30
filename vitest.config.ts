@@ -152,6 +152,10 @@ export default defineConfig({
         __dirname,
         'packages/@granit/react-ai-prompts/src/testing/index.ts'
       ),
+      '@granit/react-ai-prompts': path.resolve(
+        __dirname,
+        'packages/@granit/react-ai-prompts/src/index.ts'
+      ),
       '@granit/react-analytics/testing': path.resolve(
         __dirname,
         'packages/@granit/react-analytics/src/testing/index.ts'

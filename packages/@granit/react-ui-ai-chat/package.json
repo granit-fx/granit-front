@@ -50,6 +50,7 @@
     "@granit/react-ai-chat": "workspace:*",
     "@granit/react-ai-chat-blob-storage": "workspace:*",
     "@granit/react-ai-prompts": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
     "@granit/react-blob-storage": "workspace:*",
     "@granit/react-localization": "workspace:*",
     "@granit/react-settings": "workspace:*",

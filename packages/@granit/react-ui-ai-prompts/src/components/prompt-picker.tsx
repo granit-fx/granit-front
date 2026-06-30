@@ -1,11 +1,9 @@
+import { PromptIcon } from '@granit/react-ai-prompts';
+import { useTranslation } from '@granit/react-localization';
+import { Input } from '@granit/react-ui';
 import { cn } from '@granit/utils';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 
-import { defaultPromptLabels } from '../locales/index';
-
-import { PromptIcon } from './prompt-icon';
-
-import type { PromptTranslations } from '../locales/index';
 import type { PromptPickerCategoryResponse, PromptPickerItemResponse } from '@granit/ai-prompts';
 import type { KeyboardEvent } from 'react';
 
@@ -13,23 +11,22 @@ export interface PromptPickerProps {
   readonly categories: readonly PromptPickerCategoryResponse[];
   readonly onSelect: (item: PromptPickerItemResponse) => void;
   readonly autoFocus?: boolean;
-  readonly labels?: PromptTranslations['Picker'];
   readonly className?: string;
 }
 
 /**
- * A standalone, searchable `/` prompt picker grouped by category. The search
- * box is an ARIA `combobox`; arrow keys move a single active index across the
- * flattened result, Enter selects. (Inside the chat composer, the inline picker
- * in `@granit/react-ai-chat` is used instead.)
+ * A standalone, searchable `/` prompt picker grouped by category. The search box
+ * is the `@granit/react-ui` `Input` wired as an ARIA `combobox`; arrow keys move
+ * a single active index across the flattened result, Enter selects. (Inside the
+ * chat composer, the inline picker in `@granit/react-ai-chat` is used instead.)
  */
 export function PromptPicker({
   categories,
   onSelect,
   autoFocus = false,
-  labels = defaultPromptLabels.Picker,
   className,
 }: Readonly<PromptPickerProps>) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -79,32 +76,32 @@ export function PromptPicker({
       data-slot="prompt-picker"
       className={cn('border-border bg-popover w-full rounded-md border', className)}
     >
-      <input
+      <Input
         ref={inputRef}
         type="text"
         role="combobox"
         aria-expanded
         aria-controls={listboxId}
-        aria-label={labels.Title}
+        aria-label={t('AiPrompts.Picker.Title')}
         value={query}
-        placeholder={labels.Title}
+        placeholder={t('AiPrompts.Picker.Title')}
         onChange={(event) => {
           setQuery(event.target.value);
           setActiveIndex(0);
         }}
         onKeyDown={onKeyDown}
-        className="border-border w-full border-b px-2.5 py-2 text-sm outline-none"
+        className="border-0 border-b border-border rounded-b-none focus-visible:ring-0"
       />
 
       {flat.length === 0 ? (
         <p data-slot="picker-empty" className="text-muted-foreground px-2.5 py-2 text-sm">
-          {labels.NoResults}
+          {t('AiPrompts.Picker.NoResults')}
         </p>
       ) : (
         <ul
           role="listbox"
           id={listboxId}
-          aria-label={labels.Title}
+          aria-label={t('AiPrompts.Picker.Title')}
           className="max-h-72 overflow-auto py-1"
         >
           {filtered.map((group) => (
@@ -145,7 +142,9 @@ export function PromptPicker({
                       />
                       <span className="flex-1 truncate">{item.name}</span>
                       {item.isSystem ? (
-                        <span className="text-muted-foreground text-[10px]">{labels.System}</span>
+                        <span className="text-muted-foreground text-[10px]">
+                          {t('AiPrompts.Picker.System')}
+                        </span>
                       ) : null}
                     </li>
                   );

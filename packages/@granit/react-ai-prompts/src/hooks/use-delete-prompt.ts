@@ -2,9 +2,12 @@ import { deletePrompt } from '@granit/ai-prompts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
+import { logger } from '../logger';
 import { useAIPromptsConfig } from '../providers/ai-prompts-provider';
 
 import { promptKeys } from './query-keys';
+
+const log = logger.child('Delete');
 
 import type { PromptId } from '@granit/ai-prompts';
 
@@ -25,7 +28,9 @@ export function useDeletePrompt(): UseDeletePromptReturn {
 
   const mutation = useMutation({
     mutationFn: (id: PromptId) => deletePrompt(config.client, config.basePath, id),
-    onSuccess: () => {
+    onSuccess: (_data, id) => {
+      log.info('Deleted prompt', { id });
+      log.debug('Invalidating catalogue list and picker');
       queryClient
         .invalidateQueries({ queryKey: promptKeys.list(config.queryKeyPrefix) })
         .catch(() => undefined);

@@ -24,17 +24,11 @@ export type { UseDeletePromptReturn } from './hooks/use-delete-prompt';
 export { useCustomisePrompt } from './hooks/use-customise-prompt';
 export type { UseCustomisePromptReturn } from './hooks/use-customise-prompt';
 
-// Components
+// Components — primitives (the styled catalogue / form / picker UI lives in
+// @granit/react-ui-ai-prompts; only the framework-agnostic glyph renderer and
+// its registry stay here).
 export { PromptIcon } from './components/prompt-icon';
 export type { PromptIconProps } from './components/prompt-icon';
-export { IconPicker } from './components/icon-picker';
-export type { IconPickerProps } from './components/icon-picker';
-export { PromptForm } from './components/prompt-form';
-export type { PromptFormProps, PromptFormValues } from './components/prompt-form';
-export { PromptCatalogue } from './components/prompt-catalogue';
-export type { PromptCatalogueProps } from './components/prompt-catalogue';
-export { PromptPicker } from './components/prompt-picker';
-export type { PromptPickerProps } from './components/prompt-picker';
 export {
   DEFAULT_PROMPT_ICON,
   getPromptIcon,

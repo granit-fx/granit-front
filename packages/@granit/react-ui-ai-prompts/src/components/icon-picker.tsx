@@ -1,18 +1,14 @@
 import { ICON_COLOR_PATTERN } from '@granit/ai-prompts';
+import { getPromptIcon, PROMPT_ICON_IDS } from '@granit/react-ai-prompts';
+import { useTranslation } from '@granit/react-localization';
+import { Input } from '@granit/react-ui';
 import { cn } from '@granit/utils';
-
-import { defaultPromptLabels } from '../locales/index';
-
-import { getPromptIcon, PROMPT_ICON_IDS } from './icon-registry';
-
-import type { PromptTranslations } from '../locales/index';
 
 export interface IconPickerProps {
   readonly icon: string | null;
   readonly iconColor: string | null;
   readonly onIconChange: (icon: string) => void;
   readonly onColorChange: (color: string) => void;
-  readonly labels?: PromptTranslations['IconPicker'];
   readonly className?: string;
 }
 
@@ -23,23 +19,28 @@ function toColorInput(color: string | null): string {
 }
 
 /**
- * Selects a prompt glyph from the front-owned icon set plus its hex colour.
- * The grid is a `radiogroup`; the colour is editable both as a swatch and as a
- * hex string (so `#RRGGBBAA` alpha is reachable).
+ * Selects a prompt glyph from the front-owned icon set plus its hex colour. The
+ * glyph grid is an ARIA `radiogroup` (a custom roving grid the shadcn
+ * `RadioGroup` dot indicator cannot express); the colour fields use the
+ * `@granit/react-ui` `Input` primitive so `#RRGGBBAA` alpha stays reachable.
  */
 export function IconPicker({
   icon,
   iconColor,
   onIconChange,
   onColorChange,
-  labels = defaultPromptLabels.IconPicker,
   className,
 }: Readonly<IconPickerProps>) {
+  const { t } = useTranslation();
   const colorValid = iconColor === null || iconColor === '' || ICON_COLOR_PATTERN.test(iconColor);
 
   return (
     <div data-slot="icon-picker" className={cn('flex flex-col gap-2', className)}>
-      <div role="radiogroup" aria-label={labels.IconLabel} className="flex flex-wrap gap-1">
+      <div
+        role="radiogroup"
+        aria-label={t('AiPrompts.IconPicker.IconLabel')}
+        className="flex flex-wrap gap-1"
+      >
         {PROMPT_ICON_IDS.map((id) => {
           const Glyph = getPromptIcon(id);
           const selected = id === icon;
@@ -55,7 +56,7 @@ export function IconPicker({
                 onIconChange(id);
               }}
               className={cn(
-                'rounded-md border p-1.5',
+                'focus-visible:ring-ring/50 rounded-md border p-1.5 outline-none focus-visible:ring-[3px]',
                 selected ? 'border-primary bg-primary/10' : 'border-border hover:bg-accent'
               )}
             >
@@ -70,33 +71,30 @@ export function IconPicker({
       </div>
 
       <div className="flex items-center gap-2">
-        <input
+        <Input
           type="color"
-          aria-label={labels.ColorLabel}
+          aria-label={t('AiPrompts.IconPicker.ColorLabel')}
           value={toColorInput(iconColor)}
           onChange={(event) => {
             onColorChange(event.target.value);
           }}
           className="size-7 cursor-pointer rounded border-0 bg-transparent p-0"
         />
-        <input
+        <Input
           type="text"
           data-slot="icon-color-hex"
-          aria-label={labels.ColorHexLabel}
+          aria-label={t('AiPrompts.IconPicker.ColorHexLabel')}
           value={iconColor ?? ''}
           placeholder="#RRGGBB"
           aria-invalid={!colorValid}
           onChange={(event) => {
             onColorChange(event.target.value);
           }}
-          className={cn(
-            'w-28 rounded-md border px-2 py-1 text-sm',
-            colorValid ? 'border-input' : 'border-destructive'
-          )}
+          className={cn('w-28', colorValid ? undefined : 'border-destructive')}
         />
         {!colorValid && (
           <span data-slot="icon-color-error" className="text-destructive text-xs">
-            {labels.ColorInvalid}
+            {t('AiPrompts.IconPicker.ColorInvalid')}
           </span>
         )}
       </div>

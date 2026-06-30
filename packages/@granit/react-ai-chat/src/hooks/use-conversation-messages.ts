@@ -1,13 +1,16 @@
 import { getConversationMessages } from '@granit/ai-chat';
 import { usePagedInfiniteQuery } from '@granit/react-query-engine';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
+import { logger } from '../logger';
 import { useAIChatConfig } from '../providers/ai-chat-provider';
 
 import { conversationKeys } from './query-keys';
 
 import type { ConversationId, MessageResponse } from '@granit/ai-chat';
 import type { PagedResult } from '@granit/query-engine';
+
+const log = logger.child('useConversationMessages');
 
 /** Default page size; mirrors the endpoint's server-side default. */
 const DEFAULT_PAGE_SIZE = 30;
@@ -101,6 +104,20 @@ export function useConversationMessages(
     () => [...paged.items].reverse(),
     [paged.items]
   );
+
+  // Debug a page load once per change in the loaded count (ids/counts only, no
+  // content) — never per render.
+  const loadedCountRef = useRef(0);
+  useEffect(() => {
+    if (id !== null && messages.length !== loadedCountRef.current) {
+      loadedCountRef.current = messages.length;
+      log.debug('Messages page loaded', {
+        conversationId: id,
+        loadedCount: messages.length,
+        hasMoreOlder: paged.hasNextPage,
+      });
+    }
+  }, [id, messages.length, paged.hasNextPage]);
 
   return {
     messages,

@@ -2,11 +2,14 @@ import { setConversationFavorite } from '@granit/ai-chat';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
+import { logger } from '../logger';
 import { useAIChatConfig } from '../providers/ai-chat-provider';
 
 import { conversationKeys } from './query-keys';
 
 import type { ConversationId } from '@granit/ai-chat';
+
+const log = logger.child('useSetConversationFavorite');
 
 export interface SetConversationFavoriteVariables {
   readonly id: ConversationId;
@@ -33,7 +36,8 @@ export function useSetConversationFavorite(): UseSetConversationFavoriteReturn {
   const mutation = useMutation({
     mutationFn: ({ id, isFavorite }: SetConversationFavoriteVariables) =>
       setConversationFavorite(config.client, config.basePath, id, isFavorite),
-    onSuccess: (_data, { id }) => {
+    onSuccess: (_data, { id, isFavorite }) => {
+      log.info('Conversation favorite set', { conversationId: id, isFavorite });
       queryClient
         .invalidateQueries({ queryKey: conversationKeys.list(config.queryKeyPrefix) })
         .catch(() => undefined);

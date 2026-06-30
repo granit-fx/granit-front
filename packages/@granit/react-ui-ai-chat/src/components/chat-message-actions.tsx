@@ -31,6 +31,8 @@ import { logger } from '../logger';
 
 import { copyMessage } from './chat-clipboard';
 
+const log = logger.child('ChatMessageActions');
+
 import type { CopyFormat } from './chat-clipboard';
 import type { MessageReportCategory } from '@granit/ai-chat';
 import type { LucideIcon } from 'lucide-react';
@@ -177,7 +179,7 @@ export function ChatMessageActions({
       await copyMessage(content, format);
       toast.success(t('AiChat.Actions.Copied'));
     } catch (error) {
-      logger.error('[ChatMessageActions] Failed to copy chat message to clipboard', error);
+      log.error('Failed to copy chat message to clipboard', error);
       toast.error(t('AiChat.Actions.CopyFailed'));
     }
   };
@@ -197,7 +199,7 @@ export function ChatMessageActions({
       resetReport();
       setReportOpen(false);
     } catch (error) {
-      logger.error('[ChatMessageActions] Failed to report chat message', error);
+      log.error('Failed to report chat message', error);
       toast.error(t('AiChat.Actions.ReportFailed'));
     } finally {
       setSubmitting(false);

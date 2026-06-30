@@ -1,5 +1,5 @@
-export { ChatPage } from './chat-page';
-export { ChatSettingsPage } from './chat-settings-page';
+export { ChatPage } from './components/chat-page';
+export { ChatSettingsPage } from './components/chat-settings-page';
 export { ChatMessageActions } from './components/chat-message-actions';
 export type { ChatMessageActionsProps } from './components/chat-message-actions';
 export { ConversationListItem } from './components/conversation-list-item';
@@ -7,5 +7,5 @@ export type { ConversationListItemProps } from './components/conversation-list-i
 export { ProviderIcon } from './components/provider-icon';
 export { copyMessage, markdownToClipboard } from './components/chat-clipboard';
 export type { CopyFormat } from './components/chat-clipboard';
-export { buildWorkspaceOptions } from './model-catalog';
+export { buildWorkspaceOptions } from './lib/model-catalog';
 export { aiChatAdminTranslationsEn, aiChatAdminTranslationsFr } from './locales';

@@ -12,6 +12,8 @@ import { useAIChatConfig } from '../providers/ai-chat-provider';
 
 import { conversationKeys } from './query-keys';
 
+const log = logger.child('useChatStream');
+
 import type { MessagesPageParam } from './use-conversation-messages';
 import type {
   ChatStreamEvent,
@@ -282,6 +284,12 @@ export function useChatStream(): UseChatStreamReturn {
       const controller = new AbortController();
       abortRef.current = controller;
 
+      // Debug once per stream start (ids/counts only, never message content).
+      log.debug('Chat stream started', {
+        hasPromptRefs: (request.promptRefs?.length ?? 0) > 0,
+        workspaceName: request.workspaceName ?? null,
+      });
+
       const turn: TurnState = {
         accumulated: '',
         tools: [],
@@ -357,9 +365,17 @@ export function useChatStream(): UseChatStreamReturn {
           queryClient
             .invalidateQueries({ queryKey: conversationKeys.list(config.queryKeyPrefix) })
             .catch(() => undefined);
+
+          // Debug once on turn completion (ids/counts only, never content).
+          log.debug('Chat stream turn complete', {
+            conversationId: turn.resolvedId,
+            chunkCount: turn.chunkCount,
+            toolCallCount: turn.tools.length,
+            failed: turn.errorCode !== null,
+          });
         } catch (err) {
           if (err instanceof DOMException && err.name === 'AbortError') return;
-          logger.error('Chat stream turn failed', err, { conversationId: turn.resolvedId });
+          log.error('Chat stream turn failed', err, { conversationId: turn.resolvedId });
           setError(err instanceof Error ? err : new Error(String(err)));
           setErrorKind(classifyThrownError(err));
         } finally {

@@ -1,9 +1,12 @@
 import { listPrompts } from '@granit/ai-prompts';
 import { useQuery } from '@tanstack/react-query';
 
+import { logger } from '../logger';
 import { useAIPromptsConfig } from '../providers/ai-prompts-provider';
 
 import { promptKeys } from './query-keys';
+
+const log = logger.child('Catalogue');
 
 import type { PromptSummaryResponse } from '@granit/ai-prompts';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -18,7 +21,10 @@ export function usePrompts(options?: {
   const config = useAIPromptsConfig();
   return useQuery({
     queryKey: promptKeys.list(config.queryKeyPrefix),
-    queryFn: () => listPrompts(config.client, config.basePath),
+    queryFn: () => {
+      log.debug('Fetching prompt catalogue list');
+      return listPrompts(config.client, config.basePath);
+    },
     enabled: options?.enabled ?? true,
   });
 }

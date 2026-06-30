@@ -33,12 +33,7 @@ these peers:
 ## Quick start
 
 ```ts
-import {
-  chatComplete,
-  chatStream,
-  generateEmbeddings,
-  listAIWorkspaces,
-} from '@granit/ai';
+import { chatComplete, chatStream, generateEmbeddings, listAIWorkspaces } from '@granit/ai';
 import type { AIChatRequest } from '@granit/ai';
 
 // `basePath` is the AI module mount; functions append /workspaces, /chat/{key},
@@ -71,46 +66,45 @@ const { embeddings } = await generateEmbeddings(client, basePath, 'default', {
 
 ## Public API
 
-| Symbol                     | Kind  | Purpose                                                       |
-| -------------------------- | ----- | ------------------------------------------------------------- |
-| `AIWorkspaceResponse`      | type  | Workspace config (key, provider, model, prompt, capabilities) |
-| `AIWorkspaceListResponse`  | type  | `{ workspaces, totalCount }` list wrapper                     |
-| `AIWorkspaceCreateRequest` | type  | `POST /workspaces` body (slug `key` + provider/model)         |
-| `AIWorkspaceUpdateRequest` | type  | `PUT /workspaces/{key}` body (includes `activated`)           |
-| `AIWorkspaceKind`          | type  | `'System' \| 'Dynamic'`                                       |
-| `AIChatRequest`            | type  | `{ messages }` completion body                                |
-| `AIChatMessageRequest`     | type  | One `{ role, content }` message                               |
-| `AIChatMessageRole`        | type  | `'user' \| 'assistant' \| 'system'`                           |
-| `AIChatResponse`           | type  | Sync completion result (`content` is untrusted)               |
-| `AIChatUsageResponse`      | type  | Token counts + estimated cost for a completion                |
-| `AIChatStreamChunk`        | type  | Raw SSE content frame                                          |
-| `AIChatStreamUsage`        | type  | Token usage emitted before `[DONE]`                           |
-| `AIChatCompletionEvent`    | type  | Union yielded by `chatStream` (`chunk` \| `usage`)            |
-| `AIEmbeddingRequest`       | type  | `{ inputs }` embedding body                                   |
-| `AIEmbeddingResponse`      | type  | Batch result (`embeddings`, `usage`)                          |
-| `AIEmbeddingDataResponse`  | type  | One `{ index, vector }` embedding                             |
-| `AIEmbeddingUsageResponse` | type  | Embedding token usage                                         |
-| `AIProviderResponse`       | type  | Provider summary + chat/embeddings support flags              |
-| `AIProviderModelResponse`  | type  | Model metadata (id, capabilities, context window)             |
-| `AIModelCapabilities`      | type  | Per-model feature flags + capability `extensions`             |
-| `AIUsageRecord`            | type  | Persisted usage row (queried via `@granit/react-ai/usage`)    |
-| `AIUsageRecordId`          | type  | Branded `EntityId<'AIUsageRecord'>`                           |
-| `ConversationId`           | type  | Branded `EntityId<'Conversation'>` (cycle-free local copy)    |
-| `listAIWorkspaces`         | fn    | `GET {basePath}/workspaces`                                   |
-| `getAIWorkspace`           | fn    | `GET {basePath}/workspaces/{key}`                             |
-| `createAIWorkspace`        | fn    | `POST {basePath}/workspaces`                                  |
-| `updateAIWorkspace`        | fn    | `PUT {basePath}/workspaces/{key}`                             |
-| `deleteAIWorkspace`        | fn    | `DELETE {basePath}/workspaces/{key}`                          |
-| `listAIProviders`          | fn    | `GET {basePath}/providers`                                    |
-| `listAIProviderModels`     | fn    | `GET {basePath}/providers/{providerName}/models`              |
-| `chatComplete`             | fn    | `POST {basePath}/chat/{workspaceName}`                        |
-| `chatStream`               | fn    | `POST {basePath}/chat/{workspaceName}/stream` (async gen)     |
-| `generateEmbeddings`       | fn    | `POST {basePath}/embeddings/{workspaceName}`                  |
-| `AIPermissions`            | const | Permission strings (`AI.Workspaces.Manage`, `AI.Chat.Execute`)|
-| `AI_WORKSPACE_KINDS`       | const | `{ SYSTEM, DYNAMIC }` kind values                             |
-| `AI_WORKSPACE_LIMITS`      | const | Server-enforced `key`/`displayName` length + slug pattern     |
-| `AI_CAPABILITY_EXTENSIONS` | const | Well-known capability extension identifiers                   |
-| `AI_STREAM_DONE_MARKER`    | const | SSE terminator string (`[DONE]`)                              |
+| Symbol                     | Kind  | Purpose                                                        |
+| -------------------------- | ----- | -------------------------------------------------------------- |
+| `AIWorkspaceResponse`      | type  | Workspace config (key, provider, model, prompt, capabilities)  |
+| `AIWorkspaceListResponse`  | type  | `{ workspaces, totalCount }` list wrapper                      |
+| `AIWorkspaceCreateRequest` | type  | `POST /workspaces` body (slug `key` + provider/model)          |
+| `AIWorkspaceUpdateRequest` | type  | `PUT /workspaces/{key}` body (includes `activated`)            |
+| `AIWorkspaceKind`          | type  | `'System' \| 'Dynamic'`                                        |
+| `AIChatRequest`            | type  | `{ messages }` completion body                                 |
+| `AIChatMessageRequest`     | type  | One `{ role, content }` message                                |
+| `AIChatMessageRole`        | type  | `'user' \| 'assistant' \| 'system'`                            |
+| `AIChatResponse`           | type  | Sync completion result (`content` is untrusted)                |
+| `AIChatUsageResponse`      | type  | Token counts + estimated cost for a completion                 |
+| `AIChatStreamEvent`        | type  | Raw SSE frame (`type`: `delta` \| `usage` \| `error`)          |
+| `AIChatStreamUsage`        | type  | Token usage carried by a `usage` frame                         |
+| `AIChatCompletionEvent`    | type  | Union yielded by `chatStream` (`chunk` \| `usage`)             |
+| `AIEmbeddingRequest`       | type  | `{ inputs }` embedding body                                    |
+| `AIEmbeddingResponse`      | type  | Batch result (`embeddings`, `usage`)                           |
+| `AIEmbeddingDataResponse`  | type  | One `{ index, vector }` embedding                              |
+| `AIEmbeddingUsageResponse` | type  | Embedding token usage                                          |
+| `AIProviderResponse`       | type  | Provider summary + chat/embeddings support flags               |
+| `AIProviderModelResponse`  | type  | Model metadata (id, capabilities, context window)              |
+| `AIModelCapabilities`      | type  | Per-model feature flags + capability `extensions`              |
+| `AIUsageRecord`            | type  | Persisted usage row (queried via `@granit/react-ai/usage`)     |
+| `AIUsageRecordId`          | type  | Branded `EntityId<'AIUsageRecord'>`                            |
+| `ConversationId`           | type  | Branded `EntityId<'Conversation'>` (cycle-free local copy)     |
+| `listAIWorkspaces`         | fn    | `GET {basePath}/workspaces`                                    |
+| `getAIWorkspace`           | fn    | `GET {basePath}/workspaces/{key}`                              |
+| `createAIWorkspace`        | fn    | `POST {basePath}/workspaces`                                   |
+| `updateAIWorkspace`        | fn    | `PUT {basePath}/workspaces/{key}`                              |
+| `deleteAIWorkspace`        | fn    | `DELETE {basePath}/workspaces/{key}`                           |
+| `listAIProviders`          | fn    | `GET {basePath}/providers`                                     |
+| `listAIProviderModels`     | fn    | `GET {basePath}/providers/{providerName}/models`               |
+| `chatComplete`             | fn    | `POST {basePath}/chat/{workspaceName}`                         |
+| `chatStream`               | fn    | `POST {basePath}/chat/{workspaceName}/stream` (async gen)      |
+| `generateEmbeddings`       | fn    | `POST {basePath}/embeddings/{workspaceName}`                   |
+| `AIPermissions`            | const | Permission strings (`AI.Workspaces.Manage`, `AI.Chat.Execute`) |
+| `AI_WORKSPACE_KINDS`       | const | `{ SYSTEM, DYNAMIC }` kind values                              |
+| `AI_WORKSPACE_LIMITS`      | const | Server-enforced `key`/`displayName` length + slug pattern      |
+| `AI_CAPABILITY_EXTENSIONS` | const | Well-known capability extension identifiers                    |
 
 The merged usage rows are not fetched here — `AIUsageRecord` is a query-engine
 shape consumed through `@granit/react-ai/usage`.

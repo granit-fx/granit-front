@@ -1,6 +1,6 @@
 {
   "name": "@granit/react-ai-prompts",
-  "description": "React bindings for @granit/ai-prompts — AIPromptsProvider, prompt catalogue CRUD + customise hooks, the / picker hook + popover, an icon picker, and the catalogue manager UI",
+  "description": "Headless React bindings for @granit/ai-prompts — AIPromptsProvider, prompt catalogue CRUD + customise hooks, the / picker hook, query-key factory, the framework-agnostic PromptIcon glyph renderer + registry, and the i18n bundles. The styled catalogue / form / picker UI lives in @granit/react-ui-ai-prompts.",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -17,6 +17,7 @@
   "peerDependencies": {
     "@granit/ai-prompts": "workspace:*",
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-icons": "workspace:*",
     "@granit/types": "workspace:*",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "@granit/ai-prompts": "workspace:*",
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-icons": "workspace:*",
     "@granit/react-testing": "workspace:*",

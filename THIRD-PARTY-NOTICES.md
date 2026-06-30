@@ -4,7 +4,7 @@ This file lists the third-party libraries used by the **granit-front** project
 along with their respective licenses. It is updated whenever an external
 dependency is added or modified.
 
-Last updated: 2026-06-29
+Last updated: 2026-06-30
 
 ---
 
@@ -12,7 +12,7 @@ Last updated: 2026-06-29
 
 | License    | Package count |
 | ---------- | ------------- |
-| MIT        | 49            |
+| MIT        | 50            |
 | Apache-2.0 | 15            |
 
 ---
@@ -58,6 +58,7 @@ Last updated: 2026-06-29
 | lint-staged                     | 17.0.7  | Copyright (c) Andrey Okonetchnikov         |
 | lucide-react                    | 1.21.0  | Copyright (c) Lucide Contributors          |
 | markdownlint-cli2               | 0.22.1  | Copyright (c) David Anson                  |
+| marked                          | 18.0.5  | Copyright (c) 2018+ MarkedJS contributors  |
 | msw                             | 2.14.6  | Copyright (c) Artem Zakharchenko           |
 | prettier                        | 3.8.4   | Copyright (c) James Long                   |
 | react                           | 19.2.7  | Copyright (c) Meta Platforms, Inc.         |
@@ -66,7 +67,7 @@ Last updated: 2026-06-29
 | react-grid-layout               | 2.2.3   | Copyright (c) React Grid Layout Authors    |
 | react-hook-form                 | 7.80.0  | Copyright (c) react-hook-form Contributors |
 | react-i18next                   | 17.0.8  | Copyright (c) i18next Contributors         |
-| react-markdown                  | 9.1.0   | Copyright (c) Espen Hovlandsdal            |
+| react-markdown                  | 10.1.0  | Copyright (c) Espen Hovlandsdal            |
 | react-resizable                 | 3.1.3   | Copyright (c) React Grid Layout Authors    |
 | remark-gfm                      | 4.0.1   | Copyright (c) Titus Wormer                 |
 | tailwind-merge                  | 3.6.0   | Copyright (c) Dany Castillo                |

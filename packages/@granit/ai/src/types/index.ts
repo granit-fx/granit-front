@@ -24,9 +24,6 @@ export const AI_CAPABILITY_EXTENSIONS = {
   BUILTIN_TOOLS: 'builtin-tools',
 } as const;
 
-/** SSE stream termination marker. */
-export const AI_STREAM_DONE_MARKER = '[DONE]';
-
 /** Server-enforced limits for workspace fields. */
 export const AI_WORKSPACE_LIMITS = {
   /** `key` maximum length. Pattern: `^[a-z0-9][a-z0-9-]*$`. */
@@ -85,7 +82,8 @@ export interface AIWorkspaceUpdateRequest {
   readonly systemPrompt?: string | null;
   readonly temperature?: number | null;
   readonly maxOutputTokens?: number | null;
-  readonly activated: boolean;
+  /** C#-defaulted (`bool Activated = false`) → absent from the spec `required` array. */
+  readonly activated?: boolean;
 }
 
 // -- Chat completion ---------------------------------------------------------
@@ -126,12 +124,22 @@ export interface AIChatResponse {
   readonly duration: string;
 }
 
-/** SSE chunk emitted during streaming. */
-export interface AIChatStreamChunk {
-  readonly content: string;
+/**
+ * A frame streamed over Server-Sent Events for a chat completion. Mirrors the
+ * backend `Granit.AI.Endpoints.Dtos.AIChatStreamEvent`. `type` discriminates the
+ * frame: `delta` (an incremental `content` chunk), `usage` (token counts), or
+ * `error` (a provider failure that occurred after streaming started).
+ * End-of-stream is the SSE connection closing — there is no sentinel frame.
+ */
+export interface AIChatStreamEvent {
+  readonly type: 'delta' | 'usage' | 'error';
+  readonly content?: string | null;
+  readonly inputTokens?: number | null;
+  readonly outputTokens?: number | null;
+  readonly error?: string | null;
 }
 
-/** Token usage emitted as an SSE `event: usage` before `[DONE]`. */
+/** Token usage carried by a `usage` SSE frame at end of stream. */
 export interface AIChatStreamUsage {
   readonly inputTokens: number;
   readonly outputTokens: number;
@@ -226,4 +234,10 @@ export interface AIUsageRecord {
   readonly conversationId: ConversationId | null;
   readonly timestamp: ISODateString;
   readonly duration: string | null;
+  /** Version of the prompt template used for this call, if any. */
+  readonly promptVersion: string | null;
+  /** Name of the prompt template used for this call, if any. */
+  readonly promptTemplateName: string | null;
+  /** Version number of the prompt template used for this call, if any. */
+  readonly promptTemplateVersion: number | null;
 }

@@ -2,9 +2,12 @@ import { customisePrompt } from '@granit/ai-prompts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
+import { logger } from '../logger';
 import { useAIPromptsConfig } from '../providers/ai-prompts-provider';
 
 import { promptKeys } from './query-keys';
+
+const log = logger.child('Customise');
 
 import type { PromptId, PromptResponse } from '@granit/ai-prompts';
 
@@ -26,7 +29,12 @@ export function useCustomisePrompt(): UseCustomisePromptReturn {
 
   const mutation = useMutation({
     mutationFn: (id: PromptId) => customisePrompt(config.client, config.basePath, id),
-    onSuccess: () => {
+    onSuccess: (created, sourceId) => {
+      log.info('Customised system prompt into an editable copy', {
+        sourceId,
+        id: created.id,
+      });
+      log.debug('Invalidating catalogue list and picker');
       queryClient
         .invalidateQueries({ queryKey: promptKeys.list(config.queryKeyPrefix) })
         .catch(() => undefined);

@@ -1,6 +1,6 @@
 import { Bot, Brain, Eye, FileText, LifeBuoy, Sparkles, Wrench } from 'lucide-react';
 
-import { ProviderIcon } from './components/provider-icon';
+import { ProviderIcon } from '../components/provider-icon';
 
 import type { WorkspaceOption } from '@granit/react-ai-chat';
 import type { useTranslation } from '@granit/react-localization';

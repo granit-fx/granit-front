@@ -1,11 +1,9 @@
+import { PromptIcon } from '@granit/react-ai-prompts';
+import { useTranslation } from '@granit/react-localization';
+import { Badge, Button } from '@granit/react-ui';
 import { cn } from '@granit/utils';
 import { Copy, Pencil, Plus, Trash2 } from 'lucide-react';
 
-import { defaultPromptLabels } from '../locales/index';
-
-import { PromptIcon } from './prompt-icon';
-
-import type { PromptTranslations } from '../locales/index';
 import type { PromptId, PromptSummaryResponse } from '@granit/ai-prompts';
 
 export interface PromptCatalogueProps {
@@ -18,14 +16,14 @@ export interface PromptCatalogueProps {
   readonly canManage?: boolean;
   /** Gates Delete (server still enforces `AIPrompts.Templates.Delete`). */
   readonly canDelete?: boolean;
-  readonly labels?: PromptTranslations['Catalogue'];
   readonly className?: string;
 }
 
 /**
  * Lists the prompt catalogue with management affordances. System prompts are
  * read-only — they offer **Customise** instead of Edit/Delete. Affordances are
- * gated by `canManage` / `canDelete`; the server re-checks regardless.
+ * gated by `canManage` / `canDelete`; the server re-checks regardless. Built on
+ * the `@granit/react-ui` `Button` / `Badge` primitives.
  */
 export function PromptCatalogue({
   prompts,
@@ -35,28 +33,24 @@ export function PromptCatalogue({
   onCustomise,
   canManage = false,
   canDelete = false,
-  labels = defaultPromptLabels.Catalogue,
   className,
 }: Readonly<PromptCatalogueProps>) {
+  const { t } = useTranslation();
+
   return (
     <div data-slot="prompt-catalogue" className={cn('flex flex-col gap-2', className)}>
       {canManage && onNew ? (
         <div className="flex justify-end">
-          <button
-            type="button"
-            data-slot="prompt-new"
-            onClick={onNew}
-            className="bg-primary text-primary-foreground inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm"
-          >
+          <Button type="button" size="sm" data-slot="prompt-new" onClick={onNew}>
             <Plus className="size-3.5" aria-hidden />
-            {labels.New}
-          </button>
+            {t('AiPrompts.Catalogue.New')}
+          </Button>
         </div>
       ) : null}
 
       {prompts.length === 0 ? (
         <p data-slot="catalogue-empty" className="text-muted-foreground py-6 text-center text-sm">
-          {labels.Empty}
+          {t('AiPrompts.Catalogue.Empty')}
         </p>
       ) : (
         <ul className="flex flex-col gap-1">
@@ -76,9 +70,9 @@ export function PromptCatalogue({
                 <div className="flex items-center gap-2">
                   <span className="truncate text-sm font-medium">{prompt.name}</span>
                   {prompt.isSystem ? (
-                    <span className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-[10px] font-medium">
-                      {labels.System}
-                    </span>
+                    <Badge variant="secondary" className="text-[10px]">
+                      {t('AiPrompts.Catalogue.System')}
+                    </Badge>
                   ) : null}
                 </div>
                 <p className="text-muted-foreground truncate text-xs">{prompt.shortDescription}</p>
@@ -88,46 +82,50 @@ export function PromptCatalogue({
                 {prompt.isSystem ? (
                   canManage &&
                   onCustomise && (
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="sm"
                       data-slot="prompt-customise"
-                      aria-label={`${labels.Customise} ${prompt.name}`}
+                      aria-label={`${t('AiPrompts.Catalogue.Customise')} ${prompt.name}`}
                       onClick={() => {
                         onCustomise(prompt.id);
                       }}
-                      className="hover:bg-accent inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs"
                     >
                       <Copy className="size-3.5" aria-hidden />
-                      {labels.Customise}
-                    </button>
+                      {t('AiPrompts.Catalogue.Customise')}
+                    </Button>
                   )
                 ) : (
                   <>
                     {canManage && onEdit ? (
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
+                        size="icon"
                         data-slot="prompt-edit"
-                        aria-label={`${labels.Edit} ${prompt.name}`}
+                        aria-label={`${t('AiPrompts.Catalogue.Edit')} ${prompt.name}`}
                         onClick={() => {
                           onEdit(prompt.id);
                         }}
-                        className="hover:bg-accent rounded-md p-1.5"
                       >
                         <Pencil className="size-3.5" aria-hidden />
-                      </button>
+                      </Button>
                     ) : null}
                     {canDelete && onDelete ? (
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
+                        size="icon"
                         data-slot="prompt-delete"
-                        aria-label={`${labels.Delete} ${prompt.name}`}
+                        className="text-destructive"
+                        aria-label={`${t('AiPrompts.Catalogue.Delete')} ${prompt.name}`}
                         onClick={() => {
                           onDelete(prompt.id);
                         }}
-                        className="hover:bg-accent text-destructive rounded-md p-1.5"
                       >
                         <Trash2 className="size-3.5" aria-hidden />
-                      </button>
+                      </Button>
                     ) : null}
                   </>
                 )}

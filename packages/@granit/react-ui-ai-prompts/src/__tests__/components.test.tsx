@@ -1,18 +1,19 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { mockPromptPicker, mockPromptSummaries } from '@granit/react-ai-prompts/testing';
+import { screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { IconPicker } from '../components/icon-picker';
 import { PromptCatalogue } from '../components/prompt-catalogue';
 import { PromptForm } from '../components/prompt-form';
 import { PromptPicker } from '../components/prompt-picker';
-import { mockPromptPicker, mockPromptSummaries } from '../testing/data';
+
+import { renderWithProviders } from './test-utils';
 
 import type { CreatePromptRequest } from '@granit/ai-prompts';
 
 describe('PromptCatalogue', () => {
   it('offers Customise for system prompts and Edit/Delete for own (when permitted)', () => {
-    render(
+    renderWithProviders(
       <PromptCatalogue
         prompts={mockPromptSummaries}
         canManage
@@ -30,15 +31,19 @@ describe('PromptCatalogue', () => {
   });
 
   it('hides management affordances without permission', () => {
-    render(<PromptCatalogue prompts={mockPromptSummaries} onEdit={vi.fn()} onDelete={vi.fn()} />);
+    renderWithProviders(
+      <PromptCatalogue prompts={mockPromptSummaries} onEdit={vi.fn()} onDelete={vi.fn()} />
+    );
     expect(screen.queryByRole('button', { name: /edit/i })).toBeNull();
     expect(screen.queryByRole('button', { name: /delete/i })).toBeNull();
   });
 
   it('emits onCustomise with the system prompt id', async () => {
     const onCustomise = vi.fn();
-    render(<PromptCatalogue prompts={mockPromptSummaries} canManage onCustomise={onCustomise} />);
-    await userEvent.click(screen.getByRole('button', { name: /customise summarize/i }));
+    const { user } = renderWithProviders(
+      <PromptCatalogue prompts={mockPromptSummaries} canManage onCustomise={onCustomise} />
+    );
+    await user.click(screen.getByRole('button', { name: /customise summarize/i }));
     expect(onCustomise).toHaveBeenCalledWith(mockPromptSummaries[0]!.id);
   });
 });
@@ -46,24 +51,31 @@ describe('PromptCatalogue', () => {
 describe('PromptForm', () => {
   it('blocks submit until name and instruction are filled', async () => {
     const onSubmit = vi.fn<(r: CreatePromptRequest) => void>();
-    render(<PromptForm onSubmit={onSubmit} />);
+    const { user } = renderWithProviders(<PromptForm onSubmit={onSubmit} />);
 
-    const save = screen.getByRole('button', { name: /save/i });
-    expect(save).toBeDisabled();
+    // Empty form: submit is rejected by the spec-driven resolver (no onSubmit).
+    await user.click(screen.getByRole('button', { name: /save/i }));
+    await waitFor(() => {
+      expect(onSubmit).not.toHaveBeenCalled();
+    });
 
-    await userEvent.type(screen.getByLabelText(/name/i, { selector: 'input' }), 'Summarize');
-    await userEvent.type(screen.getByLabelText(/instruction/i), 'Do the thing');
-    expect(save).toBeEnabled();
+    await user.type(screen.getByLabelText(/name/i, { selector: 'input' }), 'Summarize');
+    await user.type(screen.getByLabelText(/instruction/i), 'Do the thing');
+    await user.click(screen.getByRole('button', { name: /save/i }));
 
-    await userEvent.click(save);
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+    });
     const request = onSubmit.mock.calls[0]![0];
     expect(request).toMatchObject({ name: 'Summarize', content: 'Do the thing' });
   });
 
   it('flags an invalid hex colour', async () => {
-    render(<PromptForm onSubmit={vi.fn()} />);
-    await userEvent.type(screen.getByLabelText(/icon colour hex/i), 'not-a-color');
-    expect(screen.getByRole('button', { name: /save/i })).toBeDisabled();
+    const onSubmit = vi.fn();
+    const { user } = renderWithProviders(<PromptForm onSubmit={onSubmit} />);
+    await user.type(screen.getByLabelText(/icon colour hex/i), 'not-a-color');
+    // The icon picker surfaces its own inline hex-format error.
+    expect(screen.getByText(/#RRGGBB or #RRGGBBAA/i)).toBeInTheDocument();
   });
 });
 
@@ -71,7 +83,7 @@ describe('IconPicker', () => {
   it('selects an icon and edits the colour', async () => {
     const onIconChange = vi.fn();
     const onColorChange = vi.fn();
-    render(
+    const { user } = renderWithProviders(
       <IconPicker
         icon="sparkles"
         iconColor="#3366FF"
@@ -79,7 +91,7 @@ describe('IconPicker', () => {
         onColorChange={onColorChange}
       />
     );
-    await userEvent.click(screen.getByRole('radio', { name: 'calendar' }));
+    await user.click(screen.getByRole('radio', { name: 'calendar' }));
     expect(onIconChange).toHaveBeenCalledWith('calendar');
   });
 });
@@ -87,20 +99,24 @@ describe('IconPicker', () => {
 describe('PromptPicker', () => {
   it('renders grouped categories and selects on click', async () => {
     const onSelect = vi.fn();
-    render(<PromptPicker categories={mockPromptPicker.categories} onSelect={onSelect} />);
+    const { user } = renderWithProviders(
+      <PromptPicker categories={mockPromptPicker.categories} onSelect={onSelect} />
+    );
 
     expect(screen.getByRole('group', { name: 'Records' })).toBeInTheDocument();
     expect(screen.getByRole('group', { name: 'General' })).toBeInTheDocument();
 
-    await userEvent.click(screen.getByText('Summarize'));
+    await user.click(screen.getByText('Summarize'));
     expect(onSelect).toHaveBeenCalledWith(
       expect.objectContaining({ name: 'Summarize', isSystem: true })
     );
   });
 
   it('filters by the search query', async () => {
-    render(<PromptPicker categories={mockPromptPicker.categories} onSelect={vi.fn()} />);
-    await userEvent.type(screen.getByRole('combobox'), 'daily');
+    const { user } = renderWithProviders(
+      <PromptPicker categories={mockPromptPicker.categories} onSelect={vi.fn()} />
+    );
+    await user.type(screen.getByRole('combobox'), 'daily');
     expect(screen.getByText('Daily brief')).toBeInTheDocument();
     expect(screen.queryByText('Summarize')).toBeNull();
   });

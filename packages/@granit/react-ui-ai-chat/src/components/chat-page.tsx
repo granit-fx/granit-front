@@ -24,9 +24,10 @@ import { Loader2, MessageSquarePlus } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { ChatMessageActions } from './components/chat-message-actions';
-import { ConversationListItem } from './components/conversation-list-item';
-import { buildWorkspaceOptions } from './model-catalog';
+import { buildWorkspaceOptions } from '../lib/model-catalog';
+
+import { ChatMessageActions } from './chat-message-actions';
+import { ConversationListItem } from './conversation-list-item';
 
 import type {
   ConversationId,

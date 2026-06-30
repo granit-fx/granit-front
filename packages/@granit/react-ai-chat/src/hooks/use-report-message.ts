@@ -2,9 +2,12 @@ import { reportConversationMessage } from '@granit/ai-chat';
 import { useMutation } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
+import { logger } from '../logger';
 import { useAIChatConfig } from '../providers/ai-chat-provider';
 
 import type { MessageId, MessageReportCategory } from '@granit/ai-chat';
+
+const log = logger.child('useReportMessage');
 
 export interface ReportMessageVariables {
   readonly messageId: MessageId;
@@ -30,6 +33,10 @@ export function useReportMessage(): UseReportMessageReturn {
   const mutation = useMutation({
     mutationFn: ({ messageId, reason, category }: ReportMessageVariables) =>
       reportConversationMessage(config.client, config.basePath, messageId, { reason, category }),
+    onSuccess: (_data, { messageId, category }) => {
+      // No PII: report reason text is never logged, only the id and category.
+      log.info('Message reported', { messageId, category: category ?? null });
+    },
   });
 
   const report = useCallback(

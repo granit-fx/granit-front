@@ -2,7 +2,7 @@ import { mockConversationMessages, mockConversationSummaries } from '@granit/rea
 import { screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatPage } from '../chat-page';
+import { ChatPage } from '../components/chat-page';
 
 import { renderWithProviders } from './test-utils';
 

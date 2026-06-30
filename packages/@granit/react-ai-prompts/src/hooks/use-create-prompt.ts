@@ -2,9 +2,12 @@ import { createPrompt } from '@granit/ai-prompts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
+import { logger } from '../logger';
 import { useAIPromptsConfig } from '../providers/ai-prompts-provider';
 
 import { promptKeys } from './query-keys';
+
+const log = logger.child('Create');
 
 import type { CreatePromptRequest, PromptResponse } from '@granit/ai-prompts';
 
@@ -26,7 +29,9 @@ export function useCreatePrompt(): UseCreatePromptReturn {
   const mutation = useMutation({
     mutationFn: (request: CreatePromptRequest) =>
       createPrompt(config.client, config.basePath, request),
-    onSuccess: () => {
+    onSuccess: (created) => {
+      log.info('Created prompt', { id: created.id });
+      log.debug('Invalidating catalogue list and picker');
       queryClient
         .invalidateQueries({ queryKey: promptKeys.list(config.queryKeyPrefix) })
         .catch(() => undefined);

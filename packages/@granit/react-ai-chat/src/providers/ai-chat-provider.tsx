@@ -4,11 +4,15 @@
 // ---------------------------------------------------------------------------
 
 import { createConfigProvider } from '@granit/react-api-client';
+import { useEffect } from 'react';
 
 import { DEFAULT_BASE_PATH, DEFAULT_QUERY_KEY_PREFIX } from '../constants';
+import { logger } from '../logger';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { GranitProviderConfig, GranitProviderProps } from '@granit/react-api-client';
+
+const log = logger.child('AIChatProvider');
 
 /** Configuration for {@link AIChatProvider}. */
 export interface AIChatConfig extends GranitProviderConfig {
@@ -46,8 +50,21 @@ const { Provider, useConfig, useOptionalConfig } = createConfigProvider<
   }),
 });
 
-/** Provides chat configuration to child components and hooks. */
-export const AIChatProvider = Provider;
+/**
+ * Provides chat configuration to child components and hooks. Wraps the generated
+ * config provider to emit a single dev-observability init log on mount (config
+ * shape only — never any message content).
+ */
+export function AIChatProvider({ config, children }: AIChatProviderProps) {
+  useEffect(() => {
+    log.info('Initialized', {
+      basePath: config.basePath ?? DEFAULT_BASE_PATH,
+      showMessageMetrics: config.showMessageMetrics ?? false,
+    });
+  }, [config.basePath, config.showMessageMetrics]);
+
+  return <Provider config={config}>{children}</Provider>;
+}
 
 /** Returns the chat configuration from the nearest {@link AIChatProvider}. */
 export const useAIChatConfig = useConfig;

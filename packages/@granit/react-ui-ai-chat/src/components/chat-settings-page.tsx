@@ -19,9 +19,11 @@ import {
 } from '@granit/react-ui';
 import { useState } from 'react';
 
-import { logger } from './logger';
+import { logger } from '../logger';
 
 import type { SettingsMap } from '@granit/settings';
+
+const log = logger.child('ChatSettingsPage');
 
 const SETTING = {
   DefaultWorkspace: 'Granit.AI.Chat.DefaultWorkspace',
@@ -89,7 +91,7 @@ function ChatSettingsForm({ current }: Readonly<{ current: SettingsMap }>) {
       ]);
       toast.success(t('AiChat.Settings.Saved'));
     } catch (error) {
-      logger.error('[ChatSettingsPage] Failed to save chat preferences', error);
+      log.error('Failed to save chat preferences', error);
       toast.error(t('AiChat.Settings.SaveFailed'));
     }
   };

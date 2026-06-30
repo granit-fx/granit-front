@@ -1,9 +1,12 @@
 import { getPromptPicker } from '@granit/ai-prompts';
 import { useQuery } from '@tanstack/react-query';
 
+import { logger } from '../logger';
 import { useAIPromptsConfig } from '../providers/ai-prompts-provider';
 
 import { promptKeys } from './query-keys';
+
+const log = logger.child('Picker');
 
 import type { PromptPickerResponse } from '@granit/ai-prompts';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -18,7 +21,10 @@ export function usePromptPicker(options?: {
   const config = useAIPromptsConfig();
   return useQuery({
     queryKey: promptKeys.picker(config.queryKeyPrefix),
-    queryFn: () => getPromptPicker(config.client, config.basePath),
+    queryFn: () => {
+      log.debug('Fetching prompt picker catalogue');
+      return getPromptPicker(config.client, config.basePath);
+    },
     enabled: options?.enabled ?? true,
   });
 }

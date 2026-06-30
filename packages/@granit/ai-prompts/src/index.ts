@@ -27,3 +27,6 @@ export {
 
 // Permissions
 export { AIPromptsPermissions } from './permissions';
+
+// Validation constraints (generated from contracts/openapi/ai-prompts.json)
+export { aiPromptsConstraints } from './constraints';

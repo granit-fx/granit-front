@@ -2,7 +2,7 @@ import { mockPromptSummaries, mockUserPrompt } from '@granit/react-ai-prompts/te
 import { screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { PromptCataloguePage } from '../prompt-catalogue-page';
+import { PromptCataloguePage } from '../components/prompt-catalogue-page';
 
 import { renderWithProviders } from './test-utils';
 
@@ -48,6 +48,9 @@ vi.mock('@granit/react-ai-prompts', () => ({
   useUpdatePrompt: () => ({ updateAsync: mockUpdateAsync, isPending: false }),
   useDeletePrompt: () => ({ remove: mockRemove }),
   useCustomisePrompt: () => ({ customise: mockCustomise }),
+}));
+
+vi.mock('../components/prompt-catalogue', () => ({
   PromptCatalogue: ({
     prompts,
     canManage,
@@ -95,6 +98,9 @@ vi.mock('@granit/react-ai-prompts', () => ({
       </ul>
     </div>
   ),
+}));
+
+vi.mock('../components/prompt-form', () => ({
   PromptForm: ({
     initial,
     submitting,

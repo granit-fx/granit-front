@@ -2,11 +2,14 @@ import { deleteConversation } from '@granit/ai-chat';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
+import { logger } from '../logger';
 import { useAIChatConfig } from '../providers/ai-chat-provider';
 
 import { conversationKeys } from './query-keys';
 
 import type { ConversationId } from '@granit/ai-chat';
+
+const log = logger.child('useDeleteConversation');
 
 export interface UseDeleteConversationReturn {
   readonly remove: (id: ConversationId) => void;
@@ -25,7 +28,8 @@ export function useDeleteConversation(): UseDeleteConversationReturn {
 
   const mutation = useMutation({
     mutationFn: (id: ConversationId) => deleteConversation(config.client, config.basePath, id),
-    onSuccess: () => {
+    onSuccess: (_data, id) => {
+      log.info('Conversation deleted', { conversationId: id });
       queryClient
         .invalidateQueries({ queryKey: conversationKeys.list(config.queryKeyPrefix) })
         .catch(() => undefined);

@@ -1,7 +1,7 @@
 import { isValidElement } from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { buildWorkspaceOptions } from '../model-catalog';
+import { buildWorkspaceOptions } from '../lib/model-catalog';
 
 // The catalog only needs `t` for the capability labels and the fallback group
 // name; echo the fallback (or the key) so assertions stay i18n-independent.

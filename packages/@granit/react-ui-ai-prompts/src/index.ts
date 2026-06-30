@@ -1,2 +1,12 @@
-export { PromptCataloguePage } from './prompt-catalogue-page';
+export { PromptCataloguePage } from './components/prompt-catalogue-page';
+export { PromptCatalogue } from './components/prompt-catalogue';
+export type { PromptCatalogueProps } from './components/prompt-catalogue';
+export { PromptForm } from './components/prompt-form';
+export type { PromptFormProps } from './components/prompt-form';
+export { PromptPicker } from './components/prompt-picker';
+export type { PromptPickerProps } from './components/prompt-picker';
+export { IconPicker } from './components/icon-picker';
+export type { IconPickerProps } from './components/icon-picker';
+export { createPromptResolver } from './validation';
+export type { PromptFormValues } from './validation';
 export { aiPromptsAdminTranslationsEn, aiPromptsAdminTranslationsFr } from './locales';

@@ -1,70 +1,11 @@
-/** Translation shape for the `aiPrompts` namespace. */
-export interface PromptTranslations {
-  readonly Picker: {
-    readonly Title: string;
-    readonly NoResults: string;
-    readonly System: string;
-  };
-  readonly Catalogue: {
-    readonly Empty: string;
-    readonly New: string;
-    readonly Edit: string;
-    readonly Delete: string;
-    readonly Customise: string;
-    readonly System: string;
-    readonly DeleteConfirm: string;
-  };
-  readonly Form: {
-    readonly Name: string;
-    readonly NamePlaceholder: string;
-    readonly ShortDescription: string;
-    readonly Content: string;
-    readonly ContentPlaceholder: string;
-    readonly Icon: string;
-    readonly Save: string;
-    readonly Cancel: string;
-    readonly NameRequired: string;
-    readonly ContentRequired: string;
-  };
-  readonly IconPicker: {
-    readonly IconLabel: string;
-    readonly ColorLabel: string;
-    readonly ColorHexLabel: string;
-    readonly ColorInvalid: string;
-  };
-}
+/**
+ * Translation shape for the headless `@granit/react-ai-prompts` package. The
+ * styled catalogue / form / picker UI (and its user-facing strings) now lives in
+ * `@granit/react-ui-ai-prompts`; the only component shipped here is the
+ * framework-agnostic `PromptIcon` glyph renderer, which renders no text. The
+ * bundle is therefore intentionally empty but kept exported so hosts can still
+ * register the `aiPrompts` namespace without a breaking import change.
+ */
+export type PromptTranslations = Record<string, never>;
 
-export const aiPromptsTranslationsEn: PromptTranslations = {
-  Picker: {
-    Title: 'Prompts',
-    NoResults: 'No prompts',
-    System: 'System',
-  },
-  Catalogue: {
-    Empty: 'No prompts yet.',
-    New: 'New prompt',
-    Edit: 'Edit',
-    Delete: 'Delete',
-    Customise: 'Customise',
-    System: 'System',
-    DeleteConfirm: 'Delete this prompt?',
-  },
-  Form: {
-    Name: 'Name',
-    NamePlaceholder: 'e.g. Summarize',
-    ShortDescription: 'Short description',
-    Content: 'Instruction',
-    ContentPlaceholder: 'What should the assistant do?',
-    Icon: 'Icon',
-    Save: 'Save',
-    Cancel: 'Cancel',
-    NameRequired: 'A name is required.',
-    ContentRequired: 'An instruction is required.',
-  },
-  IconPicker: {
-    IconLabel: 'Icon',
-    ColorLabel: 'Icon colour',
-    ColorHexLabel: 'Icon colour hex',
-    ColorInvalid: 'Use #RRGGBB or #RRGGBBAA.',
-  },
-};
+export const aiPromptsTranslationsEn: PromptTranslations = {};

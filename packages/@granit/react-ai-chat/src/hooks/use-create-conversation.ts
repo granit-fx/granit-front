@@ -2,11 +2,14 @@ import { createConversation } from '@granit/ai-chat';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
+import { logger } from '../logger';
 import { useAIChatConfig } from '../providers/ai-chat-provider';
 
 import { conversationKeys } from './query-keys';
 
 import type { ConversationResponse, CreateConversationRequest } from '@granit/ai-chat';
+
+const log = logger.child('useCreateConversation');
 
 export interface UseCreateConversationReturn {
   readonly create: (request: CreateConversationRequest) => void;
@@ -26,7 +29,8 @@ export function useCreateConversation(): UseCreateConversationReturn {
   const mutation = useMutation({
     mutationFn: (request: CreateConversationRequest) =>
       createConversation(config.client, config.basePath, request),
-    onSuccess: () => {
+    onSuccess: (conversation) => {
+      log.info('Conversation created', { conversationId: conversation.id });
       queryClient
         .invalidateQueries({ queryKey: conversationKeys.list(config.queryKeyPrefix) })
         .catch(() => undefined);

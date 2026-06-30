@@ -4,14 +4,12 @@
 // ---------------------------------------------------------------------------
 
 import { logger } from '../logger';
-import { AI_STREAM_DONE_MARKER } from '../types/index';
 
 import type {
   AIChatCompletionEvent,
   AIChatRequest,
   AIChatResponse,
-  AIChatStreamChunk,
-  AIChatStreamUsage,
+  AIChatStreamEvent,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
@@ -33,37 +31,31 @@ export async function chatComplete(
   return response.data;
 }
 
-/** Result of parsing a single SSE data line. */
-type ParsedLine =
-  | { kind: 'chunk'; content: string }
-  | { kind: 'usage'; usage: AIChatStreamUsage }
-  | { kind: 'done' }
-  | { kind: 'event'; eventType: string }
-  | { kind: 'skip' };
+/** Result of parsing a single SSE `data:` line into a backend frame. */
+type ParsedFrame = { kind: 'event'; event: AIChatStreamEvent } | { kind: 'skip' };
 
-/** Parses a single SSE line into a typed result. */
-function parseSseLine(line: string, currentEventType: string | null): ParsedLine {
-  if (line.startsWith('event: ')) {
-    return { kind: 'event', eventType: line.slice(7).trim() };
-  }
+/**
+ * Parses a single SSE line into an {@link AIChatStreamEvent}. The backend emits
+ * one JSON frame per `data:` line discriminated by `type` (`delta`/`usage`/`error`)
+ * with no `event:` name and no `[DONE]` sentinel — end-of-stream is the connection
+ * closing. Non-`data:` lines (comments, blank separators) are skipped.
+ */
+function parseSseLine(line: string): ParsedFrame {
+  if (!line.startsWith('data:')) return { kind: 'skip' };
 
-  if (!line.startsWith('data: ')) return { kind: 'skip' };
-
-  const data = line.slice(6).trim();
-  if (data === AI_STREAM_DONE_MARKER) return { kind: 'done' };
+  // SSE strips a single optional space after the field name.
+  const data = line.slice(5).replace(/^ /, '').trim();
+  if (!data) return { kind: 'skip' };
 
   try {
-    if (currentEventType === 'usage') {
-      const parsed = JSON.parse(data) as AIChatStreamUsage;
-      return { kind: 'usage', usage: parsed };
-    }
-    const parsed = JSON.parse(data) as AIChatStreamChunk;
-    return { kind: 'chunk', content: parsed.content };
+    const parsed = JSON.parse(data) as AIChatStreamEvent;
+    if (typeof parsed.type !== 'string') return { kind: 'skip' };
+    return { kind: 'event', event: parsed };
   } catch (err) {
     // Partial/malformed frame mid-stream; skip it. Debug (not warn) because a
     // truncated tail frame is expected, and the raw data is untrusted server
     // content kept out of the log.
-    logger.debug('Skipped unparseable AI chat SSE frame', { currentEventType, err });
+    logger.debug('Skipped unparseable AI chat SSE frame', { err });
     return { kind: 'skip' };
   }
 }
@@ -74,8 +66,10 @@ function parseSseLine(line: string, currentEventType: string | null): ParsedLine
  * Uses `adapter: 'fetch'` with `responseType: 'stream'` so the request goes
  * through the full Axios interceptor pipeline (CSRF, auth, tenant headers).
  * Yields {@link AIChatCompletionEvent} items as they arrive: content chunks and a
- * final usage summary. The stream ends when the server sends `data: [DONE]`
- * or closes the connection.
+ * final usage summary. The stream ends when the server closes the connection
+ * (there is no `[DONE]` sentinel). An `error` frame — a provider failure after
+ * streaming started — is surfaced by throwing, so the caller's `try/catch` (or
+ * the `error` state in `useAIChatStream`) handles it after any partial content.
  *
  * `POST {basePath}/chat/{workspaceName}/stream`
  *
@@ -116,7 +110,6 @@ export async function* chatStream(
   const reader = body.getReader();
   const decoder = new TextDecoder();
   let buffer = '';
-  let currentEventType: string | null = null;
 
   try {
     for (;;) {
@@ -128,17 +121,19 @@ export async function* chatStream(
       buffer = lines.pop()!;
 
       for (const line of lines) {
-        const result = parseSseLine(line, currentEventType);
-        if (result.kind === 'event') {
-          currentEventType = result.eventType;
-        } else if (result.kind === 'done') {
-          return;
-        } else if (result.kind === 'chunk') {
-          currentEventType = null;
-          yield { type: 'chunk', content: result.content };
-        } else if (result.kind === 'usage') {
-          currentEventType = null;
-          yield { type: 'usage', usage: result.usage };
+        const result = parseSseLine(line);
+        if (result.kind !== 'event') continue;
+
+        const frame = result.event;
+        if (frame.type === 'delta') {
+          if (frame.content != null) yield { type: 'chunk', content: frame.content };
+        } else if (frame.type === 'usage') {
+          yield {
+            type: 'usage',
+            usage: { inputTokens: frame.inputTokens ?? 0, outputTokens: frame.outputTokens ?? 0 },
+          };
+        } else if (frame.type === 'error') {
+          throw new Error(frame.error ?? 'AI chat stream failed');
         }
       }
     }

@@ -6,7 +6,7 @@ import {
 import { screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { PromptCataloguePage } from '../prompt-catalogue-page';
+import { PromptCataloguePage } from '../components/prompt-catalogue-page';
 
 import { renderWithProviders } from './test-utils';
 
@@ -34,7 +34,11 @@ vi.mock('@granit/react-ai-prompts', () => ({
   useUpdatePrompt: () => ({ updateAsync: vi.fn(), isPending: false }),
   useDeletePrompt: () => ({ remove: mockRemove }),
   useCustomisePrompt: () => ({ customise: vi.fn() }),
-  // Stub heavy package components so they do not self-fetch.
+}));
+
+// Stub the sibling styled components so the page test exercises only the page's
+// own wiring (the components have their own focused tests).
+vi.mock('../components/prompt-catalogue', () => ({
   PromptCatalogue: ({
     prompts,
     canManage,
@@ -68,6 +72,9 @@ vi.mock('@granit/react-ai-prompts', () => ({
       </ul>
     </div>
   ),
+}));
+
+vi.mock('../components/prompt-form', () => ({
   PromptForm: () => <div data-slot="prompt-form-stub" />,
 }));
 

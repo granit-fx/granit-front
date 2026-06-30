@@ -22,12 +22,11 @@ describe('chatStream', () => {
     vi.restoreAllMocks();
   });
 
-  it('should yield content chunks from SSE events', async () => {
+  it('should yield content chunks from delta frames', async () => {
     const client = createMockClient();
     const stream = createSSEStream([
-      'data: {"content":"Hello"}\n\n',
-      'data: {"content":" world"}\n\n',
-      'data: [DONE]\n\n',
+      'data: {"type":"delta","content":"Hello"}\n\n',
+      'data: {"type":"delta","content":" world"}\n\n',
     ]);
     vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
@@ -44,9 +43,9 @@ describe('chatStream', () => {
     ]);
   });
 
-  it('should handle chunks split across reads', async () => {
+  it('should handle frames split across reads', async () => {
     const client = createMockClient();
-    const stream = createSSEStream(['data: {"cont', 'ent":"split"}\n\ndata: [DONE]\n\n']);
+    const stream = createSSEStream(['data: {"type":"delta","cont', 'ent":"split"}\n\n']);
     vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
     const events: AIChatCompletionEvent[] = [];
@@ -70,12 +69,31 @@ describe('chatStream', () => {
     await expect(generator.next()).rejects.toThrow('Request failed with status 401');
   });
 
-  it('should skip malformed SSE events', async () => {
+  it('should throw on an error frame, after yielding prior content', async () => {
+    const client = createMockClient();
+    const stream = createSSEStream([
+      'data: {"type":"delta","content":"partial"}\n\n',
+      'data: {"type":"error","error":"provider unavailable"}\n\n',
+    ]);
+    vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
+
+    const events: AIChatCompletionEvent[] = [];
+    await expect(async () => {
+      for await (const event of chatStream(client, '', 'default', {
+        messages: [{ role: 'user', content: 'Hi' }],
+      })) {
+        events.push(event);
+      }
+    }).rejects.toThrow('provider unavailable');
+
+    expect(events).toEqual([{ type: 'chunk', content: 'partial' }]);
+  });
+
+  it('should skip malformed SSE frames', async () => {
     const client = createMockClient();
     const stream = createSSEStream([
       'data: not-json\n\n',
-      'data: {"content":"valid"}\n\n',
-      'data: [DONE]\n\n',
+      'data: {"type":"delta","content":"valid"}\n\n',
     ]);
     vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
@@ -91,7 +109,7 @@ describe('chatStream', () => {
 
   it('should call axios with correct URL and options', async () => {
     const client = createMockClient();
-    const stream = createSSEStream(['data: [DONE]\n\n']);
+    const stream = createSSEStream([]);
     const postSpy = vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
     const request = { messages: [{ role: 'user' as const, content: 'Hi' }] };
@@ -125,13 +143,11 @@ describe('chatStream', () => {
     expect(events).toEqual([]);
   });
 
-  it('should yield usage event from SSE event: usage', async () => {
+  it('should yield usage from a usage frame', async () => {
     const client = createMockClient();
     const stream = createSSEStream([
-      'data: {"content":"Hello"}\n\n',
-      'event: usage\n',
-      'data: {"inputTokens":150,"outputTokens":42}\n\n',
-      'data: [DONE]\n\n',
+      'data: {"type":"delta","content":"Hello"}\n\n',
+      'data: {"type":"usage","inputTokens":150,"outputTokens":42}\n\n',
     ]);
     vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 
@@ -148,11 +164,11 @@ describe('chatStream', () => {
     ]);
   });
 
-  it('should handle usage event split across reads', async () => {
+  it('should handle a usage frame split across reads', async () => {
     const client = createMockClient();
     const stream = createSSEStream([
-      'data: {"content":"Hi"}\n\nevent: us',
-      'age\ndata: {"inputTokens":10,"outputTokens":5}\n\ndata: [DONE]\n\n',
+      'data: {"type":"delta","content":"Hi"}\n\ndata: {"type":"usage","inp',
+      'utTokens":10,"outputTokens":5}\n\n',
     ]);
     vi.spyOn(client, 'post').mockResolvedValue({ data: stream });
 

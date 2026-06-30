@@ -2,7 +2,7 @@ import { toast } from '@granit/react-ui';
 import { screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatSettingsPage } from '../chat-settings-page';
+import { ChatSettingsPage } from '../components/chat-settings-page';
 
 import { renderWithProviders } from './test-utils';
 
