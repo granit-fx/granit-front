@@ -155,7 +155,6 @@ export const STORYBOOK_PAGE_BUDGET: Readonly<Record<string, number>> = {
   '@granit/react-ui-ai': 4,
   '@granit/react-ui-ai-chat': 2,
   '@granit/react-ui-ai-prompts': 1,
-  '@granit/react-ui-auditing': 2,
   '@granit/react-ui-authentication-federated': 1,
   '@granit/react-ui-authentication-local': 7,
   '@granit/react-ui-authorization': 4,

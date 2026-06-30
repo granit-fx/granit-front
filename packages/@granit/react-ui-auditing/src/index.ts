@@ -8,12 +8,15 @@ export { AuditListPage } from './audit-list-page';
 export type { AuditListPageProps } from './audit-list-page';
 export { AuditDetailPage } from './audit-detail-page';
 export type { AuditDetailPageProps } from './audit-detail-page';
+export { AuditEntityChangesPage } from './audit-entity-changes-page';
+export type { AuditEntityChangesPageProps } from './audit-entity-changes-page';
 
 // Components
 export { AuditCategoryBadge } from './components/audit-category-badge';
 export { AuditChangeTypeBadge } from './components/audit-change-type-badge';
 export { AuditEntityChangeCard } from './components/audit-entity-change-card';
 export { createAuditColumns } from './components/audit-columns';
+export { createAuditEntityChangeColumns } from './components/audit-entity-change-columns';
 
 // Constants
 export { DEFAULT_AUDIT_BASE_PATH, DEFAULT_AUDIT_ROUTE_BASE } from './constants';

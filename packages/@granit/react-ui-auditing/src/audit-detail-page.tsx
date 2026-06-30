@@ -100,6 +100,12 @@ function AuditDetailContent({ routeBase }: { readonly routeBase: string }) {
             </div>
             <div>
               <dt className="text-sm font-medium text-muted-foreground">
+                {t('Audit.Columns.UserAgent')}
+              </dt>
+              <dd className="mt-1 break-all font-mono text-sm">{entry.userAgent ?? '-'}</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-medium text-muted-foreground">
                 {t('Audit.Columns.CorrelationId')}
               </dt>
               <dd className="mt-1 font-mono text-sm">{entry.correlationId ?? '-'}</dd>

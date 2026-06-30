@@ -23,6 +23,7 @@ vi.mock('@granit/react-auditing', () => ({
     setPage: vi.fn(),
     setPageSize: vi.fn(),
     setFilters: vi.fn(),
+    toggleSort: vi.fn(),
   }),
 }));
 

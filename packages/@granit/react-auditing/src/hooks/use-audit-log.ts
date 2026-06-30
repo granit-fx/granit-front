@@ -4,9 +4,11 @@ import {
   listEntityAuditTrail,
   pseudonymizeUserAuditLogs,
 } from '@granit/auditing';
+import { redact } from '@granit/logger';
 import { useQueryEndpoint } from '@granit/react-query-engine';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { logger } from '../logger';
 import { buildAuditLogQueryKey, useAuditLogConfig } from '../providers/audit-log-provider';
 
 import type { AxiosError, ProblemDetails } from '@granit/api-client';
@@ -20,7 +22,7 @@ import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
  * `MapGranitQuery<AuditEntryResponse>()` group of `Granit.Auditing.Endpoints`. Exposes
  * pagination / search / filter / sort / group-by dispatchers and the paged
  * (or grouped) result. Filters are serialized as `filter[field.op]=value`, so
- * they are honored by the backend (unlike the deprecated {@link useAuditLogEntries}).
+ * they are honored server-side by the QueryEngine.
  *
  * Must be used within an {@link AuditLogProvider}.
  *
@@ -54,7 +56,10 @@ export function useAuditLogEntry(id: string): UseQueryResult<AuditEntryDetailRes
 
   return useQuery({
     queryKey: buildAuditLogQueryKey(config, 'detail', id),
-    queryFn: () => getAuditLogEntry(config.client, auditEntriesPath, id),
+    queryFn: () => {
+      logger.debug('Fetching audit entry detail', { id });
+      return getAuditLogEntry(config.client, auditEntriesPath, id);
+    },
     enabled: id.length > 0,
   });
 }
@@ -77,8 +82,10 @@ export function useEntityAuditTrail(
 
   return useQuery({
     queryKey: buildAuditLogQueryKey(config, 'entity', entityType, entityId, params),
-    queryFn: () =>
-      listEntityAuditTrail(config.client, auditEntriesPath, entityType, entityId, params),
+    queryFn: () => {
+      logger.debug('Fetching entity audit trail', { entityType, entityId });
+      return listEntityAuditTrail(config.client, auditEntriesPath, entityType, entityId, params);
+    },
     enabled: entityType.length > 0 && entityId.length > 0,
   });
 }
@@ -102,7 +109,10 @@ export function useAuditEntriesByCorrelation(
 
   return useQuery({
     queryKey: buildAuditLogQueryKey(config, 'correlation', correlationId),
-    queryFn: () => getAuditEntriesByCorrelationId(config.client, auditEntriesPath, correlationId),
+    queryFn: () => {
+      logger.debug('Fetching audit entries by correlation', { correlationId });
+      return getAuditEntriesByCorrelationId(config.client, auditEntriesPath, correlationId);
+    },
     enabled: correlationId.length > 0,
   });
 }
@@ -130,10 +140,14 @@ export function usePseudonymizeUserAuditLogs(): UseMutationResult<
   const queryClient = useQueryClient();
 
   return useMutation<void, AxiosError<ProblemDetails>, string>({
-    mutationFn: (userId: string) =>
-      pseudonymizeUserAuditLogs(config.client, auditEntriesPath, userId),
-    onSuccess: () => {
-      // Custom-lookup hooks (detail / entity / correlation / deprecated list).
+    mutationFn: (userId: string) => {
+      // GDPR Art. 17 subject — never log the raw user identifier.
+      logger.info('Pseudonymizing user audit logs', { userId: redact.token(userId) });
+      return pseudonymizeUserAuditLogs(config.client, auditEntriesPath, userId);
+    },
+    onSuccess: (_data, userId) => {
+      logger.info('Pseudonymized user audit logs', { userId: redact.token(userId) });
+      // Custom-lookup hooks (detail / entity / correlation).
       queryClient.invalidateQueries({ queryKey: buildAuditLogQueryKey(config) });
       // QueryEngine list/meta cache (keyed by the audit-entries path segments).
       queryClient.invalidateQueries({

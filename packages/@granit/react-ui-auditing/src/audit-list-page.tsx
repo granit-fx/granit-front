@@ -1,14 +1,7 @@
 import { AuditLogProvider, useAuditEntries } from '@granit/react-auditing';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Spinner,
-} from '@granit/react-ui';
-import { ManualDataTable } from '@granit/react-ui-kit';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@granit/react-ui';
+import { QueryEndpointDataTable } from '@granit/react-ui-kit';
 import { useMemo } from 'react';
 
 import { createAuditColumns } from './components/audit-columns';
@@ -23,8 +16,6 @@ const CATEGORIES: AuditCategoryValue[] = [
   'AccessDenied',
   'PrivilegedAccess',
 ];
-
-const PAGE_SIZES = [10, 20, 50];
 
 export interface AuditListPageProps {
   /** API mount path. Defaults to `/api/v1/auditing`. The Axios client resolves
@@ -47,9 +38,11 @@ export function AuditListPage({
 
 function AuditPageContent({ routeBase }: { readonly routeBase: string }) {
   const { t } = useTranslation();
-  // Query-engine surface: filters are serialized as `filter[field.op]=value`,
-  // so the category filter is actually honored by the backend.
-  const { query, params, setPage, setPageSize, setFilters } = useAuditEntries();
+  // Query-engine surface: pagination, sort and filters are driven server-side by
+  // `QueryEndpointDataTable`. Category is a first-class filterable field, so the
+  // dropdown sets `filter[category.eq]` and is honored by the backend.
+  const qe = useAuditEntries();
+  const { params, setFilters } = qe;
   const { formatDateTime } = useDateFormatter();
   const columns = useMemo(
     () => createAuditColumns({ t, formatDateTime, routeBase }),
@@ -57,8 +50,6 @@ function AuditPageContent({ routeBase }: { readonly routeBase: string }) {
   );
 
   const category = params.filters?.find((f) => f.field === 'category')?.value;
-
-  const { data, isLoading } = query;
 
   return (
     <div data-slot="audit-list-page" className="space-y-6">
@@ -75,7 +66,7 @@ function AuditPageContent({ routeBase }: { readonly routeBase: string }) {
             setFilters(v === 'all' ? [] : [{ field: 'category', operator: 'Eq', value: v }])
           }
         >
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-[200px]" aria-label={t('Audit.FilterByCategory')}>
             <SelectValue placeholder={t('Audit.FilterByCategory')} />
           </SelectTrigger>
           <SelectContent>
@@ -89,23 +80,7 @@ function AuditPageContent({ routeBase }: { readonly routeBase: string }) {
         </Select>
       </div>
 
-      {/* Table */}
-      {isLoading ? (
-        <div className="flex h-64 items-center justify-center">
-          <Spinner />
-        </div>
-      ) : (
-        <ManualDataTable
-          columns={columns}
-          data={data?.items ?? []}
-          totalCount={data?.totalCount ?? 0}
-          page={params.page ?? 1}
-          pageSize={params.pageSize ?? 20}
-          pageSizes={PAGE_SIZES}
-          onPageChange={setPage}
-          onPageSizeChange={setPageSize}
-        />
-      )}
+      <QueryEndpointDataTable queryEndpoint={qe} columns={columns} />
     </div>
   );
 }

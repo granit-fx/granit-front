@@ -29,6 +29,7 @@ const mockEntry: AuditEntryDetailResponse = {
   userName: 'Marie Dupont',
   category: 'DataMutation',
   ipAddress: '10.0.1.45',
+  userAgent: 'Mozilla/5.0',
   tenantId: null,
   correlationId: null,
   entityChanges: [
@@ -65,6 +66,7 @@ describe('AuditDetailPage', () => {
     expect(screen.getByText('Audit entry detail')).toBeInTheDocument();
     expect(screen.getByText('Marie Dupont')).toBeInTheDocument();
     expect(screen.getByText('10.0.1.45')).toBeInTheDocument();
+    expect(screen.getByText('Mozilla/5.0')).toBeInTheDocument();
   });
 
   it('should render the entity change with its property diff', () => {

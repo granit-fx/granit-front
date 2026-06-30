@@ -1,8 +1,9 @@
 import { useOptionalGranitClient } from '@granit/react-api-client';
 import { QueryProvider } from '@granit/react-query-engine';
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 
 import { DEFAULT_BASE_PATH } from '../constants';
+import { logger } from '../logger';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { QueryConfig } from '@granit/query-engine';
@@ -63,6 +64,10 @@ export function AuditLogProvider({ config, children }: Readonly<AuditLogProvider
     () => ({ client: value.client, basePath: `${value.basePath}/audit-entries` }),
     [value]
   );
+
+  useEffect(() => {
+    logger.info('AuditLogProvider initialized', { basePath: value.basePath });
+  }, [value.basePath]);
 
   return (
     <AuditLogConfigContext value={value}>

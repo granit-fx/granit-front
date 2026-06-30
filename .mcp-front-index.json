@@ -8176,6 +8176,17 @@
           "members": []
         },
         {
+          "name": "AuditEntityChangesPage",
+          "kind": "function",
+          "signature": "function AuditEntityChangesPage("
+        },
+        {
+          "name": "AuditEntityChangesPageProps",
+          "kind": "interface",
+          "signature": "interface AuditEntityChangesPageProps",
+          "members": []
+        },
+        {
           "name": "AuditCategoryBadge",
           "kind": "function",
           "signature": "function AuditCategoryBadge("
@@ -8194,6 +8205,11 @@
           "name": "createAuditColumns",
           "kind": "function",
           "signature": "function createAuditColumns("
+        },
+        {
+          "name": "createAuditEntityChangeColumns",
+          "kind": "function",
+          "signature": "function createAuditEntityChangeColumns("
         },
         {
           "name": "DEFAULT_AUDIT_BASE_PATH",
