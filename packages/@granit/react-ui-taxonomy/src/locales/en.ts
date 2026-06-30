@@ -9,10 +9,15 @@
  */
 export const taxonomyAdminTranslationsEn = {
   'taxonomy:Category.Tree.Add': 'Add child',
+  'taxonomy:Category.Tree.AddDialogTitle': 'Add category',
+  'taxonomy:Category.Tree.Cancel': 'Cancel',
+  'taxonomy:Category.Tree.Collapse': 'Collapse',
+  'taxonomy:Category.Tree.ConfirmDelete': 'Delete',
   'taxonomy:Category.Tree.Delete': 'Delete',
   'taxonomy:Category.Tree.DeleteConfirm':
     'Delete this category? This cannot be undone. Categories with descendants or active assignments cannot be deleted.',
   'taxonomy:Category.Tree.Empty': 'No categories.',
+  'taxonomy:Category.Tree.Expand': 'Expand',
   'taxonomy:Category.Tree.Error.CrossScope': 'Cannot move across scopes.',
   'taxonomy:Category.Tree.Error.Cycle': 'Cannot move a category under one of its descendants.',
   'taxonomy:Category.Tree.Error.HasAssignments':
@@ -24,7 +29,11 @@ export const taxonomyAdminTranslationsEn = {
   'taxonomy:Category.Tree.MovePromote': '(promote to root)',
   'taxonomy:Category.Tree.MovePrompt':
     'Paste the new parent category id, or leave empty to promote to root.',
+  'taxonomy:Category.Tree.NameField': 'Name',
+  'taxonomy:Category.Tree.NewParentField': 'New parent category id',
   'taxonomy:Category.Tree.Rename': 'Rename',
+  'taxonomy:Category.Tree.RenameDialogTitle': 'Rename category',
+  'taxonomy:Category.Tree.Submit': 'Save',
   'taxonomy:Category.Tree.Subtitle':
     'Categories are single-assignment, hierarchical buckets. Each entity belongs to at most one category in a given scope.',
   'taxonomy:Category.Tree.Title': 'Categories',
@@ -49,6 +58,7 @@ export const taxonomyAdminTranslationsEn = {
   'taxonomy:Tag.Manager.NameConflict': 'A tag with this name already exists.',
   'taxonomy:Tag.Manager.NameHeader': 'Name',
   'taxonomy:Tag.Manager.NameRequired': 'Name is required.',
+  'taxonomy:Tag.Manager.NameTooLong': 'Name must be at most 50 characters.',
   'taxonomy:Tag.Manager.NewTag': 'New tag',
   'taxonomy:Tag.Manager.ReadonlyHint': "You don't have permission to manage tags.",
   'taxonomy:Tag.Manager.Subtitle':

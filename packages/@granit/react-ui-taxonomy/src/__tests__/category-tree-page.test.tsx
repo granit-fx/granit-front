@@ -1,10 +1,10 @@
 import { screen } from '@testing-library/react';
 
-import { CategoryTreePage } from '../category-tree-page';
+import { CategoryTreePage } from '../components/category-tree-page';
 
 import { renderWithProviders } from './test-utils';
 
-vi.mock('@granit/react-taxonomy', () => ({
+vi.mock('../components/category-tree', () => ({
   CategoryTree: ({ scope, canManage }: { scope: string; canManage?: boolean }) => (
     <div data-testid="category-tree-stub" data-scope={scope} data-can-manage={String(canManage)} />
   ),

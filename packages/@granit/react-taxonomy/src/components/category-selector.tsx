@@ -4,10 +4,16 @@ import { useCategory } from '../hooks/use-categories';
 import { useAssignCategory, useUnassignCategory } from '../hooks/use-category-mutations';
 
 import { CategoryBreadcrumb } from './category-breadcrumb.tsx';
-import { CategoryTree } from './category-tree.tsx';
+import { CategoryBrowser } from './category-browser.tsx';
 
 import type { CategoryResponse } from '@granit/taxonomy';
 import type { ReactNode } from 'react';
+
+/** Props passed to a custom {@link CategorySelectorProps.renderTree}. */
+export interface CategorySelectorTreeRenderProps {
+  readonly scope: string;
+  readonly onSelect: (category: CategoryResponse) => void;
+}
 
 export interface CategorySelectorLabels {
   readonly noCategory?: string;
@@ -42,6 +48,14 @@ export interface CategorySelectorProps {
    * local state management.
    */
   readonly onUnassign?: () => void;
+  /**
+   * Render the in-dialog category selection surface. Defaults to the headless
+   * {@link CategoryBrowser} (no `@granit/react-ui` dependency). The UI tier
+   * injects the richer tree, e.g.
+   * `renderTree={({ scope, onSelect }) => <CategoryTree scope={scope} onSelect={onSelect} />}`
+   * from `@granit/react-ui-taxonomy`.
+   */
+  readonly renderTree?: (props: CategorySelectorTreeRenderProps) => ReactNode;
 }
 
 const DEFAULT_LABELS: Required<CategorySelectorLabels> = {
@@ -57,7 +71,8 @@ const DEFAULT_LABELS: Required<CategorySelectorLabels> = {
  * breadcrumb (or a "No category" state); the Choose / Clear buttons wire
  * `useAssignCategory` (idempotent — re-assignment updates in place
  * server-side) and `useUnassignCategory`. Selection happens via an inline
- * {@link CategoryTree} dialog scoped to the same `scope`.
+ * dialog scoped to the same `scope`, rendering {@link CategoryBrowser} by
+ * default (override with `renderTree` to inject a richer tree).
  */
 export function CategorySelector({
   scope,
@@ -69,6 +84,7 @@ export function CategorySelector({
   className,
   onAssign,
   onUnassign,
+  renderTree,
 }: CategorySelectorProps): ReactNode {
   const labelStrings = { ...DEFAULT_LABELS, ...labels };
   const [open, setOpen] = useState(false);
@@ -126,7 +142,11 @@ export function CategorySelector({
               {labelStrings.close}
             </button>
           </header>
-          <CategoryTree scope={scope} onSelect={handleSelect} />
+          {renderTree ? (
+            renderTree({ scope, onSelect: handleSelect })
+          ) : (
+            <CategoryBrowser scope={scope} onSelect={handleSelect} />
+          )}
         </dialog>
       )}
     </div>

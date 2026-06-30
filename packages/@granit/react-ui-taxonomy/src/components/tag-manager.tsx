@@ -1,13 +1,15 @@
-import { isHexColor } from '@granit/taxonomy';
+import { TagChip, useCreateTag, useDeleteTag, useTags, useUpdateTag } from '@granit/react-taxonomy';
+import { isHexColor, taxonomyConstraints } from '@granit/taxonomy';
 import { useState } from 'react';
-
-import { useCreateTag, useDeleteTag, useUpdateTag } from '../hooks/use-tag-mutations';
-import { useTags } from '../hooks/use-tags';
-
-import { TagChip } from './tag-chip.tsx';
 
 import type { CreateTagRequest, HexColor, TagResponse } from '@granit/taxonomy';
 import type { ReactNode } from 'react';
+
+// Spec-derived constraint (generated from contracts/openapi/taxonomy.json):
+// tag name maxLength 50, color pattern `^#[0-9A-Fa-f]{6}$` (enforced via
+// isHexColor). The plain-HTML draft row is not a react-hook-form, so the
+// length cap is enforced directly — still sourced from the single spec oracle.
+const TAG_NAME_MAX_LENGTH: number = taxonomyConstraints.CreateTagRequest.name.maxLength ?? 50;
 
 export interface TagManagerLabels {
   readonly title?: string;
@@ -21,6 +23,7 @@ export interface TagManagerLabels {
   readonly deleteConfirm?: string;
   readonly invalidColor?: string;
   readonly nameRequired?: string;
+  readonly nameTooLong?: string;
   readonly nameConflict?: string;
   readonly empty?: string;
   readonly readonlyHint?: string;
@@ -48,6 +51,7 @@ const DEFAULT_LABELS: Required<TagManagerLabels> = {
   deleteConfirm: 'Delete this tag? All assignments will be removed.',
   invalidColor: 'Color must be a 7-character hex (e.g. #1A2B3C).',
   nameRequired: 'Name is required.',
+  nameTooLong: `Name must be at most ${TAG_NAME_MAX_LENGTH} characters.`,
   nameConflict: 'A tag with this name already exists.',
   empty: 'No tags yet — create the first one.',
   readonlyHint: 'You don’t have permission to manage tags.',
@@ -99,6 +103,10 @@ export function TagManager({
     if (!draft) return;
     if (draft.name.trim().length === 0) {
       setDraftError(labelStrings.nameRequired);
+      return;
+    }
+    if (draft.name.trim().length > TAG_NAME_MAX_LENGTH) {
+      setDraftError(labelStrings.nameTooLong);
       return;
     }
     if (!isHexColor(draft.color)) {
@@ -257,6 +265,7 @@ export function TagManager({
                   <input
                     aria-label={labelStrings.nameHeader}
                     autoFocus
+                    maxLength={TAG_NAME_MAX_LENGTH}
                     value={draft.name}
                     onChange={(event) => setDraft({ ...draft, name: event.target.value })}
                   />

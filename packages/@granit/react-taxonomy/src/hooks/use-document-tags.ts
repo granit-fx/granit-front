@@ -1,6 +1,7 @@
 import { attachTagToDocument, detachTagFromDocument, listDocumentTags } from '@granit/taxonomy';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { logMutationError } from '../logger';
 import { buildTaxonomyQueryKey, useTaxonomyConfig } from '../providers/taxonomy-provider';
 
 import type { TagResponse } from '@granit/taxonomy';
@@ -56,6 +57,7 @@ export function useAttachTagToDocument(
     onSuccess: () => {
       invalidateDocumentTags(queryClient, queryKey);
     },
+    onError: (error) => logMutationError('attachTagToDocument', error),
   });
 }
 
@@ -75,5 +77,6 @@ export function useDetachTagFromDocument(
     onSuccess: () => {
       invalidateDocumentTags(queryClient, queryKey);
     },
+    onError: (error) => logMutationError('detachTagFromDocument', error),
   });
 }

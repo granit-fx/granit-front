@@ -3,7 +3,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { buildTaxonomyQueryKey, useTaxonomyConfig } from '../providers/taxonomy-provider';
 
-import type { TaxonomySearchFilter, TaxonomySearchResultGroup } from '@granit/taxonomy';
+import type { TaxonomySearchFilter, TaxonomySearchResult } from '@granit/taxonomy';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 export interface UseTaxonomySearchOptions extends TaxonomySearchFilter {
@@ -26,7 +26,7 @@ export interface UseTaxonomySearchOptions extends TaxonomySearchFilter {
  */
 export function useTaxonomySearch(
   options: UseTaxonomySearchOptions
-): UseQueryResult<readonly TaxonomySearchResultGroup[]> {
+): UseQueryResult<TaxonomySearchResult> {
   const config = useTaxonomyConfig();
   const { enabled, ...filter } = options;
 

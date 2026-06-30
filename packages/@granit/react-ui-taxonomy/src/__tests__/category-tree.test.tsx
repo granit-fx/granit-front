@@ -1,12 +1,15 @@
+import { TaxonomyProvider } from '@granit/react-taxonomy';
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
 import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { I18nextProvider } from 'react-i18next';
 import { describe, expect, it, vi } from 'vitest';
 
 import { CategoryTree } from '../components/category-tree.tsx';
-import { TaxonomyProvider } from '../providers/taxonomy-provider';
+
+import { testI18n } from './test-utils';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { CategoryResponse } from '@granit/taxonomy';
@@ -48,9 +51,11 @@ function createWrapper(client: AxiosInstance) {
   return function Wrapper({ children }: { children: ReactNode }) {
     const qc = createTestQueryClient();
     return (
-      <QueryClientProvider client={qc}>
-        <TaxonomyProvider config={{ client }}>{children}</TaxonomyProvider>
-      </QueryClientProvider>
+      <I18nextProvider i18n={testI18n}>
+        <QueryClientProvider client={qc}>
+          <TaxonomyProvider config={{ client }}>{children}</TaxonomyProvider>
+        </QueryClientProvider>
+      </I18nextProvider>
     );
   };
 }

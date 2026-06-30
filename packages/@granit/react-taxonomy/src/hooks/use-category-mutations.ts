@@ -8,6 +8,7 @@ import {
 } from '@granit/taxonomy';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { logMutationError } from '../logger';
 import { buildTaxonomyQueryKey, useTaxonomyConfig } from '../providers/taxonomy-provider';
 
 import type { ResolvedTaxonomyConfig } from '../providers/taxonomy-provider';
@@ -103,6 +104,7 @@ export function useCreateCategory(
     onSuccess: () => {
       invalidateCategoriesForScope(queryClient, config, scope);
     },
+    onError: (error) => logMutationError('createCategory', error),
   });
 }
 
@@ -123,6 +125,7 @@ export function useUpdateCategory(
       invalidateCategoriesForScope(queryClient, config, scope);
       invalidateCategoryDetail(queryClient, config, id);
     },
+    onError: (error) => logMutationError('updateCategory', error),
   });
 }
 
@@ -144,6 +147,7 @@ export function useMoveCategory(
       invalidateCategoriesForScope(queryClient, config, scope);
       invalidateAllCategoryDetails(queryClient, config);
     },
+    onError: (error) => logMutationError('moveCategory', error),
   });
 }
 
@@ -161,6 +165,7 @@ export function useDeleteCategory(scope: string): UseMutationResult<void, Error,
       invalidateCategoriesForScope(queryClient, config, scope);
       invalidateCategoryDetail(queryClient, config, id);
     },
+    onError: (error) => logMutationError('deleteCategory', error),
   });
 }
 
@@ -184,6 +189,7 @@ export function useAssignCategory(): UseMutationResult<
     onSuccess: (_data, { target }) => {
       invalidateCategoryAssignmentsForTarget(queryClient, config, target);
     },
+    onError: (error) => logMutationError('assignCategory', error),
   });
 }
 
@@ -201,5 +207,6 @@ export function useUnassignCategory(): UseMutationResult<void, Error, TaxonomyTa
     onSuccess: (_data, target) => {
       invalidateCategoryAssignmentsForTarget(queryClient, config, target);
     },
+    onError: (error) => logMutationError('unassignCategory', error),
   });
 }

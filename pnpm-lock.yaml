@@ -3492,6 +3492,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
@@ -3501,9 +3504,6 @@ importers:
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
-      '@granit/react-ui':
-        specifier: workspace:*
-        version: link:../react-ui
       '@granit/taxonomy':
         specifier: workspace:*
         version: link:../taxonomy
@@ -6713,6 +6713,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@granit/react-authorization':
         specifier: workspace:*
         version: link:../react-authorization
@@ -6722,12 +6725,27 @@ importers:
       '@granit/react-taxonomy':
         specifier: workspace:*
         version: link:../react-taxonomy
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/react-ui':
+        specifier: workspace:*
+        version: link:../react-ui
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
+      '@granit/react-validation':
+        specifier: workspace:*
+        version: link:../react-validation
       '@granit/taxonomy':
         specifier: workspace:*
         version: link:../taxonomy
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
       '@storybook/react-vite':
         specifier: ^10.4.6
         version: 10.4.6(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rollup@4.62.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.9.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
@@ -6746,6 +6764,9 @@ importers:
       react-dom:
         specifier: 19.2.7
         version: 19.2.7(react@19.2.7)
+      react-hook-form:
+        specifier: ^7.80.0
+        version: 7.80.0(react@19.2.7)
       react-i18next:
         specifier: ^17.0.0
         version: 17.0.8(i18next@26.3.3(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
@@ -7334,6 +7355,9 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
+      '@granit/validation':
+        specifier: workspace:*
+        version: link:../validation
 
   packages/@granit/templating:
     devDependencies:

@@ -114,6 +114,12 @@ const TARGETS = [
     schemaPattern: /Request$/,
   },
   {
+    spec: 'taxonomy.json',
+    pkg: 'taxonomy',
+    exportName: 'taxonomyConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
     spec: 'webhooks.json',
     pkg: 'webhooks',
     exportName: 'webhooksConstraints',

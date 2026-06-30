@@ -7564,7 +7564,7 @@
         {
           "name": "useTaxonomySearch",
           "kind": "function",
-          "signature": "function useTaxonomySearch( options: UseTaxonomySearchOptions ): UseQueryResult<readonly TaxonomySearchResultGroup[]>"
+          "signature": "function useTaxonomySearch( options: UseTaxonomySearchOptions ): UseQueryResult<TaxonomySearchResult>"
         },
         {
           "name": "UseTaxonomySearchOptions",
@@ -7623,23 +7623,6 @@
           "members": []
         },
         {
-          "name": "TagManager",
-          "kind": "function",
-          "signature": "function TagManager("
-        },
-        {
-          "name": "TagManagerLabels",
-          "kind": "interface",
-          "signature": "interface TagManagerLabels",
-          "members": []
-        },
-        {
-          "name": "TagManagerProps",
-          "kind": "interface",
-          "signature": "interface TagManagerProps",
-          "members": []
-        },
-        {
           "name": "CategoryBreadcrumb",
           "kind": "function",
           "signature": "function CategoryBreadcrumb("
@@ -7651,26 +7634,14 @@
           "members": []
         },
         {
-          "name": "CategoryTree",
-          "kind": "function",
-          "signature": "function CategoryTree("
-        },
-        {
-          "name": "CategoryTreeLabels",
-          "kind": "interface",
-          "signature": "interface CategoryTreeLabels",
-          "members": []
-        },
-        {
-          "name": "CategoryTreeProps",
-          "kind": "interface",
-          "signature": "interface CategoryTreeProps",
-          "members": []
-        },
-        {
           "name": "CategorySelector",
           "kind": "function",
           "signature": "function CategorySelector("
+        },
+        {
+          "name": "CategoryBrowser",
+          "kind": "function",
+          "signature": "function CategoryBrowser("
         },
         {
           "name": "TaxonomySearchBar",
@@ -10526,9 +10497,43 @@
       "description": "Granit admin UI for the Taxonomy module — the tag-manager and category-tree admin pages plus the header-mounted cross-entity search bar. Composes @granit/react-taxonomy (headless) with the foundation UI packages, localises the headless `labels` props and gates management with @granit/react-authorization.",
       "exports": [
         {
+          "name": "CategoryTree",
+          "kind": "function",
+          "signature": "function CategoryTree("
+        },
+        {
+          "name": "CategoryTreeLabels",
+          "kind": "interface",
+          "signature": "interface CategoryTreeLabels",
+          "members": []
+        },
+        {
+          "name": "CategoryTreeProps",
+          "kind": "interface",
+          "signature": "interface CategoryTreeProps",
+          "members": []
+        },
+        {
           "name": "CategoryTreePage",
           "kind": "function",
           "signature": "function CategoryTreePage()"
+        },
+        {
+          "name": "TagManager",
+          "kind": "function",
+          "signature": "function TagManager("
+        },
+        {
+          "name": "TagManagerLabels",
+          "kind": "interface",
+          "signature": "interface TagManagerLabels",
+          "members": []
+        },
+        {
+          "name": "TagManagerProps",
+          "kind": "interface",
+          "signature": "interface TagManagerProps",
+          "members": []
         },
         {
           "name": "TagManagerPage",
@@ -11726,7 +11731,7 @@
     },
     {
       "name": "@granit/taxonomy",
-      "description": "Cross-entity Tags and Categories module — types, API client, and permissions",
+      "description": "Cross-entity Tags and Categories module — types, API client, permissions, and spec-derived validation constraints",
       "exports": [
         {
           "name": "isHexColor",
@@ -11739,9 +11744,14 @@
           "signature": "const TaxonomyPermissions"
         },
         {
+          "name": "taxonomyConstraints",
+          "kind": "const",
+          "signature": "const taxonomyConstraints"
+        },
+        {
           "name": "searchTaxonomy",
           "kind": "function",
-          "signature": "async function searchTaxonomy( client: AxiosInstance, basePath: string, filter: TaxonomySearchFilter ): Promise<readonly TaxonomySearchResultGroup[]>"
+          "signature": "async function searchTaxonomy( client: AxiosInstance, basePath: string, filter: TaxonomySearchFilter ): Promise<TaxonomySearchResult>"
         }
       ]
     },

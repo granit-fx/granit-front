@@ -53,8 +53,11 @@ export interface CreateTagRequest {
   readonly scope: string;
   readonly name: string;
   readonly color: HexColor;
-  /** `null` lets the backend apply its default (false). */
-  readonly hideOnEntityCard: boolean | null;
+  /**
+   * Absent from the contract's `required` array — omit to let the backend
+   * apply its default (false), or pass `null` for the same effect.
+   */
+  readonly hideOnEntityCard?: boolean | null;
 }
 
 /**
@@ -130,12 +133,12 @@ export interface CategoryListFilter {
 export interface CreateCategoryRequest {
   readonly scope: string;
   readonly name: string;
-  /** `null` to create a scope root. */
-  readonly parentId: string | null;
-  /** `null` to create without an icon. */
-  readonly iconName: string | null;
-  /** `null` lets the backend apply its default (false). */
-  readonly hideOnEntityCard: boolean | null;
+  /** Absent from `required`: omit (or pass `null`) to create a scope root. */
+  readonly parentId?: string | null;
+  /** Absent from `required`: omit (or pass `null`) to create without an icon. */
+  readonly iconName?: string | null;
+  /** Absent from `required`: omit (or pass `null`) to take the backend default (false). */
+  readonly hideOnEntityCard?: boolean | null;
 }
 
 /**
@@ -181,6 +184,12 @@ export interface TaxonomySearchFilter {
 export interface TaxonomySearchResultItem {
   readonly targetType: string;
   readonly targetId: string;
+  /**
+   * Human-readable label for the hit. The backend search envelope describes
+   * targets by id + matched tags only, so the label is resolved from the
+   * matched tags' names (joined). Apps that fan out to entity stores can
+   * surface a richer label by wrapping the search bar.
+   */
   readonly label: string;
   readonly snippet: string | null;
   readonly matchedTagIds: readonly string[];
@@ -190,4 +199,54 @@ export interface TaxonomySearchResultItem {
 export interface TaxonomySearchResultGroup {
   readonly targetType: string;
   readonly items: readonly TaxonomySearchResultItem[];
+}
+
+/**
+ * Grouped search results plus the server-side pagination window the backend
+ * echoes back (`totalCount`/`skip`/`take`). For legacy bare-array responses
+ * (older mocks / fixtures) the counts are derived from the flattened items
+ * and `skip`/`take` are `null`.
+ */
+export interface TaxonomySearchResult {
+  readonly groups: readonly TaxonomySearchResultGroup[];
+  readonly totalCount: number;
+  readonly skip: number | null;
+  readonly take: number | null;
+}
+
+// ─── Search — backend wire envelope (`SearchResponse`) ───────────────────────
+
+/**
+ * A matched tag, returned flat in {@link SearchResponse.tags}. Hits reference
+ * tags by id (see {@link SearchHit.tagIds}); the front joins them by id to
+ * resolve labels. Mirrors the spec `SearchTagItem` (all fields required).
+ */
+export interface SearchTagItem {
+  readonly id: string;
+  readonly name: string;
+  readonly color: string;
+  readonly scope: string;
+}
+
+/**
+ * A single target match within a target-type bucket. Mirrors the spec
+ * `SearchHit` (both fields required). `tagIds` index into
+ * {@link SearchResponse.tags}.
+ */
+export interface SearchHit {
+  readonly targetId: string;
+  readonly tagIds: readonly string[];
+}
+
+/**
+ * Wire shape of `GET {basePath}/search`. Mirrors the spec `SearchResponse`
+ * (all fields required): the matched tags flat list, a per-target-type
+ * dictionary of hits, and the pagination window.
+ */
+export interface SearchResponse {
+  readonly tags: readonly SearchTagItem[];
+  readonly hits: Readonly<Record<string, readonly SearchHit[]>>;
+  readonly totalCount: number;
+  readonly skip: number;
+  readonly take: number;
 }

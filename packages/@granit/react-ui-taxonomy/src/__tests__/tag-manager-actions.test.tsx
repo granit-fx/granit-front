@@ -1,3 +1,4 @@
+import { TaxonomyProvider } from '@granit/react-taxonomy';
 import { createMockClient, createTestQueryClient } from '@granit/react-testing';
 import { toISODateString } from '@granit/types';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -5,8 +6,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+
 import { TagManager } from '../components/tag-manager.tsx';
-import { TaxonomyProvider } from '../providers/taxonomy-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { TagResponse } from '@granit/taxonomy';

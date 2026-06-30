@@ -22,7 +22,7 @@ const sampleGroup: TaxonomySearchResultGroup = {
 };
 
 describe('searchTaxonomy', () => {
-  it('GETs /search with the q query param and passes through a bare-array response', async () => {
+  it('GETs /search with the q query param and adapts a bare-array response', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse([sampleGroup]));
 
@@ -31,7 +31,8 @@ describe('searchTaxonomy', () => {
     expect(client.get).toHaveBeenCalledWith(`${basePath}/search`, {
       params: { q: 'urgent' },
     });
-    expect(result).toEqual([sampleGroup]);
+    // Legacy bare-array: groups pass through; counts derived, skip/take unknown.
+    expect(result).toEqual({ groups: [sampleGroup], totalCount: 1, skip: null, take: null });
   });
 
   it('forwards an empty query string to the backend (does not short-circuit)', async () => {
@@ -43,13 +44,27 @@ describe('searchTaxonomy', () => {
     expect(client.get).toHaveBeenCalledWith(`${basePath}/search`, { params: { q: '' } });
   });
 
-  it('adapts the backend SearchResponse envelope into TaxonomySearchResultGroup[]', async () => {
+  it('forwards skip/take pagination params when supplied', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(axiosResponse([]));
+
+    await searchTaxonomy(client, basePath, { q: 'urgent', scope: 'documents', skip: 10, take: 5 });
+
+    expect(client.get).toHaveBeenCalledWith(`${basePath}/search`, {
+      params: { q: 'urgent', scope: 'documents', skip: 10, take: 5 },
+    });
+  });
+
+  it('adapts the backend SearchResponse envelope, resolving labels from matched tags', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
       axiosResponse({
-        tags: [{ id: 'tag-1', name: 'Urgent', color: '#FF0000', scope: 'documents' }],
+        tags: [
+          { id: 'tag-1', name: 'Urgent', color: '#FF0000', scope: 'documents' },
+          { id: 'tag-2', name: 'Legal', color: '#00FF00', scope: 'documents' },
+        ],
         hits: {
-          'Granit.Documents.Domain.Document': [{ targetId: 'doc-1', tagIds: ['tag-1'] }],
+          'Granit.Documents.Domain.Document': [{ targetId: 'doc-1', tagIds: ['tag-1', 'tag-2'] }],
         },
         totalCount: 1,
         skip: 0,
@@ -59,24 +74,50 @@ describe('searchTaxonomy', () => {
 
     const result = await searchTaxonomy(client, basePath, { q: 'urgent' });
 
-    expect(result).toEqual([
-      {
-        targetType: 'Granit.Documents.Domain.Document',
-        items: [
-          {
-            targetType: 'Granit.Documents.Domain.Document',
-            targetId: 'doc-1',
-            label: '',
-            snippet: null,
-            matchedTagIds: ['tag-1'],
-            matchedCategoryId: null,
-          },
-        ],
-      },
-    ]);
+    expect(result).toEqual({
+      groups: [
+        {
+          targetType: 'Granit.Documents.Domain.Document',
+          items: [
+            {
+              targetType: 'Granit.Documents.Domain.Document',
+              targetId: 'doc-1',
+              label: 'Urgent, Legal',
+              snippet: null,
+              matchedTagIds: ['tag-1', 'tag-2'],
+              matchedCategoryId: null,
+            },
+          ],
+        },
+      ],
+      totalCount: 1,
+      skip: 0,
+      take: 50,
+    });
   });
 
-  it('returns [] when the backend envelope has no hits', async () => {
+  it('skips unknown tag ids when resolving labels', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(
+      axiosResponse({
+        tags: [{ id: 'tag-1', name: 'Urgent', color: '#FF0000', scope: 'documents' }],
+        hits: {
+          'Granit.Documents.Domain.Document': [
+            { targetId: 'doc-1', tagIds: ['tag-1', 'tag-missing'] },
+          ],
+        },
+        totalCount: 1,
+        skip: 0,
+        take: 50,
+      })
+    );
+
+    const result = await searchTaxonomy(client, basePath, { q: 'urgent' });
+
+    expect(result.groups[0]!.items[0]!.label).toBe('Urgent');
+  });
+
+  it('returns an empty result with the pagination window when the envelope has no hits', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
       axiosResponse({
@@ -90,6 +131,6 @@ describe('searchTaxonomy', () => {
 
     const result = await searchTaxonomy(client, basePath, { q: 'nothing' });
 
-    expect(result).toEqual([]);
+    expect(result).toEqual({ groups: [], totalCount: 0, skip: 0, take: 50 });
   });
 });

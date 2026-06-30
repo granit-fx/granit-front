@@ -71,7 +71,7 @@ export function TaxonomySearchBar({
   const enabled = debounced.length >= minQueryLength;
   const searchQuery = useTaxonomySearch({ q: debounced, enabled });
 
-  const groups = searchQuery.data ?? [];
+  const groups = searchQuery.data?.groups ?? [];
   const flatItems: readonly TaxonomySearchResultItem[] = groups.flatMap((group) => group.items);
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {

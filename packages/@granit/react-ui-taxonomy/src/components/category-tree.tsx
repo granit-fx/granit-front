@@ -1,4 +1,18 @@
+import { useTranslation } from '@granit/react-localization';
 import {
+  useCategories,
+  useCreateCategory,
+  useDeleteCategory,
+  useMoveCategory,
+  useUpdateCategory,
+} from '@granit/react-taxonomy';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
   Tree,
   TreeGroup,
   TreeItem,
@@ -6,28 +20,36 @@ import {
   TreeItemSpacer,
   TreeItemToggle,
 } from '@granit/react-ui';
-import { useState } from 'react';
+import { ConfirmActionDialog, FormDialog } from '@granit/react-ui-kit';
+import { createConstraintsResolver } from '@granit/react-validation';
+import { taxonomyConstraints } from '@granit/taxonomy';
+import { useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-import { useCategories } from '../hooks/use-categories';
-import {
-  useCreateCategory,
-  useDeleteCategory,
-  useMoveCategory,
-  useUpdateCategory,
-} from '../hooks/use-category-mutations';
+import { logger } from '../logger';
 
 import type { CategoryResponse } from '@granit/taxonomy';
 import type { ReactNode } from 'react';
+import type { Resolver } from 'react-hook-form';
 
 export interface CategoryTreeLabels {
   readonly add?: string;
+  readonly addDialogTitle?: string;
+  readonly nameField?: string;
   readonly rename?: string;
+  readonly renameDialogTitle?: string;
   readonly move?: string;
   readonly delete?: string;
   readonly deleteConfirm?: string;
+  readonly confirmDelete?: string;
+  readonly cancel?: string;
+  readonly submit?: string;
   readonly moveDialogTitle?: string;
   readonly movePromote?: string;
   readonly movePrompt?: string;
+  readonly newParentField?: string;
+  readonly expand?: string;
+  readonly collapse?: string;
   readonly empty?: string;
   readonly loading?: string;
   readonly error422HasDescendants?: string;
@@ -47,14 +69,23 @@ export interface CategoryTreeProps {
 
 const DEFAULT_LABELS: Required<CategoryTreeLabels> = {
   add: '+',
+  addDialogTitle: 'Add category',
+  nameField: 'Name',
   rename: 'Rename',
+  renameDialogTitle: 'Rename category',
   move: 'Move',
   delete: 'Delete',
   deleteConfirm:
     'Delete this category? This cannot be undone. Categories with descendants or active assignments cannot be deleted.',
+  confirmDelete: 'Delete',
+  cancel: 'Cancel',
+  submit: 'Save',
   moveDialogTitle: 'Move category',
   movePromote: '(promote to root)',
   movePrompt: 'Paste the new parent category id, or leave empty to promote to root.',
+  newParentField: 'New parent category id',
+  expand: 'Expand',
+  collapse: 'Collapse',
   empty: 'No categories.',
   loading: 'Loading…',
   error422HasDescendants: 'Cannot delete: this category has descendants.',
@@ -69,6 +100,14 @@ function extractProblemDetail(err: unknown): string {
   return err instanceof Error ? err.message : 'Request failed.';
 }
 
+interface NameFormValues {
+  readonly name: string;
+}
+
+interface MoveFormValues {
+  readonly newParentId: string;
+}
+
 interface CategoryNodeProps {
   readonly scope: string;
   readonly category: CategoryResponse;
@@ -77,6 +116,8 @@ interface CategoryNodeProps {
   readonly onSelect?: (category: CategoryResponse) => void;
 }
 
+type OpenDialog = 'add' | 'rename' | 'move' | 'delete' | null;
+
 function CategoryNode({
   scope,
   category,
@@ -84,7 +125,9 @@ function CategoryNode({
   labels,
   onSelect,
 }: Readonly<CategoryNodeProps>): ReactNode {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
+  const [dialog, setDialog] = useState<OpenDialog>(null);
   const childrenQuery = useCategories({ scope, parentId: category.id }, { enabled: expanded });
   const createCategory = useCreateCategory(scope);
   const updateCategory = useUpdateCategory(scope);
@@ -92,51 +135,81 @@ function CategoryNode({
   const deleteCategory = useDeleteCategory(scope);
   const [error, setError] = useState<string | null>(null);
 
-  function handleAdd(): void {
-    if (globalThis.window === undefined) return;
-    const name = globalThis.prompt('Category name?');
-    if (!name?.trim()) return;
+  const nameResolver = useMemo(
+    () =>
+      createConstraintsResolver(taxonomyConstraints.CreateCategoryRequest, t, {
+        labelResolver: () => labels.nameField,
+      }) as unknown as Resolver<NameFormValues>,
+    [t, labels.nameField]
+  );
+
+  const addForm = useForm<NameFormValues>({ resolver: nameResolver, defaultValues: { name: '' } });
+  const renameForm = useForm<NameFormValues>({
+    resolver: nameResolver,
+    defaultValues: { name: category.name },
+  });
+  const moveForm = useForm<MoveFormValues>({ defaultValues: { newParentId: '' } });
+
+  function closeDialog(): void {
+    setDialog(null);
+    addForm.reset({ name: '' });
+    renameForm.reset({ name: category.name });
+    moveForm.reset({ newParentId: '' });
+  }
+
+  function handleAdd(values: NameFormValues): void {
     createCategory.mutate(
-      { scope, parentId: category.id, name: name.trim(), iconName: null, hideOnEntityCard: null },
+      { scope, parentId: category.id, name: values.name.trim(), iconName: null },
       {
         // Auto-expand the parent so the freshly invalidated children query
         // actually fires (`enabled: expanded`) and the new node becomes
         // visible without a second click.
-        onSuccess: () => setExpanded(true),
+        onSuccess: () => {
+          setExpanded(true);
+          closeDialog();
+        },
         onError: (err) => setError(extractProblemDetail(err)),
       }
     );
   }
 
-  function handleRename(): void {
-    if (globalThis.window === undefined) return;
-    const next = globalThis.prompt('Rename category', category.name);
-    if (!next?.trim() || next.trim() === category.name) return;
+  function handleRename(values: NameFormValues): void {
+    const next = values.name.trim();
+    if (next === category.name) {
+      closeDialog();
+      return;
+    }
     updateCategory.mutate(
       {
         id: category.id,
         request: {
           concurrencyStamp: category.concurrencyStamp,
-          name: next.trim(),
+          name: next,
           iconName: null,
           hideOnEntityCard: null,
         },
       },
-      { onError: (err) => setError(extractProblemDetail(err)) }
+      {
+        onSuccess: () => closeDialog(),
+        onError: (err) => {
+          setError(extractProblemDetail(err));
+          closeDialog();
+        },
+      }
     );
   }
 
-  function handleMove(): void {
-    if (globalThis.window === undefined) return;
-    const next = globalThis.prompt(labels.movePrompt, '');
-    if (next === null) return;
-    if (next === category.id) {
+  function handleMove(values: MoveFormValues): void {
+    const target = values.newParentId.trim();
+    if (target === category.id) {
       setError(labels.error422Cycle);
+      closeDialog();
       return;
     }
     moveCategory.mutate(
-      { id: category.id, request: { newParentId: next.trim() === '' ? null : next.trim() } },
+      { id: category.id, request: { newParentId: target === '' ? null : target } },
       {
+        onSuccess: () => closeDialog(),
         onError: (err) => {
           const status = (err as { response?: { status?: number; data?: { detail?: string } } })
             ?.response?.status;
@@ -149,14 +222,15 @@ function CategoryNode({
           } else {
             setError(err.message);
           }
+          closeDialog();
         },
       }
     );
   }
 
   function handleDelete(): void {
-    if (globalThis.window === undefined || !globalThis.confirm(labels.deleteConfirm)) return;
     deleteCategory.mutate(category.id, {
+      onSuccess: () => closeDialog(),
       onError: (err) => {
         const status = (err as { response?: { status?: number; data?: { detail?: string } } })
           ?.response?.status;
@@ -169,6 +243,8 @@ function CategoryNode({
         } else {
           setError(err.message);
         }
+        logger.warn('category delete rejected', { status });
+        closeDialog();
       },
     });
   }
@@ -195,6 +271,7 @@ function CategoryNode({
         ) : (
           <TreeItemToggle
             expanded={expanded}
+            aria-label={expanded ? labels.collapse : labels.expand}
             data-granit-category-tree-toggle=""
             onClick={() => setExpanded((current) => !current)}
           />
@@ -218,18 +295,23 @@ function CategoryNode({
             data-granit-category-tree-actions=""
             className="ml-auto flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover/tree-row:opacity-100 focus-within:opacity-100"
           >
-            <button type="button" onClick={handleAdd} className={actionClass}>
+            <button
+              type="button"
+              aria-label={labels.add}
+              onClick={() => setDialog('add')}
+              className={actionClass}
+            >
               {labels.add}
             </button>
-            <button type="button" onClick={handleRename} className={actionClass}>
+            <button type="button" onClick={() => setDialog('rename')} className={actionClass}>
               {labels.rename}
             </button>
-            <button type="button" onClick={handleMove} className={actionClass}>
+            <button type="button" onClick={() => setDialog('move')} className={actionClass}>
               {labels.move}
             </button>
             <button
               type="button"
-              onClick={handleDelete}
+              onClick={() => setDialog('delete')}
               className="rounded px-1.5 py-0.5 text-xs text-destructive hover:bg-destructive/10"
             >
               {labels.delete}
@@ -237,6 +319,103 @@ function CategoryNode({
           </span>
         )}
       </TreeItemRow>
+
+      {canManage && (
+        <>
+          <FormDialog
+            open={dialog === 'add'}
+            onOpenChange={(open) => (open ? setDialog('add') : closeDialog())}
+            form={addForm}
+            onSubmit={handleAdd}
+            title={labels.addDialogTitle}
+            submitLabel={labels.submit}
+            cancelLabel={labels.cancel}
+            isSubmitting={createCategory.isPending}
+            data-slot="category-tree-add-dialog"
+          >
+            <FormField
+              control={addForm.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{labels.nameField}</FormLabel>
+                  <FormControl>
+                    <Input {...field} autoFocus />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </FormDialog>
+
+          <FormDialog
+            open={dialog === 'rename'}
+            onOpenChange={(open) => (open ? setDialog('rename') : closeDialog())}
+            form={renameForm}
+            onSubmit={handleRename}
+            title={labels.renameDialogTitle}
+            submitLabel={labels.submit}
+            cancelLabel={labels.cancel}
+            isSubmitting={updateCategory.isPending}
+            data-slot="category-tree-rename-dialog"
+          >
+            <FormField
+              control={renameForm.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{labels.nameField}</FormLabel>
+                  <FormControl>
+                    <Input {...field} autoFocus />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </FormDialog>
+
+          <FormDialog
+            open={dialog === 'move'}
+            onOpenChange={(open) => (open ? setDialog('move') : closeDialog())}
+            form={moveForm}
+            onSubmit={handleMove}
+            title={labels.moveDialogTitle}
+            description={labels.movePrompt}
+            submitLabel={labels.submit}
+            cancelLabel={labels.cancel}
+            isSubmitting={moveCategory.isPending}
+            data-slot="category-tree-move-dialog"
+          >
+            <FormField
+              control={moveForm.control}
+              name="newParentId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{labels.newParentField}</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder={labels.movePromote} autoFocus />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </FormDialog>
+
+          <ConfirmActionDialog
+            open={dialog === 'delete'}
+            onOpenChange={(open) => (open ? setDialog('delete') : closeDialog())}
+            tone="destructive"
+            title={labels.delete}
+            description={labels.deleteConfirm}
+            confirmLabel={labels.confirmDelete}
+            cancelLabel={labels.cancel}
+            isPending={deleteCategory.isPending}
+            onConfirm={handleDelete}
+            data-slot="category-tree-delete-dialog"
+          />
+        </>
+      )}
+
       {error && (
         <div
           data-granit-category-tree-error=""
@@ -281,8 +460,11 @@ function CategoryNode({
  * 422 error mapping for the documented backend rejections (cycle,
  * cross-scope, has-descendants, has-assignments).
  *
- * Move and rename use `window.prompt` as a minimal default; apps that want
- * a richer dialog can replace this component or wrap it.
+ * Rename / move / add open a spec-driven `FormDialog` (constraints derived
+ * from `taxonomy.json`); delete opens a `ConfirmActionDialog`. User-facing
+ * strings are injected as `labels` by the page wrapper — the component owns no
+ * taxonomy i18n namespace (it only resolves host-owned `Validation:Builtin:*`
+ * messages for the form resolver).
  */
 export function CategoryTree({
   scope,
@@ -291,18 +473,33 @@ export function CategoryTree({
   labels,
   className,
 }: CategoryTreeProps): ReactNode {
+  const { t } = useTranslation();
   const labelStrings = { ...DEFAULT_LABELS, ...labels };
   const rootsQuery = useCategories({ scope });
   const createCategory = useCreateCategory(scope);
+  const [rootDialogOpen, setRootDialogOpen] = useState(false);
   const [rootError, setRootError] = useState<string | null>(null);
 
-  function handleAddRoot(): void {
-    if (globalThis.window === undefined) return;
-    const name = globalThis.prompt('Root category name?');
-    if (!name?.trim()) return;
+  const rootResolver = useMemo(
+    () =>
+      createConstraintsResolver(taxonomyConstraints.CreateCategoryRequest, t, {
+        labelResolver: () => labelStrings.nameField,
+      }) as unknown as Resolver<NameFormValues>,
+    [t, labelStrings.nameField]
+  );
+  const rootForm = useForm<NameFormValues>({
+    resolver: rootResolver,
+    defaultValues: { name: '' },
+  });
+
+  function handleAddRoot(values: NameFormValues): void {
     createCategory.mutate(
-      { scope, parentId: null, name: name.trim(), iconName: null, hideOnEntityCard: null },
+      { scope, parentId: null, name: values.name.trim(), iconName: null },
       {
+        onSuccess: () => {
+          setRootDialogOpen(false);
+          rootForm.reset({ name: '' });
+        },
         onError: (err) => {
           const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data
             ?.detail;
@@ -348,11 +545,39 @@ export function CategoryTree({
         <button
           type="button"
           data-granit-category-tree-add-root=""
-          onClick={handleAddRoot}
+          aria-label={labelStrings.add}
+          onClick={() => setRootDialogOpen(true)}
           className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground"
         >
           {labelStrings.add}
         </button>
+      )}
+      {canManage && (
+        <FormDialog
+          open={rootDialogOpen}
+          onOpenChange={setRootDialogOpen}
+          form={rootForm}
+          onSubmit={handleAddRoot}
+          title={labelStrings.addDialogTitle}
+          submitLabel={labelStrings.submit}
+          cancelLabel={labelStrings.cancel}
+          isSubmitting={createCategory.isPending}
+          data-slot="category-tree-add-root-dialog"
+        >
+          <FormField
+            control={rootForm.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{labelStrings.nameField}</FormLabel>
+                <FormControl>
+                  <Input {...field} autoFocus />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </FormDialog>
       )}
       {rootError && (
         <div

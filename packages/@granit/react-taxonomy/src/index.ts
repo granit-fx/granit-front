@@ -56,17 +56,19 @@ export { TagChipStrip } from './components/tag-chip-strip.tsx';
 export type { TagChipStripLabels, TagChipStripProps } from './components/tag-chip-strip.tsx';
 export { DocumentTagChipStrip } from './components/document-tag-chip-strip.tsx';
 export type { DocumentTagChipStripProps } from './components/document-tag-chip-strip.tsx';
-export { TagManager } from './components/tag-manager.tsx';
-export type { TagManagerLabels, TagManagerProps } from './components/tag-manager.tsx';
 export { CategoryBreadcrumb } from './components/category-breadcrumb.tsx';
 export type { CategoryBreadcrumbProps } from './components/category-breadcrumb.tsx';
-export { CategoryTree } from './components/category-tree.tsx';
-export type { CategoryTreeLabels, CategoryTreeProps } from './components/category-tree.tsx';
 export { CategorySelector } from './components/category-selector.tsx';
 export type {
   CategorySelectorLabels,
   CategorySelectorProps,
+  CategorySelectorTreeRenderProps,
 } from './components/category-selector.tsx';
+export { CategoryBrowser } from './components/category-browser.tsx';
+export type {
+  CategoryBrowserLabels,
+  CategoryBrowserProps,
+} from './components/category-browser.tsx';
 export { TaxonomySearchBar } from './components/taxonomy-search-bar.tsx';
 export type {
   TaxonomySearchBarLabels,

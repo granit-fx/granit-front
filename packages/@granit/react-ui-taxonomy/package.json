@@ -14,12 +14,18 @@
     "build": "tsup"
   },
   "peerDependencies": {
+    "@granit/logger": "workspace:*",
     "@granit/react-authorization": "workspace:*",
     "@granit/react-localization": "workspace:*",
     "@granit/react-taxonomy": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-kit": "workspace:*",
+    "@granit/react-validation": "workspace:*",
     "@granit/taxonomy": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.80.0",
     "react-router-dom": "^7.18.0"
   },
   "publishConfig": {
@@ -33,17 +39,24 @@
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-authorization": "workspace:*",
     "@granit/react-localization": "workspace:*",
     "@granit/react-taxonomy": "workspace:*",
+    "@granit/react-testing": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/react-ui-kit": "workspace:*",
+    "@granit/react-validation": "workspace:*",
     "@granit/taxonomy": "workspace:*",
     "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*",
     "@storybook/react-vite": "^10.4.6",
     "@tanstack/react-query": "^5.0.0",
     "i18next": "^26.0.0",
     "msw": "^2.12.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.80.0",
     "react-i18next": "^17.0.0",
     "react-router-dom": "^7.18.0",
     "storybook": "^10.4.6"

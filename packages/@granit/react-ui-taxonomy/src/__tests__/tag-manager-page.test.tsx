@@ -1,10 +1,10 @@
 import { screen } from '@testing-library/react';
 
-import { TagManagerPage } from '../tag-manager-page';
+import { TagManagerPage } from '../components/tag-manager-page';
 
 import { renderWithProviders } from './test-utils';
 
-vi.mock('@granit/react-taxonomy', () => ({
+vi.mock('../components/tag-manager', () => ({
   TagManager: ({ scope, canManage }: { scope: string; canManage?: boolean }) => (
     <div data-testid="tag-manager-stub" data-scope={scope} data-can-manage={String(canManage)} />
   ),

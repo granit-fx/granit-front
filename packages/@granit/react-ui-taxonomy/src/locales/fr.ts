@@ -6,10 +6,15 @@
  */
 export const taxonomyAdminTranslationsFr = {
   'taxonomy:Category.Tree.Add': 'Ajouter une sous-catégorie',
+  'taxonomy:Category.Tree.AddDialogTitle': 'Ajouter une catégorie',
+  'taxonomy:Category.Tree.Cancel': 'Annuler',
+  'taxonomy:Category.Tree.Collapse': 'Réduire',
+  'taxonomy:Category.Tree.ConfirmDelete': 'Supprimer',
   'taxonomy:Category.Tree.Delete': 'Supprimer',
   'taxonomy:Category.Tree.DeleteConfirm':
     'Supprimer cette catégorie ? Cette action est irréversible. Une catégorie ayant des sous-catégories ou des affectations actives ne peut pas être supprimée.',
   'taxonomy:Category.Tree.Empty': 'Aucune catégorie.',
+  'taxonomy:Category.Tree.Expand': 'Développer',
   'taxonomy:Category.Tree.Error.CrossScope':
     'Impossible de déplacer la catégorie entre périmètres.',
   'taxonomy:Category.Tree.Error.Cycle':
@@ -24,7 +29,11 @@ export const taxonomyAdminTranslationsFr = {
   'taxonomy:Category.Tree.MovePromote': '(promouvoir à la racine)',
   'taxonomy:Category.Tree.MovePrompt':
     'Collez l’identifiant de la nouvelle catégorie parente, ou laissez vide pour promouvoir à la racine.',
+  'taxonomy:Category.Tree.NameField': 'Nom',
+  'taxonomy:Category.Tree.NewParentField': 'Identifiant de la nouvelle catégorie parente',
   'taxonomy:Category.Tree.Rename': 'Renommer',
+  'taxonomy:Category.Tree.RenameDialogTitle': 'Renommer la catégorie',
+  'taxonomy:Category.Tree.Submit': 'Enregistrer',
   'taxonomy:Category.Tree.Subtitle':
     'Les catégories sont des conteneurs hiérarchiques à affectation unique. Chaque entité appartient à au plus une catégorie dans un périmètre donné.',
   'taxonomy:Category.Tree.Title': 'Catégories',
@@ -51,6 +60,7 @@ export const taxonomyAdminTranslationsFr = {
   'taxonomy:Tag.Manager.NameConflict': 'Une étiquette portant ce nom existe déjà.',
   'taxonomy:Tag.Manager.NameHeader': 'Nom',
   'taxonomy:Tag.Manager.NameRequired': 'Le nom est obligatoire.',
+  'taxonomy:Tag.Manager.NameTooLong': 'Le nom ne doit pas dépasser 50 caractères.',
   'taxonomy:Tag.Manager.NewTag': 'Nouvelle étiquette',
   'taxonomy:Tag.Manager.ReadonlyHint': 'Vous n’avez pas la permission de gérer les étiquettes.',
   'taxonomy:Tag.Manager.Subtitle':

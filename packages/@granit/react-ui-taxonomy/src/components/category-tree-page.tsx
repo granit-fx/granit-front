@@ -1,8 +1,9 @@
 import { usePermissions } from '@granit/react-authorization';
 import { useTranslation } from '@granit/react-localization';
-import { CategoryTree } from '@granit/react-taxonomy';
 
-import { TAXONOMY_DEFAULT_SCOPE, TAXONOMY_PERMISSIONS } from './constants';
+import { TAXONOMY_DEFAULT_SCOPE, TAXONOMY_PERMISSIONS } from '../constants';
+
+import { CategoryTree } from './category-tree';
 
 export function CategoryTreePage() {
   const { t } = useTranslation();
@@ -28,13 +29,22 @@ export function CategoryTreePage() {
         canManage={canManage}
         labels={{
           add: t('taxonomy:Category.Tree.Add', 'Add child'),
+          addDialogTitle: t('taxonomy:Category.Tree.AddDialogTitle', 'Add category'),
+          nameField: t('taxonomy:Category.Tree.NameField', 'Name'),
           rename: t('taxonomy:Category.Tree.Rename', 'Rename'),
+          renameDialogTitle: t('taxonomy:Category.Tree.RenameDialogTitle', 'Rename category'),
           move: t('taxonomy:Category.Tree.Move', 'Move'),
           delete: t('taxonomy:Category.Tree.Delete', 'Delete'),
           deleteConfirm: t(
             'taxonomy:Category.Tree.DeleteConfirm',
             'Delete this category? This cannot be undone. Categories with descendants or active assignments cannot be deleted.'
           ),
+          confirmDelete: t('taxonomy:Category.Tree.ConfirmDelete', 'Delete'),
+          cancel: t('taxonomy:Category.Tree.Cancel', 'Cancel'),
+          submit: t('taxonomy:Category.Tree.Submit', 'Save'),
+          newParentField: t('taxonomy:Category.Tree.NewParentField', 'New parent category id'),
+          expand: t('taxonomy:Category.Tree.Expand', 'Expand'),
+          collapse: t('taxonomy:Category.Tree.Collapse', 'Collapse'),
           moveDialogTitle: t('taxonomy:Category.Tree.MoveDialogTitle', 'Move category'),
           movePromote: t('taxonomy:Category.Tree.MovePromote', '(promote to root)'),
           movePrompt: t(

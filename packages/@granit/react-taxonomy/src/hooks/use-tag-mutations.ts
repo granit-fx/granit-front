@@ -1,6 +1,7 @@
 import { assignTag, createTag, deleteTag, unassignTag, updateTag } from '@granit/taxonomy';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { logMutationError } from '../logger';
 import { buildTaxonomyQueryKey, useTaxonomyConfig } from '../providers/taxonomy-provider';
 
 import type { ResolvedTaxonomyConfig } from '../providers/taxonomy-provider';
@@ -88,6 +89,7 @@ export function useCreateTag(
     onSuccess: () => {
       invalidateTagsForScope(queryClient, config, scope);
     },
+    onError: (error) => logMutationError('createTag', error),
   });
 }
 
@@ -115,6 +117,7 @@ export function useUpdateTag(
       invalidateTagsForScope(queryClient, config, scope);
       invalidateAllTagAssignments(queryClient, config);
     },
+    onError: (error) => logMutationError('updateTag', error),
   });
 }
 
@@ -139,6 +142,7 @@ export function useDeleteTag(scope: string): UseMutationResult<void, Error, stri
       invalidateTagsForScope(queryClient, config, scope);
       invalidateAllTagAssignments(queryClient, config);
     },
+    onError: (error) => logMutationError('deleteTag', error),
   });
 }
 
@@ -168,6 +172,7 @@ export function useAssignTag(): UseMutationResult<
     onSuccess: (_data, { target }) => {
       invalidateTagAssignmentsForTarget(queryClient, config, target);
     },
+    onError: (error) => logMutationError('assignTag', error),
   });
 }
 
@@ -191,5 +196,6 @@ export function useUnassignTag(): UseMutationResult<void, Error, TagAssignmentMu
     onSuccess: (_data, { target }) => {
       invalidateTagAssignmentsForTarget(queryClient, config, target);
     },
+    onError: (error) => logMutationError('unassignTag', error),
   });
 }

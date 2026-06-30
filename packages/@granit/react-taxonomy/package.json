@@ -17,9 +17,9 @@
   },
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-data-lookup": "workspace:*",
-    "@granit/react-ui": "workspace:*",
     "@granit/taxonomy": "workspace:*",
     "@granit/types": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
@@ -47,10 +47,10 @@
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-data-lookup": "workspace:*",
     "@granit/react-testing": "workspace:*",
-    "@granit/react-ui": "workspace:*",
     "@granit/taxonomy": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/types": "workspace:*",

@@ -9,11 +9,15 @@ export type {
   CreateTagRequest,
   HexColor,
   MoveCategoryRequest,
+  SearchHit,
+  SearchResponse,
+  SearchTagItem,
   TagAssignmentRequest,
   TagAssignmentResponse,
   TagListFilter,
   TagResponse,
   TaxonomySearchFilter,
+  TaxonomySearchResult,
   TaxonomySearchResultGroup,
   TaxonomySearchResultItem,
   TaxonomyTargetRef,
@@ -26,6 +30,9 @@ export { isHexColor } from './types/index';
 
 // Permissions
 export { TaxonomyPermissions } from './permissions';
+
+// Validation constraints (generated from contracts/openapi/taxonomy.json)
+export { taxonomyConstraints } from './constraints';
 
 // API — Tags
 export {

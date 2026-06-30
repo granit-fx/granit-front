@@ -1,8 +1,9 @@
 import { usePermissions } from '@granit/react-authorization';
 import { useTranslation } from '@granit/react-localization';
-import { TagManager } from '@granit/react-taxonomy';
 
-import { TAXONOMY_DEFAULT_SCOPE, TAXONOMY_PERMISSIONS } from './constants';
+import { TAXONOMY_DEFAULT_SCOPE, TAXONOMY_PERMISSIONS } from '../constants';
+
+import { TagManager } from './tag-manager';
 
 export function TagManagerPage() {
   const { t } = useTranslation();
@@ -47,6 +48,7 @@ export function TagManagerPage() {
             'Color must be a 7-character hex (e.g. #1A2B3C).'
           ),
           nameRequired: t('taxonomy:Tag.Manager.NameRequired', 'Name is required.'),
+          nameTooLong: t('taxonomy:Tag.Manager.NameTooLong', 'Name must be at most 50 characters.'),
           nameConflict: t(
             'taxonomy:Tag.Manager.NameConflict',
             'A tag with this name already exists.'

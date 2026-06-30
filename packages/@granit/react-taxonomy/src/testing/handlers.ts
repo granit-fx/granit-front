@@ -12,9 +12,11 @@ import type {
   CreateTagRequest,
   HexColor,
   MoveCategoryRequest,
+  SearchHit,
+  SearchResponse,
+  SearchTagItem,
   TagAssignmentRequest,
   TagResponse,
-  TaxonomySearchResultGroup,
   UpdateCategoryRequest,
   UpdateTagRequest,
 } from '@granit/taxonomy';
@@ -195,11 +197,11 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
         id: newId('cat'),
         tenantId: null,
         scope: body.scope,
-        parentId: body.parentId,
+        parentId: body.parentId ?? null,
         path: parent ? `${parent.path}/${body.name.toLowerCase()}` : `/${body.name.toLowerCase()}`,
         name: body.name,
         depth: parent ? parent.depth + 1 : 0,
-        iconName: body.iconName,
+        iconName: body.iconName ?? null,
         hideOnEntityCard: body.hideOnEntityCard ?? false,
         hasChildren: false,
         createdAt: toISODateString('2026-05-01T08:00:00Z'),
@@ -207,7 +209,7 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
         concurrencyStamp: 'stamp-1',
       };
       store.categories.push(cat);
-      recomputeHasChildren(body.scope, body.parentId);
+      recomputeHasChildren(body.scope, body.parentId ?? null);
       return created(cat);
     }),
     http.patch(`${baseUrl}/categories/:id`, async ({ params, request }) => {
@@ -307,9 +309,49 @@ export function createTaxonomyHandlers(baseUrl = DEFAULT_BASE_PATH) {
     }),
 
     // ─── Search (cross-entity) ──────────────────────────────────────────────
-    http.get(`${baseUrl}/search`, () => {
-      const groups: readonly TaxonomySearchResultGroup[] = [];
-      return HttpResponse.json(groups);
+    // Returns the real `SearchResponse` envelope: the matched tags (flat) and a
+    // per-target-type dictionary of hits referencing those tags by id, plus the
+    // pagination window. The adapter joins hit.tagIds → tag names for labels.
+    http.get(`${baseUrl}/search`, ({ request }) => {
+      const url = new URL(request.url);
+      const q = url.searchParams.get('q')?.toLowerCase() ?? '';
+      const scope = url.searchParams.get('scope');
+      const skip = Number(url.searchParams.get('skip') ?? '0');
+      const take = Number(url.searchParams.get('take') ?? '20');
+
+      const matchedTags = store.tags.filter(
+        (t) =>
+          (scope === null || scope === '*' || t.scope === scope) &&
+          q.length > 0 &&
+          t.name.toLowerCase().includes(q)
+      );
+      const matchedTagIds = new Set(matchedTags.map((t) => t.id));
+
+      const tags: SearchTagItem[] = matchedTags.map((t) => ({
+        id: t.id,
+        name: t.name,
+        color: t.color,
+        scope: t.scope,
+      }));
+
+      // Group assignments referencing a matched tag by their targetType.
+      const hits: Record<string, SearchHit[]> = {};
+      const byTarget = new Map<string, { targetType: string; tagIds: string[] }>();
+      for (const a of store.tagAssignments) {
+        if (!matchedTagIds.has(a.tagId)) continue;
+        const key = `${a.targetType}::${a.targetId}`;
+        const existing = byTarget.get(key);
+        if (existing) existing.tagIds.push(a.tagId);
+        else byTarget.set(key, { targetType: a.targetType, tagIds: [a.tagId] });
+      }
+      for (const [key, entry] of byTarget) {
+        const targetId = key.slice(key.indexOf('::') + 2);
+        (hits[entry.targetType] ??= []).push({ targetId, tagIds: entry.tagIds });
+      }
+
+      const totalCount = Object.values(hits).reduce((sum, rows) => sum + rows.length, 0);
+      const response: SearchResponse = { tags, hits, totalCount, skip, take };
+      return HttpResponse.json(response);
     }),
   ];
 }
