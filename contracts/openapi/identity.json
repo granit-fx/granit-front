@@ -849,6 +849,221 @@
           }
         }
       }
+    },
+    "/devices/trust": {
+      "post": {
+        "tags": ["Identity - User Sessions"],
+        "summary": "Marks the caller's current device as trusted.",
+        "description": "Binds the current browser to a stable device identity (signed cookie) and records a trust verdict for the configured duration. A trusted device may, when the deployment opts in, skip the two-factor step-up on subsequent logins.",
+        "operationId": "TrustMyDevice",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceTrustedResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/devices/{deviceId}/trust": {
+      "delete": {
+        "tags": ["Identity - User Sessions"],
+        "summary": "Revokes trust for one of the caller's devices.",
+        "description": "Removes the trust verdict for the given device id. When it is the current device, the signed device-trust cookie is also cleared so the device is no longer recognised.",
+        "operationId": "RevokeMyDeviceTrust",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "Unique identifier of the device.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/review": {
+      "get": {
+        "tags": ["Identity - User Sessions"],
+        "summary": "Returns the context for a session-review link.",
+        "description": "Validates the signed review token and returns the flagged sign-in's context plus any decision already recorded. Side-effect-free, so an email link scanner that prefetches the link cannot trigger any action.",
+        "operationId": "GetSessionReviewContext",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "description": "Single-use token from a confirmation/reset email link.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionReviewContextResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      },
+      "post": {
+        "tags": ["Identity - User Sessions"],
+        "summary": "Records a \"was this you?\" decision.",
+        "description": "Commits the user's yes/no answer. \"Yes\" trusts the current device and reinforces the habitual profile; \"No\" revokes all the user's sessions and triggers credential-reset remediation. Single-use: a repeat submission (double-click, prefetch) is an idempotent no-op.",
+        "operationId": "SubmitSessionReview",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionReviewDecisionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionReviewResultResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
     }
   },
   "components": {
@@ -866,6 +1081,38 @@
           "ApiClient"
         ]
       },
+      "DeviceTrustedResponse": {
+        "required": ["deviceId", "trustedUntil"],
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string"
+          },
+          "trustedUntil": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GeoCoordinate": {
+        "required": ["latitude", "longitude"],
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": ["number", "string"],
+            "description": "Latitude in decimal degrees, in the range [-90, 90].",
+            "format": "double"
+          },
+          "longitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": ["number", "string"],
+            "description": "Longitude in decimal degrees, in the range [-180, 180].",
+            "format": "double"
+          }
+        },
+        "description": "A geographic coordinate in WGS 84 decimal degrees — latitude and longitude. A reusable value object for any\ndomain that records a point on Earth: address geocoding, IP geolocation, asset tracking, store locators."
+      },
       "GeoLocation": {
         "type": "object",
         "properties": {
@@ -881,15 +1128,58 @@
           "countryCode": {
             "type": ["null", "string"]
           },
-          "latitude": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-            "type": ["null", "number", "string"],
-            "format": "double"
+          "coordinate": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/GeoCoordinate"
+              }
+            ]
           },
-          "longitude": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-            "type": ["null", "number", "string"],
-            "format": "double"
+          "accuracyRadiusKm": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "isAnonymousProxy": {
+            "type": ["null", "boolean"]
+          },
+          "isHostingProvider": {
+            "type": ["null", "boolean"]
+          },
+          "isVpn": {
+            "type": ["null", "boolean"]
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       },
@@ -1084,6 +1374,49 @@
           }
         }
       },
+      "SessionReviewContextResponse": {
+        "required": ["country", "decision"],
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": ["null", "string"]
+          },
+          "decision": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/UserSessionReviewDecision"
+              }
+            ]
+          }
+        }
+      },
+      "SessionReviewDecisionRequest": {
+        "required": ["token", "decision"],
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/UserSessionReviewDecision"
+          }
+        }
+      },
+      "SessionReviewResultResponse": {
+        "required": ["decision", "applied"],
+        "type": "object",
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/UserSessionReviewDecision"
+          },
+          "applied": {
+            "type": "boolean"
+          }
+        }
+      },
       "UserDeviceResponse": {
         "required": [
           "deviceId",
@@ -1092,7 +1425,9 @@
           "browser",
           "lastSeen",
           "sessionCount",
-          "lastLocation"
+          "lastLocation",
+          "isTrusted",
+          "trustedUntil"
         ],
         "type": "object",
         "properties": {
@@ -1125,6 +1460,13 @@
                 "$ref": "#/components/schemas/GeoLocation"
               }
             ]
+          },
+          "isTrusted": {
+            "type": "boolean"
+          },
+          "trustedUntil": {
+            "type": ["null", "string"],
+            "format": "date-time"
           }
         }
       },
@@ -1189,6 +1531,9 @@
             }
           }
         }
+      },
+      "UserSessionReviewDecision": {
+        "enum": ["Confirmed", "Denied", null]
       },
       "UserSessionRiskLevel": {
         "enum": ["None", "Low", "Medium", "High", null]

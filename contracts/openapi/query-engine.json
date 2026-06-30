@@ -9,7 +9,7 @@
       "get": {
         "tags": ["Query Engine"],
         "summary": "Lists every registered QueryDefinition.",
-        "description": "Returns the full query catalogue surfaced by IQueryDefinitionRegistry so a dashboard editor can offer a dropdown of queries instead of a free-text queryName. Each entry carries the owning module, the wire identifier and, when a MapGranitQuery route exposes it, the resolved base path of its list endpoint. Registration and routing are decoupled: a query registered without a mapped route is returned with a null base path rather than a forged URL. The array is ordered by moduleName then name (ascending, ordinal).",
+        "description": "Returns the full query catalogue surfaced by IQueryDefinitionRegistry so a dashboard editor can offer a dropdown of queries instead of a free-text queryName. Entries are ordered by owning module, then by name, so the editor can group them under module headings. Each entry carries the wire identifier, its owning module, a localization key for the label (the target entity's display key when registered, else Query:{Name}), and — when a MapGranitQuery route exposes it — the resolved base path of its list endpoint. Registration and routing are decoupled: a query registered without a mapped route is returned with a null base path rather than a forged URL.",
         "operationId": "ListQueryCatalog",
         "responses": {
           "200": {

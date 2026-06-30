@@ -53,8 +53,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -83,8 +83,51 @@
               }
             }
           },
-          "422": {
-            "description": "Unprocessable Entity",
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/metrics/catalog": {
+      "get": {
+        "tags": ["Analytics"],
+        "summary": "Lists every registered Granit.Analytics MetricDefinition.",
+        "description": "Returns the full metric catalogue surfaced by IMetricDefinitionRegistry so a KPI widget editor can offer a dropdown of metrics instead of a free-text metric name. Each entry carries the wire identifier (invokable via POST /metrics/{name}), the localized label, and the display metadata (value kind, aggregation, refresh hint, currency) the editor needs to preview a metric.",
+        "operationId": "ListMetricCatalog",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MetricCatalogEntryResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -133,8 +176,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -155,16 +198,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -213,8 +246,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -235,16 +268,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -293,8 +316,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -315,16 +338,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -373,8 +386,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -395,16 +408,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -453,8 +456,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -475,16 +478,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -516,15 +509,7 @@
         "enum": ["Bar", "HorizontalBar", "Line", "Area", "Pie", "Donut"]
       },
       "ChartWidgetDefinition": {
-        "required": [
-          "queryName",
-          "groupBy",
-          "aggregation",
-          "field",
-          "chartType",
-          "slug",
-          "position"
-        ],
+        "required": ["queryName", "groupBy", "aggregation", "field", "chartType", "slug"],
         "type": "object",
         "properties": {
           "queryName": {
@@ -544,10 +529,6 @@
           },
           "slug": {
             "type": "string"
-          },
-          "position": {
-            "type": "integer",
-            "format": "int32"
           },
           "size": {
             "$ref": "#/components/schemas/WidgetSize"
@@ -597,7 +578,8 @@
           "id",
           "widgetType",
           "slug",
-          "position",
+          "x",
+          "y",
           "width",
           "height",
           "titleLocalizationKey",
@@ -622,7 +604,11 @@
           "slug": {
             "type": "string"
           },
-          "position": {
+          "x": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "y": {
             "type": "integer",
             "format": "int32"
           },
@@ -845,7 +831,7 @@
         "description": "Arbitrary JSON value (object, array, string, number, boolean, or null)."
       },
       "KpiWidgetDefinition": {
-        "required": ["datasource", "slug", "position"],
+        "required": ["datasource", "slug"],
         "type": "object",
         "properties": {
           "datasource": {
@@ -853,10 +839,6 @@
           },
           "slug": {
             "type": "string"
-          },
-          "position": {
-            "type": "integer",
-            "format": "int32"
           },
           "size": {
             "$ref": "#/components/schemas/WidgetSize"
@@ -926,13 +908,42 @@
           },
           {
             "$ref": "#/components/schemas/MapPointSourceGeography"
+          },
+          {
+            "$ref": "#/components/schemas/MapPointSourceAddress"
+          },
+          {
+            "$ref": "#/components/schemas/MapPointSourceIpAddress"
           }
         ],
         "discriminator": {
           "propertyName": "kind",
           "mapping": {
             "lat-lng": "#/components/schemas/MapPointSourceLatLng",
-            "geography": "#/components/schemas/MapPointSourceGeography"
+            "geography": "#/components/schemas/MapPointSourceGeography",
+            "address": "#/components/schemas/MapPointSourceAddress",
+            "ip-address": "#/components/schemas/MapPointSourceIpAddress"
+          }
+        }
+      },
+      "MapPointSourceAddress": {
+        "required": ["streetColumn", "postalCodeColumn", "localityColumn", "countryColumn"],
+        "properties": {
+          "kind": {
+            "enum": ["address"],
+            "type": "string"
+          },
+          "streetColumn": {
+            "type": "string"
+          },
+          "postalCodeColumn": {
+            "type": "string"
+          },
+          "localityColumn": {
+            "type": "string"
+          },
+          "countryColumn": {
+            "type": "string"
           }
         }
       },
@@ -944,6 +955,18 @@
             "type": "string"
           },
           "geographyColumn": {
+            "type": "string"
+          }
+        }
+      },
+      "MapPointSourceIpAddress": {
+        "required": ["ipAddressColumn"],
+        "properties": {
+          "kind": {
+            "enum": ["ip-address"],
+            "type": "string"
+          },
+          "ipAddressColumn": {
             "type": "string"
           }
         }
@@ -967,7 +990,7 @@
         "enum": ["Plan", "Satellite", "Hybrid", "Topo", "Custom", null]
       },
       "MapWidgetDefinition": {
-        "required": ["queryName", "pointSource", "popupColumns", "slug", "position"],
+        "required": ["queryName", "pointSource", "popupColumns", "slug"],
         "type": "object",
         "properties": {
           "queryName": {
@@ -1021,10 +1044,6 @@
           "slug": {
             "type": "string"
           },
-          "position": {
-            "type": "integer",
-            "format": "int32"
-          },
           "size": {
             "$ref": "#/components/schemas/WidgetSize"
           },
@@ -1065,6 +1084,41 @@
                 "$ref": "#/components/schemas/WidgetRenderContextRequest"
               }
             ]
+          }
+        }
+      },
+      "MetricCatalogEntryResponse": {
+        "required": [
+          "name",
+          "label",
+          "valueKind",
+          "aggregation",
+          "isHigherBetter",
+          "refreshHint",
+          "currencyCode"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "valueKind": {
+            "type": "string"
+          },
+          "aggregation": {
+            "type": "string"
+          },
+          "isHigherBetter": {
+            "type": "boolean"
+          },
+          "refreshHint": {
+            "type": "string"
+          },
+          "currencyCode": {
+            "type": ["null", "string"]
           }
         }
       },
@@ -1192,8 +1246,7 @@
           "columnFields",
           "valueField",
           "valueAggregation",
-          "slug",
-          "position"
+          "slug"
         ],
         "type": "object",
         "properties": {
@@ -1220,10 +1273,6 @@
           },
           "slug": {
             "type": "string"
-          },
-          "position": {
-            "type": "integer",
-            "format": "int32"
           },
           "size": {
             "$ref": "#/components/schemas/WidgetSize"
@@ -1297,7 +1346,7 @@
         "enum": ["Static", "Dynamic", "Realtime"]
       },
       "TableWidgetDefinition": {
-        "required": ["queryName", "visibleColumns", "pageSize", "slug", "position"],
+        "required": ["queryName", "visibleColumns", "pageSize", "slug"],
         "type": "object",
         "properties": {
           "queryName": {
@@ -1315,10 +1364,6 @@
           },
           "slug": {
             "type": "string"
-          },
-          "position": {
-            "type": "integer",
-            "format": "int32"
           },
           "size": {
             "$ref": "#/components/schemas/WidgetSize"

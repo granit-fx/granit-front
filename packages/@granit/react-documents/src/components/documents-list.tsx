@@ -487,7 +487,10 @@ function DocumentsListBody({
       return;
     }
     renameDocument.mutate(
-      { id: doc.id, request: { name, description: null } },
+      {
+        id: doc.id,
+        request: { concurrencyStamp: doc.concurrencyStamp, name, description: null },
+      },
       { onSettled: () => clearRowMode(doc.id) }
     );
   }

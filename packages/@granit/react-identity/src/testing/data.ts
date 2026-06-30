@@ -180,6 +180,8 @@ export const mockDevices: UserDeviceResponse[] = [
     browser: 'Chrome',
     lastSeen: toISODateString('2026-03-06T09:30:00Z'),
     sessionCount: 2,
+    isTrusted: false,
+    trustedUntil: null,
     lastLocation: {
       city: 'Brussels',
       region: 'Brussels-Capital',
@@ -196,6 +198,8 @@ export const mockDevices: UserDeviceResponse[] = [
     browser: null,
     lastSeen: toISODateString('2026-03-04T12:00:00Z'),
     sessionCount: 0,
+    isTrusted: false,
+    trustedUntil: null,
     lastLocation: null,
   },
 ];

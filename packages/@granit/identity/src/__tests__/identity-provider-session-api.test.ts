@@ -30,6 +30,8 @@ const sampleDevice: UserDeviceResponse = {
   browser: 'Chrome',
   lastSeen: toISODateString('2026-03-20T12:00:00Z'),
   sessionCount: 1,
+  isTrusted: false,
+  trustedUntil: null,
   lastLocation: null,
 };
 

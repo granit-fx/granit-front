@@ -186,6 +186,8 @@ export interface SeoMetadataResponse {
   readonly xDefaultCulture: string | null;
   readonly statusAtLastReview: SeoReviewStatus;
   readonly lastReviewedAt: ISODateString | null;
+  readonly createdAt: ISODateString;
+  readonly modifiedAt: ISODateString | null;
   readonly concurrencyStamp: string;
 }
 
@@ -280,12 +282,7 @@ export type SeoGenerationOutcome = 'Succeeded' | 'Refused' | 'SchemaViolation' |
 
 /** A single `[Flags] SuggestionScope` member name. */
 export type SuggestionScopeFlag =
-  | 'None'
-  | 'Title'
-  | 'Description'
-  | 'OgImageAltText'
-  | 'Keywords'
-  | 'JsonLd';
+  'None' | 'Title' | 'Description' | 'OgImageAltText' | 'Keywords' | 'JsonLd';
 
 /**
  * Which SEO fields a suggestion covers / was applied with. Maps the
@@ -389,10 +386,7 @@ export type ListSeoMetadataParams = QueryRequest;
 
 /** A quick-filter token recognised by the SEO audit grid. */
 export type SeoAuditQuickFilter =
-  | 'MissingDescription'
-  | 'NoCanonical'
-  | 'TitleTooLong'
-  | 'MissingOgImage';
+  'MissingDescription' | 'NoCanonical' | 'TitleTooLong' | 'MissingOgImage';
 
 /** Query params for the SEO-AI suggestions inbox (`GET /api/cms/seo/ai/suggestions`). */
 export interface ListSeoSuggestionsParams {

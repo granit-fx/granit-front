@@ -274,7 +274,7 @@ describe('use-parties', () => {
 
       const request: PartyAddressRequest = {
         kind: 'Billing',
-        line1: '1 rue',
+        street1: '1 rue',
         city: 'Paris',
         postalCode: '75001',
         country: 'FR',

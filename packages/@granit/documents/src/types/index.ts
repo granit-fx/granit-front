@@ -169,6 +169,8 @@ export interface AppendVersionRequest {
  * non-null empty value instead).
  */
 export interface RenameDocumentRequest {
+  /** Optimistic-concurrency token echoed from the document's last read. */
+  readonly concurrencyStamp: string;
   readonly name: string | null;
   readonly description: string | null;
   /** When `true`, clears the description regardless of {@link description}. */

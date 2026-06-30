@@ -48,6 +48,8 @@ export interface RedirectResponse {
   readonly origin: RedirectOrigin;
   readonly hitCount: number;
   readonly lastHitAt: ISODateString | null;
+  readonly createdAt: ISODateString;
+  readonly modifiedAt: ISODateString | null;
 }
 
 /**

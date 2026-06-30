@@ -24,13 +24,12 @@ export function AddAddressDialog({ partyId, open, onOpenChange }: AddAddressDial
     resolver: createPartyAddressResolver(t),
     defaultValues: {
       kind: 'Billing',
-      line1: '',
-      line2: null,
+      street1: '',
+      street2: null,
       city: '',
       state: null,
       postalCode: '',
       country: 'BE',
-      companyName: null,
       label: null,
       isDefault: false,
     },
@@ -41,13 +40,12 @@ export function AddAddressDialog({ partyId, open, onOpenChange }: AddAddressDial
       id: partyId,
       request: {
         kind: values.kind as AddressKind,
-        line1: values.line1,
-        line2: values.line2 ?? null,
+        street1: values.street1,
+        street2: values.street2 ?? null,
         city: values.city,
         state: values.state ?? null,
         postalCode: values.postalCode,
         country: values.country,
-        companyName: values.companyName ?? null,
         label: values.label ?? null,
         isDefault: values.isDefault ?? false,
       },
@@ -72,8 +70,8 @@ export function AddAddressDialog({ partyId, open, onOpenChange }: AddAddressDial
         options={ADDRESS_KINDS.map((k) => ({ value: k, label: t(`Parties.AddressKind.${k}`) }))}
       />
 
-      <TextField control={form.control} name="line1" label={t('Parties.Fields.Line1')} />
-      <TextField control={form.control} name="line2" label={t('Parties.Fields.Line2')} />
+      <TextField control={form.control} name="street1" label={t('Parties.Fields.Street1')} />
+      <TextField control={form.control} name="street2" label={t('Parties.Fields.Street2')} />
 
       <div className="grid gap-4 md:grid-cols-2">
         <TextField
@@ -95,12 +93,6 @@ export function AddAddressDialog({ partyId, open, onOpenChange }: AddAddressDial
           transform={(value) => value.toUpperCase()}
         />
       </div>
-
-      <TextField
-        control={form.control}
-        name="companyName"
-        label={t('Parties.Fields.CompanyName')}
-      />
 
       <TextField control={form.control} name="label" label={t('Parties.Fields.Label')} />
 

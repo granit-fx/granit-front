@@ -1,4 +1,5 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
+import { toISODateString } from '@granit/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -39,6 +40,8 @@ const redirect: RedirectResponse = {
   origin: 'Manual',
   hitCount: 0,
   lastHitAt: null,
+  createdAt: toISODateString('2026-01-01T00:00:00+00:00'),
+  modifiedAt: null,
 };
 
 const mutationResult: RedirectMutationResult = { redirect, conflictWarning: null };

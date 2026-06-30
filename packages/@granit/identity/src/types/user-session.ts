@@ -67,6 +67,10 @@ export type UserDeviceResponse = {
   readonly sessionCount: number;
   /** Approximate geolocation of the most recent activity, or null when unresolved. */
   readonly lastLocation: GeoLocation | null;
+  /** Whether the user has marked this device as trusted. */
+  readonly isTrusted: boolean;
+  /** When the trust grant expires, or null when the device is not trusted. */
+  readonly trustedUntil: ISODateString | null;
 };
 
 /**

@@ -202,8 +202,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -224,16 +224,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -377,8 +367,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -690,7 +680,7 @@
       },
       "IIntegrationEvent": {
         "type": "object",
-        "description": "Marker interface for integration events (ETO \u2014 Event Transfer Object)."
+        "description": "Marker interface for integration events (ETO — Event Transfer Object)."
       },
       "LookupDescriptor": {
         "type": "object",
@@ -782,7 +772,7 @@
                   "type": ["null", "array"],
                   "items": {
                     "type": "object",
-                    "description": "Marker interface for integration events (ETO \u2014 Event Transfer Object)."
+                    "description": "Marker interface for integration events (ETO — Event Transfer Object)."
                   }
                 },
                 "createdAt": {
@@ -1044,7 +1034,8 @@
           "executedAt",
           "cancelledBy",
           "failureReason",
-          "createdAt"
+          "createdAt",
+          "modifiedAt"
         ],
         "type": "object",
         "properties": {
@@ -1080,7 +1071,7 @@
             "format": "date-time"
           },
           "modifiedAt": {
-            "type": ["string", "null"],
+            "type": ["null", "string"],
             "format": "date-time"
           }
         }

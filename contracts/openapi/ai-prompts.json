@@ -60,7 +60,7 @@
       "post": {
         "tags": ["AI - Prompts"],
         "summary": "Creates a prompt owned by the caller.",
-        "description": "Creates a private prompt with the given content, decoration, and categories, owned by the caller.",
+        "description": "Creates a private prompt with the given content, decoration, and categories, owned by the caller. Returns 422 when a referenced category does not exist.",
         "operationId": "CreatePrompt",
         "requestBody": {
           "content": {
@@ -83,12 +83,12 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -105,16 +105,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -260,7 +250,7 @@
       "put": {
         "tags": ["AI - Prompts"],
         "summary": "Updates one of the caller's own prompts.",
-        "description": "Updates the prompt and bumps its version. System prompts are read-only and reported as not found; customise one to get an editable copy.",
+        "description": "Updates the prompt and bumps its version. System prompts are read-only and reported as not found; customise one to get an editable copy. Returns 422 when a referenced category does not exist.",
         "operationId": "UpdatePrompt",
         "parameters": [
           {
@@ -295,12 +285,12 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -327,16 +317,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -535,36 +515,6 @@
             "items": {
               "type": "string",
               "format": "uuid"
-            }
-          }
-        }
-      },
-      "HttpValidationProblemDetails": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": ["null", "string"]
-          },
-          "title": {
-            "type": ["null", "string"]
-          },
-          "status": {
-            "type": ["null", "integer"],
-            "format": "int32"
-          },
-          "detail": {
-            "type": ["null", "string"]
-          },
-          "instance": {
-            "type": ["null", "string"]
-          },
-          "errors": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
             }
           }
         }

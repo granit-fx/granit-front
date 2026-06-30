@@ -1281,8 +1281,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1376,7 +1376,7 @@
     },
     "/api/cms/seo/ai/suggest": {
       "post": {
-        "tags": ["CMS - SEO - AI"],
+        "tags": ["CMS - SEO AI"],
         "summary": "Generates an AI SEO suggestion for one content item.",
         "description": "Generates AI SEO fields for the specified content item using the configured language model. ContentTitle is required for grounding; ContentBody is optional but improves quality. Returns the created suggestion on success. An identical fingerprint within 7 days reuses the existing suggestion without re-spending tokens. Outcome is Refused, SchemaViolation or TransportFailure when the model declines or the transport fails.",
         "operationId": "GenerateCmsSeoAISuggestion",
@@ -1456,7 +1456,7 @@
     },
     "/api/cms/seo/ai/suggestions": {
       "get": {
-        "tags": ["CMS - SEO - AI"],
+        "tags": ["CMS - SEO AI"],
         "summary": "Lists AI SEO suggestions for the review inbox, filtered and paginated.",
         "description": "Returns a page of AI SEO suggestions optionally filtered by siteId, contentType and status. Use skip and take for pagination; take is capped at 100 and defaults to 25.",
         "operationId": "ListCmsSeoAISuggestions",
@@ -1549,7 +1549,7 @@
     },
     "/api/cms/seo/ai/suggestions/{id}/apply": {
       "post": {
-        "tags": ["CMS - SEO - AI"],
+        "tags": ["CMS - SEO AI"],
         "summary": "Applies a chosen subset of a suggestion's fields to the live SEO metadata.",
         "description": "Writes the AI-generated values selected by the Fields mask to the live SEO metadata row for the content item, creating it if it does not exist. The mask is intersected with the suggestion's own scope. Returns 404 when the suggestion does not exist, 409 when it is no longer Pending, and 400 when the selected fields do not overlap with the suggestion's scope.",
         "operationId": "ApplyCmsSeoAISuggestion",
@@ -1661,7 +1661,7 @@
     },
     "/api/cms/seo/ai/suggestions/{id}/reject": {
       "post": {
-        "tags": ["CMS - SEO - AI"],
+        "tags": ["CMS - SEO AI"],
         "summary": "Rejects a pending suggestion, recording an optional reason.",
         "description": "Marks the suggestion as rejected, recording the reviewer identity, the instant, and an optional dismissal reason. No changes are written to the live SEO metadata. Returns 404 when the suggestion does not exist, 409 when it is no longer Pending.",
         "operationId": "RejectCmsSeoAISuggestion",
@@ -1763,7 +1763,7 @@
     },
     "/api/cms/seo/ai/suggestions/{id}/diff": {
       "get": {
-        "tags": ["CMS - SEO - AI"],
+        "tags": ["CMS - SEO AI"],
         "summary": "Returns the per-field current-vs-proposed diff for a suggestion.",
         "description": "Returns a per-field diff comparing the suggestion's proposed values against the content item's current live SEO metadata. Fields in the suggestion but absent from the live row are shown as additions. Use this endpoint to preview the impact of an apply before committing.",
         "operationId": "DiffCmsSeoAISuggestion",
@@ -1835,7 +1835,7 @@
     },
     "/api/cms/seo/ai/sites/{siteId}/audit": {
       "post": {
-        "tags": ["CMS - SEO - AI"],
+        "tags": ["CMS - SEO AI"],
         "summary": "Queues a bulk SEO generation run for all published content on the site.",
         "description": "Enqueues a one-off bulk SEO generation job for all published content items on the site that do not yet have SEO metadata. Each item is processed independently; quota exhaustion for one item does not stop the run. Returns 202 Accepted immediately; generated suggestions appear in the review inbox.",
         "operationId": "BulkAuditCmsSeoAI",
@@ -3173,8 +3173,7 @@
             "type": ["null", "string"]
           },
           "concurrencyStamp": {
-            "type": "string",
-            "default": ""
+            "type": ["null", "string"]
           }
         }
       },
@@ -3199,6 +3198,8 @@
           "xDefaultCulture",
           "statusAtLastReview",
           "lastReviewedAt",
+          "createdAt",
+          "modifiedAt",
           "concurrencyStamp"
         ],
         "type": "object",
@@ -3281,6 +3282,14 @@
             "$ref": "#/components/schemas/SeoReviewStatus"
           },
           "lastReviewedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
             "type": ["null", "string"],
             "format": "date-time"
           },
@@ -3622,8 +3631,7 @@
             "default": false
           },
           "concurrencyStamp": {
-            "type": "string",
-            "default": ""
+            "type": ["null", "string"]
           }
         }
       },
@@ -3843,7 +3851,7 @@
       "name": "CMS - SEO"
     },
     {
-      "name": "CMS - SEO - AI"
+      "name": "CMS - SEO AI"
     }
   ]
 }

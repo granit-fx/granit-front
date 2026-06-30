@@ -127,8 +127,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -205,8 +205,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -227,16 +227,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -382,7 +372,7 @@
       "put": {
         "tags": ["IoT Devices"],
         "summary": "Updates a device.",
-        "description": "Updates firmware version or label of an existing device.",
+        "description": "Updates firmware version or label of an existing device. The request must include the concurrency stamp from the last read; a mismatch returns 409 Conflict.",
         "operationId": "UpdateDevice",
         "parameters": [
           {
@@ -427,8 +417,18 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -449,16 +449,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -675,8 +665,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1011,6 +1001,9 @@
       "Device": {
         "type": "object",
         "properties": {
+          "concurrencyStamp": {
+            "type": "string"
+          },
           "serialNumber": {
             "$ref": "#/components/schemas/DeviceSerialNumber"
           },
@@ -1119,15 +1112,19 @@
         "type": "object",
         "properties": {
           "serialNumber": {
+            "maxLength": 128,
             "type": "string"
           },
           "hardwareModel": {
+            "maxLength": 256,
             "type": "string"
           },
           "firmwareVersion": {
+            "maxLength": 64,
             "type": "string"
           },
           "label": {
+            "maxLength": 256,
             "type": ["null", "string"]
           }
         }
@@ -1142,7 +1139,8 @@
           "label",
           "lastHeartbeatAt",
           "createdAt",
-          "modifiedAt"
+          "modifiedAt",
+          "concurrencyStamp"
         ],
         "type": "object",
         "properties": {
@@ -1176,6 +1174,9 @@
           "modifiedAt": {
             "type": ["null", "string"],
             "format": "date-time"
+          },
+          "concurrencyStamp": {
+            "type": "string"
           }
         }
       },
@@ -1184,12 +1185,18 @@
         "enum": ["Provisioning", "Active", "Suspended", "Decommissioned"]
       },
       "DeviceUpdateRequest": {
+        "required": ["concurrencyStamp"],
         "type": "object",
         "properties": {
+          "concurrencyStamp": {
+            "type": "string"
+          },
           "firmwareVersion": {
+            "maxLength": 64,
             "type": ["null", "string"]
           },
           "label": {
+            "maxLength": 256,
             "type": ["null", "string"]
           }
         }
@@ -1436,6 +1443,9 @@
             "items": {
               "type": "object",
               "properties": {
+                "concurrencyStamp": {
+                  "type": "string"
+                },
                 "serialNumber": {},
                 "model": {},
                 "firmware": {},
@@ -1829,7 +1839,7 @@
         }
       },
       "TelemetryPointResponse": {
-        "required": ["id", "deviceId", "recordedAt", "metrics", "source"],
+        "required": ["id", "deviceId", "recordedAt", "metrics", "source", "createdAt"],
         "type": "object",
         "properties": {
           "id": {
@@ -1854,6 +1864,10 @@
           },
           "source": {
             "type": ["null", "string"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }

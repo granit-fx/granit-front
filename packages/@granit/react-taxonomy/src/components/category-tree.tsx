@@ -113,7 +113,15 @@ function CategoryNode({
     const next = globalThis.prompt('Rename category', category.name);
     if (!next?.trim() || next.trim() === category.name) return;
     updateCategory.mutate(
-      { id: category.id, request: { name: next.trim(), iconName: null, hideOnEntityCard: null } },
+      {
+        id: category.id,
+        request: {
+          concurrencyStamp: category.concurrencyStamp,
+          name: next.trim(),
+          iconName: null,
+          hideOnEntityCard: null,
+        },
+      },
       { onError: (err) => setError(extractProblemDetail(err)) }
     );
   }

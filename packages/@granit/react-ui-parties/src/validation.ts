@@ -85,13 +85,12 @@ export interface PartyIdentityFormValues {
 
 export interface PartyAddressFormValues {
   kind: string;
-  line1: string;
-  line2: string | null;
+  street1: string;
+  street2: string | null;
   city: string;
   state: string | null;
   postalCode: string;
   country: string;
-  companyName: string | null;
   label: string | null;
   isDefault?: boolean;
 }
@@ -232,13 +231,12 @@ export function createPartyAddressResolver(t: TranslateFn): Resolver<PartyAddres
   const baseResolver = createConstraintsResolver(partiesConstraints.PartyAddressRequest, t, {
     labelResolver: fieldLabel(t, {
       kind: 'Parties.Fields.AddressKind',
-      line1: 'Parties.Fields.Line1',
-      line2: 'Parties.Fields.Line2',
+      street1: 'Parties.Fields.Street1',
+      street2: 'Parties.Fields.Street2',
       city: 'Parties.Fields.City',
       state: 'Parties.Fields.State',
       postalCode: 'Parties.Fields.PostalCode',
       country: 'Parties.Fields.Country',
-      companyName: 'Parties.Fields.CompanyName',
       label: 'Parties.Fields.Label',
     }),
   });

@@ -134,7 +134,10 @@ export function DocumentDetail({
       return;
     }
     renameDocument.mutate(
-      { id: document.id, request: { name: trimmed, description: null } },
+      {
+        id: document.id,
+        request: { concurrencyStamp: document.concurrencyStamp, name: trimmed, description: null },
+      },
       { onSuccess: () => setEditing(false) }
     );
   }

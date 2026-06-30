@@ -127,13 +127,12 @@ describe('createPartyAddressResolver', () => {
 
   const validData = {
     kind: 'Billing',
-    line1: '1 Main Street',
+    street1: '1 Main Street',
     city: 'Brussels',
     postalCode: '1000',
     country: 'BE',
-    line2: null,
+    street2: null,
     state: null,
-    companyName: null,
     label: null,
   };
 
@@ -141,9 +140,9 @@ describe('createPartyAddressResolver', () => {
     expect(await run(resolver, validData)).toEqual({});
   });
 
-  it('rejects an empty line1', async () => {
-    const errors = await run(resolver, { ...validData, line1: '' });
-    expect(errors.line1).toBeDefined();
+  it('rejects an empty street1', async () => {
+    const errors = await run(resolver, { ...validData, street1: '' });
+    expect(errors.street1).toBeDefined();
   });
 
   it('rejects an empty city', async () => {

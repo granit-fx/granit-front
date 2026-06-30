@@ -63,6 +63,8 @@ export interface CreateTagRequest {
  * server-side, pass a value to update it.
  */
 export interface UpdateTagRequest {
+  /** Optimistic-concurrency token echoed from the tag's last read. */
+  readonly concurrencyStamp: string;
   readonly name: string | null;
   readonly color: string | null;
   readonly hideOnEntityCard: boolean | null;
@@ -141,6 +143,8 @@ export interface CreateCategoryRequest {
  * (OpenAPI `required` + `["null","T"]`): pass `null` to leave a field unchanged.
  */
 export interface UpdateCategoryRequest {
+  /** Optimistic-concurrency token echoed from the category's last read. */
+  readonly concurrencyStamp: string;
   readonly name: string | null;
   readonly iconName: string | null;
   readonly hideOnEntityCard: boolean | null;

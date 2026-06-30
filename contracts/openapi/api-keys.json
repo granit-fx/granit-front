@@ -127,8 +127,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -172,7 +172,7 @@
       "post": {
         "tags": ["API Keys"],
         "summary": "Creates a new API key. The raw secret is returned once.",
-        "description": "Generates a new API key with the specified type, environment, permissions, and optional CIDR restrictions. The caller must possess every permission being assigned (privilege escalation prevention). The response includes the full raw secret \u2014 this is the only time the secret is available. Store it securely; it cannot be retrieved later. The key is immediately active.",
+        "description": "Generates a new API key with the specified type, environment, permissions, and optional CIDR restrictions. The caller must possess every permission being assigned (privilege escalation prevention). The response includes the full raw secret — this is the only time the secret is available. Store it securely; it cannot be retrieved later. The key is immediately active.",
         "operationId": "CreateApiKey",
         "requestBody": {
           "content": {
@@ -364,7 +364,7 @@
       "post": {
         "tags": ["API Keys"],
         "summary": "Revokes an API key. The key will no longer be accepted for authentication.",
-        "description": "Permanently revokes the API key. Any subsequent authentication attempt using this key will be rejected. This operation is irreversible \u2014 use rotate instead if you need a replacement key. Returns 404 if the key does not exist.",
+        "description": "Permanently revokes the API key. Any subsequent authentication attempt using this key will be rejected. This operation is irreversible — use rotate instead if you need a replacement key. Returns 404 if the key does not exist.",
         "operationId": "RevokeApiKey",
         "parameters": [
           {
@@ -735,7 +735,8 @@
           "lastUsedAt",
           "revokedAt",
           "cacheBehavior",
-          "createdAt"
+          "createdAt",
+          "modifiedAt"
         ],
         "type": "object",
         "properties": {
@@ -790,7 +791,7 @@
             "format": "date-time"
           },
           "modifiedAt": {
-            "type": ["string", "null"],
+            "type": ["null", "string"],
             "format": "date-time"
           }
         }

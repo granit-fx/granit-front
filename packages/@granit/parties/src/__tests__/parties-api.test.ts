@@ -253,7 +253,7 @@ describe('parties-api', () => {
 
       const request: PartyAddressRequest = {
         kind: 'Billing',
-        line1: '1 rue de la Paix',
+        street1: '1 rue de la Paix',
         city: 'Paris',
         postalCode: '75001',
         country: 'FR',

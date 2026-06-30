@@ -127,11 +127,13 @@ describe('renameDocument', () => {
     );
 
     const result = await renameDocument(client, basePath, 'doc-1', {
+      concurrencyStamp: 'stamp-1',
       name: 'Renamed.pdf',
       description: null,
     });
 
     expect(client.patch).toHaveBeenCalledWith(`${basePath}/documents/doc-1`, {
+      concurrencyStamp: 'stamp-1',
       name: 'Renamed.pdf',
       description: null,
     });
@@ -143,12 +145,14 @@ describe('renameDocument', () => {
     vi.mocked(client.patch).mockResolvedValue(axiosResponse(sampleDocument));
 
     await renameDocument(client, basePath, 'doc-1', {
+      concurrencyStamp: 'stamp-1',
       name: null,
       description: null,
       clearDescription: true,
     });
 
     expect(client.patch).toHaveBeenCalledWith(`${basePath}/documents/doc-1`, {
+      concurrencyStamp: 'stamp-1',
       name: null,
       description: null,
       clearDescription: true,

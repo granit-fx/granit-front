@@ -194,8 +194,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -204,8 +204,8 @@
               }
             }
           },
-          "422": {
-            "description": "Unprocessable Entity",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -274,18 +274,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -294,8 +284,8 @@
               }
             }
           },
-          "422": {
-            "description": "Unprocessable Entity",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -467,36 +457,6 @@
           "updatedAt": {
             "type": ["null", "string"],
             "format": "date-time"
-          }
-        }
-      },
-      "HttpValidationProblemDetails": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": ["null", "string"]
-          },
-          "title": {
-            "type": ["null", "string"]
-          },
-          "status": {
-            "type": ["null", "integer"],
-            "format": "int32"
-          },
-          "detail": {
-            "type": ["null", "string"]
-          },
-          "instance": {
-            "type": ["null", "string"]
-          },
-          "errors": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
           }
         }
       },

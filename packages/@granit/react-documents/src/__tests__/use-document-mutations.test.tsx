@@ -118,10 +118,11 @@ describe('useRenameDocument', () => {
     const { result } = renderHook(() => useRenameDocument(), { wrapper });
     await result.current.mutateAsync({
       id: docId,
-      request: { name: 'renamed.pdf', description: null },
+      request: { concurrencyStamp: 'stamp-1', name: 'renamed.pdf', description: null },
     });
 
     expect(client.patch).toHaveBeenCalledWith(`/api/v1/documents/documents/${docId}`, {
+      concurrencyStamp: 'stamp-1',
       name: 'renamed.pdf',
       description: null,
     });

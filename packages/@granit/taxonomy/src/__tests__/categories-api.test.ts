@@ -172,12 +172,14 @@ describe('updateCategory', () => {
     );
 
     const result = await updateCategory(client, basePath, 'cat-2', {
+      concurrencyStamp: 'stamp-1',
       name: 'agreements',
       iconName: null,
       hideOnEntityCard: null,
     });
 
     expect(client.patch).toHaveBeenCalledWith(`${basePath}/categories/cat-2`, {
+      concurrencyStamp: 'stamp-1',
       name: 'agreements',
       iconName: null,
       hideOnEntityCard: null,

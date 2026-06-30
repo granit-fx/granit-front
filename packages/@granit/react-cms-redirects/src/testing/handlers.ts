@@ -2,6 +2,7 @@
 // @granit/react-cms-redirects/testing — MSW handler factory
 // ---------------------------------------------------------------------------
 
+import { toISODateString } from '@granit/types';
 import { http, HttpResponse, type RequestHandler } from 'msw';
 
 import { mockRedirects } from './data';
@@ -81,6 +82,8 @@ export function createCmsRedirectsHandlers(baseUrl = '/api/cms/redirects'): Requ
         origin: 'Manual',
         hitCount: 0,
         lastHitAt: null,
+        createdAt: toISODateString('2026-01-01T00:00:00+00:00'),
+        modifiedAt: null,
       };
       redirects.push(redirect);
       const body: RedirectMutationResult = { redirect, conflictWarning: null };

@@ -34,7 +34,6 @@ describe('AddressesTab', () => {
     renderWithProviders(<AddressesTab partyId={partyId} addresses={addresses} />);
     expect(screen.getByText('Addresses')).toBeInTheDocument();
     expect(screen.getByText('1 rue de la Loi')).toBeInTheDocument();
-    expect(screen.getByText('Acme Corp SA')).toBeInTheDocument();
     expect(screen.getByText('Bât. 4')).toBeInTheDocument();
   });
 
@@ -80,9 +79,9 @@ describe('AddressesTab', () => {
       expect(mockAdd.mutateAsync).toHaveBeenCalled();
     });
     const call = mockAdd.mutateAsync.mock.calls[0]![0] as {
-      request: { line1: string; country: string };
+      request: { street1: string; country: string };
     };
-    expect(call.request.line1).toBe('12 Main St');
+    expect(call.request.street1).toBe('12 Main St');
     expect(call.request.country).toBe('BE');
   });
 });

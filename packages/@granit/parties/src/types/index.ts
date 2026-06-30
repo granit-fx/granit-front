@@ -58,12 +58,11 @@ export interface PartyAddressResponse {
   readonly kind: AddressKind;
   readonly isDefault: boolean;
   readonly label: string | null;
-  readonly line1: string;
+  readonly street1: string;
   readonly city: string;
   readonly postalCode: string;
   readonly country: string;
-  readonly companyName: string | null;
-  readonly line2: string | null;
+  readonly street2: string | null;
   readonly state: string | null;
 }
 
@@ -236,12 +235,11 @@ export interface PartySuspendRequest {
 /** Request payload to add an address to a party. */
 export interface PartyAddressRequest {
   readonly kind: AddressKind;
-  readonly line1: string;
+  readonly street1: string;
   readonly city: string;
   readonly postalCode: string;
   readonly country: string;
-  readonly companyName?: string | null;
-  readonly line2?: string | null;
+  readonly street2?: string | null;
   readonly state?: string | null;
   readonly isDefault?: boolean;
   readonly label?: string | null;

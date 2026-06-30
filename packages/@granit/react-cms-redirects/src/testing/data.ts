@@ -22,6 +22,8 @@ export const mockRedirects: RedirectResponse[] = [
     origin: 'Manual',
     hitCount: 12,
     lastHitAt: toISODateString('2026-05-01T09:30:00+00:00'),
+    createdAt: toISODateString('2026-01-01T00:00:00+00:00'),
+    modifiedAt: null,
   },
   {
     id: '50000000-0000-4000-8000-000000000002',
@@ -36,5 +38,7 @@ export const mockRedirects: RedirectResponse[] = [
     origin: 'Imported',
     hitCount: 0,
     lastHitAt: null,
+    createdAt: toISODateString('2026-01-01T00:00:00+00:00'),
+    modifiedAt: null,
   },
 ];

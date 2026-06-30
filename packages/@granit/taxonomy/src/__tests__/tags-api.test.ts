@@ -138,7 +138,12 @@ describe('createTag', () => {
 describe('updateTag', () => {
   it('PATCHes /tags/{id} with the nullable payload and url-encodes the id', async () => {
     const client = createMockClient();
-    const request: UpdateTagRequest = { name: 'Critical', color: null, hideOnEntityCard: null };
+    const request: UpdateTagRequest = {
+      concurrencyStamp: 'stamp-1',
+      name: 'Critical',
+      color: null,
+      hideOnEntityCard: null,
+    };
     vi.mocked(client.patch).mockResolvedValue(axiosResponse({ ...sampleTag, name: 'Critical' }));
 
     const result = await updateTag(client, basePath, 'tag/with slash', request);

@@ -95,7 +95,12 @@ describe('useUpdateTag', () => {
     const { result } = renderHook(() => useUpdateTag('documents'), { wrapper });
     await result.current.mutateAsync({
       id: 'tag-1',
-      request: { name: null, color: '#0000FF', hideOnEntityCard: null },
+      request: {
+        concurrencyStamp: 'stamp-1',
+        name: null,
+        color: '#0000FF',
+        hideOnEntityCard: null,
+      },
     });
 
     expect(client.patch).toHaveBeenCalledWith('/api/v1/taxonomy/tags/tag-1', expect.any(Object));
@@ -205,7 +210,12 @@ describe('error propagation', () => {
     await expect(
       result.current.mutateAsync({
         id: 'tag-1',
-        request: { name: 'Urgent', color: null, hideOnEntityCard: null },
+        request: {
+          concurrencyStamp: 'stamp-1',
+          name: 'Urgent',
+          color: null,
+          hideOnEntityCard: null,
+        },
       })
     ).rejects.toMatchObject({ response: { status: 409 } });
 

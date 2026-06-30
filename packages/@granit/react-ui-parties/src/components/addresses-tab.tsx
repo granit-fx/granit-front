@@ -68,9 +68,8 @@ export function AddressesTab({ partyId, addresses }: AddressesTabProps) {
                   </Button>
                 </div>
                 <div className="text-sm">
-                  {address.companyName && <div className="font-medium">{address.companyName}</div>}
-                  <div>{address.line1}</div>
-                  {address.line2 && <div>{address.line2}</div>}
+                  <div>{address.street1}</div>
+                  {address.street2 && <div>{address.street2}</div>}
                   <div>
                     {address.postalCode} {address.city}
                     {address.state ? `, ${address.state}` : ''}

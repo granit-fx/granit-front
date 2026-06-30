@@ -101,7 +101,12 @@ describe('useUpdateCategory', () => {
     const { result } = renderHook(() => useUpdateCategory('documents'), { wrapper });
     await result.current.mutateAsync({
       id: 'cat-1',
-      request: { name: 'agreements', iconName: null, hideOnEntityCard: null },
+      request: {
+        concurrencyStamp: 'stamp-1',
+        name: 'agreements',
+        iconName: null,
+        hideOnEntityCard: null,
+      },
     });
 
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);

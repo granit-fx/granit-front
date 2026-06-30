@@ -192,7 +192,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -350,8 +350,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -465,8 +465,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -477,16 +477,6 @@
           },
           "401": {
             "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -941,29 +931,58 @@
   },
   "components": {
     "schemas": {
+      "Address": {
+        "type": "object",
+        "properties": {
+          "street1": {
+            "type": "string",
+            "description": "Street address line 1 (required)."
+          },
+          "street2": {
+            "type": ["null", "string"],
+            "description": "Optional second street line."
+          },
+          "city": {
+            "type": "string",
+            "description": "City (required)."
+          },
+          "postalCode": {
+            "type": "string",
+            "description": "Postal / ZIP code (required)."
+          },
+          "state": {
+            "type": ["null", "string"],
+            "description": "Optional administrative subdivision (e.g., a US state)."
+          },
+          "country": {
+            "type": "string",
+            "description": "ISO 3166-1 alpha-2 country code (always upper-case after construction)."
+          },
+          "deliveryPointType": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Optional kind of delivery point (street, PO box, …). Drives deliverability semantics — a PO box can\nnever be confirmed by a courier delivery. `null` when unknown.",
+                "$ref": "#/components/schemas/AddressDeliveryPointType"
+              }
+            ]
+          }
+        },
+        "description": "Postal address value object."
+      },
+      "AddressDeliveryPointType": {
+        "enum": ["Street", "PoBox", "Other", null]
+      },
       "BillingAddress": {
         "type": "object",
         "properties": {
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
           "companyName": {
             "type": ["null", "string"]
-          },
-          "line1": {
-            "type": "string"
-          },
-          "line2": {
-            "type": ["null", "string"]
-          },
-          "city": {
-            "type": "string"
-          },
-          "postalCode": {
-            "type": "string"
-          },
-          "state": {
-            "type": ["null", "string"]
-          },
-          "country": {
-            "type": "string"
           },
           "vatNumber": {
             "type": ["null", "string"]
@@ -1844,26 +1863,41 @@
                 "issuedBillingAddressSnapshot": {
                   "type": "object",
                   "properties": {
+                    "address": {
+                      "type": "object",
+                      "properties": {
+                        "street1": {
+                          "type": "string",
+                          "description": "Street address line 1 (required)."
+                        },
+                        "street2": {
+                          "type": ["null", "string"],
+                          "description": "Optional second street line."
+                        },
+                        "city": {
+                          "type": "string",
+                          "description": "City (required)."
+                        },
+                        "postalCode": {
+                          "type": "string",
+                          "description": "Postal / ZIP code (required)."
+                        },
+                        "state": {
+                          "type": ["null", "string"],
+                          "description": "Optional administrative subdivision (e.g., a US state)."
+                        },
+                        "country": {
+                          "type": "string",
+                          "description": "ISO 3166-1 alpha-2 country code (always upper-case after construction)."
+                        },
+                        "deliveryPointType": {
+                          "enum": ["Street", "PoBox", "Other", null]
+                        }
+                      },
+                      "description": "Postal address value object."
+                    },
                     "companyName": {
                       "type": ["null", "string"]
-                    },
-                    "line1": {
-                      "type": "string"
-                    },
-                    "line2": {
-                      "type": ["null", "string"]
-                    },
-                    "city": {
-                      "type": "string"
-                    },
-                    "postalCode": {
-                      "type": "string"
-                    },
-                    "state": {
-                      "type": ["null", "string"]
-                    },
-                    "country": {
-                      "type": "string"
                     },
                     "vatNumber": {
                       "type": ["null", "string"]

@@ -65,6 +65,16 @@
               }
             }
           },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -125,16 +135,6 @@
           },
           "422": {
             "description": "Unprocessable Entity",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -250,7 +250,7 @@
       "patch": {
         "tags": ["Taxonomy"],
         "summary": "Partially updates a tag (name / colour / hide-on-entity-card).",
-        "description": "Applies the supplied facets in turn. Each property is independently optional; an empty body is a no-op. Returns 404 when the tag is missing, 422 when a rename collides with an existing (TenantId, Scope, Name) row.",
+        "description": "Applies the supplied facets in a single optimistic-concurrency-guarded update. The request carries the concurrencyStamp from the last read; a stale stamp yields 409. Returns 404 when the tag is missing, 422 when a rename collides with an existing (TenantId, Scope, Name) row.",
         "operationId": "UpdateTaxonomyTag",
         "parameters": [
           {
@@ -295,8 +295,8 @@
               }
             }
           },
-          "422": {
-            "description": "Unprocessable Entity",
+          "409": {
+            "description": "Conflict",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -305,8 +305,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -468,16 +468,6 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
                   "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
@@ -629,6 +619,16 @@
               }
             }
           },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -722,6 +722,16 @@
               }
             }
           },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -800,6 +810,16 @@
               }
             }
           },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -860,16 +880,6 @@
           },
           "422": {
             "description": "Unprocessable Entity",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1030,8 +1040,8 @@
               }
             }
           },
-          "422": {
-            "description": "Unprocessable Entity",
+          "409": {
+            "description": "Conflict",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1040,8 +1050,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1210,16 +1220,6 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
                   "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
@@ -1307,8 +1307,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1329,16 +1329,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1879,8 +1869,12 @@
         }
       },
       "UpdateCategoryRequest": {
+        "required": ["concurrencyStamp"],
         "type": "object",
         "properties": {
+          "concurrencyStamp": {
+            "type": "string"
+          },
           "name": {
             "maxLength": 100,
             "pattern": "^[^/]+$",
@@ -1896,8 +1890,12 @@
         }
       },
       "UpdateTagRequest": {
+        "required": ["concurrencyStamp"],
         "type": "object",
         "properties": {
+          "concurrencyStamp": {
+            "type": "string"
+          },
           "name": {
             "maxLength": 50,
             "type": ["null", "string"]

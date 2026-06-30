@@ -250,7 +250,7 @@ function PartyCard({ variant, party, loading, title, help }: Readonly<PartyCardP
             {defaultBilling && (
               <KeyValue
                 label="Address"
-                value={`${defaultBilling.line1}, ${defaultBilling.postalCode} ${defaultBilling.city} (${defaultBilling.country})`}
+                value={`${defaultBilling.street1}, ${defaultBilling.postalCode} ${defaultBilling.city} (${defaultBilling.country})`}
               />
             )}
           </dl>

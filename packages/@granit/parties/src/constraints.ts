@@ -7,11 +7,16 @@
 import type { SchemaConstraints } from '@granit/validation';
 
 export const partiesConstraints = {
+  "PartyAddressConfirmRequest": {
+    "evidence": {
+      "maxLength": 256
+    }
+  },
   "PartyAddressRequest": {
     "kind": {
       "required": true
     },
-    "line1": {
+    "street1": {
       "required": true,
       "maxLength": 200
     },
@@ -28,10 +33,7 @@ export const partiesConstraints = {
       "maxLength": 2,
       "minLength": 2
     },
-    "companyName": {
-      "maxLength": 200
-    },
-    "line2": {
+    "street2": {
       "maxLength": 200
     },
     "state": {
