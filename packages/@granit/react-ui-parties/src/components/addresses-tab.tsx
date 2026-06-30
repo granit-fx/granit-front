@@ -1,7 +1,12 @@
+import { PartiesPermissions } from '@granit/parties';
+import { usePermissions } from '@granit/react-authorization';
 import { useTranslation } from '@granit/react-localization';
-import { useRemovePartyAddressMutation } from '@granit/react-parties';
+import {
+  useConfirmPartyAddressMutation,
+  useRemovePartyAddressMutation,
+} from '@granit/react-parties';
 import { toast, Badge, Button, Card, CardContent } from '@granit/react-ui';
-import { Plus, Trash2 } from 'lucide-react';
+import { BadgeCheck, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 import { logger } from '../logger';
@@ -17,8 +22,11 @@ interface AddressesTabProps {
 
 export function AddressesTab({ partyId, addresses }: AddressesTabProps) {
   const { t } = useTranslation();
+  const { hasPermission } = usePermissions();
+  const canConfirm = hasPermission(PartiesPermissions.PartyAddresses.Confirm);
   const [open, setOpen] = useState(false);
   const remove = useRemovePartyAddressMutation();
+  const confirm = useConfirmPartyAddressMutation();
 
   const handleRemove = async (addressId: PartyAddressId) => {
     try {
@@ -27,6 +35,16 @@ export function AddressesTab({ partyId, addresses }: AddressesTabProps) {
     } catch (err) {
       // API errors are surfaced by the global MutationCache.onError toast.
       logger.error('[AddressesTab] remove address failed', err);
+    }
+  };
+
+  const handleConfirm = async (addressId: PartyAddressId) => {
+    try {
+      await confirm.mutateAsync({ id: partyId, addressId });
+      toast.success(t('Parties.Addresses.ConfirmSuccess'));
+    } catch (err) {
+      // API errors are surfaced by the global MutationCache.onError toast.
+      logger.error('[AddressesTab] confirm address failed', err);
     }
   };
 
@@ -57,15 +75,28 @@ export function AddressesTab({ partyId, addresses }: AddressesTabProps) {
                       <span className="text-xs text-muted-foreground">{address.label}</span>
                     )}
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleRemove(address.id)}
-                    disabled={remove.isPending}
-                    aria-label={t('Common.Delete')}
-                  >
-                    <Trash2 className="h-4 w-4 text-destructive" />
-                  </Button>
+                  <div className="flex items-center gap-1">
+                    {canConfirm && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleConfirm(address.id)}
+                        disabled={confirm.isPending}
+                        aria-label={t('Parties.Addresses.Confirm')}
+                      >
+                        <BadgeCheck className="h-4 w-4 text-primary" />
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleRemove(address.id)}
+                      disabled={remove.isPending}
+                      aria-label={t('Common.Delete')}
+                    >
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </div>
                 </div>
                 <div className="text-sm">
                   <div>{address.street1}</div>

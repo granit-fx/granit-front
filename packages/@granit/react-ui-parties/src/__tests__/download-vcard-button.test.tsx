@@ -6,21 +6,13 @@ import { renderWithProviders } from './test-utils';
 
 import type { PartyId } from '@granit/parties';
 
-const { mockDownload } = vi.hoisted(() => ({ mockDownload: vi.fn() }));
-
-vi.mock('@granit/parties', async (importOriginal) => {
-  const actual = await importOriginal<Record<string, unknown>>();
-  return {
-    ...actual,
-    downloadPartyVCard: (...args: unknown[]) => mockDownload(...args),
-  };
-});
+const { mockMutateAsync } = vi.hoisted(() => ({ mockMutateAsync: vi.fn() }));
 
 vi.mock('@granit/react-parties', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return {
     ...actual,
-    usePartiesConfig: () => ({ client: {}, basePath: '/api/v1/parties' }),
+    useDownloadPartyVCard: () => ({ mutateAsync: mockMutateAsync, isPending: false }),
   };
 });
 
@@ -28,7 +20,7 @@ const partyId = 'party-1' as PartyId;
 
 describe('DownloadVCardButton', () => {
   beforeEach(() => {
-    mockDownload.mockReset();
+    mockMutateAsync.mockReset();
     vi.stubGlobal('URL', {
       createObjectURL: vi.fn(() => 'blob:fake'),
       revokeObjectURL: vi.fn(),
@@ -45,7 +37,7 @@ describe('DownloadVCardButton', () => {
   });
 
   it('downloads the vCard and triggers the anchor click', async () => {
-    mockDownload.mockResolvedValue(new Blob(['BEGIN:VCARD'], { type: 'text/vcard' }));
+    mockMutateAsync.mockResolvedValue(new Blob(['BEGIN:VCARD'], { type: 'text/vcard' }));
     const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
 
     const { user } = renderWithProviders(
@@ -54,20 +46,20 @@ describe('DownloadVCardButton', () => {
     await user.click(screen.getByRole('button', { name: 'Download vCard' }));
 
     await waitFor(() => {
-      expect(mockDownload).toHaveBeenCalledWith({}, '/api/v1/parties', partyId);
+      expect(mockMutateAsync).toHaveBeenCalledWith(partyId);
     });
     expect(clickSpy).toHaveBeenCalled();
     clickSpy.mockRestore();
   });
 
   it('surfaces an error toast when the download fails', async () => {
-    mockDownload.mockRejectedValue(new Error('network'));
+    mockMutateAsync.mockRejectedValue(new Error('network'));
     const { user } = renderWithProviders(
       <DownloadVCardButton partyId={partyId} partyName="Acme" />
     );
     await user.click(screen.getByRole('button', { name: 'Download vCard' }));
     await waitFor(() => {
-      expect(mockDownload).toHaveBeenCalled();
+      expect(mockMutateAsync).toHaveBeenCalled();
     });
   });
 });

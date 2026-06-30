@@ -1,5 +1,4 @@
 import { useTranslation } from '@granit/react-localization';
-import { MergeWizard } from '@granit/react-parties';
 import {
   Button,
   Dialog,
@@ -13,6 +12,7 @@ import { GitMerge } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { MergeWizard } from './merge-wizard';
 import { PartyPickerDialog } from './party-picker-dialog';
 
 import type { PartyId, PartyListItemResponse } from '@granit/parties';
@@ -23,9 +23,7 @@ interface MergeActionProps {
 }
 
 type Stage =
-  | { kind: 'idle' }
-  | { kind: 'picker' }
-  | { kind: 'wizard'; loser: PartyListItemResponse };
+  { kind: 'idle' } | { kind: 'picker' } | { kind: 'wizard'; loser: PartyListItemResponse };
 
 export function MergeAction({ survivorId, survivorName }: MergeActionProps) {
   const { t } = useTranslation();

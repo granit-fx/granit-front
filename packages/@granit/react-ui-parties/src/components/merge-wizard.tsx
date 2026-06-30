@@ -3,13 +3,16 @@ import {
   ReferenceRewriterSummary,
   useFieldChoices,
 } from '@granit/react-entity-merge';
+import {
+  isAxiosError,
+  useMergePartyMutation,
+  useMergePartyPreviewQuery,
+  usePartyQuery,
+} from '@granit/react-parties';
+import { Button, Card, CardContent, CardHeader, Label, Textarea } from '@granit/react-ui';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { usePartyQuery } from '../hooks/use-parties';
-import { useMergePartyMutation, useMergePartyPreviewQuery } from '../hooks/use-party-merge';
-
-import type { AxiosError } from '@granit/api-client';
 import type { PartyId, PartyResponse } from '@granit/parties';
 
 const REASON_MAX_LENGTH = 1000;
@@ -32,13 +35,12 @@ export interface MergeWizardProps {
 /**
  * Side-by-side merge wizard for two parties. Composes the aggregate-agnostic
  * building blocks from `@granit/react-entity-merge` (`FieldConflictTable`,
- * `ReferenceRewriterSummary`, `useFieldChoices`) and adds the party-specific
- * summary cards, i18n and error copy.
+ * `ReferenceRewriterSummary`, `useFieldChoices`) and the shared `@granit/react-ui`
+ * primitives (`Card`, `Textarea`, `Button`), adding the party-specific summary
+ * cards, i18n and error copy.
  *
- * The component is unstyled beyond minimal Tailwind utility classes so
- * consumers can wrap it in their own modal / dialog / drawer. Permission gating
- * is delegated to the consumer — wrap the wizard with your own guard checking
- * `PartiesPermissions.Parties.Merge`.
+ * Permission gating is delegated to the consumer — wrap the wizard with your own
+ * guard checking `PartiesPermissions.Parties.Merge`.
  *
  * @example
  * ```tsx
@@ -159,15 +161,12 @@ export function MergeWizard({
 
       {/* Reason */}
       <div className="space-y-1">
-        <label htmlFor="merge-reason" className="text-sm font-medium">
-          {t('MergeWizard.Reason')}
-        </label>
-        <textarea
+        <Label htmlFor="merge-reason">{t('MergeWizard.Reason')}</Label>
+        <Textarea
           id="merge-reason"
           name="reason"
           maxLength={REASON_MAX_LENGTH}
           rows={3}
-          className="w-full rounded-md border border-input bg-background p-2 text-sm"
           placeholder={t('MergeWizard.ReasonPlaceholder')}
           value={reason}
           onChange={(e) => setReason(e.target.value)}
@@ -184,21 +183,17 @@ export function MergeWizard({
 
       {/* Actions */}
       <div className="flex justify-end gap-2">
-        <button
+        <Button
           type="button"
-          className="rounded-md border border-input bg-background px-4 py-2 text-sm font-medium"
+          variant="outline"
           onClick={onCancel}
           disabled={mergeMutation.isPending}
         >
           {t('MergeWizard.Cancel')}
-        </button>
-        <button
-          type="submit"
-          className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-50"
-          disabled={submitDisabled}
-        >
+        </Button>
+        <Button type="submit" disabled={submitDisabled}>
           {t('MergeWizard.Merge')}
-        </button>
+        </Button>
       </div>
     </form>
   );
@@ -222,12 +217,8 @@ function PartyCard({ variant, party, loading, title, help }: Readonly<PartyCardP
     party?.addresses.find((a) => a.isDefault);
 
   return (
-    <article
-      data-slot="party-card"
-      data-variant={variant}
-      className="rounded-md border bg-card p-4 text-card-foreground"
-    >
-      <header className="mb-2 flex items-baseline justify-between gap-2">
+    <Card data-slot="party-card" data-variant={variant}>
+      <CardHeader className="flex flex-row items-baseline justify-between gap-2 space-y-0">
         <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           {title}
         </span>
@@ -236,27 +227,29 @@ function PartyCard({ variant, party, loading, title, help }: Readonly<PartyCardP
             {party.status}
           </span>
         )}
-      </header>
-      {loading || !party ? (
-        <p className="text-sm text-muted-foreground">…</p>
-      ) : (
-        <div className="space-y-1 text-sm">
-          <p className="font-semibold">{party.name}</p>
-          <p className="text-xs text-muted-foreground">{help}</p>
-          <dl className="mt-2 space-y-0.5 text-xs">
-            <KeyValue label="Roles" value={party.roles} />
-            <KeyValue label="Email" value={primaryEmail} />
-            <KeyValue label="Phone" value={primaryPhone} />
-            {defaultBilling && (
-              <KeyValue
-                label="Address"
-                value={`${defaultBilling.street1}, ${defaultBilling.postalCode} ${defaultBilling.city} (${defaultBilling.country})`}
-              />
-            )}
-          </dl>
-        </div>
-      )}
-    </article>
+      </CardHeader>
+      <CardContent>
+        {loading || !party ? (
+          <p className="text-sm text-muted-foreground">…</p>
+        ) : (
+          <div className="space-y-1 text-sm">
+            <p className="font-semibold">{party.name}</p>
+            <p className="text-xs text-muted-foreground">{help}</p>
+            <dl className="mt-2 space-y-0.5 text-xs">
+              <KeyValue label="Roles" value={party.roles} />
+              <KeyValue label="Email" value={primaryEmail} />
+              <KeyValue label="Phone" value={primaryPhone} />
+              {defaultBilling && (
+                <KeyValue
+                  label="Address"
+                  value={`${defaultBilling.street1}, ${defaultBilling.postalCode} ${defaultBilling.city} (${defaultBilling.country})`}
+                />
+              )}
+            </dl>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
@@ -276,9 +269,11 @@ type Translator = ReturnType<typeof useTranslation>['t'];
 
 function formatError(t: Translator, error: unknown): string | null {
   if (!error) return null;
-  const axiosError = error as AxiosError<{ detail?: string; title?: string }>;
-  const status = axiosError.response?.status;
-  const detail = axiosError.response?.data?.detail ?? axiosError.response?.data?.title;
+  if (!isAxiosError(error)) return t('MergeWizard.Errors.Unknown');
+
+  const data = error.response?.data as { detail?: string; title?: string } | undefined;
+  const status = error.response?.status;
+  const detail = data?.detail ?? data?.title;
 
   if (status === 409) {
     return t('MergeWizard.Errors.AlreadyMerged');

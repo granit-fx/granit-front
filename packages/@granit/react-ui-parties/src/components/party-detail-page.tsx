@@ -1,6 +1,6 @@
 import { usePermissions } from '@granit/react-authorization';
 import { useTranslation } from '@granit/react-localization';
-import { PartyDuplicatesBadge, usePartyQuery } from '@granit/react-parties';
+import { usePartyQuery } from '@granit/react-parties';
 import { CategorySelector, TagChipStrip } from '@granit/react-taxonomy';
 import {
   Button,
@@ -26,6 +26,7 @@ import { ExternalMappingsTab } from './external-mappings-tab';
 import { LifecycleActions } from './lifecycle-actions';
 import { MergeAction } from './merge-action';
 import { MetadataTab } from './metadata-tab';
+import { PartyDuplicatesBadge } from './party-duplicates-badge';
 import { PartyIdentityForm } from './party-identity-form';
 import { PartyRolesBadges } from './party-roles-badges';
 import { PartyStatusBadge } from './party-status-badge';

@@ -13,7 +13,7 @@ vi.mock('react-router-dom', async () => {
   return { ...actual, useNavigate: () => mockNavigate };
 });
 
-vi.mock('@granit/react-parties', () => ({
+vi.mock('../components/merge-wizard', () => ({
   MergeWizard: ({
     survivorId,
     loserId,
@@ -32,6 +32,10 @@ vi.mock('@granit/react-parties', () => ({
       </button>
     </div>
   ),
+}));
+
+vi.mock('@granit/react-parties', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
   usePartyQuery: (id: PartyId | null | undefined) => ({
     data:
       id != null

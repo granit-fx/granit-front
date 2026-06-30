@@ -14,8 +14,15 @@ vi.mock('react-router-dom', async () => {
 });
 
 const mockUsePartiesQuery = vi.fn();
-vi.mock('@granit/react-parties', () => ({
-  usePartiesQuery: () => mockUsePartiesQuery(),
+vi.mock('@granit/react-parties', async (importOriginal) => {
+  const actual = await importOriginal<Record<string, unknown>>();
+  return {
+    ...actual,
+    usePartiesQuery: () => mockUsePartiesQuery(),
+  };
+});
+
+vi.mock('../components/merge-wizard', () => ({
   MergeWizard: ({
     survivorId,
     loserId,

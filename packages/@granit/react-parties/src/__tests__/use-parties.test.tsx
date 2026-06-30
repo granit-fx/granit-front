@@ -17,7 +17,9 @@ import {
   useAddPartyRoleMutation,
   useArchivePartyMutation,
   useClearPartyTaxStatusMutation,
+  useConfirmPartyAddressMutation,
   useCreatePartyMutation,
+  useDownloadPartyVCard,
   usePartiesQuery,
   usePartyQuery,
   useRemovePartyAddressMutation,
@@ -98,7 +100,7 @@ describe('use-parties', () => {
       expect(result.current.data).toEqual([sampleListItem]);
     });
 
-    it('passes role as query param', async () => {
+    it('translates a role filter to the query-engine filter contract', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: { items: [] } });
 
@@ -108,7 +110,7 @@ describe('use-parties', () => {
 
       await waitFor(() => expect(result.current.isFetched).toBe(true));
       expect(client.get).toHaveBeenCalledWith('/api/v1/parties', {
-        params: { pageSize: 100, role: 'Customer' },
+        params: { pageSize: 100, 'filter[roles.Eq]': 'Customer' },
       });
     });
 
@@ -347,6 +349,27 @@ describe('use-parties', () => {
     });
   });
 
+  describe('useConfirmPartyAddressMutation', () => {
+    it('POSTs a deliverability confirmation and returns the refreshed party', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleParty });
+
+      const addressId = toEntityId<'PartyAddress'>('a1') as PartyAddressId;
+      const { result } = renderHook(() => useConfirmPartyAddressMutation(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate({ id: partyId, addressId, request: { evidence: 'mail check' } });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.post).toHaveBeenCalledWith(
+        `/api/v1/parties/${partyId}/addresses/${addressId}/confirm`,
+        { evidence: 'mail check' }
+      );
+      expect(result.current.data).toEqual(sampleParty);
+    });
+  });
+
   describe('email mutations', () => {
     it('adds an email', async () => {
       const client = createMockClient();
@@ -479,6 +502,26 @@ describe('use-parties', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(client.delete).toHaveBeenCalledWith(`/api/v1/parties/${partyId}/roles/Supplier`);
+    });
+  });
+
+  describe('useDownloadPartyVCard', () => {
+    it('GETs the vCard blob for the party', async () => {
+      const client = createMockClient();
+      const blob = new Blob(['BEGIN:VCARD'], { type: 'text/vcard' });
+      vi.mocked(client.get).mockResolvedValue({ data: blob });
+
+      const { result } = renderHook(() => useDownloadPartyVCard(), {
+        wrapper: createWrapper(client),
+      });
+
+      result.current.mutate(partyId);
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(client.get).toHaveBeenCalledWith(`/api/v1/parties/${partyId}/vcard`, {
+        responseType: 'blob',
+      });
+      expect(result.current.data).toBe(blob);
     });
   });
 

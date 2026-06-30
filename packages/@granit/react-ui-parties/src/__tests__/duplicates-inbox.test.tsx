@@ -1,3 +1,4 @@
+import { PartiesProvider, partiesTranslationsEn } from '@granit/react-parties';
 import { createTestQueryClient } from '@granit/react-testing';
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { toEntityId, toISODateString } from '@granit/types';
@@ -5,18 +6,17 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import i18next from 'i18next';
 import { initReactI18next, I18nextProvider } from 'react-i18next';
+import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { DuplicatesInbox } from '../components/duplicates-inbox';
-import { partiesTranslationsEn } from '../locales/en';
-import { PartiesProvider } from '../providers/parties-provider';
 
-import type { PartiesConfig } from '../providers/parties-provider';
 import type {
   PartyDuplicateCandidateId,
   PartyDuplicateCandidateResponse,
   PartyId,
 } from '@granit/parties';
+import type { PartiesConfig } from '@granit/react-parties';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -72,7 +72,7 @@ function renderInbox(
   options?: {
     onMerge?: (row: PartyDuplicateCandidateResponse) => void;
     pageSize?: number;
-    renderPartyLink?: (partyId: string) => ReactNode;
+    partyDetailBasePath?: string;
   }
 ) {
   const queryClient = createTestQueryClient();
@@ -81,7 +81,9 @@ function renderInbox(
     return (
       <I18nextProvider i18n={i18next}>
         <QueryClientProvider client={queryClient}>
-          <PartiesProvider config={config}>{children}</PartiesProvider>
+          <MemoryRouter>
+            <PartiesProvider config={config}>{children}</PartiesProvider>
+          </MemoryRouter>
         </QueryClientProvider>
       </I18nextProvider>
     );
@@ -90,14 +92,14 @@ function renderInbox(
     <DuplicatesInbox
       onMerge={options?.onMerge}
       pageSize={options?.pageSize}
-      renderPartyLink={options?.renderPartyLink}
+      partyDetailBasePath={options?.partyDetailBasePath}
     />,
     { wrapper: Wrapper }
   );
 }
 
 describe('DuplicatesInbox', () => {
-  it('renders one table row per candidate after the QueryEngine call resolves', async () => {
+  it('renders one tier badge per candidate after the QueryEngine call resolves', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
       axiosResponse({ items: rows, totalCount: rows.length })
@@ -106,14 +108,16 @@ describe('DuplicatesInbox', () => {
     const { container } = renderInbox(client);
 
     await waitFor(() =>
-      expect(container.querySelectorAll('[data-slot="duplicate-row"]').length).toBe(rows.length)
+      expect(container.querySelectorAll('[data-slot="tier-badge"]').length).toBe(rows.length)
     );
 
-    // Tier badges show the right tone via data-tier attribute
     const tierAttrs = Array.from(container.querySelectorAll('[data-slot="tier-badge"]')).map((el) =>
       el.getAttribute('data-tier')
     );
     expect(tierAttrs).toEqual(['Deterministic', 'Fuzzy']);
+    // Scores rendered
+    expect(screen.getByText('0.97')).toBeInTheDocument();
+    expect(screen.getByText('0.62')).toBeInTheDocument();
   });
 
   it('shows the empty state when no candidates are pending', async () => {
@@ -123,9 +127,9 @@ describe('DuplicatesInbox', () => {
     const { container } = renderInbox(client);
 
     await waitFor(() =>
-      expect(screen.queryByText(partiesTranslationsEn.Duplicates.EmptyState)).not.toBeNull()
+      expect(container.querySelector('[data-slot="query-data-table"]')).not.toBeNull()
     );
-    expect(container.querySelector('[data-slot="duplicate-row"]')).toBeNull();
+    expect(container.querySelectorAll('[data-slot="tier-badge"]').length).toBe(0);
   });
 
   it('dispatches the dismiss mutation when "Dismiss" is clicked', async () => {
@@ -138,7 +142,7 @@ describe('DuplicatesInbox', () => {
     const { container } = renderInbox(client);
 
     await waitFor(() =>
-      expect(container.querySelectorAll('[data-slot="duplicate-row"]').length).toBe(rows.length)
+      expect(container.querySelectorAll('[data-slot="tier-badge"]').length).toBe(rows.length)
     );
 
     const dismissButtons = screen.getAllByRole('button', {
@@ -161,7 +165,7 @@ describe('DuplicatesInbox', () => {
     const { container } = renderInbox(client, { onMerge });
 
     await waitFor(() =>
-      expect(container.querySelectorAll('[data-slot="duplicate-row"]').length).toBe(rows.length)
+      expect(container.querySelectorAll('[data-slot="tier-badge"]').length).toBe(rows.length)
     );
 
     const mergeButtons = screen.getAllByRole('button', {
@@ -182,51 +186,6 @@ describe('DuplicatesInbox', () => {
     expect(alert.textContent).toBe(partiesTranslationsEn.Duplicates.ErrorState);
   });
 
-  it('renders pagination buttons when totalCount exceeds the page size', async () => {
-    const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [rows[0]!], totalCount: 5 }));
-
-    renderInbox(client, { pageSize: 1 });
-
-    const next = await waitFor(() =>
-      screen.getByRole('button', { name: partiesTranslationsEn.Duplicates.Pagination.Next })
-    );
-    const previous = screen.getByRole('button', {
-      name: partiesTranslationsEn.Duplicates.Pagination.Previous,
-    }) as HTMLButtonElement;
-    expect(previous.disabled).toBe(true);
-
-    fireEvent.click(next);
-
-    await waitFor(() => expect((previous as HTMLButtonElement).disabled).toBe(false));
-  });
-
-  it('uses renderPartyLink when provided and falls back to "—" for missing dates', async () => {
-    const client = createMockClient();
-    const rowWithoutUpdate: PartyDuplicateCandidateResponse = {
-      ...rows[1]!,
-      updatedAt: null,
-    };
-    vi.mocked(client.get).mockResolvedValue(
-      axiosResponse({ items: [rowWithoutUpdate], totalCount: 1 })
-    );
-
-    const renderPartyLink = vi.fn((id: string) => <span data-slot="ext-link">{id}</span>);
-    const { container } = renderInbox(client, { renderPartyLink });
-
-    await waitFor(() =>
-      expect(container.querySelectorAll('[data-slot="duplicate-row"]').length).toBe(1)
-    );
-
-    expect(renderPartyLink).toHaveBeenCalledWith(rowWithoutUpdate.partyId);
-    expect(renderPartyLink).toHaveBeenCalledWith(rowWithoutUpdate.candidateId);
-    expect(container.querySelectorAll('[data-slot="ext-link"]').length).toBe(2);
-
-    // Refreshed column shows "—" because updatedAt is null
-    const row = container.querySelector('[data-slot="duplicate-row"]') as HTMLElement;
-    expect(row.textContent).toContain('—');
-  });
-
   it('does not render Merge buttons when onMerge is omitted', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
@@ -236,11 +195,27 @@ describe('DuplicatesInbox', () => {
     const { container } = renderInbox(client);
 
     await waitFor(() =>
-      expect(container.querySelectorAll('[data-slot="duplicate-row"]').length).toBe(rows.length)
+      expect(container.querySelectorAll('[data-slot="tier-badge"]').length).toBe(rows.length)
     );
 
     expect(
       screen.queryAllByRole('button', { name: partiesTranslationsEn.Duplicates.Actions.Merge })
     ).toHaveLength(0);
+  });
+
+  it('links Party columns to the detail page when partyDetailBasePath is provided', async () => {
+    const client = createMockClient();
+    vi.mocked(client.get).mockResolvedValue(axiosResponse({ items: [rows[0]!], totalCount: 1 }));
+
+    const { container } = renderInbox(client, { partyDetailBasePath: '/parties' });
+
+    await waitFor(() =>
+      expect(container.querySelectorAll('[data-slot="party-ref"]').length).toBe(2)
+    );
+    const links = Array.from(
+      container.querySelectorAll<HTMLAnchorElement>('[data-slot="party-ref"]')
+    );
+    expect(links[0]!.getAttribute('href')).toBe(`/parties/${partyA}`);
+    expect(links[1]!.getAttribute('href')).toBe(`/parties/${partyB}`);
   });
 });

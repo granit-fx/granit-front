@@ -1,5 +1,4 @@
 import { useTranslation } from '@granit/react-localization';
-import { MergeWizard } from '@granit/react-parties';
 import {
   Button,
   Dialog,
@@ -15,6 +14,8 @@ import {
 } from '@granit/react-ui';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { MergeWizard } from './merge-wizard';
 
 import type { PartyDuplicateCandidateResponse, PartyId } from '@granit/parties';
 

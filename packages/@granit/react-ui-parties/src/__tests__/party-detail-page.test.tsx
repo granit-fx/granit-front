@@ -64,10 +64,13 @@ vi.mock('@granit/react-parties', async (importOriginal) => {
     useActivatePartyMutation: noopMutation,
     useSuspendPartyMutation: noopMutation,
     useArchivePartyMutation: noopMutation,
-    PartyDuplicatesBadge: () => <div data-slot="party-duplicates-badge-stub" />,
-    MergeWizard: () => <div data-slot="merge-wizard-stub" />,
+    useDownloadPartyVCard: noopMutation,
   };
 });
+
+vi.mock('../components/party-duplicates-badge', () => ({
+  PartyDuplicatesBadge: () => <div data-slot="party-duplicates-badge-stub" />,
+}));
 
 vi.mock('@granit/react-taxonomy', () => ({
   TagChipStrip: () => <div data-slot="tag-chip-strip-stub" />,

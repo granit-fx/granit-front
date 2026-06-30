@@ -427,6 +427,16 @@ export function createPartiesHandlers(baseUrl = DEFAULT_BASE_PATH) {
       party.addresses = party.addresses.filter((a) => a.id !== params.addressId);
       return new HttpResponse(null, { status: 204 });
     }),
+    // Records a manual deliverability confirmation (tier-2 evidence). A foreign
+    // address id 404s; otherwise the refreshed party is returned unchanged
+    // (the confirmation marker is not part of the wire `PartyAddressResponse`).
+    http.post(`${baseUrl}/:id/addresses/:addressId/confirm`, ({ params }) => {
+      const party = findById(params.id as string);
+      if (!party) return notFound();
+      const address = party.addresses.find((a) => a.id === params.addressId);
+      if (!address) return notFound();
+      return HttpResponse.json(party);
+    }),
 
     // ── Emails ───────────────────────────────────────────────────────
     http.post(`${baseUrl}/:id/emails`, async ({ params, request }) => {

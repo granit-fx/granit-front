@@ -18,7 +18,9 @@ export {
   useAddPartyRoleMutation,
   useArchivePartyMutation,
   useClearPartyTaxStatusMutation,
+  useConfirmPartyAddressMutation,
   useCreatePartyMutation,
+  useDownloadPartyVCard,
   usePartiesQuery,
   usePartyQuery,
   useRemovePartyAddressMutation,
@@ -47,14 +49,6 @@ export {
   usePartyDuplicateCandidatesForPartyQuery,
 } from './hooks/use-party-duplicates';
 export type { MergePartyFromDuplicateMutationVariables } from './hooks/use-party-duplicates';
-
-// Components
-export { MergeWizard } from './components/merge-wizard';
-export type { MergeWizardProps } from './components/merge-wizard';
-export { DuplicatesInbox } from './components/duplicates-inbox';
-export type { DuplicatesInboxProps } from './components/duplicates-inbox';
-export { PartyDuplicatesBadge } from './components/party-duplicates-badge';
-export type { PartyDuplicatesBadgeProps } from './components/party-duplicates-badge';
 
 // i18n bundles
 export { partiesTranslationsEn, partiesTranslationsFr } from './locales/index';
