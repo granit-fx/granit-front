@@ -11,6 +11,7 @@
   "devDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/cms-seo": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
@@ -20,6 +21,7 @@
   "peerDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/cms-seo": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/types": "workspace:*",
     "@tanstack/react-query": "^5.0.0",

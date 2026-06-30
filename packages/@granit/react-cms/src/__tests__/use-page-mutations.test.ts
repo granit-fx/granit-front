@@ -157,7 +157,7 @@ describe('useMovePage', () => {
 
   it('calls movePage', async () => {
     const client = createMockClient();
-    vi.mocked(movePage).mockResolvedValue(undefined);
+    vi.mocked(movePage).mockResolvedValue(page);
 
     const { result } = renderHook(() => useMovePage(), { wrapper: createWrapper(client) });
     result.current.mutate({
@@ -201,7 +201,11 @@ describe('useSaveDraft', () => {
     vi.mocked(saveDraft).mockResolvedValue({ ok: true, version });
 
     const { result } = renderHook(() => useSaveDraft(), { wrapper: createWrapper(client) });
-    result.current.mutate({ id: 'page-1', culture: 'fr', request: { contentJson: '{}' } });
+    result.current.mutate({
+      id: 'page-1',
+      culture: 'fr',
+      request: { contentJson: '{}', title: null },
+    });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual({ ok: true, version });

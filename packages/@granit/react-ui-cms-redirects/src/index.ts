@@ -5,7 +5,7 @@
 // does NOT wrap a provider. Form validation is spec-driven via
 // @granit/react-validation + the generated @granit/cms-redirects constraints.
 
-export { RedirectsListPage } from './redirects-list-page';
+export { RedirectsListPage } from './components/redirects-list-page';
 export { RedirectFormDialog } from './components/redirect-form-dialog';
 
 // i18next resource bundles (flat keys, "translation" ns)

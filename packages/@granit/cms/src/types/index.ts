@@ -207,6 +207,11 @@ export interface UpdateSiteRequest {
   readonly activated: boolean;
 }
 
+/** Request body for `PUT /api/cms/sites/{id}/home-page`. */
+export interface SetSiteHomePageRequest {
+  readonly pageId: string;
+}
+
 // ─── Pages admin (§11) ───────────────────────────────────────────────────────
 
 /** One node in the page tree. Returned by `GET /api/cms/pages/tree`. */
@@ -220,7 +225,7 @@ export interface PageTreeNodeResponse {
 }
 
 /** Per-culture translation of a page. */
-export interface PageTranslation {
+export interface PageTranslationResponse {
   readonly urlSlug: string;
   readonly title: string;
   readonly path: string;
@@ -238,7 +243,7 @@ export interface PageResponse {
   readonly kind: string;
   readonly isSiteRoot: boolean;
   readonly layoutKey: string | null;
-  readonly translations: readonly PageTranslation[];
+  readonly translations: readonly PageTranslationResponse[];
   readonly createdAt: ISODateString;
   readonly modifiedAt: ISODateString | null;
   readonly concurrencyStamp: string;
@@ -266,13 +271,13 @@ export interface CreatePageRequest {
 }
 
 /** Request body for `PUT /api/cms/pages/{id}`. */
-export interface UpdatePageRequest {
+export interface RenamePageRequest {
   readonly slugSegment: string;
   readonly concurrencyStamp: string;
 }
 
 /** Request body for `PUT /api/cms/pages/{id}/translations/{culture}`. */
-export interface UpdatePageTranslationRequest {
+export interface SetPageTranslationRequest {
   readonly urlSlug: string;
   readonly title: string;
 }
@@ -284,9 +289,10 @@ export interface MovePageRequest {
 }
 
 /** Request body for `PUT /api/cms/pages/{id}/draft/{culture}`. */
-export interface SaveDraftRequest {
+export interface SaveDraftContentRequest {
   readonly contentJson: string;
-  readonly title?: string | null;
+  /** Required key, nullable value: pass `null` to leave the title unchanged. */
+  readonly title: string | null;
 }
 
 /** Problem detail returned in a 409 on concurrent draft edit. */
@@ -335,15 +341,15 @@ export interface MenuItemRequest {
 }
 
 /** Request body for `POST /api/cms/menus`. */
-export interface CreateMenuRequest {
+export interface MenuCreateRequest {
   readonly siteId: string;
   readonly key: string;
   readonly title: string;
-  readonly items?: readonly MenuItemRequest[];
+  readonly items?: readonly MenuItemRequest[] | null;
 }
 
 /** Request body for `PUT /api/cms/menus/{id}`. */
-export interface UpdateMenuRequest {
+export interface MenuUpdateRequest {
   readonly title: string;
   readonly items: readonly MenuItemRequest[];
 }
@@ -360,10 +366,11 @@ export type ReleaseActionType = 'Publish' | 'Unpublish';
 export type ReleaseActionStatus = 'Pending' | 'Succeeded' | 'Failed';
 
 /** Schedule specification for a release. */
-export interface ReleaseSchedule {
-  readonly localDateTime: string;
+export interface ReleaseScheduleResponse {
+  /** Wall-clock local datetime in `timeZoneId`; ISO-8601-shaped instant for ordering. */
+  readonly localDateTime: ISODateString;
   readonly timeZoneId: string | null;
-  readonly scheduledAtUtc: string;
+  readonly scheduledAtUtc: ISODateString;
 }
 
 /** One content action inside a release. */
@@ -383,7 +390,7 @@ export interface ReleaseResponse {
   readonly siteId: string;
   readonly name: string;
   readonly status: ReleaseStatus;
-  readonly schedule: ReleaseSchedule | null;
+  readonly schedule: ReleaseScheduleResponse | null;
   readonly tenantId: string | null;
   readonly actions: readonly ReleaseActionResponse[];
   readonly createdAt: ISODateString;
@@ -398,7 +405,7 @@ export interface CreateReleaseRequest {
 }
 
 /** Request body for `PUT /api/cms/releases/{id}`. */
-export interface UpdateReleaseRequest {
+export interface RenameReleaseRequest {
   readonly name: string;
   readonly concurrencyStamp: string;
 }
@@ -414,6 +421,10 @@ export interface AddReleaseActionRequest {
 
 /** Request body for `POST /api/cms/releases/{id}/schedule`. */
 export interface ScheduleReleaseRequest {
+  /**
+   * Wall-clock local datetime, interpreted in {@link timeZoneId} — NOT a UTC
+   * instant, so it is intentionally a plain `string` (not branded `ISODateString`).
+   */
   readonly localDateTime: string;
   /** IANA time-zone identifier (e.g. `"Europe/Brussels"`). */
   readonly timeZoneId: string;

@@ -1,3 +1,4 @@
+import { CORPORATE_SITE_ID, mockRedirects } from '@granit/react-cms-redirects/testing';
 import { TooltipProvider } from '@granit/react-ui';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -7,8 +8,9 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { cmsRedirectsTranslationsEn } from '../locales';
 
-import type { RedirectResponse } from '@granit/react-cms-redirects';
 import type { ReactElement, ReactNode } from 'react';
+
+export { CORPORATE_SITE_ID, mockRedirects };
 
 // Local UI render helper. The tests stub the data layer (vi.mock
 // @granit/react-cms-redirects in-workspace), so only i18n (the package's own flat
@@ -50,7 +52,7 @@ void testI18n.use(initReactI18next).init({
  */
 export function renderCmsRedirects(
   ui: ReactElement,
-  { route = '/cms/sites/site-1/redirects', path = '/cms/sites/:id/redirects' } = {}
+  { route = `/cms/sites/${CORPORATE_SITE_ID}/redirects`, path = '/cms/sites/:id/redirects' } = {}
 ) {
   return {
     ...render(ui, {
@@ -69,35 +71,3 @@ export function renderCmsRedirects(
     user: userEvent.setup(),
   };
 }
-
-/** Local fixtures mirroring @granit/react-cms-redirects/testing data. */
-export const mockRedirects: RedirectResponse[] = [
-  {
-    id: '50000000-0000-4000-8000-000000000001',
-    siteId: 'site-1',
-    source: '/old-about',
-    matchType: 'Exact',
-    target: '/about',
-    type: 'MovedPermanently',
-    statusCode: 301,
-    isActive: true,
-    culture: null,
-    origin: 'Manual',
-    hitCount: 12,
-    lastHitAt: '2026-05-01T09:30:00+00:00',
-  },
-  {
-    id: '50000000-0000-4000-8000-000000000002',
-    siteId: 'site-1',
-    source: '/promo',
-    matchType: 'Prefix',
-    target: '/campaign-2026',
-    type: 'Found',
-    statusCode: 302,
-    isActive: false,
-    culture: 'en-GB',
-    origin: 'Imported',
-    hitCount: 0,
-    lastHitAt: null,
-  },
-];

@@ -1,7 +1,7 @@
 import { mockReleases } from '@granit/react-cms/testing';
 import { screen } from '@testing-library/react';
 
-import { ReleaseDetailPage } from '../release-detail-page';
+import { ReleaseDetailPage } from '../components/release-detail-page';
 
 import { renderCmsReleases } from './test-utils';
 

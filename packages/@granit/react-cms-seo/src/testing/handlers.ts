@@ -4,7 +4,12 @@
 
 import { http, HttpResponse, type RequestHandler } from 'msw';
 
-import { mockSeoDefaults, mockSeoMetadataAudit, mockSeoSuggestions } from './data';
+import {
+  mockSeoDefaults,
+  mockSeoMetadataAudit,
+  mockSeoMetadataMeta,
+  mockSeoSuggestions,
+} from './data';
 
 import type {
   PagedResult,
@@ -74,6 +79,8 @@ export function createCmsSeoHandlers(baseUrl = '/api/cms/seo'): RequestHandler[]
       defaultsBySite[siteId] = updated;
       return HttpResponse.json(updated);
     }),
+
+    http.get(`${baseUrl}/metadata/meta`, () => HttpResponse.json(mockSeoMetadataMeta)),
 
     http.get(`${baseUrl}/metadata`, () => HttpResponse.json(paged(auditRows))),
 

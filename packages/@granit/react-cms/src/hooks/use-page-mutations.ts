@@ -21,10 +21,10 @@ import type {
   CreatePageRequest,
   MovePageRequest,
   PageResponse,
-  SaveDraftRequest,
+  SaveDraftContentRequest,
   SaveDraftResult,
-  UpdatePageRequest,
-  UpdatePageTranslationRequest,
+  RenamePageRequest,
+  SetPageTranslationRequest,
 } from '@granit/cms';
 import type { UseMutationResult } from '@tanstack/react-query';
 
@@ -43,7 +43,7 @@ export function useCreatePage(): UseMutationResult<PageResponse, Error, CreatePa
 export function useUpdatePage(): UseMutationResult<
   PageResponse,
   Error,
-  { id: string; request: UpdatePageRequest }
+  { id: string; request: RenamePageRequest }
 > {
   const { client, basePath, queryKeyPrefix } = useCmsConfig();
   const qc = useQueryClient();
@@ -59,7 +59,7 @@ export function useUpdatePage(): UseMutationResult<
 export function useUpdatePageTranslation(): UseMutationResult<
   PageResponse,
   Error,
-  { id: string; culture: string; request: UpdatePageTranslationRequest }
+  { id: string; culture: string; request: SetPageTranslationRequest }
 > {
   const { client, basePath, queryKeyPrefix } = useCmsConfig();
   const qc = useQueryClient();
@@ -73,7 +73,7 @@ export function useUpdatePageTranslation(): UseMutationResult<
 }
 
 export function useMovePage(): UseMutationResult<
-  void,
+  PageResponse,
   Error,
   { id: string; request: MovePageRequest; siteId: string }
 > {
@@ -81,7 +81,8 @@ export function useMovePage(): UseMutationResult<
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ id, request }) => movePage(client, basePath, id, request),
-    onSuccess: (_data, { siteId }) => {
+    onSuccess: (movedPage, { siteId }) => {
+      qc.setQueryData(cmsKeys.pages.detail(queryKeyPrefix, movedPage.id), movedPage);
       qc.invalidateQueries({ queryKey: cmsKeys.pages.tree(queryKeyPrefix, siteId) });
     },
   });
@@ -102,7 +103,7 @@ export function useDeletePage(): UseMutationResult<void, Error, { id: string; si
 export function useSaveDraft(): UseMutationResult<
   SaveDraftResult,
   Error,
-  { id: string; culture: string; request: SaveDraftRequest }
+  { id: string; culture: string; request: SaveDraftContentRequest }
 > {
   const { client, basePath, queryKeyPrefix } = useCmsConfig();
   const qc = useQueryClient();

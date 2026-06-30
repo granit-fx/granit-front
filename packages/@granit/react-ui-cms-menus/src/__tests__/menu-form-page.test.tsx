@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { MenuFormPage } from '../menu-form-page';
+import { MenuFormPage } from '../components/menu-form-page';
 import { mockMenus } from '../testing';
 
 import { renderWithProviders } from './test-utils';

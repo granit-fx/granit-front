@@ -5,7 +5,8 @@ import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
 
-import { cmsSitesTranslationsEn } from './locales';
+import { cmsSitesTranslationsEn } from '../locales';
+
 import { SiteFormPage } from './site-form-page';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';

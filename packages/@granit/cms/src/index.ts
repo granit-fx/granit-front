@@ -20,12 +20,12 @@ export type {
   MovePageRequest,
   PageDraftConflictResponse,
   PageResponse,
-  PageTranslation,
+  PageTranslationResponse,
   PageTreeNodeResponse,
   PageVersionSummaryResponse,
-  SaveDraftRequest,
-  UpdatePageRequest,
-  UpdatePageTranslationRequest,
+  RenamePageRequest,
+  SaveDraftContentRequest,
+  SetPageTranslationRequest,
   // Pages — search
   PageSearchHitResponse,
   PageSearchPageResponse,
@@ -38,13 +38,14 @@ export type {
   ResolvedMenu,
   ResolvedMenuItem,
   // Menus admin
-  CreateMenuRequest,
+  MenuCreateRequest,
   MenuItemRequest,
   MenuItemResponse,
   MenuResponse,
-  UpdateMenuRequest,
+  MenuUpdateRequest,
   // Sites
   CreateSiteRequest,
+  SetSiteHomePageRequest,
   SiteResponse,
   UpdateSiteRequest,
   // Releases
@@ -54,10 +55,10 @@ export type {
   ReleaseActionStatus,
   ReleaseActionType,
   ReleaseResponse,
-  ReleaseSchedule,
+  ReleaseScheduleResponse,
   ReleaseStatus,
+  RenameReleaseRequest,
   ScheduleReleaseRequest,
-  UpdateReleaseRequest,
   // Admin list params
   ListMenusParams,
   ListPagesParams,
@@ -84,7 +85,16 @@ export { searchPages, searchPagesAdmin } from './api/page-search';
 // ─── API — Admin ──────────────────────────────────────────────────────────────
 
 // Sites
-export { createSite, deleteSite, getSite, listSites, updateSite } from './api/sites';
+export {
+  clearSiteHomePage,
+  createSite,
+  deleteSite,
+  getSite,
+  getSitesMeta,
+  listSites,
+  setSiteHomePage,
+  updateSite,
+} from './api/sites';
 
 // Pages admin
 export {
@@ -111,7 +121,14 @@ export {
 } from './api/page-presence';
 
 // Menus admin
-export { createMenu, deleteMenu, getMenu, listMenus, updateMenu } from './api/menus-admin';
+export {
+  createMenu,
+  deleteMenu,
+  getMenu,
+  getMenusMeta,
+  listMenus,
+  updateMenu,
+} from './api/menus-admin';
 
 // Releases
 export {
@@ -119,6 +136,7 @@ export {
   cancelRelease,
   createRelease,
   getRelease,
+  getReleasesMeta,
   listReleases,
   publishRelease,
   removeReleaseAction,

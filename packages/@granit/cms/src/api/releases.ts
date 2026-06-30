@@ -1,4 +1,4 @@
-import { getPage } from '@granit/query-engine';
+import { getPage, getQueryMeta } from '@granit/query-engine';
 
 import type {
   AddReleaseActionRequest,
@@ -6,10 +6,10 @@ import type {
   ListReleasesParams,
   ReleaseResponse,
   ScheduleReleaseRequest,
-  UpdateReleaseRequest,
+  RenameReleaseRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
-import type { PagedResult } from '@granit/query-engine';
+import type { PagedResult, QueryMetadata } from '@granit/query-engine';
 
 /** `GET /api/cms/releases` — QueryEngine grid (filter/sort/quickFilters). Requires `Cms.Releases.Read`. */
 export async function listReleases(
@@ -19,6 +19,15 @@ export async function listReleases(
   options?: { readonly signal?: AbortSignal }
 ): Promise<PagedResult<ReleaseResponse>> {
   return getPage<ReleaseResponse>(client, `${basePath}/releases`, params ?? {}, options);
+}
+
+/** `GET /api/cms/releases/meta` — QueryEngine grid metadata (columns/filters). Requires `Cms.Releases.Read`. */
+export async function getReleasesMeta(
+  client: AxiosInstance,
+  basePath: string,
+  options?: { readonly signal?: AbortSignal }
+): Promise<QueryMetadata> {
+  return getQueryMeta(client, `${basePath}/releases`, options);
 }
 
 /** `GET /api/cms/releases/{id}`. Requires `Cms.Releases.Read`. */
@@ -46,7 +55,7 @@ export async function updateRelease(
   client: AxiosInstance,
   basePath: string,
   id: string,
-  request: UpdateReleaseRequest
+  request: RenameReleaseRequest
 ): Promise<ReleaseResponse> {
   const res = await client.put<ReleaseResponse>(
     `${basePath}/releases/${encodeURIComponent(id)}`,

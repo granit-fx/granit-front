@@ -7,10 +7,10 @@ import { useCmsConfig } from '../providers/cms-provider';
 
 import { cmsKeys } from './query-keys';
 
-import type { CreateMenuRequest, MenuResponse, UpdateMenuRequest } from '@granit/cms';
+import type { MenuCreateRequest, MenuResponse, MenuUpdateRequest } from '@granit/cms';
 import type { UseMutationResult } from '@tanstack/react-query';
 
-export function useCreateMenu(): UseMutationResult<MenuResponse, Error, CreateMenuRequest> {
+export function useCreateMenu(): UseMutationResult<MenuResponse, Error, MenuCreateRequest> {
   const { client, basePath, queryKeyPrefix } = useCmsConfig();
   const qc = useQueryClient();
   return useMutation({
@@ -24,7 +24,7 @@ export function useCreateMenu(): UseMutationResult<MenuResponse, Error, CreateMe
 export function useUpdateMenu(): UseMutationResult<
   MenuResponse,
   Error,
-  { id: string; request: UpdateMenuRequest }
+  { id: string; request: MenuUpdateRequest }
 > {
   const { client, basePath, queryKeyPrefix } = useCmsConfig();
   const qc = useQueryClient();

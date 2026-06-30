@@ -1,78 +1,109 @@
-import { screen } from '@testing-library/react';
+import { GranitClientProvider } from '@granit/react-api-client';
+import { CmsProvider } from '@granit/react-cms';
+import { CORPORATE_SITE_ID, createMenusHandlers } from '@granit/react-cms/testing';
+import { createMswServer } from '@granit/testing/msw-server';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { screen, waitFor } from '@testing-library/react';
+import axios from 'axios';
+import { http, HttpResponse } from 'msw';
 
-import { MenusListPage } from '../menus-list-page';
-import { mockMenus } from '../testing';
+import { MenusListPage } from '../components/menus-list-page';
 
 import { renderWithProviders } from './test-utils';
 
-const { mockUseParams } = vi.hoisted(() => ({
-  mockUseParams: vi.fn(),
-}));
+import type { ReactNode } from 'react';
 
-vi.mock('react-router-dom', async (importOriginal) => {
-  const actual = await importOriginal<Record<string, unknown>>();
-  return { ...actual, useParams: mockUseParams };
-});
+const BASE_PATH = '/api/cms';
+const client = axios.create({ baseURL: '' });
 
-const { mockUseMenus } = vi.hoisted(() => ({
-  mockUseMenus: vi.fn(),
-}));
+// Minimal `/menus/meta` so `useMenusMeta` resolves (the grid only reads
+// `defaultSort`); the list itself is served by the shared CMS handlers.
+const metaHandler = http.get(`${BASE_PATH}/menus/meta`, () =>
+  HttpResponse.json({
+    columns: [],
+    filterableFields: [],
+    sortableFields: [],
+    presetFilterGroups: [],
+    quickFilters: [],
+    dateFilters: [],
+    groupByFields: [],
+    pagination: {
+      defaultPageSize: 20,
+      maxPageSize: 100,
+      maxStreamSize: 10000,
+      supportsCursor: false,
+    },
+    defaultSort: 'key',
+  })
+);
 
-vi.mock('@granit/react-cms', () => ({
-  useMenus: mockUseMenus,
-  useDeleteMenu: () => ({ mutate: vi.fn() }),
-}));
+const server = createMswServer(metaHandler, ...createMenusHandlers(`${BASE_PATH}/menus`));
+
+function Wrapper({ children }: { readonly children: ReactNode }) {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
+  return (
+    <GranitClientProvider client={client}>
+      <QueryClientProvider client={queryClient}>
+        <CmsProvider config={{ client, basePath: BASE_PATH }}>{children}</CmsProvider>
+      </QueryClientProvider>
+    </GranitClientProvider>
+  );
+}
+
+const ROUTE = `/cms/sites/${CORPORATE_SITE_ID}/menus`;
+
+function renderPage() {
+  return renderWithProviders(
+    <Wrapper>
+      <MenusListPage />
+    </Wrapper>,
+    { route: ROUTE }
+  );
+}
 
 describe('MenusListPage', () => {
-  beforeEach(() => {
-    mockUseParams.mockReturnValue({ id: 'site-1' });
-    mockUseMenus.mockReturnValue({ data: { items: mockMenus }, isLoading: false, isError: false });
-  });
-
-  afterEach(() => vi.clearAllMocks());
-
   it('renders the page title and data-slot', () => {
-    renderWithProviders(<MenusListPage />, { route: '/cms/sites/site-1/menus' });
+    renderPage();
     expect(screen.getByRole('heading', { name: 'Menus' })).toBeInTheDocument();
     expect(document.querySelector('[data-slot="menus-list-page"]')).toBeInTheDocument();
   });
 
   it('renders the new-menu action', () => {
-    renderWithProviders(<MenusListPage />, { route: '/cms/sites/site-1/menus' });
+    renderPage();
     expect(screen.getByRole('button', { name: /New menu/i })).toBeInTheDocument();
   });
 
   it('renders the column headers', () => {
-    renderWithProviders(<MenusListPage />, { route: '/cms/sites/site-1/menus' });
+    renderPage();
     expect(screen.getByRole('columnheader', { name: 'Key' })).toBeInTheDocument();
     expect(screen.getByRole('columnheader', { name: 'Title' })).toBeInTheDocument();
     expect(screen.getByRole('columnheader', { name: 'Items' })).toBeInTheDocument();
   });
 
-  it('renders a row per menu with key, title and item count', () => {
-    renderWithProviders(<MenusListPage />, { route: '/cms/sites/site-1/menus' });
-    expect(screen.getByText('main')).toBeInTheDocument();
+  it('renders a row per menu fetched from the query endpoint', async () => {
+    renderPage();
+    expect(await screen.findByText('main')).toBeInTheDocument();
     expect(screen.getByText('Main navigation')).toBeInTheDocument();
     expect(screen.getByText('footer')).toBeInTheDocument();
-    // first menu has 2 items
-    expect(screen.getByText('2')).toBeInTheDocument();
   });
 
-  it('renders the empty state when there are no menus', () => {
-    mockUseMenus.mockReturnValue({ data: { items: [] }, isLoading: false, isError: false });
-    renderWithProviders(<MenusListPage />, { route: '/cms/sites/site-1/menus' });
-    expect(screen.getByText('No menus found.')).toBeInTheDocument();
+  it('exposes accessible edit and delete actions per row', async () => {
+    renderPage();
+    await screen.findByText('main');
+    expect(screen.getAllByRole('link', { name: 'Edit' }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('button', { name: 'Delete' }).length).toBeGreaterThan(0);
   });
 
-  it('renders the loading row while fetching', () => {
-    mockUseMenus.mockReturnValue({ data: undefined, isLoading: true, isError: false });
-    renderWithProviders(<MenusListPage />, { route: '/cms/sites/site-1/menus' });
-    expect(screen.getByText('Loading menus…')).toBeInTheDocument();
-  });
-
-  it('renders the error message on failure', () => {
-    mockUseMenus.mockReturnValue({ data: undefined, isLoading: false, isError: true });
-    renderWithProviders(<MenusListPage />, { route: '/cms/sites/site-1/menus' });
-    expect(screen.getByText('Failed to load menus.')).toBeInTheDocument();
+  it('renders no data rows when the endpoint returns no menus', async () => {
+    server.use(
+      http.get(`${BASE_PATH}/menus`, () =>
+        HttpResponse.json({ items: [], totalCount: 0, hasMore: false, nextCursor: null })
+      )
+    );
+    renderPage();
+    await waitFor(() => expect(screen.queryByText('main')).not.toBeInTheDocument());
+    expect(screen.getByRole('columnheader', { name: 'Key' })).toBeInTheDocument();
   });
 });

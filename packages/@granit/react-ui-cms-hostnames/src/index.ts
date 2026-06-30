@@ -6,7 +6,7 @@
 // spec-derived cmsHostnamesConstraints (@granit/cms-hostnames) plus a client-only
 // FQDN guard, via @granit/react-validation's createConstraintsResolver.
 
-export { HostnamesPage } from './hostnames-page';
+export { HostnamesPage } from './components/hostnames-page';
 export { CmsHostnameAddForm } from './components/cms-hostname-add-form';
 export type { CmsHostnameAddFormProps } from './components/cms-hostname-add-form';
 export { CmsHostnameStatusBadge } from './components/cms-hostname-status-badge';

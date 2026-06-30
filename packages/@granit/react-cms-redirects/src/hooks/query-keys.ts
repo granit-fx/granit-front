@@ -8,6 +8,8 @@ export const cmsRedirectsKeys = {
   /** Paginated / filterable admin grid (QueryEngine). */
   grid: (prefix: readonly string[], request: QueryRequest) =>
     [...prefix, 'redirects', 'grid', request] as const,
+  /** Admin grid column / filter / preset metadata (QueryEngine). */
+  gridMeta: (prefix: readonly string[]) => [...prefix, 'redirects', 'grid', 'meta'] as const,
   detail: (prefix: readonly string[], id: string) =>
     [...prefix, 'redirects', 'detail', id] as const,
   settings: (prefix: readonly string[], siteId: string) =>

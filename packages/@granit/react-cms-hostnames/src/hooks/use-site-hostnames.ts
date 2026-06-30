@@ -1,6 +1,7 @@
 import { checkSiteHostnameAvailability, listSiteHostnames } from '@granit/cms-hostnames';
 import { useQuery } from '@tanstack/react-query';
 
+import { logger } from '../logger';
 import { useCmsHostnamesConfig } from '../providers/cms-hostnames-provider';
 
 import { cmsHostnamesKeys } from './query-keys';
@@ -15,7 +16,12 @@ export function useSiteHostnames(
   const { client, basePath, queryKeyPrefix } = useCmsHostnamesConfig();
   return useQuery({
     queryKey: cmsHostnamesKeys.list(queryKeyPrefix, siteId),
-    queryFn: () => listSiteHostnames(client, basePath, siteId),
+    queryFn: async () => {
+      logger.debug('Fetching site hostnames', { siteId });
+      const hostnames = await listSiteHostnames(client, basePath, siteId);
+      logger.debug('Loaded site hostnames', { siteId, count: hostnames.length });
+      return hostnames;
+    },
     enabled: (options?.enabled ?? true) && siteId.length > 0,
   });
 }

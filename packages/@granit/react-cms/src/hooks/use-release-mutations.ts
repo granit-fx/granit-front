@@ -20,7 +20,7 @@ import type {
   CreateReleaseRequest,
   ReleaseResponse,
   ScheduleReleaseRequest,
-  UpdateReleaseRequest,
+  RenameReleaseRequest,
 } from '@granit/cms';
 import type { UseMutationResult } from '@tanstack/react-query';
 
@@ -42,7 +42,7 @@ export function useCreateRelease(): UseMutationResult<
 export function useUpdateRelease(): UseMutationResult<
   ReleaseResponse,
   Error,
-  { id: string; request: UpdateReleaseRequest }
+  { id: string; request: RenameReleaseRequest }
 > {
   const { client, basePath, queryKeyPrefix } = useCmsConfig();
   const qc = useQueryClient();

@@ -9,9 +9,10 @@ import { renderCmsSeo } from './test-utils';
 // minimal "empty + idle" shape so only the visual layer is under test. The host
 // supplies a CmsSeoProvider (and the Axios client) in production — none needed here.
 vi.mock('@granit/react-cms-seo', () => ({
+  useCmsSeoConfig: () => ({ client: {}, basePath: '/api/cms/seo' }),
   useSeoDefaults: () => ({ data: undefined, isLoading: false }),
   useUpdateSeoDefaults: () => ({ mutate: vi.fn(), isPending: false }),
-  useSeoMetadataAudit: () => ({ data: { items: [] }, isLoading: false }),
+  useSeoMetadataMeta: () => ({ data: undefined, isLoading: false }),
   useSeoSuggestions: () => ({ data: { items: [] }, isLoading: false }),
   useApplySeoSuggestion: () => ({ mutate: vi.fn(), isPending: false }),
   useRejectSeoSuggestion: () => ({ mutate: vi.fn(), isPending: false }),

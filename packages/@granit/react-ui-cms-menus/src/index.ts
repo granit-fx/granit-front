@@ -4,8 +4,8 @@
 // in the host tree (via the @granit/react-cms hooks); the create/edit form derives
 // its validation from the OpenAPI contract (@granit/cms cmsConstraints).
 
-export { MenusListPage } from './menus-list-page';
-export { MenuFormPage } from './menu-form-page';
+export { MenusListPage } from './components/menus-list-page';
+export { MenuFormPage } from './components/menu-form-page';
 
 // i18next resource bundles (flat keys, literal `cms:` prefix, "translation" ns)
 export { cmsMenusTranslationsEn, cmsMenusTranslationsFr } from './locales/index';

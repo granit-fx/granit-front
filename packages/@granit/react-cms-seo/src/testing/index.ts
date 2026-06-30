@@ -2,5 +2,10 @@
 // @granit/react-cms-seo/testing — mock data & MSW handlers
 // ---------------------------------------------------------------------------
 
-export { mockSeoDefaults, mockSeoMetadataAudit, mockSeoSuggestions } from './data';
+export {
+  mockSeoDefaults,
+  mockSeoMetadataAudit,
+  mockSeoMetadataMeta,
+  mockSeoSuggestions,
+} from './data';
 export { createCmsSeoHandlers } from './handlers';

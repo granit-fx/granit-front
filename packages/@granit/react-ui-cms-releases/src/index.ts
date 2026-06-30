@@ -5,8 +5,8 @@
 // @granit/cms constraints; the timezone field reuses @granit/react-ui-kit's
 // TimezonePicker. Pages do NOT wrap a provider — the host owns it.
 
-export { ReleasesListPage } from './releases-list-page';
-export { ReleaseDetailPage } from './release-detail-page';
+export { ReleasesListPage } from './components/releases-list-page';
+export { ReleaseDetailPage } from './components/release-detail-page';
 export { ReleaseFormDialog } from './components/release-form-dialog';
 
 // i18next resource bundles (flat keys with the literal "cms:" prefix, "translation" ns)

@@ -1102,56 +1102,6 @@
           "signature": "async function searchPagesAdmin( client: AxiosInstance, basePath: string, params: PageSearchParams ): Promise<PageSearchPageResponse>"
         },
         {
-          "name": "createSite",
-          "kind": "function",
-          "signature": "async function createSite( client: AxiosInstance, basePath: string, request: CreateSiteRequest ): Promise<SiteResponse>"
-        },
-        {
-          "name": "deleteSite",
-          "kind": "function",
-          "signature": "async function deleteSite( client: AxiosInstance, basePath: string, id: string ): Promise<void>"
-        },
-        {
-          "name": "getSite",
-          "kind": "function",
-          "signature": "async function getSite( client: AxiosInstance, basePath: string, id: string ): Promise<SiteResponse>"
-        },
-        {
-          "name": "listSites",
-          "kind": "function",
-          "signature": "async function listSites( client: AxiosInstance, basePath: string, params?: ListSitesParams, options?:"
-        },
-        {
-          "name": "updateSite",
-          "kind": "function",
-          "signature": "async function updateSite( client: AxiosInstance, basePath: string, id: string, request: UpdateSiteRequest ): Promise<SiteResponse>"
-        },
-        {
-          "name": "createMenu",
-          "kind": "function",
-          "signature": "async function createMenu( client: AxiosInstance, basePath: string, request: CreateMenuRequest ): Promise<MenuResponse>"
-        },
-        {
-          "name": "deleteMenu",
-          "kind": "function",
-          "signature": "async function deleteMenu( client: AxiosInstance, basePath: string, id: string ): Promise<void>"
-        },
-        {
-          "name": "getMenu",
-          "kind": "function",
-          "signature": "async function getMenu( client: AxiosInstance, basePath: string, id: string ): Promise<MenuResponse>"
-        },
-        {
-          "name": "listMenus",
-          "kind": "function",
-          "signature": "async function listMenus( client: AxiosInstance, basePath: string, params?: ListMenusParams, options?:"
-        },
-        {
-          "name": "updateMenu",
-          "kind": "function",
-          "signature": "async function updateMenu( client: AxiosInstance, basePath: string, id: string, request: UpdateMenuRequest ): Promise<MenuResponse>"
-        },
-        {
           "name": "cmsConstraints",
           "kind": "const",
           "signature": "const cmsConstraints"
@@ -4384,19 +4334,9 @@
           "signature": "function useSites( params?: ListSitesParams, options?:"
         },
         {
-          "name": "useCreateSite",
+          "name": "useSitesMeta",
           "kind": "function",
-          "signature": "function useCreateSite(): UseMutationResult<SiteResponse, Error, CreateSiteRequest>"
-        },
-        {
-          "name": "useDeleteSite",
-          "kind": "function",
-          "signature": "function useDeleteSite(): UseMutationResult<void, Error, string>"
-        },
-        {
-          "name": "useUpdateSite",
-          "kind": "function",
-          "signature": "function useUpdateSite(): UseMutationResult< SiteResponse, Error,"
+          "signature": "function useSitesMeta(options?:"
         },
         {
           "name": "usePage",
@@ -4439,9 +4379,14 @@
           "signature": "function useMenus( params?: ListMenusParams, options?:"
         },
         {
+          "name": "useMenusMeta",
+          "kind": "function",
+          "signature": "function useMenusMeta(options?:"
+        },
+        {
           "name": "useCreateMenu",
           "kind": "function",
-          "signature": "function useCreateMenu(): UseMutationResult<MenuResponse, Error, CreateMenuRequest>"
+          "signature": "function useCreateMenu(): UseMutationResult<MenuResponse, Error, MenuCreateRequest>"
         },
         {
           "name": "useDeleteMenu",
@@ -4462,6 +4407,11 @@
           "name": "useReleases",
           "kind": "function",
           "signature": "function useReleases( params?: ListReleasesParams, options?:"
+        },
+        {
+          "name": "useReleasesMeta",
+          "kind": "function",
+          "signature": "function useReleasesMeta(options?:"
         }
       ]
     },

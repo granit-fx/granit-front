@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { RedirectsListPage } from '../redirects-list-page';
+import { RedirectsListPage } from '../components/redirects-list-page';
 
 import { mockRedirects, renderCmsRedirects } from './test-utils';
 
@@ -20,7 +20,7 @@ describe('RedirectsListPage', () => {
 
   it('renders the mocked redirect rows', () => {
     renderCmsRedirects(<RedirectsListPage />);
-    expect(screen.getByText(mockRedirects[0].source)).toBeInTheDocument();
-    expect(screen.getByText(mockRedirects[0].target)).toBeInTheDocument();
+    expect(screen.getByText(mockRedirects[0]!.source)).toBeInTheDocument();
+    expect(screen.getByText(mockRedirects[0]!.target)).toBeInTheDocument();
   });
 });

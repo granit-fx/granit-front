@@ -5,8 +5,8 @@
 // Validation is spec-driven: the create form derives its rules from
 // cmsConstraints.CreatePageRequest (@granit/cms) via createConstraintsResolver.
 
-export { PageTreePage } from './page-tree-page';
-export { PageFormPage } from './page-form-page';
+export { PageTreePage } from './components/page-tree-page';
+export { PageFormPage } from './components/page-form-page';
 
 // CMS renderer link-out helpers (gated by VITE_CMS_RENDERER_URL in the host).
 export { CMS_RENDERER_URL, isCmsRendererConfigured, buildPageEditorUrl } from './renderer';

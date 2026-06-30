@@ -2,6 +2,7 @@
 export type {
   // Shared (audit grid)
   PagedResult,
+  QueryMetadata,
   QueryRequest,
   // Domain value objects
   EffectiveSeoResponse,
@@ -30,7 +31,7 @@ export type {
   // SEO-AI
   SeoSuggestionApplyRequest,
   ListSeoSuggestionsParams,
-  RejectSeoAiRequest,
+  SeoSuggestionRejectRequest,
   SeoSuggestRequest,
   SeoSuggestResponse,
   SeoSuggestionResponse,
@@ -52,6 +53,7 @@ export {
   deleteSeoMetadata,
   getSeoDefaults,
   getSeoMetadata,
+  getSeoMetadataMeta,
   getJsonLdPreview,
   getOgCardPreview,
   getSerpPreview,

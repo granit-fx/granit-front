@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { PageFormPage } from '../page-form-page';
+import { PageFormPage } from '../components/page-form-page';
 import { mockPageTree } from '../testing';
 
 import { renderWithProviders } from './test-utils';

@@ -4,8 +4,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
+import { mockPageTree, mockSites } from '../testing';
+
 import { PageFormPage } from './page-form-page';
-import { mockPageTree, mockSites } from './testing';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 

@@ -15,7 +15,7 @@ import type { ISODateString } from '@granit/types';
 // ─── Shared ──────────────────────────────────────────────────────────────────
 
 /** Paginated audit-grid result (`MapGranitQuery<SeoMetadata>`). */
-export type { PagedResult, QueryRequest } from '@granit/query-engine';
+export type { PagedResult, QueryMetadata, QueryRequest } from '@granit/query-engine';
 
 // ─── Domain value objects ────────────────────────────────────────────────────
 
@@ -352,7 +352,7 @@ export interface SeoSuggestionApplyRequest {
 }
 
 /** Request body for `POST /api/cms/seo/ai/suggestions/{id}/reject`. Maps `SeoSuggestionRejectRequest`. */
-export interface RejectSeoAiRequest {
+export interface SeoSuggestionRejectRequest {
   readonly reason?: string | null;
 }
 

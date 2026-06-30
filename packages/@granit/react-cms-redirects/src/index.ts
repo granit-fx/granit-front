@@ -15,6 +15,7 @@ export {
   useRedirectPreview,
   useRedirects,
   useRedirectsGrid,
+  useRedirectsGridMeta,
   useRedirectSettings,
 } from './hooks/use-redirects';
 
@@ -30,6 +31,7 @@ export {
 export type {
   PagedResult,
   PaginationParams,
+  QueryMetadata,
   QueryRequest,
   RedirectCreateRequest,
   RedirectMatchType,

@@ -13,7 +13,12 @@ import type { ISODateString } from '@granit/types';
 // ─── Grid (QueryEngine) re-exports ───────────────────────────────────────────
 // The admin grid is backed by `MapGranitQuery<Redirect>` — use the QueryEngine
 // contracts, never `PagedResponse` from `@granit/cms`.
-export type { PagedResult, PaginationParams, QueryRequest } from '@granit/query-engine';
+export type {
+  PagedResult,
+  PaginationParams,
+  QueryMetadata,
+  QueryRequest,
+} from '@granit/query-engine';
 
 // ─── Domain enums (serialized as PascalCase names) ───────────────────────────
 

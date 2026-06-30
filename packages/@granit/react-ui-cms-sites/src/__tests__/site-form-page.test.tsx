@@ -1,7 +1,7 @@
 import { mockSites } from '@granit/react-cms/testing';
 import { screen } from '@testing-library/react';
 
-import { SiteFormPage } from '../site-form-page';
+import { SiteFormPage } from '../components/site-form-page';
 
 import { renderWithProviders } from './test-utils';
 

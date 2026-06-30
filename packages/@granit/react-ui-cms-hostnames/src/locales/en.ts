@@ -6,10 +6,8 @@
 
 export const cmsHostnamesTranslationsEn = {
   'cms:Hostnames.Actions.Remove': 'Remove',
-  'cms:Hostnames.Actions.SetPrimary': 'Set as primary',
   'cms:Hostnames.Actions.VerifyNow': 'Verify now',
   'cms:Hostnames.Add': 'Add hostname',
-  'cms:Hostnames.AddError': 'Failed to add hostname.',
   'cms:Hostnames.AddSuccess': 'Hostname added.',
   'cms:Hostnames.Columns.Host': 'Host',
   'cms:Hostnames.Columns.LastVerified': 'Last verified',
@@ -21,14 +19,10 @@ export const cmsHostnamesTranslationsEn = {
   'cms:Hostnames.InvalidHost': 'Invalid hostname format.',
   'cms:Hostnames.LoadError': 'Failed to load hostnames.',
   'cms:Hostnames.Loading': 'Loading hostnames…',
-  'cms:Hostnames.PrimaryError': 'Failed to set primary hostname.',
-  'cms:Hostnames.PrimarySuccess': '"{{host}}" set as primary.',
   'cms:Hostnames.RemoveConfirm.Description': 'Remove "{{host}}" from this site?',
   'cms:Hostnames.RemoveConfirm.Title': 'Remove hostname?',
-  'cms:Hostnames.RemoveError': 'Failed to remove "{{host}}".',
   'cms:Hostnames.RemoveSuccess': 'Hostname removed.',
   'cms:Hostnames.Title': 'Hostnames',
-  'cms:Hostnames.VerifyError': 'Failed to trigger verification.',
   'cms:Hostnames.VerifySuccess': 'Verification triggered.',
   'cms:Sites.Title': 'Sites',
 } as const;

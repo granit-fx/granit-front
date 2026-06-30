@@ -19,7 +19,7 @@ import { useEffect, useRef } from 'react';
 import { Controller, useForm, type Resolver } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-import { buildPageEditorUrl } from './renderer';
+import { buildPageEditorUrl } from '../renderer';
 
 interface PageFormValues {
   slugSegment: string;

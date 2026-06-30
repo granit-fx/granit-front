@@ -19,7 +19,7 @@ import { ArrowLeft, Pencil, Plus, Trash2, ToggleLeft, ToggleRight } from 'lucide
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { RedirectFormDialog } from './components/redirect-form-dialog';
+import { RedirectFormDialog } from './redirect-form-dialog';
 
 import type { RedirectResponse } from '@granit/react-cms-redirects';
 

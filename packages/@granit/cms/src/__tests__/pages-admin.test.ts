@@ -147,11 +147,11 @@ describe('updatePageTranslation', () => {
 });
 
 describe('movePage', () => {
-  it('POST /api/cms/pages/{id}/move', async () => {
+  it('POST /api/cms/pages/{id}/move returns the moved page', async () => {
     const client = createMockClient();
-    vi.mocked(client.post).mockResolvedValue({ status: 204, data: undefined });
+    vi.mocked(client.post).mockResolvedValue({ status: 200, data: page });
 
-    await movePage(client, BASE, 'page-1', {
+    const result = await movePage(client, BASE, 'page-1', {
       newParentId: 'parent-1',
       concurrencyStamp: 'stamp-1',
     });
@@ -160,6 +160,7 @@ describe('movePage', () => {
       newParentId: 'parent-1',
       concurrencyStamp: 'stamp-1',
     });
+    expect(result).toEqual(page);
   });
 });
 
@@ -179,7 +180,10 @@ describe('saveDraft', () => {
     const client = createMockClient();
     vi.mocked(client.put).mockResolvedValue({ status: 200, data: version });
 
-    const result = await saveDraft(client, BASE, 'page-1', 'fr', { contentJson: '{}' });
+    const result = await saveDraft(client, BASE, 'page-1', 'fr', {
+      contentJson: '{}',
+      title: null,
+    });
 
     expect(result).toEqual({ ok: true, version });
   });
@@ -189,7 +193,10 @@ describe('saveDraft', () => {
     const conflict: PageDraftConflictResponse = { pageId: 'page-1', culture: 'fr' };
     vi.mocked(client.put).mockResolvedValue({ status: 409, data: conflict });
 
-    const result = await saveDraft(client, BASE, 'page-1', 'fr', { contentJson: '{}' });
+    const result = await saveDraft(client, BASE, 'page-1', 'fr', {
+      contentJson: '{}',
+      title: null,
+    });
 
     expect(result).toEqual({ ok: false, conflict });
   });

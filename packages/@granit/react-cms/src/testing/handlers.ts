@@ -12,7 +12,7 @@ import { http, HttpResponse, type RequestHandler } from 'msw';
 import { CORPORATE_SITE_ID, mockMenus, mockPageTree, mockReleases, mockSites } from './data';
 
 import type {
-  CreateMenuRequest,
+  MenuCreateRequest,
   CreatePageRequest,
   CreateReleaseRequest,
   CreateSiteRequest,
@@ -22,9 +22,10 @@ import type {
   PageTreeNodeResponse,
   ReleaseResponse,
   ScheduleReleaseRequest,
+  SetSiteHomePageRequest,
   SiteResponse,
-  UpdateMenuRequest,
-  UpdatePageRequest,
+  MenuUpdateRequest,
+  RenamePageRequest,
   UpdateSiteRequest,
 } from '@granit/cms';
 import type { PagedResult } from '@granit/query-engine';
@@ -108,6 +109,23 @@ export function createSitesHandlers(baseUrl = '/api/cms/sites'): RequestHandler[
       sites.splice(sites.indexOf(existing), 1);
       return new HttpResponse(null, { status: 204 });
     }),
+
+    http.put(`${baseUrl}/:id/home-page`, async ({ params, request }) => {
+      const existing = sites.find((candidate) => candidate.id === params.id);
+      if (!existing) return notFound();
+      const dto = (await request.json()) as SetSiteHomePageRequest;
+      const updated: SiteResponse = { ...existing, homePageId: dto.pageId };
+      sites[sites.indexOf(existing)] = updated;
+      return HttpResponse.json(updated);
+    }),
+
+    http.delete(`${baseUrl}/:id/home-page`, ({ params }) => {
+      const existing = sites.find((candidate) => candidate.id === params.id);
+      if (!existing) return notFound();
+      const updated: SiteResponse = { ...existing, homePageId: null };
+      sites[sites.indexOf(existing)] = updated;
+      return HttpResponse.json(updated);
+    }),
   ];
 }
 
@@ -169,7 +187,7 @@ export function createPagesHandlers(baseUrl = '/api/cms/pages'): RequestHandler[
     http.put(`${baseUrl}/:id`, async ({ params, request }) => {
       const existing = nodes.find((node) => node.id === params.id);
       if (!existing) return notFound();
-      const dto = (await request.json()) as UpdatePageRequest;
+      const dto = (await request.json()) as RenamePageRequest;
       const updated: StoredNode = { ...existing, slugSegment: dto.slugSegment };
       nodes[nodes.indexOf(existing)] = updated;
       return HttpResponse.json(toPageResponse(updated));
@@ -185,7 +203,7 @@ export function createPagesHandlers(baseUrl = '/api/cms/pages'): RequestHandler[
 }
 
 function toMenuItems(
-  items: CreateMenuRequest['items'] | UpdateMenuRequest['items']
+  items: MenuCreateRequest['items'] | MenuUpdateRequest['items']
 ): MenuItemResponse[] {
   return (items ?? []).map((item) => ({
     label: item.label,
@@ -220,7 +238,7 @@ export function createMenusHandlers(baseUrl = '/api/cms/menus'): RequestHandler[
     }),
 
     http.post(baseUrl, async ({ request }) => {
-      const dto = (await request.json()) as CreateMenuRequest;
+      const dto = (await request.json()) as MenuCreateRequest;
       const menu: MenuResponse = {
         id: crypto.randomUUID(),
         siteId: dto.siteId,
@@ -237,7 +255,7 @@ export function createMenusHandlers(baseUrl = '/api/cms/menus'): RequestHandler[
     http.put(`${baseUrl}/:id`, async ({ params, request }) => {
       const existing = menus.find((candidate) => candidate.id === params.id);
       if (!existing) return notFound();
-      const dto = (await request.json()) as UpdateMenuRequest;
+      const dto = (await request.json()) as MenuUpdateRequest;
       const updated: MenuResponse = {
         ...existing,
         title: dto.title,
@@ -314,9 +332,9 @@ export function createReleasesHandlers(baseUrl = '/api/cms/releases'): RequestHa
         ...existing,
         status: 'Ready',
         schedule: {
-          localDateTime: dto.localDateTime,
+          localDateTime: toISODateString(dto.localDateTime),
           timeZoneId: dto.timeZoneId,
-          scheduledAtUtc: new Date(dto.localDateTime).toISOString(),
+          scheduledAtUtc: toISODateString(new Date(dto.localDateTime).toISOString()),
         },
       };
       releases[releases.indexOf(existing)] = updated;

@@ -8,10 +8,10 @@ import type {
   PageResponse,
   PageTreeNodeResponse,
   PageVersionSummaryResponse,
-  SaveDraftRequest,
+  SaveDraftContentRequest,
   SaveDraftResult,
-  UpdatePageRequest,
-  UpdatePageTranslationRequest,
+  RenamePageRequest,
+  SetPageTranslationRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult } from '@granit/query-engine';
@@ -63,7 +63,7 @@ export async function updatePage(
   client: AxiosInstance,
   basePath: string,
   id: string,
-  request: UpdatePageRequest
+  request: RenamePageRequest
 ): Promise<PageResponse> {
   const res = await client.put<PageResponse>(
     `${basePath}/pages/${encodeURIComponent(id)}`,
@@ -78,7 +78,7 @@ export async function updatePageTranslation(
   basePath: string,
   id: string,
   culture: string,
-  request: UpdatePageTranslationRequest
+  request: SetPageTranslationRequest
 ): Promise<PageResponse> {
   const res = await client.put<PageResponse>(
     `${basePath}/pages/${encodeURIComponent(id)}/translations/${encodeURIComponent(culture)}`,
@@ -87,14 +87,18 @@ export async function updatePageTranslation(
   return res.data;
 }
 
-/** `POST /api/cms/pages/{id}/move` — reparent. Requires `Cms.Pages.Manage`. */
+/** `POST /api/cms/pages/{id}/move` — reparent. Requires `Cms.Pages.Manage`. Returns the moved page. */
 export async function movePage(
   client: AxiosInstance,
   basePath: string,
   id: string,
   request: MovePageRequest
-): Promise<void> {
-  await client.post(`${basePath}/pages/${encodeURIComponent(id)}/move`, request);
+): Promise<PageResponse> {
+  const res = await client.post<PageResponse>(
+    `${basePath}/pages/${encodeURIComponent(id)}/move`,
+    request
+  );
+  return res.data;
 }
 
 /** `DELETE /api/cms/pages/{id}`. Requires `Cms.Pages.Manage`. Returns `204`. */
@@ -116,7 +120,7 @@ export async function saveDraft(
   basePath: string,
   id: string,
   culture: string,
-  request: SaveDraftRequest
+  request: SaveDraftContentRequest
 ): Promise<SaveDraftResult> {
   const res = await client.put<PageVersionSummaryResponse | PageDraftConflictResponse>(
     `${basePath}/pages/${encodeURIComponent(id)}/draft/${encodeURIComponent(culture)}`,

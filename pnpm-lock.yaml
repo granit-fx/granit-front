@@ -1954,6 +1954,9 @@ importers:
       '@granit/cms-hostnames':
         specifier: workspace:*
         version: link:../cms-hostnames
+      '@granit/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
@@ -1985,6 +1988,9 @@ importers:
       '@granit/cms-redirects':
         specifier: workspace:*
         version: link:../cms-redirects
+      '@granit/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
@@ -2019,6 +2025,9 @@ importers:
       '@granit/cms-seo':
         specifier: workspace:*
         version: link:../cms-seo
+      '@granit/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
@@ -4658,12 +4667,21 @@ importers:
       '@granit/cms':
         specifier: workspace:*
         version: link:../cms
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-cms':
         specifier: workspace:*
         version: link:../react-cms
       '@granit/react-localization':
         specifier: workspace:*
         version: link:../react-localization
+      '@granit/react-query-engine':
+        specifier: workspace:*
+        version: link:../react-query-engine
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
@@ -4688,6 +4706,12 @@ importers:
       '@tanstack/react-query':
         specifier: 5.101.2
         version: 5.101.2(react@19.2.7)
+      '@tanstack/react-table':
+        specifier: ^8.21.3
+        version: 8.21.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@26.0.1)(typescript@6.0.3)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.9.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -4832,12 +4856,18 @@ importers:
       '@granit/cms':
         specifier: workspace:*
         version: link:../cms
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/react-cms':
         specifier: workspace:*
         version: link:../react-cms
       '@granit/react-localization':
         specifier: workspace:*
         version: link:../react-localization
+      '@granit/react-query-engine':
+        specifier: workspace:*
+        version: link:../react-query-engine
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
@@ -4859,6 +4889,12 @@ importers:
       '@tanstack/react-query':
         specifier: 5.101.2
         version: 5.101.2(react@19.2.7)
+      '@tanstack/react-table':
+        specifier: ^8.21.3
+        version: 8.21.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@26.0.1)(typescript@6.0.3)
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.9.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -4881,15 +4917,24 @@ importers:
       '@granit/cms-seo':
         specifier: workspace:*
         version: link:../cms-seo
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
       '@granit/react-cms-seo':
         specifier: workspace:*
         version: link:../react-cms-seo
       '@granit/react-localization':
         specifier: workspace:*
         version: link:../react-localization
+      '@granit/react-query-engine':
+        specifier: workspace:*
+        version: link:../react-query-engine
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-kit':
+        specifier: workspace:*
+        version: link:../react-ui-kit
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
@@ -4905,6 +4950,9 @@ importers:
       '@tanstack/react-query':
         specifier: 5.101.2
         version: 5.101.2(react@19.2.7)
+      '@tanstack/react-table':
+        specifier: ^8.21.3
+        version: 8.21.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       i18next:
         specifier: ^26.0.0
         version: 26.3.3(typescript@6.0.3)
@@ -4942,12 +4990,21 @@ importers:
       '@granit/cms':
         specifier: workspace:*
         version: link:../cms
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-cms':
         specifier: workspace:*
         version: link:../react-cms
       '@granit/react-localization':
         specifier: workspace:*
         version: link:../react-localization
+      '@granit/react-query-engine':
+        specifier: workspace:*
+        version: link:../react-query-engine
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
@@ -4957,6 +5014,9 @@ importers:
       '@granit/react-validation':
         specifier: workspace:*
         version: link:../react-validation
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
       '@granit/types':
         specifier: workspace:*
         version: link:../types
@@ -4966,9 +5026,15 @@ importers:
       '@tanstack/react-query':
         specifier: 5.101.2
         version: 5.101.2(react@19.2.7)
+      '@tanstack/react-table':
+        specifier: ^8.21.3
+        version: 8.21.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       i18next:
         specifier: ^26.0.0
         version: 26.3.3(typescript@6.0.3)
+      msw:
+        specifier: ^2.14.6
+        version: 2.14.6(@types/node@26.0.1)(typescript@6.0.3)
       react-i18next:
         specifier: ^17.0.0
         version: 17.0.8(i18next@26.3.3(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)

@@ -15,11 +15,14 @@
   },
   "peerDependencies": {
     "@granit/cms": "workspace:*",
+    "@granit/query-engine": "workspace:*",
     "@granit/react-cms": "workspace:*",
     "@granit/react-localization": "workspace:*",
+    "@granit/react-query-engine": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/react-ui-kit": "workspace:*",
     "@granit/react-validation": "workspace:*",
+    "@tanstack/react-table": "^8.21.3",
     "lucide-react": "^1.21.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -38,8 +41,10 @@
   "devDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/cms": "workspace:*",
+    "@granit/query-engine": "workspace:*",
     "@granit/react-cms": "workspace:*",
     "@granit/react-localization": "workspace:*",
+    "@granit/react-query-engine": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/react-ui-kit": "workspace:*",
     "@granit/react-validation": "workspace:*",
@@ -47,6 +52,8 @@
     "@granit/types": "workspace:*",
     "@storybook/react-vite": "^10.4.6",
     "@tanstack/react-query": "^5.0.0",
+    "@tanstack/react-table": "^8.21.3",
+    "msw": "^2.12.0",
     "storybook": "^10.4.6"
   }
 }

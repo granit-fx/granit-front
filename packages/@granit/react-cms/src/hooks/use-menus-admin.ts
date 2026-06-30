@@ -1,6 +1,6 @@
 'use client';
 
-import { getMenu, listMenus } from '@granit/cms';
+import { getMenu, getMenusMeta, listMenus } from '@granit/cms';
 import { useQuery } from '@tanstack/react-query';
 
 import { useCmsConfig } from '../providers/cms-provider';
@@ -8,7 +8,7 @@ import { useCmsConfig } from '../providers/cms-provider';
 import { cmsKeys } from './query-keys';
 
 import type { ListMenusParams, MenuResponse } from '@granit/cms';
-import type { PagedResult } from '@granit/query-engine';
+import type { PagedResult, QueryMetadata } from '@granit/query-engine';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 export function useMenus(
@@ -21,6 +21,19 @@ export function useMenus(
     queryFn: ({ signal }) => listMenus(client, basePath, params, { signal }),
     enabled: options?.enabled ?? true,
     staleTime: 30_000,
+  });
+}
+
+/** Column / filter / preset metadata for the menus admin grid. Static per deployment. */
+export function useMenusMeta(options?: {
+  readonly enabled?: boolean;
+}): UseQueryResult<QueryMetadata> {
+  const { client, basePath, queryKeyPrefix } = useCmsConfig();
+  return useQuery({
+    queryKey: cmsKeys.menus.meta(queryKeyPrefix),
+    queryFn: ({ signal }) => getMenusMeta(client, basePath, { signal }),
+    staleTime: Infinity,
+    enabled: options?.enabled ?? true,
   });
 }
 

@@ -18,6 +18,7 @@ export {
   useSeoDefaults,
   useSeoMetadata,
   useSeoMetadataAudit,
+  useSeoMetadataMeta,
   useSerpPreview,
 } from './hooks/use-seo-metadata';
 
@@ -52,8 +53,9 @@ export type {
   OpenGraph,
   OpenGraphArticle,
   PagedResult,
+  QueryMetadata,
   QueryRequest,
-  RejectSeoAiRequest,
+  SeoSuggestionRejectRequest,
   RobotsDirective,
   RobotsTxtRule,
   SeoSuggestRequest,

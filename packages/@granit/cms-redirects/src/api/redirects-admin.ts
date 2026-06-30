@@ -1,4 +1,4 @@
-import { getPage } from '@granit/query-engine';
+import { getPage, getQueryMeta } from '@granit/query-engine';
 
 import type {
   PagedResult,
@@ -12,6 +12,7 @@ import type {
   SiteRedirectSettingsResponse,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+import type { QueryMetadata } from '@granit/query-engine';
 
 const ROOT = '';
 
@@ -143,4 +144,17 @@ export async function getRedirectsGrid(
   options?: { readonly signal?: AbortSignal }
 ): Promise<PagedResult<RedirectResponse>> {
   return getPage<RedirectResponse>(client, `${basePath}${ROOT}/grid`, request, options);
+}
+
+/**
+ * `GET {basePath}/api/cms/redirects/grid/meta` — column / filter / preset metadata for the
+ * admin grid (`MapGranitQuery<Redirect>`). Drives the grid's filter UI. Requires
+ * `Cms.Redirects.Read`.
+ */
+export async function getRedirectsGridMeta(
+  client: AxiosInstance,
+  basePath: string,
+  options?: { readonly signal?: AbortSignal }
+): Promise<QueryMetadata> {
+  return getQueryMeta(client, `${basePath}${ROOT}/grid`, options);
 }

@@ -1,13 +1,15 @@
 import { cmsSeoConstraints } from '@granit/cms-seo';
 import {
   useApplySeoSuggestion,
+  useCmsSeoConfig,
   useRejectSeoSuggestion,
   useSeoDefaults,
-  useSeoMetadataAudit,
+  useSeoMetadataMeta,
   useSeoSuggestions,
   useUpdateSeoDefaults,
 } from '@granit/react-cms-seo';
 import { useTranslation } from '@granit/react-localization';
+import { QueryProvider, useQueryEndpoint } from '@granit/react-query-engine';
 import {
   Badge,
   Button,
@@ -26,17 +28,29 @@ import {
   Textarea,
   toast,
 } from '@granit/react-ui';
+import { QueryEndpointDataTable } from '@granit/react-ui-kit';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { Check, X } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
+import { createSeoAuditColumns } from './seo-audit-columns';
+
 import type {
   RobotsTxtRule,
-  SeoSuggestionResponse,
+  SeoAuditQuickFilter,
   SeoMetadataListItem,
+  SeoSuggestionResponse,
 } from '@granit/react-cms-seo';
+
+/** Quick filters declared by `SeoMetadataQueryDefinition` (used as the fallback set). */
+const SEO_AUDIT_QUICK_FILTERS: readonly SeoAuditQuickFilter[] = [
+  'MissingDescription',
+  'NoCanonical',
+  'TitleTooLong',
+  'MissingOgImage',
+];
 
 /** Capitalize the first letter — used to map a form field to its `cms:Seo.Fields.*` key. */
 function capitalize(value: string): string {
@@ -147,6 +161,7 @@ function DefaultsTab({ siteId }: { readonly siteId: string }) {
       },
       {
         onSuccess: () => toast.success(t('cms:Seo.UpdateSuccess', 'SEO defaults updated.')),
+        onError: () => toast.error(t('cms:Seo.UpdateError', 'Failed to update SEO defaults.')),
       }
     );
   }
@@ -198,61 +213,67 @@ function DefaultsTab({ siteId }: { readonly siteId: string }) {
   );
 }
 
+/**
+ * SEO audit grid. Server-driven via `MapGranitQuery<SeoMetadata>`: a
+ * `QueryProvider` scoped to `{basePath}/metadata` feeds `useQueryEndpoint` so the
+ * `QueryEndpointDataTable` gets real server pagination / sort, while the
+ * `SeoMetadataQueryDefinition` quick filters (`MissingDescription`, `NoCanonical`,
+ * `TitleTooLong`, `MissingOgImage`) toggle as `quickFilters` on the request. The
+ * `siteId` filter scopes the grid to the current site.
+ */
 function AuditTab({ siteId }: { readonly siteId: string }) {
-  const { t } = useTranslation();
-  const { data: page, isLoading } = useSeoMetadataAudit({
-    filters: [{ field: 'siteId', operator: 'Eq', value: siteId }],
-  });
-  const rows: readonly SeoMetadataListItem[] = page?.items ?? [];
-
-  if (isLoading) {
-    return <p className="text-sm text-muted-foreground">{t('cms:Common.Loading', 'Loading…')}</p>;
-  }
+  const { client, basePath } = useCmsSeoConfig();
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>{t('cms:Seo.Audit.ContentType', 'Content type')}</TableHead>
-          <TableHead>{t('cms:Seo.Audit.ContentId', 'Content ID')}</TableHead>
-          <TableHead>{t('cms:Seo.Audit.Culture', 'Culture')}</TableHead>
-          <TableHead>{t('cms:Seo.Audit.Title', 'Title')}</TableHead>
-          <TableHead>{t('cms:Seo.Audit.Description', 'Description')}</TableHead>
-          <TableHead>{t('cms:Seo.Audit.Canonical', 'Canonical URL')}</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {rows.length === 0 && (
-          <TableRow>
-            <TableCell colSpan={6} className="text-center text-muted-foreground">
-              {t('cms:Seo.Audit.Empty', 'No metadata found.')}
-            </TableCell>
-          </TableRow>
-        )}
-        {rows.map((row) => (
-          <TableRow key={row.id}>
-            <TableCell className="font-mono text-xs">{row.contentType}</TableCell>
-            <TableCell className="font-mono text-xs">{row.contentId}</TableCell>
-            <TableCell>{row.culture ?? '—'}</TableCell>
-            <TableCell>
-              {row.title ?? (
-                <Badge variant="secondary">{t('cms:Seo.Audit.Missing', 'Missing')}</Badge>
-              )}
-            </TableCell>
-            <TableCell className="text-sm text-muted-foreground">
-              {row.description ?? (
-                <Badge variant="secondary">{t('cms:Seo.Audit.Missing', 'Missing')}</Badge>
-              )}
-            </TableCell>
-            <TableCell className="font-mono text-xs">
-              {row.canonicalUrl ?? (
-                <Badge variant="secondary">{t('cms:Seo.Audit.Missing', 'Missing')}</Badge>
-              )}
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <QueryProvider config={{ client, basePath: `${basePath}/metadata` }}>
+      <AuditGrid siteId={siteId} />
+    </QueryProvider>
+  );
+}
+
+function AuditGrid({ siteId }: { readonly siteId: string }) {
+  const { t } = useTranslation();
+  const { data: meta } = useSeoMetadataMeta();
+
+  const queryEndpoint = useQueryEndpoint<SeoMetadataListItem>({
+    initialParams: { filters: [{ field: 'siteId', operator: 'Eq', value: siteId }] },
+  });
+  const { params, toggleQuickFilter } = queryEndpoint;
+  const activeQuickFilters = params.quickFilters ?? [];
+
+  const columns = useMemo(() => createSeoAuditColumns({ t }), [t]);
+
+  // Prefer the quick filters the backend actually advertises; fall back to the
+  // statically-known `SeoMetadataQueryDefinition` set when `/metadata/meta`
+  // has not resolved yet.
+  const quickFilters: readonly { name: string; label: string }[] = meta
+    ? meta.quickFilters.map((qf) => ({ name: qf.name, label: qf.label }))
+    : SEO_AUDIT_QUICK_FILTERS.map((name) => ({
+        name,
+        label: t(`cms:Seo.Audit.QuickFilter.${name}`, name),
+      }));
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2">
+        {quickFilters.map((qf) => {
+          const active = activeQuickFilters.includes(qf.name);
+          return (
+            <Button
+              key={qf.name}
+              type="button"
+              variant={active ? 'default' : 'outline'}
+              size="sm"
+              aria-pressed={active}
+              onClick={() => toggleQuickFilter(qf.name)}
+            >
+              {qf.label}
+            </Button>
+          );
+        })}
+      </div>
+      <QueryEndpointDataTable queryEndpoint={queryEndpoint} columns={columns} />
+    </div>
   );
 }
 
@@ -297,6 +318,7 @@ function AiInboxTab({ siteId }: { readonly siteId: string }) {
                   variant="ghost"
                   size="sm"
                   title={t('cms:Seo.AiInbox.Apply', 'Apply')}
+                  aria-label={t('cms:Seo.AiInbox.Apply', 'Apply')}
                   onClick={() =>
                     applySuggestion.mutate(
                       {
@@ -308,6 +330,8 @@ function AiInboxTab({ siteId }: { readonly siteId: string }) {
                       {
                         onSuccess: () =>
                           toast.success(t('cms:Seo.AiInbox.ApplySuccess', 'Suggestion applied.')),
+                        onError: () =>
+                          toast.error(t('cms:Seo.AiInbox.ApplyError', 'Failed to apply.')),
                       }
                     )
                   }
@@ -318,12 +342,15 @@ function AiInboxTab({ siteId }: { readonly siteId: string }) {
                   variant="ghost"
                   size="sm"
                   title={t('cms:Seo.AiInbox.Reject', 'Reject')}
+                  aria-label={t('cms:Seo.AiInbox.Reject', 'Reject')}
                   onClick={() =>
                     rejectSuggestion.mutate(
                       { id: suggestion.id },
                       {
                         onSuccess: () =>
                           toast.success(t('cms:Seo.AiInbox.RejectSuccess', 'Suggestion rejected.')),
+                        onError: () =>
+                          toast.error(t('cms:Seo.AiInbox.RejectError', 'Failed to reject.')),
                       }
                     )
                   }

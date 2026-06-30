@@ -54,8 +54,14 @@ export type { CmsConfig, ResolvedCmsConfig, CmsProviderProps } from './providers
 export { cmsKeys } from './hooks/query-keys';
 
 // Admin hooks — sites
-export { useSite, useSites } from './hooks/use-sites';
-export { useCreateSite, useDeleteSite, useUpdateSite } from './hooks/use-site-mutations';
+export { useSite, useSites, useSitesMeta } from './hooks/use-sites';
+export {
+  useClearSiteHomePage,
+  useCreateSite,
+  useDeleteSite,
+  useSetSiteHomePage,
+  useUpdateSite,
+} from './hooks/use-site-mutations';
 
 // Admin hooks — pages
 export { usePage, usePageTree, usePageVersions, usePages } from './hooks/use-pages';
@@ -82,11 +88,11 @@ export {
 } from './hooks/use-page-presence';
 
 // Admin hooks — menus
-export { useMenu, useMenus } from './hooks/use-menus-admin';
+export { useMenu, useMenus, useMenusMeta } from './hooks/use-menus-admin';
 export { useCreateMenu, useDeleteMenu, useUpdateMenu } from './hooks/use-menu-mutations';
 
 // Admin hooks — releases
-export { useRelease, useReleases } from './hooks/use-releases';
+export { useRelease, useReleases, useReleasesMeta } from './hooks/use-releases';
 export {
   useAddReleaseAction,
   useCancelRelease,

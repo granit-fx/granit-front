@@ -11,6 +11,7 @@ export const cmsKeys = {
     all: (prefix: readonly string[]) => [...prefix, 'sites'] as const,
     list: (prefix: readonly string[], params?: ListSitesParams) =>
       [...prefix, 'sites', 'list', params ?? {}] as const,
+    meta: (prefix: readonly string[]) => [...prefix, 'sites', 'meta'] as const,
     detail: (prefix: readonly string[], id: string) => [...prefix, 'sites', id] as const,
   },
   pages: {
@@ -35,12 +36,14 @@ export const cmsKeys = {
     all: (prefix: readonly string[]) => [...prefix, 'menus'] as const,
     list: (prefix: readonly string[], params?: ListMenusParams) =>
       [...prefix, 'menus', 'list', params ?? {}] as const,
+    meta: (prefix: readonly string[]) => [...prefix, 'menus', 'meta'] as const,
     detail: (prefix: readonly string[], id: string) => [...prefix, 'menus', id] as const,
   },
   releases: {
     all: (prefix: readonly string[]) => [...prefix, 'releases'] as const,
     list: (prefix: readonly string[], params?: ListReleasesParams) =>
       [...prefix, 'releases', 'list', params ?? {}] as const,
+    meta: (prefix: readonly string[]) => [...prefix, 'releases', 'meta'] as const,
     detail: (prefix: readonly string[], id: string) => [...prefix, 'releases', id] as const,
   },
 } as const;

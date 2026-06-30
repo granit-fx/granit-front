@@ -2,6 +2,7 @@
 export type {
   PagedResult,
   PaginationParams,
+  QueryMetadata,
   QueryRequest,
   RedirectCreateRequest,
   RedirectMatchType,
@@ -25,6 +26,7 @@ export {
   deleteRedirect,
   getRedirect,
   getRedirectsGrid,
+  getRedirectsGridMeta,
   getRedirectSettings,
   listRedirects,
   previewRedirect,

@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { PageTreePage } from '../page-tree-page';
+import { PageTreePage } from '../components/page-tree-page';
 import { mockPageTree } from '../testing';
 
 import { renderWithProviders } from './test-utils';

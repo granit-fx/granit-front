@@ -8,6 +8,7 @@ import {
 } from '@granit/cms-redirects';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { logger } from '../logger';
 import { useCmsRedirectsConfig } from '../providers/cms-redirects-provider';
 
 import { cmsRedirectsKeys } from './query-keys';
@@ -38,6 +39,7 @@ export function useCreateRedirect(): UseMutationResult<
   return useMutation({
     mutationFn: ({ siteId, request }) => createRedirect(client, basePath, siteId, request),
     onSuccess: (data) => {
+      logger.info('Created redirect', { id: data.redirect.id, siteId: data.redirect.siteId });
       qc.setQueryData(cmsRedirectsKeys.detail(queryKeyPrefix, data.redirect.id), data.redirect);
       invalidateSiteRedirects(qc, queryKeyPrefix, data.redirect.siteId);
     },
@@ -54,6 +56,7 @@ export function useUpdateRedirect(): UseMutationResult<
   return useMutation({
     mutationFn: ({ id, request }) => updateRedirect(client, basePath, id, request),
     onSuccess: (data) => {
+      logger.info('Updated redirect', { id: data.redirect.id, siteId: data.redirect.siteId });
       qc.setQueryData(cmsRedirectsKeys.detail(queryKeyPrefix, data.redirect.id), data.redirect);
       invalidateSiteRedirects(qc, queryKeyPrefix, data.redirect.siteId);
     },
@@ -70,6 +73,7 @@ export function useDeleteRedirect(): UseMutationResult<
   return useMutation({
     mutationFn: ({ id }) => deleteRedirect(client, basePath, id),
     onSuccess: (_data, { id, siteId }) => {
+      logger.info('Deleted redirect', { id, siteId });
       qc.removeQueries({ queryKey: cmsRedirectsKeys.detail(queryKeyPrefix, id) });
       invalidateSiteRedirects(qc, queryKeyPrefix, siteId);
     },
@@ -86,6 +90,7 @@ export function useUpdateRedirectSettings(): UseMutationResult<
   return useMutation({
     mutationFn: ({ siteId, request }) => updateRedirectSettings(client, basePath, siteId, request),
     onSuccess: (data) => {
+      logger.info('Updated redirect settings', { siteId: data.siteId });
       qc.setQueryData(cmsRedirectsKeys.settings(queryKeyPrefix, data.siteId), data);
     },
   });

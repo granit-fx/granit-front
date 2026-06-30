@@ -75,15 +75,15 @@ const titleMax = cmsSeoConstraints.SeoMetadataRequest.title.maxLength; // 300
 
 ### Public renderer & anonymous documents
 
-| Symbol               | Kind | Purpose                                                    |
-| -------------------- | ---- | ---------------------------------------------------------- |
-| `getEffectiveSeo`    | fn   | `GET .../{culture}/effective` — resolved render-ready SEO  |
-| `getSitemap`         | fn   | `GET .../sitemap.xml` — raw XML, conditional-GET aware     |
-| `getSitemapFile`     | fn   | `GET .../sitemap/{file}` — a named child sitemap file      |
-| `getRobotsTxt`       | fn   | `GET .../robots.txt` — raw text                            |
-| `getManifest`        | fn   | `GET .../manifest.webmanifest` — raw PWA manifest          |
-| `RawDocumentResult`  | type | Status + body + `ETag` / `Last-Modified` pass-through      |
-| `RawDocumentOptions` | type | `ifNoneMatch` (conditional GET) + SSR `fetchOptions`       |
+| Symbol               | Kind | Purpose                                                   |
+| -------------------- | ---- | --------------------------------------------------------- |
+| `getEffectiveSeo`    | fn   | `GET .../{culture}/effective` — resolved render-ready SEO |
+| `getSitemap`         | fn   | `GET .../sitemap.xml` — raw XML, conditional-GET aware    |
+| `getSitemapFile`     | fn   | `GET .../sitemap/{file}` — a named child sitemap file     |
+| `getRobotsTxt`       | fn   | `GET .../robots.txt` — raw text                           |
+| `getManifest`        | fn   | `GET .../manifest.webmanifest` — raw PWA manifest         |
+| `RawDocumentResult`  | type | Status + body + `ETag` / `Last-Modified` pass-through     |
+| `RawDocumentOptions` | type | `ifNoneMatch` (conditional GET) + SSR `fetchOptions`      |
 
 The four document readers expose the upstream `status`, `etag` and
 `lastModified` so a server route can do a faithful conditional-GET pass-through
@@ -91,18 +91,18 @@ The four document readers expose the upstream `status`, `etag` and
 
 ### SEO admin
 
-| Symbol              | Kind | Purpose                                                |
-| ------------------- | ---- | ------------------------------------------------------ |
-| `getSeoMetadata`    | fn   | `GET` raw pre-cascade metadata (`null` on 404)         |
-| `upsertSeoMetadata` | fn   | `PUT` a content item's metadata                        |
-| `deleteSeoMetadata` | fn   | `DELETE` a content item's metadata (`204`)             |
-| `getSeoDefaults`    | fn   | `GET` a site's SEO defaults (`null` until first save)  |
-| `updateSeoDefaults` | fn   | `PUT` a site's SEO defaults                            |
-| `listSeoMetadata`   | fn   | `GET /metadata` — the audit grid (`MapGranitQuery`)    |
-| `invalidateSitemap` | fn   | `POST .../sitemap/invalidate` — rebuild on next read   |
-| `getSerpPreview`    | fn   | `GET .../preview/serp` — Google-style preview          |
-| `getOgCardPreview`  | fn   | `GET .../preview/og` — Open Graph share-card preview   |
-| `getJsonLdPreview`  | fn   | `GET .../preview/jsonld` — raw JSON-LD `@graph` text   |
+| Symbol              | Kind | Purpose                                               |
+| ------------------- | ---- | ----------------------------------------------------- |
+| `getSeoMetadata`    | fn   | `GET` raw pre-cascade metadata (`null` on 404)        |
+| `upsertSeoMetadata` | fn   | `PUT` a content item's metadata                       |
+| `deleteSeoMetadata` | fn   | `DELETE` a content item's metadata (`204`)            |
+| `getSeoDefaults`    | fn   | `GET` a site's SEO defaults (`null` until first save) |
+| `updateSeoDefaults` | fn   | `PUT` a site's SEO defaults                           |
+| `listSeoMetadata`   | fn   | `GET /metadata` — the audit grid (`MapGranitQuery`)   |
+| `invalidateSitemap` | fn   | `POST .../sitemap/invalidate` — rebuild on next read  |
+| `getSerpPreview`    | fn   | `GET .../preview/serp` — Google-style preview         |
+| `getOgCardPreview`  | fn   | `GET .../preview/og` — Open Graph share-card preview  |
+| `getJsonLdPreview`  | fn   | `GET .../preview/jsonld` — raw JSON-LD `@graph` text  |
 
 ### SEO-AI
 
@@ -117,9 +117,9 @@ The four document readers expose the upstream `status`, `etag` and
 
 ### Validation
 
-| Symbol              | Kind  | Purpose                                              |
-| ------------------- | ----- | ---------------------------------------------------- |
-| `cmsSeoConstraints` | const | Spec-derived field constraints for the request DTOs  |
+| Symbol              | Kind  | Purpose                                             |
+| ------------------- | ----- | --------------------------------------------------- |
+| `cmsSeoConstraints` | const | Spec-derived field constraints for the request DTOs |
 
 ### Types
 
@@ -138,7 +138,8 @@ The four document readers expose the upstream `status`, `etag` and
 | `SeoSuggestRequest` / `SeoSuggestResponse`            | type | SEO-AI suggest body / outcome            |
 | `SeoSuggestionResponse` / `SeoSuggestionListResponse` | type | Suggestion projection / inbox page       |
 | `SeoSuggestionDiff` / `SeoSuggestionFieldDiff`        | type | Per-field current-vs-proposed diff       |
-| `SeoSuggestionApplyRequest` / `RejectSeoAiRequest`    | type | Apply / reject request bodies            |
+| `SeoSuggestionApplyRequest`                           | type | Apply request body                       |
+| `SeoSuggestionRejectRequest`                          | type | Reject request body                      |
 | `ListSeoSuggestionsParams`                            | type | Suggestions-inbox query params           |
 | `SuggestionStatus` / `SeoGenerationOutcome`           | type | Suggestion lifecycle / suggest outcome   |
 | `SuggestionScope` / `SuggestionScopeFlag`             | type | `[Flags]` scope string / member name     |
@@ -147,7 +148,7 @@ The four document readers expose the upstream `status`, `etag` and
 ## Conventions & caveats
 
 - **`SuggestionScope` is a string, not an array.** The backend `[Flags]
-  SuggestionScope` enum is serialized by `System.Text.Json` as a comma-joined
+SuggestionScope` enum is serialized by `System.Text.Json` as a comma-joined
   member-name string (e.g. `"Title, Description"`). The `apply` request's
   `fields` is intersected server-side with the suggestion's own scope.
 - **Optionality follows the C#-default rule, not nullability.** A request field

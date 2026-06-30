@@ -1,7 +1,7 @@
 import type {
   SeoSuggestionApplyRequest,
   ListSeoSuggestionsParams,
-  RejectSeoAiRequest,
+  SeoSuggestionRejectRequest,
   SeoSuggestRequest,
   SeoSuggestResponse,
   SeoSuggestionResponse,
@@ -69,7 +69,7 @@ export async function rejectSeoSuggestion(
   client: AxiosInstance,
   basePath: string,
   id: string,
-  request?: RejectSeoAiRequest
+  request?: SeoSuggestionRejectRequest
 ): Promise<SeoSuggestionResponse> {
   const res = await client.post<SeoSuggestionResponse>(
     `${basePath}/ai/suggestions/${encodeURIComponent(id)}/reject`,

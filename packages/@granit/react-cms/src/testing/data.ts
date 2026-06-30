@@ -198,9 +198,9 @@ export const mockReleases: ReleaseResponse[] = [
     name: 'Q1 scheduled push',
     status: 'Ready',
     schedule: {
-      localDateTime: '2026-07-01T09:00:00',
+      localDateTime: toISODateString('2026-07-01T09:00:00'),
       timeZoneId: 'Europe/Brussels',
-      scheduledAtUtc: '2026-07-01T07:00:00Z',
+      scheduledAtUtc: toISODateString('2026-07-01T07:00:00Z'),
     },
     tenantId: null,
     actions: [

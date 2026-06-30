@@ -105,6 +105,7 @@ export function PageTreePage() {
                     <Link
                       to={`/cms/sites/${effectiveSiteId}/pages/${page.id}/edit`}
                       title={t('cms:Common.Edit', 'Edit')}
+                      aria-label={t('cms:Common.Edit', 'Edit')}
                     >
                       <Pencil className="h-4 w-4" />
                     </Link>
@@ -113,6 +114,7 @@ export function PageTreePage() {
                     variant="ghost"
                     size="sm"
                     title={t('cms:Common.Delete', 'Delete')}
+                    aria-label={t('cms:Common.Delete', 'Delete')}
                     disabled={page.isSiteRoot}
                     onClick={() => setDeleteTarget({ id: page.id, path: page.structurePath })}
                   >

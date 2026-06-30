@@ -22,8 +22,8 @@ import { ArrowLeft, RefreshCw, Star, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { CmsHostnameAddForm } from './components/cms-hostname-add-form';
-import { CmsHostnameStatusBadge } from './components/cms-hostname-status-badge';
+import { CmsHostnameAddForm } from './cms-hostname-add-form';
+import { CmsHostnameStatusBadge } from './cms-hostname-status-badge';
 
 import type { SiteHostnameResponse } from '@granit/react-cms-hostnames';
 
@@ -122,6 +122,7 @@ export function HostnamesPage() {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleVerify(hostname)}
+                    aria-label={t('cms:Hostnames.Actions.VerifyNow')}
                     title={t('cms:Hostnames.Actions.VerifyNow', 'Verify now')}
                   >
                     <RefreshCw className="h-4 w-4" />
@@ -130,6 +131,7 @@ export function HostnamesPage() {
                     variant="ghost"
                     size="sm"
                     disabled={hostname.isPrimary}
+                    aria-label={t('cms:Hostnames.Actions.Remove')}
                     title={t('cms:Hostnames.Actions.Remove', 'Remove')}
                     onClick={() => setRemoveTarget(hostname)}
                   >

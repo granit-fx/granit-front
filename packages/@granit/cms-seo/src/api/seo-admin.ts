@@ -12,6 +12,7 @@ import type {
   SiteSeoDefaultsResponse,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
+import type { QueryMetadata } from '@granit/query-engine';
 
 /**
  * `GET /api/cms/seo/sites/{siteId}/metadata/{contentType}/{contentId}/{culture}` — raw metadata.
@@ -124,6 +125,21 @@ export async function listSeoMetadata(
   const suffix = qs ? `?${qs}` : '';
   const url = `${basePath}/metadata${suffix}`;
   const res = await client.get<PagedResult<SeoMetadataListItem>>(url, options);
+  return res.data;
+}
+
+/**
+ * `GET /api/cms/seo/metadata/meta` — query metadata for the SEO audit grid
+ * (`MapGranitQuery<SeoMetadata>`): the filterable / sortable columns and the
+ * `SeoMetadataQueryDefinition` quick filters (`MissingDescription`,
+ * `NoCanonical`, `TitleTooLong`, `MissingOgImage`) backing the toolbar.
+ * Requires `Cms.Seo.Read`.
+ */
+export async function getSeoMetadataMeta(
+  client: AxiosInstance,
+  basePath: string
+): Promise<QueryMetadata> {
+  const res = await client.get<QueryMetadata>(`${basePath}/metadata/meta`);
   return res.data;
 }
 

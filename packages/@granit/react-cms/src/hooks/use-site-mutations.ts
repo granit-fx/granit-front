@@ -1,13 +1,24 @@
 'use client';
 
-import { createSite, deleteSite, updateSite } from '@granit/cms';
+import {
+  clearSiteHomePage,
+  createSite,
+  deleteSite,
+  setSiteHomePage,
+  updateSite,
+} from '@granit/cms';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCmsConfig } from '../providers/cms-provider';
 
 import { cmsKeys } from './query-keys';
 
-import type { CreateSiteRequest, SiteResponse, UpdateSiteRequest } from '@granit/cms';
+import type {
+  CreateSiteRequest,
+  SetSiteHomePageRequest,
+  SiteResponse,
+  UpdateSiteRequest,
+} from '@granit/cms';
 import type { UseMutationResult } from '@tanstack/react-query';
 
 export function useCreateSite(): UseMutationResult<SiteResponse, Error, CreateSiteRequest> {
@@ -30,6 +41,34 @@ export function useUpdateSite(): UseMutationResult<
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ id, request }) => updateSite(client, basePath, id, request),
+    onSuccess: (data) => {
+      qc.setQueryData(cmsKeys.sites.detail(queryKeyPrefix, data.id), data);
+      qc.invalidateQueries({ queryKey: cmsKeys.sites.all(queryKeyPrefix) });
+    },
+  });
+}
+
+export function useSetSiteHomePage(): UseMutationResult<
+  SiteResponse,
+  Error,
+  { id: string; request: SetSiteHomePageRequest }
+> {
+  const { client, basePath, queryKeyPrefix } = useCmsConfig();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, request }) => setSiteHomePage(client, basePath, id, request),
+    onSuccess: (data) => {
+      qc.setQueryData(cmsKeys.sites.detail(queryKeyPrefix, data.id), data);
+      qc.invalidateQueries({ queryKey: cmsKeys.sites.all(queryKeyPrefix) });
+    },
+  });
+}
+
+export function useClearSiteHomePage(): UseMutationResult<SiteResponse, Error, string> {
+  const { client, basePath, queryKeyPrefix } = useCmsConfig();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => clearSiteHomePage(client, basePath, id),
     onSuccess: (data) => {
       qc.setQueryData(cmsKeys.sites.detail(queryKeyPrefix, data.id), data);
       qc.invalidateQueries({ queryKey: cmsKeys.sites.all(queryKeyPrefix) });

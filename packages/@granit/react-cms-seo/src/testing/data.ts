@@ -4,6 +4,7 @@ import { toISODateString } from '@granit/types';
 // ---------------------------------------------------------------------------
 
 import type {
+  QueryMetadata,
   SeoSuggestionResponse,
   SeoMetadataListItem,
   SiteSeoDefaultsResponse,
@@ -87,6 +88,35 @@ export const mockSeoMetadataAudit: SeoMetadataListItem[] = [
     canonicalUrl: 'https://www.example.com/en/long',
   },
 ];
+
+/**
+ * Query metadata for the SEO audit grid, returned by `useSeoMetadataMeta`
+ * (`GET {basePath}/metadata/meta`). Surfaces the `SeoMetadataQueryDefinition`
+ * quick filters so the audit toolbar can render them server-driven.
+ */
+export const mockSeoMetadataMeta: QueryMetadata = {
+  columns: [],
+  filterableFields: [
+    { name: 'siteId', type: 'Guid', operators: ['Eq'] },
+    { name: 'contentType', type: 'String', operators: ['Eq', 'Contains'] },
+  ],
+  sortableFields: [{ name: 'contentType' }, { name: 'title' }],
+  presetFilterGroups: [],
+  quickFilters: [
+    { name: 'MissingDescription', label: 'Missing description', isDefault: false },
+    { name: 'NoCanonical', label: 'No canonical', isDefault: false },
+    { name: 'TitleTooLong', label: 'Title too long', isDefault: false },
+    { name: 'MissingOgImage', label: 'Missing OG image', isDefault: false },
+  ],
+  dateFilters: [],
+  groupByFields: [],
+  pagination: {
+    defaultPageSize: 20,
+    maxPageSize: 100,
+    maxStreamSize: 10000,
+    supportsCursor: false,
+  },
+};
 
 /** AI suggestions inbox returned by `useSeoSuggestions`. */
 export const mockSeoSuggestions: SeoSuggestionResponse[] = [

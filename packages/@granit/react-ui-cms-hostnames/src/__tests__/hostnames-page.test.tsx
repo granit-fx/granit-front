@@ -2,7 +2,7 @@ import { mockHostnames } from '@granit/react-cms-hostnames/testing';
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { HostnamesPage } from '../hostnames-page';
+import { HostnamesPage } from '../components/hostnames-page';
 
 import { renderCmsHostnames } from './test-utils';
 
