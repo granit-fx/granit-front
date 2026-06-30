@@ -226,10 +226,10 @@ export interface PageTreeNodeResponse {
 
 /** Per-culture translation of a page. */
 export interface PageTranslationResponse {
+  readonly culture: string;
   readonly urlSlug: string;
   readonly title: string;
   readonly path: string;
-  readonly culture: string;
 }
 
 /** Full page record. Returned by `GET /api/cms/pages/{id}`. */

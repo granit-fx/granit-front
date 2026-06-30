@@ -1,6 +1,7 @@
 import { sampleParty } from '@granit/react-parties/testing';
 
-import { partiesMswParameters, withPartiesProvider } from './story-decorators';
+import { partiesMswParameters, withPartiesProvider } from '../story-decorators';
+
 import { TaxStatusCard } from './tax-status-card';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';

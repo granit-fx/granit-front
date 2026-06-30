@@ -2,9 +2,9 @@ import { sampleParty } from '@granit/react-parties/testing';
 import { fn } from 'storybook/test';
 
 import { PARTY_ASSIGNABLE_ROLES } from '../constants';
+import { partiesMswParameters, withPartiesProvider } from '../story-decorators';
 
 import { AddRoleDialog } from './add-role-dialog';
-import { partiesMswParameters, withPartiesProvider } from './story-decorators';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 

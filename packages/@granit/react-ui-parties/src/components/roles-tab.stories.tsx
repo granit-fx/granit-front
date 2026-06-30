@@ -1,7 +1,8 @@
 import { sampleParty } from '@granit/react-parties/testing';
 
+import { partiesMswParameters, withPartiesProvider } from '../story-decorators';
+
 import { RolesTab } from './roles-tab';
-import { partiesMswParameters, withPartiesProvider } from './story-decorators';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 

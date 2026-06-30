@@ -1,7 +1,8 @@
 import { sampleParty } from '@granit/react-parties/testing';
 
+import { partiesMswParameters, withPartiesProvider } from '../story-decorators';
+
 import { EmailsTab } from './emails-tab';
-import { partiesMswParameters, withPartiesProvider } from './story-decorators';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 

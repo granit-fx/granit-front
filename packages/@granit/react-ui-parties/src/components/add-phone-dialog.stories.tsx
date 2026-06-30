@@ -1,8 +1,9 @@
 import { sampleParty } from '@granit/react-parties/testing';
 import { fn } from 'storybook/test';
 
+import { partiesMswParameters, withPartiesProvider } from '../story-decorators';
+
 import { AddPhoneDialog } from './add-phone-dialog';
-import { partiesMswParameters, withPartiesProvider } from './story-decorators';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
