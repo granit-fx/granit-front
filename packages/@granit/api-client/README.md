@@ -26,9 +26,7 @@ dependencies a consumer must declare:
 - `axios` (`^1.6.0`) — required.
 - `@granit/logger` — optional; wire a redacting logger so interceptor warnings
   (e.g. missing CSRF token) stay out of `console` and route to OTLP. Falls back
-  to `console.warn` when absent.
-- `@granit/testing` — optional; only the `./test-utils` subpath re-exports from
-  it.
+  to the package logger (`createLogger('api-client')`) when absent.
 
 ## Quick start
 
@@ -107,12 +105,6 @@ const api = createApiClient({
 | `isIdempotentReplay`                       | fn   | `true` when the backend served a cached replay (`Idempotent-Replayed`)                                             |
 | `IdempotencyTombstoneInfo`                 | type | Machine-readable tombstone reason                                                                                  |
 | Axios façade                               | type | `AxiosError`, `AxiosInstance`, `AxiosRequestConfig`, `AxiosResponse`, `InternalAxiosRequestConfig`, `isAxiosError` |
-
-### `./test-utils` subpath
-
-Backward-compatible re-exports from [`@granit/testing`](../testing):
-`createMockClient` (a mock `AxiosInstance`) and `axiosResponse` (wrap a value as
-an `AxiosResponse`).
 
 ## Out of scope / caveats
 

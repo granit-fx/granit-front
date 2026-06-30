@@ -1,7 +1,7 @@
 import { createTsupConfig } from '../../../tsup.preset';
 
 export default createTsupConfig({
-  entry: ['src/index.ts', 'src/test-utils.ts'],
+  entry: ['src/index.ts'],
   splitting: false,
   external: [/^@granit\//, 'vitest'],
 });

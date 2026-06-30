@@ -5,10 +5,6 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   resolve: {
     alias: {
-      '@granit/api-client/test-utils': path.resolve(
-        __dirname,
-        'packages/@granit/api-client/src/test-utils.ts'
-      ),
       '@granit/api-client': path.resolve(__dirname, 'packages/@granit/api-client/src/index.ts'),
       '@granit/arch-tests-kit': path.resolve(
         __dirname,

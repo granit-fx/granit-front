@@ -69,9 +69,10 @@ export interface ApiClientConfig {
   /**
    * Optional logger from `@granit/logger`. Used to report interceptor-level
    * warnings (e.g. missing CSRF token on a BFF mutation). When omitted, the
-   * client falls back to `console.warn` so framework-level diagnostics are
-   * never lost — but production apps should always wire a redacting logger
-   * to keep PII out of `console` and route diagnostics to OTLP.
+   * client falls back to the package logger (`createLogger('api-client')`) so
+   * framework-level diagnostics are never lost — but production apps should
+   * always wire a redacting logger to keep PII out of logs and route
+   * diagnostics to OTLP.
    */
   logger?: Logger;
 }
