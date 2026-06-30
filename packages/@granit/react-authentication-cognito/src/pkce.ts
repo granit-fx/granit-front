@@ -99,6 +99,10 @@ export function buildCognitoAuthorizeUrl(params: {
   readonly challenge: string;
   readonly state: string;
   readonly nonce: string;
+  /** Forwarded as `ui_locales` to render the Hosted UI in the active locale. */
+  readonly locale?: string;
+  /** Forwarded as `login_hint` to pre-fill the username/email field. */
+  readonly loginHint?: string;
 }): string {
   const url = new URL(`https://${params.domain}/login`);
   url.searchParams.set('client_id', params.clientId);
@@ -109,5 +113,7 @@ export function buildCognitoAuthorizeUrl(params: {
   url.searchParams.set('code_challenge_method', 'S256');
   url.searchParams.set('state', params.state);
   url.searchParams.set('nonce', params.nonce);
+  if (params.locale) url.searchParams.set('ui_locales', params.locale);
+  if (params.loginHint) url.searchParams.set('login_hint', params.loginHint);
   return url.toString();
 }

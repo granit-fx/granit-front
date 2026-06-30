@@ -5,8 +5,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { I18nextProvider } from 'react-i18next';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
+import { storyI18n } from '../stories-i18n';
+
 import { ApiKeyDetailPage } from './api-key-detail-page';
-import { storyI18n } from './stories-i18n';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 

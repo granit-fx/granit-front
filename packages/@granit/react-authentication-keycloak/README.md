@@ -62,8 +62,7 @@ const config: KeycloakCoreConfig = {
 };
 
 function AuthGate({ children }: { children: React.ReactNode }) {
-  const { loading, authenticated, user, login, logout, hasRealmRole } =
-    useKeycloakInit(config);
+  const { loading, authenticated, user, login, logout, hasRealmRole } = useKeycloakInit(config);
 
   if (loading) return <Spinner />;
   if (!authenticated) return <button onClick={() => login()}>Sign in</button>;
@@ -85,25 +84,37 @@ Once `authenticated` is `true`, `@granit/api-client` automatically attaches the
 Bearer token (refreshing on demand) and triggers a Keycloak logout on a `401`, so
 domain hooks need no further auth wiring.
 
-### Trusted Types (`/csp`)
+## Trusted Types / CSP setup (host responsibility)
 
 Under a CSP `require-trusted-types-for 'script'`, `keycloak-js` writes its silent
-check-sso and session iframes through a script sink. Install the policy at
-bootstrap, **after** registering the authority origin(s):
+check-sso and session iframes through a DOM script sink (it assigns the iframe
+`src`). The browser blocks that write unless a matching Trusted Types policy is
+installed. This package ships the policy on the `/csp` subpath, but **does not
+install it itself** — the host application must activate it at bootstrap. No
+consumer currently does, so any host shipping `require-trusted-types-for` will see
+silent-SSO fail until the steps below are wired in.
+
+The host must, once at startup and **before** the first Keycloak init:
+
+1. Register the Keycloak authority origin(s) with `setKeycloakAuthorities([config.url])`.
+2. Call `installPolicy()` to install the `granit-keycloak` policy.
+3. List `granit-keycloak` in the CSP `trusted-types` directive.
 
 ```ts
-import {
-  installPolicy,
-  setKeycloakAuthorities,
-} from '@granit/react-authentication-keycloak/csp';
+import { installPolicy, setKeycloakAuthorities } from '@granit/react-authentication-keycloak/csp';
 
+// Pass the same origin(s) you feed the Keycloak config `url`.
 setKeycloakAuthorities([import.meta.env.VITE_KEYCLOAK_URL]);
 installPolicy(); // idempotent, SSR-safe, no-op when Trusted Types are absent
 ```
 
-List `granit-keycloak` in the CSP `trusted-types` directive. The policy resolves
-every script URL against the document and rejects any origin that is neither
-same-origin nor in the registered authority allow-list.
+Order matters: the policy closure captures the allow-list at install time, so
+`setKeycloakAuthorities` must run first. The policy resolves every script URL
+against the document and rejects any origin that is neither same-origin nor in the
+registered authority allow-list.
+
+> **Deferred.** Wiring this call into the showcase-admin-react bootstrap is tracked
+> as a separate MR; the front-side contract (this package) is complete.
 
 ## Public API
 

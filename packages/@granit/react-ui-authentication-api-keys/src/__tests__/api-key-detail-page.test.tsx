@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { ApiKeyDetailPage } from '../api-key-detail-page';
+import { ApiKeyDetailPage } from '../components/api-key-detail-page';
 
 import { renderWithProviders } from './test-utils';
 

@@ -205,6 +205,34 @@ describe('useEntraIdInit', () => {
     );
   });
 
+  it('login() forwards the UI locale to MSAL as ui_locales', async () => {
+    const account = { username: 'a', idTokenClaims: { sub: 'a' } };
+    mockGetActiveAccount.mockReturnValue(account);
+
+    const { result } = renderHook(() => useEntraIdInit(baseConfig));
+    await waitFor(() => expect(result.current.authenticated).toBe(true));
+
+    await result.current.login({ locale: 'fr' });
+
+    expect(mockLoginRedirect).toHaveBeenCalledWith(
+      expect.objectContaining({
+        extraQueryParameters: { ui_locales: 'fr' },
+      })
+    );
+  });
+
+  it('login() omits extraQueryParameters when no locale is provided', async () => {
+    const account = { username: 'a', idTokenClaims: { sub: 'a' } };
+    mockGetActiveAccount.mockReturnValue(account);
+
+    const { result } = renderHook(() => useEntraIdInit(baseConfig));
+    await waitFor(() => expect(result.current.authenticated).toBe(true));
+
+    await result.current.login({ loginHint: 'alice' });
+
+    expect(mockLoginRedirect.mock.calls[0]?.[0]).not.toHaveProperty('extraQueryParameters');
+  });
+
   it('logout() forwards postLogoutRedirectUri to logoutRedirect', async () => {
     const account = { username: 'a', idTokenClaims: { sub: 'a' } };
     mockGetActiveAccount.mockReturnValue(account);

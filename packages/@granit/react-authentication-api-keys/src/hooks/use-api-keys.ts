@@ -2,6 +2,7 @@ import { getApiKeysQueryMeta, listApiKeys } from '@granit/authentication-api-key
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants';
+import { logger } from '../logger';
 
 import { buildApiKeyQueryKey } from './query-keys';
 
@@ -94,7 +95,12 @@ export function useApiKeys(
 
   return useQuery({
     queryKey: buildApiKeyQueryKey(options, 'list', params),
-    queryFn: ({ signal }) => listApiKeys(client, basePath, params, { signal }),
+    queryFn: async ({ signal }) => {
+      logger.debug('fetching api keys');
+      const result = await listApiKeys(client, basePath, params, { signal });
+      logger.debug(`api keys loaded count=${result.items.length}`);
+      return result;
+    },
     placeholderData: keepPreviousData,
     ...queryOptions,
   });

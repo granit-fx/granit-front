@@ -25,6 +25,8 @@ import { forgotPasswordConstraints, type ForgotPasswordFormValues } from './vali
 
 import type { Resolver } from 'react-hook-form';
 
+const log = logger.child('ForgotPassword');
+
 /**
  * Forgot-password page. Provider-agnostic: the host supplies the
  * `AccountProvider` (from `@granit/react-account`) which carries the API client.
@@ -54,7 +56,7 @@ export function ForgotPasswordPage() {
       } else {
         setServerError(t('Auth.ForgotPassword.UnexpectedError'));
       }
-      logger.error('[ForgotPassword] Request failed', err);
+      log.error('Request failed', err);
     }
   }
 

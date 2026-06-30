@@ -2,6 +2,7 @@ import { getApiKey } from '@granit/authentication-api-keys';
 import { useQuery } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants';
+import { logger } from '../logger';
 
 import { buildApiKeyQueryKey } from './query-keys';
 
@@ -12,7 +13,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
 /**
  * Fetches a single API key by ID.
  *
- * Calls `GET {basePath}/{id}`.
+ * Calls `GET {basePath}/api-keys/{id}`.
  *
  * @param id - The API key ID to fetch.
  * @param options - Axios client and optional base path.
@@ -32,7 +33,12 @@ export function useApiKey(
 
   return useQuery({
     queryKey: buildApiKeyQueryKey(options, 'detail', id),
-    queryFn: () => getApiKey(client, basePath, id),
+    queryFn: async () => {
+      logger.debug(`fetching api key id=${id}`);
+      const result = await getApiKey(client, basePath, id);
+      logger.debug(`api key loaded id=${id}`);
+      return result;
+    },
     ...queryOptions,
     enabled: Boolean(id) && queryOptions?.enabled !== false,
   });

@@ -22,6 +22,19 @@ export interface FederatedLoginPageProps {
 const Passthrough = ({ children }: { readonly children: ReactNode }) => <>{children}</>;
 
 /**
+ * Auth error codes with a dedicated `Auth.AccessDenied.<code>` message in the locale
+ * bundle. Any other `?error=` value falls back to the generic `access_denied` message
+ * so an attacker-controlled query value never produces a missing-key render.
+ */
+const KNOWN_ACCESS_DENIED_CODES = new Set([
+  'access_denied',
+  'invalid_state',
+  'login_required',
+  'server_error',
+  'token_exchange_failed',
+]);
+
+/**
  * Federated (external-IdP) login landing. Provider-agnostic: it does not render a
  * credentials form (the IdP owns that) — it shows a branded "sign in" button that
  * calls `login()` to start the redirect, surfaces an `?error=<code>` auth error,
@@ -36,7 +49,8 @@ export function FederatedLoginPage({
 }: FederatedLoginPageProps) {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
-  const error = searchParams.get('error');
+  const rawError = searchParams.get('error');
+  const error = rawError && KNOWN_ACCESS_DENIED_CODES.has(rawError) ? rawError : 'access_denied';
 
   if (authenticated) {
     return <Navigate to="/" replace />;
@@ -50,7 +64,7 @@ export function FederatedLoginPage({
         </p>
       }
     >
-      {error && (
+      {rawError && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="size-4" />
           <AlertTitle>{t('Auth.AccessDenied.Title')}</AlertTitle>

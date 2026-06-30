@@ -7,6 +7,7 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { DEFAULT_BASE_PATH } from '../constants';
+import { logger } from '../logger';
 
 import { buildApiKeyQueryKey } from './query-keys';
 
@@ -26,7 +27,7 @@ import type { UseMutationResult } from '@tanstack/react-query';
 /**
  * Mutation to create a new API key.
  *
- * Calls `POST {basePath}` and invalidates the list cache on success.
+ * Calls `POST {basePath}/api-keys` and invalidates the list cache on success.
  *
  * @param options - Axios client and optional base path.
  *
@@ -44,7 +45,9 @@ export function useCreateApiKey(
 
   return useMutation({
     mutationFn: (request: ApiKeyCreateRequest) => createApiKey(client, basePath, request),
-    onSuccess: () => {
+    onSuccess: (result) => {
+      logger.info(`api key created id=${result.id}`);
+      logger.debug('invalidating api key list cache');
       queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'list') });
     },
   });
@@ -57,7 +60,7 @@ export function useCreateApiKey(
 /**
  * Mutation to revoke an API key.
  *
- * Calls `POST {basePath}/{id}/revoke` and invalidates both the list and the
+ * Calls `POST {basePath}/api-keys/{id}/revoke` and invalidates both the list and the
  * specific key's detail cache on success.
  *
  * @param options - Axios client and optional base path.
@@ -77,6 +80,8 @@ export function useRevokeApiKey(
   return useMutation({
     mutationFn: (id: string) => revokeApiKey(client, basePath, id),
     onSuccess: (_data, id) => {
+      logger.info(`api key revoked id=${id}`);
+      logger.debug(`invalidating api key list and detail caches id=${id}`);
       queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'list') });
       queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'detail', id) });
     },
@@ -90,7 +95,7 @@ export function useRevokeApiKey(
 /**
  * Mutation to rotate an API key, generating a new secret.
  *
- * Calls `POST {basePath}/{id}/rotate` and invalidates both the list and the
+ * Calls `POST {basePath}/api-keys/{id}/rotate` and invalidates both the list and the
  * specific key's detail cache on success.
  *
  * @param options - Axios client and optional base path.
@@ -110,7 +115,9 @@ export function useRotateApiKey(
 
   return useMutation({
     mutationFn: (id: string) => rotateApiKey(client, basePath, id),
-    onSuccess: (_data, id) => {
+    onSuccess: (data, id) => {
+      logger.info(`api key rotated newId=${data.newKeyId}`);
+      logger.debug(`invalidating api key list and detail caches id=${id}`);
       queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'list') });
       queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'detail', id) });
     },
@@ -130,7 +137,7 @@ export interface UpdateApiKeyScopesVariables {
 /**
  * Mutation to update the permissions and allowed CIDRs of an API key.
  *
- * Calls `PUT {basePath}/{id}/scopes` and invalidates both the list and the
+ * Calls `PUT {basePath}/api-keys/{id}/scopes` and invalidates both the list and the
  * specific key's detail cache on success.
  *
  * @param options - Axios client and optional base path.
@@ -154,6 +161,8 @@ export function useUpdateApiKeyScopes(
     mutationFn: ({ id, request }: UpdateApiKeyScopesVariables) =>
       updateApiKeyScopes(client, basePath, id, request),
     onSuccess: (_data, { id }) => {
+      logger.info(`api key scopes updated id=${id}`);
+      logger.debug(`invalidating api key list and detail caches id=${id}`);
       queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'list') });
       queryClient.invalidateQueries({ queryKey: buildApiKeyQueryKey(options, 'detail', id) });
     },

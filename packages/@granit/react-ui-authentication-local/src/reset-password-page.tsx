@@ -26,6 +26,8 @@ import { resetPasswordConstraints, type ResetPasswordFormValues } from './valida
 
 import type { Resolver } from 'react-hook-form';
 
+const log = logger.child('ResetPassword');
+
 /** Full browser redirect — exits the SPA. */
 function redirectTo(url: string): void {
   globalThis.location.href = url;
@@ -87,7 +89,7 @@ export function ResetPasswordPage() {
       } else {
         setServerError(t('Auth.ResetPassword.UnexpectedError'));
       }
-      logger.error('[ResetPassword] Reset failed', err);
+      log.error('Reset failed', err);
     }
   }
 

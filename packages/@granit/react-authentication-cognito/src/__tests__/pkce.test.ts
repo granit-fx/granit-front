@@ -99,4 +99,36 @@ describe('buildCognitoAuthorizeUrl', () => {
     // Raw serialization must encode the space rather than emit it literally.
     expect(url).toContain('client_id=client+1');
   });
+
+  it('omits ui_locales and login_hint when not provided', () => {
+    const url = buildCognitoAuthorizeUrl({
+      domain: 'auth.example.com',
+      clientId: 'client',
+      redirectUri: 'https://app.example/cb',
+      scopes: ['openid'],
+      challenge: 'CHAL',
+      state: 'STATE',
+      nonce: 'NONCE',
+    });
+    const parsed = new URL(url);
+    expect(parsed.searchParams.has('ui_locales')).toBe(false);
+    expect(parsed.searchParams.has('login_hint')).toBe(false);
+  });
+
+  it('forwards locale as ui_locales and loginHint as login_hint when provided', () => {
+    const url = buildCognitoAuthorizeUrl({
+      domain: 'auth.example.com',
+      clientId: 'client',
+      redirectUri: 'https://app.example/cb',
+      scopes: ['openid'],
+      challenge: 'CHAL',
+      state: 'STATE',
+      nonce: 'NONCE',
+      locale: 'fr',
+      loginHint: 'user@example.com',
+    });
+    const parsed = new URL(url);
+    expect(parsed.searchParams.get('ui_locales')).toBe('fr');
+    expect(parsed.searchParams.get('login_hint')).toBe('user@example.com');
+  });
 });

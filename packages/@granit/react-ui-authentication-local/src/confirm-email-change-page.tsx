@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { logger } from './logger';
 import { TokenConfirmationResult, type ConfirmationStatus } from './token-confirmation-result';
 
+const log = logger.child('ConfirmEmailChange');
+
 /**
  * Email-change confirmation page. Provider-agnostic: the host supplies the
  * `AccountProvider` (from `@granit/react-account`) which carries the API client.
@@ -33,7 +35,7 @@ export function ConfirmEmailChangePage() {
         onSuccess: () => setStatus('success'),
         onError: (err: Error) => {
           setStatus('error');
-          logger.error('[ConfirmEmailChange] Confirmation failed', err);
+          log.error('Confirmation failed', err);
         },
       }
     );

@@ -3,11 +3,16 @@ import { createContext, useContext } from 'react';
 
 import { MockAuthProvider } from '../mock-auth-provider';
 
-import type { KeycloakAuthContextType, KeycloakUserInfo } from '@granit/authentication-keycloak';
+import type { BaseAuthContextType, OidcUserInfo } from '@granit/authentication';
 
-const TestContext = createContext<KeycloakAuthContextType | undefined>(undefined);
+/** Provider-specific context shape (mirrors how a real provider extends the base). */
+interface ExtendedAuthContextType extends BaseAuthContextType {
+  readonly provider: 'mock';
+}
 
-const USER = {
+const TestContext = createContext<ExtendedAuthContextType | undefined>(undefined);
+
+const USER: OidcUserInfo = {
   sub: '1',
   email: 'marie@granit.test',
   email_verified: true,
@@ -15,7 +20,7 @@ const USER = {
   preferred_username: 'marie',
   given_name: 'Marie',
   family_name: 'Dupont',
-} as KeycloakUserInfo;
+};
 
 function Probe() {
   const v = useContext(TestContext);

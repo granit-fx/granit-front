@@ -26,6 +26,8 @@ import { registerConstraints, type RegisterFormValues } from './validation';
 
 import type { Resolver } from 'react-hook-form';
 
+const log = logger.child('Register');
+
 function RegisterFormSkeleton() {
   return (
     <PublicLayout>
@@ -120,7 +122,7 @@ function RegisterForm() {
       } else {
         setServerError(t('Auth.Register.UnexpectedError'));
       }
-      logger.error('[Register] Registration failed', err);
+      log.error('Registration failed', err);
     }
   }
 

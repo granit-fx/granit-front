@@ -939,11 +939,6 @@
           "name": "extractReturnUrl",
           "kind": "function",
           "signature": "function extractReturnUrl(search?: string): string | null"
-        },
-        {
-          "name": "IdentityLocalPermissions",
-          "kind": "const",
-          "signature": "const IdentityLocalPermissions"
         }
       ]
     },
@@ -3889,12 +3884,12 @@
         {
           "name": "MockAuthProvider",
           "kind": "function",
-          "signature": "function MockAuthProvider("
+          "signature": "function MockAuthProvider<T extends BaseAuthContextType>("
         },
         {
           "name": "MockAuthProviderProps",
           "kind": "interface",
-          "signature": "interface MockAuthProviderProps",
+          "signature": "interface MockAuthProviderProps<T extends BaseAuthContextType>",
           "members": []
         }
       ]

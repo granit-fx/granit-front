@@ -15,8 +15,8 @@
   },
   "peerDependencies": {
     "@granit/authentication": "workspace:*",
-    "@granit/authentication-keycloak": "workspace:*",
     "@granit/bff": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-bff": "workspace:*",
     "react": "^19.0.0"
   },
@@ -31,8 +31,8 @@
   },
   "devDependencies": {
     "@granit/authentication": "workspace:*",
-    "@granit/authentication-keycloak": "workspace:*",
     "@granit/bff": "workspace:*",
+    "@granit/logger": "workspace:*",
     "@granit/react-bff": "workspace:*"
   }
 }

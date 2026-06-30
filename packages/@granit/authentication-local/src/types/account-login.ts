@@ -18,9 +18,9 @@ export interface AccountLoginRequest {
  */
 export interface AccountLoginResponse {
   readonly succeeded: boolean;
-  readonly requiresTwoFactor: boolean;
-  readonly isLockedOut: boolean;
-  readonly isNotAllowed: boolean;
+  readonly requiresTwoFactor?: boolean;
+  readonly isLockedOut?: boolean;
+  readonly isNotAllowed?: boolean;
   /**
    * The factors this user can complete the challenge with — populated only when
    * `requiresTwoFactor` is `true`, otherwise omitted. The UI must offer only the

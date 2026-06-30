@@ -6,9 +6,9 @@
 // create form and the scopes form derive validation from the OpenAPI-backed
 // apiKeysConstraints via createConstraintsResolver (@granit/react-validation).
 
-export { ApiKeyListPage } from './api-key-list-page';
-export { ApiKeyCreatePage } from './api-key-create-page';
-export { ApiKeyDetailPage } from './api-key-detail-page';
+export { ApiKeyListPage } from './components/api-key-list-page';
+export { ApiKeyCreatePage } from './components/api-key-create-page';
+export { ApiKeyDetailPage } from './components/api-key-detail-page';
 
 // Sub-components (composable building blocks)
 export { ApiKeyTable } from './components/api-key-table';

@@ -23,6 +23,8 @@ import { TwoFactorForm } from './two-factor-form';
 
 import type { AccountLoginResponse } from '@granit/authentication-local';
 
+const log = logger.child('DirectLogin');
+
 type LoginStep = 'credentials' | 'two-factor';
 
 /**
@@ -43,7 +45,7 @@ function DirectLoginDemo() {
       const response = await login.mutateAsync({ login: loginValue, password });
       setResult(response);
     } catch (err) {
-      logger.error('[DirectLogin] Login failed', err);
+      log.error('Login failed', err);
       setResult(null);
     }
   }

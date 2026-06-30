@@ -1,20 +1,22 @@
 import { BffProvider } from '@granit/react-bff';
 import { useEffect, useMemo, useState } from 'react';
 
-import type { KeycloakAuthContextType, KeycloakUserInfo } from '@granit/authentication-keycloak';
+import { logger } from './logger';
+
+import type { BaseAuthContextType, OidcUserInfo } from '@granit/authentication';
 import type { BffConfig } from '@granit/bff';
 import type { Context, ReactNode } from 'react';
 
 const noop = () => {};
 
-export interface MockAuthProviderProps {
+export interface MockAuthProviderProps<T extends BaseAuthContextType> {
   /**
    * The app's auth context (from `createAuthContext`). The provider fills it with
    * a fake authenticated value so `useAuth()` resolves without a real IdP.
    */
-  readonly context: Context<KeycloakAuthContextType | undefined>;
+  readonly context: Context<T | undefined>;
   /** The fake signed-in user. */
-  readonly user: KeycloakUserInfo;
+  readonly user?: OidcUserInfo;
   /**
    * When set, the tree is wrapped in a `BffProvider` so `useBffConfig` consumers
    * (e.g. session cards) work against MSW-backed BFF endpoints in mock mode.
@@ -33,14 +35,14 @@ export interface MockAuthProviderProps {
  * The app keeps owning its context instance and demo user; this package owns the
  * reusable mechanism.
  */
-export function MockAuthProvider({
+export function MockAuthProvider<T extends BaseAuthContextType>({
   context: AuthContext,
   user,
   bffConfig,
   loadingMs = 0,
   loadingFallback = null,
   children,
-}: MockAuthProviderProps) {
+}: MockAuthProviderProps<T>) {
   const [loading, setLoading] = useState(loadingMs > 0);
 
   useEffect(() => {
@@ -49,8 +51,19 @@ export function MockAuthProvider({
     return () => clearTimeout(timer);
   }, [loadingMs]);
 
-  const value = useMemo<KeycloakAuthContextType>(
-    () => ({ keycloak: null, authenticated: true, loading, user, login: noop, logout: noop }),
+  useEffect(() => {
+    logger.debug('mock auth provider mounted', { authenticated: true });
+  }, []);
+
+  const value = useMemo(
+    () =>
+      ({
+        authenticated: true,
+        loading,
+        user: user ?? null,
+        login: noop,
+        logout: noop,
+      }) as T,
     [loading, user]
   );
 

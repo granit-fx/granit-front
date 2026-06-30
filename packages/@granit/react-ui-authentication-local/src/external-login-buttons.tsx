@@ -9,6 +9,8 @@ import { logger } from './logger';
 
 import type { ExternalLoginProvider } from '@granit/account';
 
+const log = logger.child('ExternalLogin');
+
 type ExternalLoginVariant = 'sign-in' | 'link';
 
 interface ExternalLoginButtonsProps {
@@ -74,7 +76,7 @@ export function ExternalLoginButtons({
             provider: label,
           });
       toast.error(message);
-      logger.error('[ExternalLogin] Challenge failed', err);
+      log.error('Challenge failed', err);
     } finally {
       setPendingProvider(null);
     }

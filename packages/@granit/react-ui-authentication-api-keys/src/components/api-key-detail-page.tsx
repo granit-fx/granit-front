@@ -20,16 +20,16 @@ import { ArrowLeft } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { ApiKeyEnvironmentBadge } from './components/api-key-environment-badge';
-import { ApiKeyRevokeDialog } from './components/api-key-revoke-dialog';
-import { ApiKeyRotateDialog } from './components/api-key-rotate-dialog';
-import { ApiKeyScopesForm } from './components/api-key-scopes-form';
-import { ApiKeySecretDialog } from './components/api-key-secret-dialog';
-import { ApiKeyStatusBadge } from './components/api-key-status-badge';
-import { getApiKeyStatus } from './components/api-key-status-utils';
-import { ApiKeyTypeBadge } from './components/api-key-type-badge';
+import { ApiKeyEnvironmentBadge } from './api-key-environment-badge';
+import { ApiKeyRevokeDialog } from './api-key-revoke-dialog';
+import { ApiKeyRotateDialog } from './api-key-rotate-dialog';
+import { ApiKeyScopesForm } from './api-key-scopes-form';
+import { ApiKeySecretDialog } from './api-key-secret-dialog';
+import { ApiKeyStatusBadge } from './api-key-status-badge';
+import { getApiKeyStatus } from './api-key-status-utils';
+import { ApiKeyTypeBadge } from './api-key-type-badge';
 
-import type { ApiKeyUpdateScopesFormValues } from './validation';
+import type { ApiKeyUpdateScopesFormValues } from '../validation';
 
 export function ApiKeyDetailPage() {
   const { t } = useTranslation();

@@ -35,6 +35,8 @@ import { loginConstraints, type LoginFormValues } from './validation';
 
 import type { Resolver } from 'react-hook-form';
 
+const log = logger.child('HeadlessLogin');
+
 interface CredentialFormProps {
   readonly serverError: string | null;
   readonly setServerError: (err: string | null) => void;
@@ -97,7 +99,7 @@ export function CredentialForm({
     } catch (err) {
       // The hook's `onError` already surfaced the message to the user; we only
       // log here for diagnostics rather than swallowing the rejection silently.
-      logger.error('[HeadlessLogin] Login mutation rejected', err);
+      log.error('Login mutation rejected', err);
     }
   }
 
@@ -139,7 +141,7 @@ export function CredentialForm({
         return;
       }
       setServerError(t('Auth.HeadlessLogin.PasskeyError'));
-      logger.error('[HeadlessLogin] Passkey login failed', err);
+      log.error('Passkey login failed', err);
     }
   }
 

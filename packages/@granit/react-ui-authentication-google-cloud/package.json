@@ -15,7 +15,6 @@
   },
   "peerDependencies": {
     "@granit/authentication": "workspace:*",
-    "@granit/authentication-keycloak": "workspace:*",
     "@granit/authentication-google-cloud": "workspace:*",
     "@granit/react-authentication-google-cloud": "workspace:*",
     "@granit/react-localization": "workspace:*",
@@ -33,7 +32,6 @@
   },
   "devDependencies": {
     "@granit/authentication": "workspace:*",
-    "@granit/authentication-keycloak": "workspace:*",
     "@granit/authentication-google-cloud": "workspace:*",
     "@granit/react-authentication-google-cloud": "workspace:*",
     "@granit/react-localization": "workspace:*",

@@ -3,13 +3,12 @@ import { useTranslation } from '@granit/react-localization';
 import { Spinner } from '@granit/react-ui';
 import { useCallback, useMemo } from 'react';
 
-import type { EntraIdCoreConfig } from '@granit/authentication-entraid';
-import type { KeycloakAuthContextType } from '@granit/authentication-keycloak';
+import type { EntraIdAuthContextType, EntraIdCoreConfig } from '@granit/authentication-entraid';
 import type { Context, ReactNode } from 'react';
 
 export interface EntraIdAuthProviderProps {
   /** The app's auth context (from `createAuthContext`). */
-  readonly context: Context<KeycloakAuthContextType | undefined>;
+  readonly context: Context<EntraIdAuthContextType | undefined>;
   /** EntraId core config (from the host environment). */
   readonly config: EntraIdCoreConfig;
   readonly children: ReactNode;
@@ -28,6 +27,7 @@ export function EntraIdAuthProvider({
 }: EntraIdAuthProviderProps) {
   const { t, i18n } = useTranslation();
   const {
+    msalInstance,
     authenticated,
     loading,
     user,
@@ -38,9 +38,9 @@ export function EntraIdAuthProvider({
   const login = useCallback(() => hookLogin({ locale: i18n.language }), [hookLogin, i18n.language]);
   const logout = useCallback(() => hookLogout(), [hookLogout]);
 
-  const value = useMemo<KeycloakAuthContextType>(
-    () => ({ keycloak: null, authenticated, loading, user, login, logout }),
-    [authenticated, loading, user, login, logout]
+  const value = useMemo<EntraIdAuthContextType>(
+    () => ({ msalInstance, authenticated, loading, user, login, logout }),
+    [msalInstance, authenticated, loading, user, login, logout]
   );
 
   if (loading) {

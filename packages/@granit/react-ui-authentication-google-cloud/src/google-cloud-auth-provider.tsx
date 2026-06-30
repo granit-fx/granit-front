@@ -3,13 +3,15 @@ import { useTranslation } from '@granit/react-localization';
 import { Spinner } from '@granit/react-ui';
 import { useCallback, useMemo } from 'react';
 
-import type { GoogleCloudCoreConfig } from '@granit/authentication-google-cloud';
-import type { KeycloakAuthContextType } from '@granit/authentication-keycloak';
+import type {
+  GoogleCloudAuthContextType,
+  GoogleCloudCoreConfig,
+} from '@granit/authentication-google-cloud';
 import type { Context, ReactNode } from 'react';
 
 export interface GoogleCloudAuthProviderProps {
   /** The app's auth context (from `createAuthContext`). */
-  readonly context: Context<KeycloakAuthContextType | undefined>;
+  readonly context: Context<GoogleCloudAuthContextType | undefined>;
   /** GoogleCloud core config (from the host environment). */
   readonly config: GoogleCloudCoreConfig;
   readonly children: ReactNode;
@@ -28,6 +30,7 @@ export function GoogleCloudAuthProvider({
 }: GoogleCloudAuthProviderProps) {
   const { t, i18n } = useTranslation();
   const {
+    firebaseAuth,
     authenticated,
     loading,
     user,
@@ -38,9 +41,9 @@ export function GoogleCloudAuthProvider({
   const login = useCallback(() => hookLogin({ locale: i18n.language }), [hookLogin, i18n.language]);
   const logout = useCallback(() => hookLogout(), [hookLogout]);
 
-  const value = useMemo<KeycloakAuthContextType>(
-    () => ({ keycloak: null, authenticated, loading, user, login, logout }),
-    [authenticated, loading, user, login, logout]
+  const value = useMemo<GoogleCloudAuthContextType>(
+    () => ({ firebaseAuth, authenticated, loading, user, login, logout }),
+    [firebaseAuth, authenticated, loading, user, login, logout]
   );
 
   if (loading) {

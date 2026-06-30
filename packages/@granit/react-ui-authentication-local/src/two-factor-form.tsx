@@ -28,6 +28,8 @@ import { twoFactorConstraints, type TwoFactorFormValues } from './validation';
 import type { TwoFactorMethod } from '@granit/authentication-local';
 import type { Resolver } from 'react-hook-form';
 
+const log = logger.child('HeadlessLogin');
+
 interface TwoFactorFormProps {
   /**
    * The opt-in second factors offered by the server for this user (the login
@@ -113,7 +115,7 @@ export function TwoFactorForm({
       setCooldown(RESEND_COOLDOWN_SECONDS);
     } catch (err) {
       setServerError(t('Auth.HeadlessLogin.EmailCodeSendError'));
-      logger.error('[HeadlessLogin] Sending email 2FA code failed', err);
+      log.error('Sending email 2FA code failed', err);
     }
   }
 

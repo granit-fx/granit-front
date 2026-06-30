@@ -117,13 +117,21 @@ export function useGoogleCloudInit(config: GoogleCloudCoreConfig): GoogleCloudCo
   ]);
 
   const login = React.useCallback(
-    async (_options?: LoginOptions) => {
+    async (options?: LoginOptions) => {
       if (!authRef.current) return;
+      // PKCE handled by the SDK (Firebase Auth performs the OAuth flow internally).
       const provider = new GoogleAuthProvider();
       if (config.scopes) {
         for (const scope of config.scopes) {
           provider.addScope(scope);
         }
+      }
+      // Forward the active UI locale / login hint to the IdP (omit undefined keys).
+      const customParameters: Record<string, string> = {};
+      if (options?.locale) customParameters.hl = options.locale;
+      if (options?.loginHint) customParameters.login_hint = options.loginHint;
+      if (Object.keys(customParameters).length > 0) {
+        provider.setCustomParameters(customParameters);
       }
       await signInWithRedirect(authRef.current, provider);
     },

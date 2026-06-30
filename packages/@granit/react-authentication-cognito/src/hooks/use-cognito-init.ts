@@ -191,6 +191,8 @@ export function useCognitoInit(config: CognitoCoreConfig): CognitoCoreResult {
           challenge,
           state,
           nonce,
+          locale: options?.locale,
+          loginHint: options?.loginHint,
         });
       })();
     },

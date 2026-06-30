@@ -86,13 +86,21 @@ export function useEntraIdInit(config: EntraIdCoreConfig): EntraIdCoreResult {
           msalInstance.setActiveAccount(activeAccount);
           setUser(extractUser(activeAccount));
           setAuthenticated(true);
+          logger.info('MSAL account activated; token-getter wired', {
+            hasAccount: true,
+            fromRedirect: Boolean(response?.account),
+          });
 
           setTokenGetter(async (): Promise<string | undefined> => {
             try {
               const result = await msalInstance.acquireTokenSilent({ scopes });
+              logger.debug('MSAL silent token acquired');
               return result.accessToken;
             } catch (err) {
               if (err instanceof InteractionRequiredAuthError) {
+                logger.warn('MSAL silent token acquisition requires interaction', {
+                  reason: 'interaction_required',
+                });
                 config.onAcquireTokenFailure?.();
               }
               return undefined;
@@ -115,11 +123,14 @@ export function useEntraIdInit(config: EntraIdCoreConfig): EntraIdCoreResult {
 
   const login = React.useCallback(
     async (options?: LoginOptions) => {
+      // PKCE handled by the SDK (MSAL performs the Authorization Code + PKCE flow internally).
       await msalRef.current?.loginRedirect({
         scopes,
         redirectUri: options?.redirectUri,
         loginHint: options?.loginHint,
         prompt: options?.prompt,
+        // Forward the active UI locale to the IdP login page (only when provided).
+        ...(options?.locale ? { extraQueryParameters: { ui_locales: options.locale } } : undefined),
       });
     },
     [scopes]

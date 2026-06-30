@@ -77,7 +77,7 @@ export function ApiKeyTable({ items, onRevoke, onRotate }: Readonly<ApiKeyTableP
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" aria-label={t('ApiKeys.RowActions')}>
                         <MoreHorizontal className="size-4" />
                       </Button>
                     </DropdownMenuTrigger>

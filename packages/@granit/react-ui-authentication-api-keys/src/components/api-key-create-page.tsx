@@ -25,9 +25,10 @@ import { useCallback, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { ApiKeySecretDialog } from './components/api-key-secret-dialog';
-import { API_KEY_ENVIRONMENTS, API_KEY_TYPES, CACHE_BEHAVIORS } from './constants';
-import { type ApiKeyCreateFormValues } from './validation';
+import { API_KEY_ENVIRONMENTS, API_KEY_TYPES, CACHE_BEHAVIORS } from '../constants';
+import { type ApiKeyCreateFormValues } from '../validation';
+
+import { ApiKeySecretDialog } from './api-key-secret-dialog';
 
 import type { Resolver } from 'react-hook-form';
 

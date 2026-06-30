@@ -21,6 +21,8 @@ import { changeEmailConstraints, type ChangeEmailFormValues } from './validation
 
 import type { Resolver } from 'react-hook-form';
 
+const log = logger.child('ChangeEmail');
+
 /**
  * Change-email page (authenticated). Provider-agnostic: the host supplies the
  * `AccountProvider` (from `@granit/react-account`) which carries the API client.
@@ -54,7 +56,7 @@ export function ChangeEmailPage() {
       setSuccess(true);
     } catch (err: unknown) {
       // API errors are surfaced by the host's global MutationCache.onError toast.
-      logger.error('[ChangeEmail] Request failed', err);
+      log.error('Request failed', err);
     }
   }
 

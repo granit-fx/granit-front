@@ -46,6 +46,7 @@ export const apiKeysTranslationsEn = {
   'ApiKeys.RevokedBanner': 'This key was revoked {{date}}',
   'ApiKeys.RevokedNoActions': 'This key is revoked. No actions available.',
   'ApiKeys.RotateSuccess': 'Key rotation completed successfully',
+  'ApiKeys.RowActions': 'Row actions',
   'ApiKeys.SecretConfirm': 'I have copied the secret',
   'ApiKeys.SecretCopied': 'Secret copied to clipboard',
   'ApiKeys.SecretWarning': 'Store this secret securely. It will never be displayed again.',

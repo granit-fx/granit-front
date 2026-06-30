@@ -61,7 +61,9 @@ export async function getApiKey(
   basePath: string,
   id: string
 ): Promise<ApiKeyResponse> {
-  const response = await client.get<ApiKeyResponse>(`${basePath}/api-keys/${id}`);
+  const response = await client.get<ApiKeyResponse>(
+    `${basePath}/api-keys/${encodeURIComponent(id)}`
+  );
   return response.data;
 }
 
@@ -89,7 +91,7 @@ export async function revokeApiKey(
   basePath: string,
   id: string
 ): Promise<void> {
-  await client.post(`${basePath}/api-keys/${id}/revoke`);
+  await client.post(`${basePath}/api-keys/${encodeURIComponent(id)}/revoke`);
 }
 
 /**
@@ -102,7 +104,9 @@ export async function rotateApiKey(
   basePath: string,
   id: string
 ): Promise<ApiKeyRotateResponse> {
-  const response = await client.post<ApiKeyRotateResponse>(`${basePath}/api-keys/${id}/rotate`);
+  const response = await client.post<ApiKeyRotateResponse>(
+    `${basePath}/api-keys/${encodeURIComponent(id)}/rotate`
+  );
   return response.data;
 }
 
@@ -117,5 +121,5 @@ export async function updateApiKeyScopes(
   id: string,
   request: ApiKeyUpdateScopesRequest
 ): Promise<void> {
-  await client.put(`${basePath}/api-keys/${id}/scopes`, request);
+  await client.put(`${basePath}/api-keys/${encodeURIComponent(id)}/scopes`, request);
 }

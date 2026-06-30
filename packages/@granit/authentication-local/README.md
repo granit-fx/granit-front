@@ -71,10 +71,7 @@ globalThis.location.assign(returnUrl ?? '/connect/authorize');
 Passkey login swaps step 1 for the WebAuthn assertion ceremony:
 
 ```ts
-import {
-  beginPasskeyAssertion,
-  completePasskeyAssertion,
-} from '@granit/authentication-local';
+import { beginPasskeyAssertion, completePasskeyAssertion } from '@granit/authentication-local';
 
 const optionsJson = await beginPasskeyAssertion(apiClient, '/account');
 const credential = await navigator.credentials.get(JSON.parse(optionsJson));
@@ -86,20 +83,19 @@ const result = await completePasskeyAssertion(apiClient, '/account', {
 
 ## Public API
 
-| Symbol                         | Kind  | Purpose                                                           |
-| ------------------------------ | ----- | ---------------------------------------------------------------- |
-| `AccountLoginRequest`          | type  | `POST {basePath}/login` body (`login`, `password`, `rememberMe?`) |
-| `AccountLoginResponse`         | type  | Login outcome flags + `twoFactorMethods?`                        |
-| `AccountTwoFactorLoginRequest` | type  | `POST {basePath}/login/two-factor` body (`code`, `method?`)      |
-| `AccountPasskeyLoginRequest`   | type  | `POST {basePath}/passkeys/assertion/complete` body              |
-| `TwoFactorMethod`              | type  | `'Authenticator' \| 'RecoveryCode' \| 'Email'`                  |
-| `loginAccount`                 | fn    | `POST {basePath}/login` — sets the Identity session cookie       |
-| `verifyTwoFactorLogin`         | fn    | `POST {basePath}/login/two-factor` — completes the 2FA challenge |
-| `sendTwoFactorLoginEmailCode`  | fn    | `POST {basePath}/login/two-factor/send-email` — email OTP        |
-| `beginPasskeyAssertion`        | fn    | `POST {basePath}/passkeys/assertion/begin` — WebAuthn options    |
-| `completePasskeyAssertion`     | fn    | `POST {basePath}/passkeys/assertion/complete` — WebAuthn finish  |
-| `extractReturnUrl`             | fn    | Parse a same-origin `returnUrl` from a URL search string         |
-| `IdentityLocalPermissions`     | const | Permission keys mirroring the .NET catalog                       |
+| Symbol                         | Kind | Purpose                                                           |
+| ------------------------------ | ---- | ----------------------------------------------------------------- |
+| `AccountLoginRequest`          | type | `POST {basePath}/login` body (`login`, `password`, `rememberMe?`) |
+| `AccountLoginResponse`         | type | Login outcome flags + `twoFactorMethods?`                         |
+| `AccountTwoFactorLoginRequest` | type | `POST {basePath}/login/two-factor` body (`code`, `method?`)       |
+| `AccountPasskeyLoginRequest`   | type | `POST {basePath}/passkeys/assertion/complete` body                |
+| `TwoFactorMethod`              | type | `'Authenticator' \| 'RecoveryCode' \| 'Email'`                    |
+| `loginAccount`                 | fn   | `POST {basePath}/login` — sets the Identity session cookie        |
+| `verifyTwoFactorLogin`         | fn   | `POST {basePath}/login/two-factor` — completes the 2FA challenge  |
+| `sendTwoFactorLoginEmailCode`  | fn   | `POST {basePath}/login/two-factor/send-email` — email OTP         |
+| `beginPasskeyAssertion`        | fn   | `POST {basePath}/passkeys/assertion/begin` — WebAuthn options     |
+| `completePasskeyAssertion`     | fn   | `POST {basePath}/passkeys/assertion/complete` — WebAuthn finish   |
+| `extractReturnUrl`             | fn   | Parse a same-origin `returnUrl` from a URL search string          |
 
 ## Out of scope / caveats
 
@@ -118,9 +114,6 @@ const result = await completePasskeyAssertion(apiClient, '/account', {
 - **`sendTwoFactorLoginEmailCode` is a silent no-op** (still `204`) when the
   user has not enrolled the email factor; it returns `400` when there is no
   active two-factor session cookie.
-- **`IdentityLocalPermissions`** (impersonation, local-role CRUD) gate
-  **admin** endpoints handled elsewhere — they are not consumed by the login
-  calls in this package, only re-exported as the canonical key source.
 - **No React, no hooks, no UI.** Query hooks belong in
   [`@granit/react-authentication-local`](../react-authentication-local); the
   login/registration screens belong in

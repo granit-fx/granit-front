@@ -46,6 +46,7 @@ export const apiKeysTranslationsFr: Record<keyof ApiKeysTranslations, string> = 
   'ApiKeys.RevokedBanner': 'Cette clé a été révoquée {{date}}',
   'ApiKeys.RevokedNoActions': 'Cette clé est révoquée. Aucune action disponible.',
   'ApiKeys.RotateSuccess': 'Rotation de la clé effectuée avec succès',
+  'ApiKeys.RowActions': 'Actions de la ligne',
   'ApiKeys.SecretConfirm': "J'ai copié le secret",
   'ApiKeys.SecretCopied': 'Secret copié dans le presse-papier',
   'ApiKeys.SecretWarning': 'Conservez ce secret en lieu sûr. Il ne sera plus jamais affiché.',

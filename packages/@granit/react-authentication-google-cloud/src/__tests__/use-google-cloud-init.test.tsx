@@ -12,6 +12,7 @@ const {
   mockSignInWithRedirect,
   mockSignOut,
   mockAddScope,
+  mockSetCustomParameters,
   mockSetTokenGetter,
   mockSetOnUnauthorized,
   GoogleAuthProviderCtor,
@@ -20,6 +21,7 @@ const {
   INDEXEDDB_PERSISTENCE,
 } = vi.hoisted(() => {
   const mockAddScope = vi.fn();
+  const mockSetCustomParameters = vi.fn();
   return {
     mockInitializeApp: vi.fn(),
     mockInitializeAuth: vi.fn(),
@@ -27,10 +29,11 @@ const {
     mockSignInWithRedirect: vi.fn(),
     mockSignOut: vi.fn(),
     mockAddScope,
+    mockSetCustomParameters,
     mockSetTokenGetter: vi.fn(),
     mockSetOnUnauthorized: vi.fn(),
     GoogleAuthProviderCtor: vi.fn(function GoogleAuthProvider() {
-      return { addScope: mockAddScope };
+      return { addScope: mockAddScope, setCustomParameters: mockSetCustomParameters };
     }),
     IN_MEMORY_PERSISTENCE: { __persistence: 'NONE' },
     SESSION_PERSISTENCE: { __persistence: 'SESSION' },
@@ -95,6 +98,7 @@ describe('useGoogleCloudInit', () => {
     mockSignOut.mockReset();
     mockSignOut.mockResolvedValue(undefined);
     mockAddScope.mockReset();
+    mockSetCustomParameters.mockReset();
     mockSetTokenGetter.mockReset();
     mockSetOnUnauthorized.mockReset();
     GoogleAuthProviderCtor.mockClear();
@@ -251,6 +255,27 @@ describe('useGoogleCloudInit', () => {
     await result.current.login();
     expect(mockAddScope).not.toHaveBeenCalled();
     expect(mockSignInWithRedirect).toHaveBeenCalled();
+  });
+
+  it('login() forwards locale and loginHint as Google custom parameters', async () => {
+    const { result } = renderHook(() => useGoogleCloudInit(baseConfig));
+    await waitFor(() => expect(authStateCallback).not.toBeNull());
+
+    await result.current.login({ locale: 'fr', loginHint: 'alice@example.com' });
+
+    expect(mockSetCustomParameters).toHaveBeenCalledWith({
+      hl: 'fr',
+      login_hint: 'alice@example.com',
+    });
+    expect(mockSignInWithRedirect).toHaveBeenCalled();
+  });
+
+  it('login() omits custom parameters when no locale or loginHint is provided', async () => {
+    const { result } = renderHook(() => useGoogleCloudInit(baseConfig));
+    await waitFor(() => expect(authStateCallback).not.toBeNull());
+
+    await result.current.login();
+    expect(mockSetCustomParameters).not.toHaveBeenCalled();
   });
 
   it('logout() signs out and redirects when redirectUri is supplied', async () => {

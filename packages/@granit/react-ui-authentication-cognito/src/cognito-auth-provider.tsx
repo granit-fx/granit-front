@@ -3,13 +3,12 @@ import { useTranslation } from '@granit/react-localization';
 import { Spinner } from '@granit/react-ui';
 import { useCallback, useMemo } from 'react';
 
-import type { CognitoCoreConfig } from '@granit/authentication-cognito';
-import type { KeycloakAuthContextType } from '@granit/authentication-keycloak';
+import type { CognitoAuthContextType, CognitoCoreConfig } from '@granit/authentication-cognito';
 import type { Context, ReactNode } from 'react';
 
 export interface CognitoAuthProviderProps {
   /** The app's auth context (from `createAuthContext`). */
-  readonly context: Context<KeycloakAuthContextType | undefined>;
+  readonly context: Context<CognitoAuthContextType | undefined>;
   /** Cognito core config (from the host environment). */
   readonly config: CognitoCoreConfig;
   readonly children: ReactNode;
@@ -28,6 +27,7 @@ export function CognitoAuthProvider({
 }: CognitoAuthProviderProps) {
   const { t, i18n } = useTranslation();
   const {
+    userPool,
     authenticated,
     loading,
     user,
@@ -38,9 +38,9 @@ export function CognitoAuthProvider({
   const login = useCallback(() => hookLogin({ locale: i18n.language }), [hookLogin, i18n.language]);
   const logout = useCallback(() => hookLogout(), [hookLogout]);
 
-  const value = useMemo<KeycloakAuthContextType>(
-    () => ({ keycloak: null, authenticated, loading, user, login, logout }),
-    [authenticated, loading, user, login, logout]
+  const value = useMemo<CognitoAuthContextType>(
+    () => ({ userPool, authenticated, loading, user, login, logout }),
+    [userPool, authenticated, loading, user, login, logout]
   );
 
   if (loading) {

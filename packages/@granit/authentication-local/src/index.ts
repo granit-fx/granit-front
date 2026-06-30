@@ -24,4 +24,3 @@ export {
 
 // Utilities
 export { extractReturnUrl } from './utils/extract-return-url';
-export { IdentityLocalPermissions } from './permissions';

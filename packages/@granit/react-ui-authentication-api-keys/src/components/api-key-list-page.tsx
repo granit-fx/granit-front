@@ -23,11 +23,12 @@ import { KeyRound, Plus, Search } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ApiKeyRevokeDialog } from './components/api-key-revoke-dialog';
-import { ApiKeyRotateDialog } from './components/api-key-rotate-dialog';
-import { ApiKeySecretDialog } from './components/api-key-secret-dialog';
-import { ApiKeyTable } from './components/api-key-table';
-import { API_KEY_ENVIRONMENTS, API_KEY_TYPES, DEFAULT_PAGE_SIZE } from './constants';
+import { API_KEY_ENVIRONMENTS, API_KEY_TYPES, DEFAULT_PAGE_SIZE } from '../constants';
+
+import { ApiKeyRevokeDialog } from './api-key-revoke-dialog';
+import { ApiKeyRotateDialog } from './api-key-rotate-dialog';
+import { ApiKeySecretDialog } from './api-key-secret-dialog';
+import { ApiKeyTable } from './api-key-table';
 
 import type { ApiKeyListItemResponse, ApiKeyRotateResponse } from '@granit/authentication-api-keys';
 import type { FilterEntry } from '@granit/query-engine';

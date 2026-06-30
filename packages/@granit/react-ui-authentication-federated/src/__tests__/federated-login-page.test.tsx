@@ -39,6 +39,14 @@ describe('FederatedLoginPage', () => {
     expect(screen.getByText(/authentication server encountered an error/i)).toBeInTheDocument();
   });
 
+  it('falls back to the generic access-denied message for an unknown error code', () => {
+    renderPage(
+      <FederatedLoginPage login={vi.fn()} loading={false} authenticated={false} />,
+      '/login?error=__not_a_real_code__'
+    );
+    expect(screen.getByText(/your login request was denied/i)).toBeInTheDocument();
+  });
+
   it('redirects away when already authenticated (no sign-in button)', () => {
     renderPage(<FederatedLoginPage login={vi.fn()} loading={false} authenticated />);
     expect(screen.queryByRole('button', { name: 'Sign in' })).not.toBeInTheDocument();

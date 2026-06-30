@@ -3,6 +3,8 @@ import { isAxiosError } from '@granit/react-authentication-local';
 import { logger } from './logger';
 import { safeReturnUrl } from './safe-return-url';
 
+const log = logger.child('HeadlessLogin');
+
 export function fromBase64Url(base64url: string): Uint8Array<ArrayBuffer> {
   const base64 = base64url.replaceAll('-', '+').replaceAll('_', '/');
   const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
@@ -60,5 +62,5 @@ export function handleLoginError(
   } else {
     setError(t('Auth.HeadlessLogin.UnexpectedError'));
   }
-  logger.error('[HeadlessLogin] Login failed', err);
+  log.error('Login failed', err);
 }

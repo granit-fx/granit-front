@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { logger } from './logger';
 import { TokenConfirmationResult, type ConfirmationStatus } from './token-confirmation-result';
 
+const log = logger.child('ConfirmEmail');
+
 /**
  * Email-confirmation page. Provider-agnostic: the host supplies the
  * `AccountProvider` (from `@granit/react-account`) which carries the API client.
@@ -36,7 +38,7 @@ export function ConfirmEmailPage() {
         onSuccess: () => setStatus('success'),
         onError: (err) => {
           setStatus('error');
-          logger.error('[ConfirmEmail] Confirmation failed', err);
+          log.error('Confirmation failed', err);
         },
       }
     );
@@ -49,7 +51,7 @@ export function ConfirmEmailPage() {
       toast.success(t('Auth.ConfirmEmail.ResendSuccess', 'Confirmation email sent.'));
     } catch (err) {
       // API errors are surfaced by the host's global MutationCache.onError toast.
-      logger.error('[ConfirmEmail] Resend failed', err);
+      log.error('Resend failed', err);
     }
   }
 
