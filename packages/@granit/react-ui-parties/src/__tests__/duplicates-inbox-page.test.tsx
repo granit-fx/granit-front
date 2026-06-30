@@ -9,7 +9,7 @@ import type { PartyDuplicateCandidateResponse } from '@granit/parties';
 
 const candidate: PartyDuplicateCandidateResponse = sampleDuplicates[0]!;
 
-vi.mock('@granit/react-parties', () => ({
+vi.mock('../components/duplicates-inbox', () => ({
   DuplicatesInbox: ({ onMerge }: { onMerge?: (row: PartyDuplicateCandidateResponse) => void }) => (
     <div data-slot="duplicates-inbox-stub">
       <button type="button" onClick={() => onMerge?.(candidate)}>
@@ -17,8 +17,10 @@ vi.mock('@granit/react-parties', () => ({
       </button>
     </div>
   ),
+}));
+
+vi.mock('../components/merge-wizard', () => ({
   MergeWizard: () => <div data-slot="merge-wizard-stub" />,
-  usePartiesQuery: () => ({ data: [], isLoading: false }),
 }));
 
 describe('DuplicatesInboxPage', () => {

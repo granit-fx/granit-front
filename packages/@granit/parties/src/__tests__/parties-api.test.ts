@@ -11,6 +11,7 @@ import {
   addPartyRole,
   archiveParty,
   clearPartyTaxStatus,
+  confirmPartyAddress,
   createParty,
   downloadPartyVCard,
   getPartyById,
@@ -29,6 +30,7 @@ import {
 } from '../api/parties-api';
 
 import type {
+  PartyAddressConfirmRequest,
   PartyAddressId,
   PartyAddressRequest,
   PartyCreateRequest,
@@ -112,14 +114,14 @@ describe('parties-api', () => {
       expect(result).toEqual([sampleListItem]);
     });
 
-    it('passes role as query param when provided', async () => {
+    it('translates a role filter to the query-engine filter contract', async () => {
       const client = createMockClient();
       vi.mocked(client.get).mockResolvedValue({ data: { items: [] } });
 
       await listParties(client, basePath, { role: 'Customer' });
 
       expect(client.get).toHaveBeenCalledWith(basePath, {
-        params: { pageSize: 100, role: 'Customer' },
+        params: { pageSize: 100, 'filter[roles.Eq]': 'Customer' },
       });
     });
   });
@@ -273,6 +275,36 @@ describe('parties-api', () => {
       await removePartyAddress(client, basePath, partyId, addressId);
 
       expect(client.delete).toHaveBeenCalledWith(`${basePath}/${partyId}/addresses/${addressId}`);
+    });
+
+    it('POSTs a confirmation with evidence and returns the refreshed party', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleParty });
+
+      const addressId: PartyAddressId = toEntityId<'PartyAddress'>('addr-1');
+      const request: PartyAddressConfirmRequest = { evidence: 'Returned mail check' };
+
+      const result = await confirmPartyAddress(client, basePath, partyId, addressId, request);
+
+      expect(client.post).toHaveBeenCalledWith(
+        `${basePath}/${partyId}/addresses/${addressId}/confirm`,
+        request
+      );
+      expect(result).toEqual(sampleParty);
+    });
+
+    it('POSTs an empty body when no evidence is supplied', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValue({ data: sampleParty });
+
+      const addressId: PartyAddressId = toEntityId<'PartyAddress'>('addr-1');
+
+      await confirmPartyAddress(client, basePath, partyId, addressId);
+
+      expect(client.post).toHaveBeenCalledWith(
+        `${basePath}/${partyId}/addresses/${addressId}/confirm`,
+        {}
+      );
     });
   });
 

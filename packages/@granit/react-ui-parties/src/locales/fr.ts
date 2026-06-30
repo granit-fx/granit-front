@@ -12,6 +12,8 @@ export const partiesAdminTranslationsFr = {
   'Parties.Addresses.AddError': "Échec de l'ajout de l'adresse",
   'Parties.Addresses.AddSuccess': 'Adresse ajoutée',
   'Parties.Addresses.AddTitle': 'Ajouter une adresse',
+  'Parties.Addresses.Confirm': 'Confirmer la délivrabilité',
+  'Parties.Addresses.ConfirmSuccess': 'Adresse confirmée',
   'Parties.Addresses.Empty': 'Aucune adresse enregistrée.',
   'Parties.Addresses.RemoveError': "Échec de la suppression de l'adresse",
   'Parties.Addresses.RemoveSuccess': 'Adresse supprimée',

@@ -13,7 +13,7 @@ vi.mock('react-router-dom', async () => {
   return { ...actual, useNavigate: () => mockNavigate };
 });
 
-vi.mock('@granit/react-parties', () => ({
+vi.mock('../components/merge-wizard', () => ({
   MergeWizard: ({
     survivorId,
     loserId,

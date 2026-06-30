@@ -1,3 +1,4 @@
+import { PartiesProvider, partiesTranslationsEn } from '@granit/react-parties';
 import { createTestQueryClient } from '@granit/react-testing';
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { toEntityId, toISODateString } from '@granit/types';
@@ -5,18 +6,17 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import i18next from 'i18next';
 import { initReactI18next, I18nextProvider } from 'react-i18next';
+import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { PartyDuplicatesBadge } from '../components/party-duplicates-badge';
-import { partiesTranslationsEn } from '../locales/en';
-import { PartiesProvider } from '../providers/parties-provider';
 
-import type { PartiesConfig } from '../providers/parties-provider';
 import type {
   PartyDuplicateCandidateId,
   PartyDuplicateCandidateResponse,
   PartyId,
 } from '@granit/parties';
+import type { PartiesConfig } from '@granit/react-parties';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -54,28 +54,21 @@ beforeAll(async () => {
 
 afterEach(() => vi.restoreAllMocks());
 
-function renderBadge(
-  client: AxiosInstance,
-  props?: {
-    href?: string;
-    renderLink?: (linkProps: { href: string; children: ReactNode }) => ReactNode;
-  }
-) {
+function renderBadge(client: AxiosInstance, props?: { href?: string }) {
   const queryClient = createTestQueryClient();
   const config: PartiesConfig = { client };
   function Wrapper({ children }: { children: ReactNode }) {
     return (
       <I18nextProvider i18n={i18next}>
         <QueryClientProvider client={queryClient}>
-          <PartiesProvider config={config}>{children}</PartiesProvider>
+          <MemoryRouter>
+            <PartiesProvider config={config}>{children}</PartiesProvider>
+          </MemoryRouter>
         </QueryClientProvider>
       </I18nextProvider>
     );
   }
-  return render(
-    <PartyDuplicatesBadge partyId={partyA} href={props?.href} renderLink={props?.renderLink} />,
-    { wrapper: Wrapper }
-  );
+  return render(<PartyDuplicatesBadge partyId={partyA} href={props?.href} />, { wrapper: Wrapper });
 }
 
 describe('PartyDuplicatesBadge', () => {
@@ -123,7 +116,6 @@ describe('PartyDuplicatesBadge', () => {
 
     const { container } = renderBadge(client);
 
-    // Wait for the query to settle then assert no pill
     await waitFor(() => expect(client.get).toHaveBeenCalled());
     expect(container.querySelector('[data-slot="party-duplicates-badge"]')).toBeNull();
   });
@@ -139,47 +131,19 @@ describe('PartyDuplicatesBadge', () => {
     expect(container.querySelector('[data-slot="party-duplicates-badge"]')).toBeNull();
   });
 
-  it('uses renderLink when provided alongside href', async () => {
+  it('wraps the pill in a router link when href is supplied', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
       axiosResponse([candidateBuilder({ tier: 'Deterministic' })])
     );
 
-    const renderLink = vi.fn(({ href, children }: { href: string; children: ReactNode }) => (
-      <button data-slot="custom-link" data-href={href} type="button">
-        {children}
-      </button>
-    ));
-
-    const { container } = renderBadge(client, { href: '/inbox', renderLink });
-
-    const wrapper = await waitFor(() => {
-      const el = container.querySelector('[data-slot="custom-link"]');
+    const { container } = renderBadge(client, { href: '/parties/duplicates' });
+    const anchor = await waitFor(() => {
+      const el = container.querySelector('a');
       expect(el).not.toBeNull();
-      return el as HTMLElement;
+      return el as HTMLAnchorElement;
     });
-
-    expect(wrapper.getAttribute('data-href')).toBe('/inbox');
-    expect(renderLink).toHaveBeenCalled();
-    // The inner pill is still rendered as a span inside the consumer's wrapper.
-    expect(wrapper.querySelector('[data-slot="party-duplicates-badge"]')?.tagName).toBe('SPAN');
-  });
-
-  it('renders as an anchor when href is supplied', async () => {
-    const client = createMockClient();
-    vi.mocked(client.get).mockResolvedValue(
-      axiosResponse([candidateBuilder({ tier: 'Deterministic' })])
-    );
-
-    const { container } = renderBadge(client, { href: '/admin/parties/duplicates?filter=…' });
-    const badge = await waitFor(() => {
-      const el = container.querySelector('[data-slot="party-duplicates-badge"]');
-      expect(el).not.toBeNull();
-      return el as HTMLElement;
-    });
-    expect(badge.tagName).toBe('A');
-    expect((badge as HTMLAnchorElement).getAttribute('href')).toBe(
-      '/admin/parties/duplicates?filter=…'
-    );
+    expect(anchor.getAttribute('href')).toBe('/parties/duplicates');
+    expect(anchor.querySelector('[data-slot="party-duplicates-badge"]')).not.toBeNull();
   });
 });

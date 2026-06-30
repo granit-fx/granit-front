@@ -7,9 +7,11 @@ import { renderWithProviders } from './test-utils';
 
 import type { PartyAddressResponse } from '@granit/parties';
 
-const { mockRemove, mockAdd } = vi.hoisted(() => ({
+const { mockRemove, mockAdd, mockConfirm, mockHasPermission } = vi.hoisted(() => ({
   mockRemove: { mutateAsync: vi.fn(), isPending: false },
   mockAdd: { mutateAsync: vi.fn(), isPending: false },
+  mockConfirm: { mutateAsync: vi.fn(), isPending: false },
+  mockHasPermission: vi.fn(() => true),
 }));
 
 vi.mock('@granit/react-parties', async (importOriginal) => {
@@ -18,8 +20,13 @@ vi.mock('@granit/react-parties', async (importOriginal) => {
     ...actual,
     useRemovePartyAddressMutation: () => mockRemove,
     useAddPartyAddressMutation: () => mockAdd,
+    useConfirmPartyAddressMutation: () => mockConfirm,
   };
 });
+
+vi.mock('@granit/react-authorization', () => ({
+  usePermissions: () => ({ hasPermission: mockHasPermission }),
+}));
 
 const partyId = sampleParty.id;
 const addresses = sampleParty.addresses as readonly PartyAddressResponse[];
@@ -28,6 +35,8 @@ describe('AddressesTab', () => {
   beforeEach(() => {
     mockRemove.mutateAsync.mockReset().mockResolvedValue(undefined);
     mockAdd.mutateAsync.mockReset().mockResolvedValue(undefined);
+    mockConfirm.mutateAsync.mockReset().mockResolvedValue(sampleParty);
+    mockHasPermission.mockReset().mockReturnValue(true);
   });
 
   it('renders the title and the address cards', () => {
@@ -60,6 +69,25 @@ describe('AddressesTab', () => {
     await waitFor(() => {
       expect(mockRemove.mutateAsync).toHaveBeenCalled();
     });
+  });
+
+  it('confirms an address deliverability when the user has the Confirm permission', async () => {
+    const { user } = renderWithProviders(<AddressesTab partyId={partyId} addresses={addresses} />);
+    await user.click(screen.getAllByRole('button', { name: 'Confirm deliverability' })[0]!);
+    await waitFor(() => {
+      expect(mockConfirm.mutateAsync).toHaveBeenCalledWith({
+        id: partyId,
+        addressId: addresses[0]!.id,
+      });
+    });
+  });
+
+  it('hides the confirm action without the Confirm permission', () => {
+    mockHasPermission.mockReturnValue(false);
+    renderWithProviders(<AddressesTab partyId={partyId} addresses={addresses} />);
+    expect(
+      screen.queryByRole('button', { name: 'Confirm deliverability' })
+    ).not.toBeInTheDocument();
   });
 
   it('opens the add-address dialog', async () => {

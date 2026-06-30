@@ -1,6 +1,6 @@
 {
   "name": "@granit/react-parties",
-  "description": "React bindings for @granit/parties — PartiesProvider, hooks, MergeWizard and TanStack Query mutations",
+  "description": "React bindings for @granit/parties — PartiesProvider, hooks and TanStack Query mutations (headless; styled components live in @granit/react-ui-parties)",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -21,7 +21,6 @@
     "@granit/parties": "workspace:*",
     "@granit/query-engine": "workspace:*",
     "@granit/react-api-client": "workspace:*",
-    "@granit/react-entity-merge": "workspace:*",
     "@granit/react-query-engine": "workspace:*",
     "@granit/types": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
@@ -58,7 +57,6 @@
     "@granit/entity-merge": "workspace:*",
     "@granit/logger": "workspace:*",
     "@granit/react-api-client": "workspace:*",
-    "@granit/react-entity-merge": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/types": "workspace:*"

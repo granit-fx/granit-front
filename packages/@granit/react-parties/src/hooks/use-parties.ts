@@ -7,7 +7,9 @@ import {
   addPartyRole,
   archiveParty,
   clearPartyTaxStatus,
+  confirmPartyAddress,
   createParty,
+  downloadPartyVCard,
   getPartyById,
   listParties,
   removePartyAddress,
@@ -27,6 +29,7 @@ import { buildPartiesQueryKey, usePartiesConfig } from '../providers/parties-pro
 
 import type {
   CreatePartyOptions,
+  PartyAddressConfirmRequest,
   PartyAddressId,
   PartyAddressRequest,
   PartyCreateRequest,
@@ -230,7 +233,11 @@ export function useAddPartyAddressMutation(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ id, request }) => addPartyAddress(config.client, basePath, id, request),
-    onSuccess: (_data, { id }) => invalidateAll(id),
+    onSuccess: (_data, { id }) => {
+      logger.debug('Party address added', { id });
+      invalidateAll(id);
+    },
+    onError: (error, { id }) => logger.error('Failed to add party address', { id, error }),
   });
 }
 
@@ -246,7 +253,40 @@ export function useRemovePartyAddressMutation(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ id, addressId }) => removePartyAddress(config.client, basePath, id, addressId),
-    onSuccess: (_data, { id }) => invalidateAll(id),
+    onSuccess: (_data, { id }) => {
+      logger.debug('Party address removed', { id });
+      invalidateAll(id);
+    },
+    onError: (error, { id }) => logger.error('Failed to remove party address', { id, error }),
+  });
+}
+
+/**
+ * Record a manual deliverability confirmation for a party address (tier-2
+ * evidence). Requires the dedicated Confirm permission server-side.
+ */
+export function useConfirmPartyAddressMutation(): UseMutationResult<
+  PartyResponse,
+  Error,
+  {
+    readonly id: PartyId;
+    readonly addressId: PartyAddressId;
+    readonly request?: PartyAddressConfirmRequest;
+  }
+> {
+  const config = usePartiesConfig();
+  const basePath = config.basePath!;
+  const { invalidateAll } = useInvalidator();
+
+  return useMutation({
+    mutationFn: ({ id, addressId, request }) =>
+      confirmPartyAddress(config.client, basePath, id, addressId, request),
+    onSuccess: (_data, { id, addressId }) => {
+      logger.debug('Party address confirmed', { id, addressId });
+      invalidateAll(id);
+    },
+    onError: (error, { id, addressId }) =>
+      logger.error('Failed to confirm party address', { id, addressId, error }),
   });
 }
 
@@ -264,7 +304,11 @@ export function useAddPartyEmailMutation(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ id, request }) => addPartyEmail(config.client, basePath, id, request),
-    onSuccess: (_data, { id }) => invalidateAll(id),
+    onSuccess: (_data, { id }) => {
+      logger.debug('Party email added', { id });
+      invalidateAll(id);
+    },
+    onError: (error, { id }) => logger.error('Failed to add party email', { id, error }),
   });
 }
 
@@ -280,7 +324,11 @@ export function useRemovePartyEmailMutation(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ id, emailId }) => removePartyEmail(config.client, basePath, id, emailId),
-    onSuccess: (_data, { id }) => invalidateAll(id),
+    onSuccess: (_data, { id }) => {
+      logger.debug('Party email removed', { id });
+      invalidateAll(id);
+    },
+    onError: (error, { id }) => logger.error('Failed to remove party email', { id, error }),
   });
 }
 
@@ -298,7 +346,11 @@ export function useAddPartyPhoneMutation(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ id, request }) => addPartyPhone(config.client, basePath, id, request),
-    onSuccess: (_data, { id }) => invalidateAll(id),
+    onSuccess: (_data, { id }) => {
+      logger.debug('Party phone added', { id });
+      invalidateAll(id);
+    },
+    onError: (error, { id }) => logger.error('Failed to add party phone', { id, error }),
   });
 }
 
@@ -314,7 +366,11 @@ export function useRemovePartyPhoneMutation(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ id, phoneId }) => removePartyPhone(config.client, basePath, id, phoneId),
-    onSuccess: (_data, { id }) => invalidateAll(id),
+    onSuccess: (_data, { id }) => {
+      logger.debug('Party phone removed', { id });
+      invalidateAll(id);
+    },
+    onError: (error, { id }) => logger.error('Failed to remove party phone', { id, error }),
   });
 }
 
@@ -332,7 +388,11 @@ export function useAddPartyExternalMappingMutation(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ id, request }) => addPartyExternalMapping(config.client, basePath, id, request),
-    onSuccess: (_data, { id }) => invalidateAll(id),
+    onSuccess: (_data, { id }) => {
+      logger.debug('Party external mapping added', { id });
+      invalidateAll(id);
+    },
+    onError: (error, { id }) => logger.error('Failed to add party external mapping', { id, error }),
   });
 }
 
@@ -349,7 +409,12 @@ export function useRemovePartyExternalMappingMutation(): UseMutationResult<
   return useMutation({
     mutationFn: ({ id, providerName }) =>
       removePartyExternalMapping(config.client, basePath, id, providerName),
-    onSuccess: (_data, { id }) => invalidateAll(id),
+    onSuccess: (_data, { id }) => {
+      logger.debug('Party external mapping removed', { id });
+      invalidateAll(id);
+    },
+    onError: (error, { id }) =>
+      logger.error('Failed to remove party external mapping', { id, error }),
   });
 }
 
@@ -367,7 +432,11 @@ export function useAddPartyRoleMutation(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ id, request }) => addPartyRole(config.client, basePath, id, request),
-    onSuccess: (_data, { id }) => invalidateAll(id),
+    onSuccess: (_data, { id }) => {
+      logger.debug('Party role added', { id });
+      invalidateAll(id);
+    },
+    onError: (error, { id }) => logger.error('Failed to add party role', { id, error }),
   });
 }
 
@@ -383,7 +452,11 @@ export function useRemovePartyRoleMutation(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ id, role }) => removePartyRole(config.client, basePath, id, role),
-    onSuccess: (_data, { id }) => invalidateAll(id),
+    onSuccess: (_data, { id }) => {
+      logger.debug('Party role removed', { id });
+      invalidateAll(id);
+    },
+    onError: (error, { id }) => logger.error('Failed to remove party role', { id, error }),
   });
 }
 
@@ -401,7 +474,11 @@ export function useSetPartyTaxStatusMutation(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ id, request }) => setPartyTaxStatus(config.client, basePath, id, request),
-    onSuccess: (_data, { id }) => invalidateAll(id),
+    onSuccess: (_data, { id }) => {
+      logger.debug('Party tax status set', { id });
+      invalidateAll(id);
+    },
+    onError: (error, { id }) => logger.error('Failed to set party tax status', { id, error }),
   });
 }
 
@@ -413,7 +490,11 @@ export function useClearPartyTaxStatusMutation(): UseMutationResult<PartyRespons
 
   return useMutation({
     mutationFn: (id: PartyId) => clearPartyTaxStatus(config.client, basePath, id),
-    onSuccess: (_data, id) => invalidateAll(id),
+    onSuccess: (_data, id) => {
+      logger.debug('Party tax status cleared', { id });
+      invalidateAll(id);
+    },
+    onError: (error, id) => logger.error('Failed to clear party tax status', { id, error }),
   });
 }
 
@@ -434,6 +515,28 @@ export function useReplacePartyMetadataMutation(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ id, request }) => replacePartyMetadata(config.client, basePath, id, request),
-    onSuccess: (_data, { id }) => invalidateAll(id),
+    onSuccess: (_data, { id }) => {
+      logger.debug('Party metadata replaced', { id });
+      invalidateAll(id);
+    },
+    onError: (error, { id }) => logger.error('Failed to replace party metadata', { id, error }),
+  });
+}
+
+// ── vCard ────────────────────────────────────────────────────────────────
+
+/**
+ * Download a party's vCard 4.0 (RFC 6350) as a `Blob`. Exposed as a mutation so
+ * callers get `isPending` / `error` and consistent logging without re-implementing
+ * the direct `downloadPartyVCard` call. Pure read — no cache invalidation.
+ */
+export function useDownloadPartyVCard(): UseMutationResult<Blob, Error, PartyId> {
+  const config = usePartiesConfig();
+  const basePath = config.basePath!;
+
+  return useMutation({
+    mutationFn: (id: PartyId) => downloadPartyVCard(config.client, basePath, id),
+    onSuccess: (_data, id) => logger.debug('Party vCard downloaded', { id }),
+    onError: (error, id) => logger.error('Failed to download party vCard', { id, error }),
   });
 }

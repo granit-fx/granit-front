@@ -1,3 +1,5 @@
+import { PartiesProvider, partiesTranslationsEn } from '@granit/react-parties';
+import { sampleParty } from '@granit/react-parties/testing';
 import { createTestQueryClient } from '@granit/react-testing';
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { toEntityId } from '@granit/types';
@@ -8,14 +10,10 @@ import * as React from 'react';
 import { initReactI18next, I18nextProvider } from 'react-i18next';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { sampleParty } from '@granit/react-parties/testing';
-
 import { MergeWizard } from '../components/merge-wizard';
-import { partiesTranslationsEn } from '../locales/en';
-import { PartiesProvider } from '../providers/parties-provider';
 
-import type { PartiesConfig } from '../providers/parties-provider';
 import type { PartyEmailId, PartyId, PartyMergeResponse, PartyResponse } from '@granit/parties';
+import type { PartiesConfig } from '@granit/react-parties';
 import type { AxiosError, AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 

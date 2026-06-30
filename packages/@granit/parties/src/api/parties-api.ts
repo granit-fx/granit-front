@@ -2,6 +2,7 @@ import { executeMerge, previewMerge } from '@granit/entity-merge';
 
 import type {
   CreatePartyOptions,
+  PartyAddressConfirmRequest,
   PartyAddressId,
   PartyAddressRequest,
   PartyCreateRequest,
@@ -25,9 +26,13 @@ import type {
 import type { AxiosInstance } from '@granit/api-client';
 
 /**
- * List parties in the active scope, optionally filtered by role flag.
+ * List parties in the active scope as a flat array, optionally filtered by role
+ * flag. Backs the non-grid party picker (the grid uses `usePartiesListQuery`).
  *
- * `GET {basePath}` — `MapGranitQuery<Party>()` paged envelope.
+ * `GET {basePath}` is a `MapGranitQuery<Party>()` group. Role filtering goes
+ * through the query-engine filter contract (`filter[roles.Eq]=<role>`) — there
+ * is no first-class `role` query param on the endpoint. The paged envelope's
+ * `items` are returned directly.
  */
 export async function listParties(
   client: AxiosInstance,
@@ -35,7 +40,7 @@ export async function listParties(
   options?: { readonly role?: string }
 ): Promise<readonly PartyListItemResponse[]> {
   const params: Record<string, string | number> = { pageSize: 100 };
-  if (options?.role) params.role = options.role;
+  if (options?.role) params['filter[roles.Eq]'] = options.role;
   const response = await client.get<{ readonly items: readonly PartyListItemResponse[] }>(
     basePath,
     { params }
@@ -175,6 +180,28 @@ export async function removePartyAddress(
   await client.delete(
     `${basePath}/${encodeURIComponent(id)}/addresses/${encodeURIComponent(addressId)}`
   );
+}
+
+/**
+ * Record a manual deliverability confirmation for a party address (tier-2
+ * evidence). Attributes the confirmation to the authenticated reviewer and
+ * returns the refreshed party. A foreign address id returns 404; requires the
+ * dedicated Confirm permission (not ordinary address-edit rights).
+ *
+ * `POST {basePath}/{id}/addresses/{addressId}/confirm`
+ */
+export async function confirmPartyAddress(
+  client: AxiosInstance,
+  basePath: string,
+  id: PartyId,
+  addressId: PartyAddressId,
+  request?: PartyAddressConfirmRequest
+): Promise<PartyResponse> {
+  const response = await client.post<PartyResponse>(
+    `${basePath}/${encodeURIComponent(id)}/addresses/${encodeURIComponent(addressId)}/confirm`,
+    request ?? {}
+  );
+  return response.data;
 }
 
 // ── Emails ───────────────────────────────────────────────────────────────

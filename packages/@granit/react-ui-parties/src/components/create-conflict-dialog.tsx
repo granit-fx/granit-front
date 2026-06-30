@@ -1,5 +1,5 @@
 import { useTranslation } from '@granit/react-localization';
-import { MergeWizard, usePartyQuery } from '@granit/react-parties';
+import { usePartyQuery } from '@granit/react-parties';
 import {
   Badge,
   Button,
@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { logger } from '../logger';
 
+import { MergeWizard } from './merge-wizard';
 import { PartyStatusBadge } from './party-status-badge';
 
 import type {

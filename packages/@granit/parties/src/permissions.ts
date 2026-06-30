@@ -26,4 +26,13 @@ export const PartiesPermissions = {
      */
     Merge: 'Parties.Parties.Merge',
   },
+  PartyAddresses: {
+    /**
+     * Record a tier-2 manual confirmation that an address is real / deliverable
+     * (promotes its verification verdict to `ManuallyConfirmed`). Scoped
+     * separately from {@link PartiesPermissions.Parties.Manage} — confirming
+     * deliverability is a reviewer / compliance action, not ordinary editing.
+     */
+    Confirm: 'Parties.PartyAddresses.Confirm',
+  },
 } as const;

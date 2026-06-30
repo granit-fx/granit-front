@@ -17,6 +17,8 @@ export const partiesAdminTranslationsEn = {
   'Parties.Addresses.AddError': 'Failed to add address',
   'Parties.Addresses.AddSuccess': 'Address added',
   'Parties.Addresses.AddTitle': 'Add address',
+  'Parties.Addresses.Confirm': 'Confirm deliverability',
+  'Parties.Addresses.ConfirmSuccess': 'Address confirmed',
   'Parties.Addresses.Empty': 'No addresses on file.',
   'Parties.Addresses.RemoveError': 'Failed to remove address',
   'Parties.Addresses.RemoveSuccess': 'Address removed',

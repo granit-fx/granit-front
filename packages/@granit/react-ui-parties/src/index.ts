@@ -14,6 +14,12 @@ export { DownloadVCardButton } from './components/download-vcard-button';
 export { LifecycleActions } from './components/lifecycle-actions';
 export { MergeAction } from './components/merge-action';
 export { MergeFromCandidate } from './components/merge-from-candidate';
+export { MergeWizard } from './components/merge-wizard';
+export type { MergeWizardProps } from './components/merge-wizard';
+export { DuplicatesInbox } from './components/duplicates-inbox';
+export type { DuplicatesInboxProps } from './components/duplicates-inbox';
+export { PartyDuplicatesBadge } from './components/party-duplicates-badge';
+export type { PartyDuplicatesBadgeProps } from './components/party-duplicates-badge';
 export { CreateConflictDialog } from './components/create-conflict-dialog';
 export { PartyPickerDialog } from './components/party-picker-dialog';
 

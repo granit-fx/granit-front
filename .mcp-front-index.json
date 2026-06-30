@@ -6830,7 +6830,7 @@
     },
     {
       "name": "@granit/react-parties",
-      "description": "React bindings for @granit/parties — PartiesProvider, hooks, MergeWizard and TanStack Query mutations",
+      "description": "React bindings for @granit/parties — PartiesProvider, hooks and TanStack Query mutations (headless; styled components live in @granit/react-ui-parties)",
       "exports": [
         {
           "name": "PartiesConfig",
@@ -6885,39 +6885,6 @@
           "name": "MergePartyFromDuplicateMutationVariables",
           "kind": "interface",
           "signature": "interface MergePartyFromDuplicateMutationVariables",
-          "members": []
-        },
-        {
-          "name": "MergeWizard",
-          "kind": "function",
-          "signature": "function MergeWizard("
-        },
-        {
-          "name": "MergeWizardProps",
-          "kind": "interface",
-          "signature": "interface MergeWizardProps",
-          "members": []
-        },
-        {
-          "name": "DuplicatesInbox",
-          "kind": "function",
-          "signature": "function DuplicatesInbox(props: Readonly<DuplicatesInboxProps>)"
-        },
-        {
-          "name": "DuplicatesInboxProps",
-          "kind": "interface",
-          "signature": "interface DuplicatesInboxProps",
-          "members": []
-        },
-        {
-          "name": "PartyDuplicatesBadge",
-          "kind": "function",
-          "signature": "function PartyDuplicatesBadge("
-        },
-        {
-          "name": "PartyDuplicatesBadgeProps",
-          "kind": "interface",
-          "signature": "interface PartyDuplicatesBadgeProps",
           "members": []
         }
       ]
@@ -10031,6 +9998,39 @@
           "name": "MergeFromCandidate",
           "kind": "function",
           "signature": "function MergeFromCandidate("
+        },
+        {
+          "name": "MergeWizard",
+          "kind": "function",
+          "signature": "function MergeWizard("
+        },
+        {
+          "name": "MergeWizardProps",
+          "kind": "interface",
+          "signature": "interface MergeWizardProps",
+          "members": []
+        },
+        {
+          "name": "DuplicatesInbox",
+          "kind": "function",
+          "signature": "function DuplicatesInbox(props: Readonly<DuplicatesInboxProps>)"
+        },
+        {
+          "name": "DuplicatesInboxProps",
+          "kind": "interface",
+          "signature": "interface DuplicatesInboxProps",
+          "members": []
+        },
+        {
+          "name": "PartyDuplicatesBadge",
+          "kind": "function",
+          "signature": "function PartyDuplicatesBadge("
+        },
+        {
+          "name": "PartyDuplicatesBadgeProps",
+          "kind": "interface",
+          "signature": "interface PartyDuplicatesBadgeProps",
+          "members": []
         },
         {
           "name": "CreateConflictDialog",

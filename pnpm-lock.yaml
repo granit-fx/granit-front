@@ -2993,9 +2993,6 @@ importers:
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
-      '@granit/react-entity-merge':
-        specifier: workspace:*
-        version: link:../react-entity-merge
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -6093,6 +6090,9 @@ importers:
       '@granit/react-authorization':
         specifier: workspace:*
         version: link:../react-authorization
+      '@granit/react-entity-merge':
+        specifier: workspace:*
+        version: link:../react-entity-merge
       '@granit/react-localization':
         specifier: workspace:*
         version: link:../react-localization
@@ -6105,6 +6105,9 @@ importers:
       '@granit/react-taxonomy':
         specifier: workspace:*
         version: link:../react-taxonomy
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
