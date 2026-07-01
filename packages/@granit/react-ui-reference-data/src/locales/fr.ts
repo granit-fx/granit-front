@@ -5,6 +5,7 @@
 export const referenceDataTranslationsFr = {
   'ReferenceData.Common.Actions.Deactivate': 'Désactiver',
   'ReferenceData.Common.Actions.Edit': 'Modifier',
+  'ReferenceData.Common.Actions.Menu': 'Actions pour {{name}}',
   'ReferenceData.Common.Actions.Reactivate': 'Réactiver',
   'ReferenceData.Common.Columns.Active': 'Actif',
   'ReferenceData.Common.Columns.Code': 'Code',

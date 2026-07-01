@@ -3,9 +3,9 @@ import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
 import { DEFAULT_BASE_PATH } from '../constants';
+import { buildGeocodingQueryKey } from '../hooks/query-keys';
 import {
   GeocodingProvider,
-  buildGeocodingQueryKey,
   useGeocodingConfig,
   useOptionalGeocodingConfig,
 } from '../providers/geocoding-provider';

@@ -2,11 +2,8 @@ import { createMockClient } from '@granit/testing';
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import {
-  buildTaxonomyQueryKey,
-  TaxonomyProvider,
-  useTaxonomyConfig,
-} from '../providers/taxonomy-provider';
+import { buildTaxonomyQueryKey } from '../hooks/query-keys';
+import { TaxonomyProvider, useTaxonomyConfig } from '../providers/taxonomy-provider';
 
 import type { TaxonomyConfig } from '../providers/taxonomy-provider';
 import type { ReactNode } from 'react';

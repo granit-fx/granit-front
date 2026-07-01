@@ -1,7 +1,9 @@
 import { getCategory, listCategories } from '@granit/taxonomy';
 import { useQuery } from '@tanstack/react-query';
 
-import { buildTaxonomyQueryKey, useTaxonomyConfig } from '../providers/taxonomy-provider';
+import { useTaxonomyConfig } from '../providers/taxonomy-provider';
+
+import { buildTaxonomyQueryKey } from './query-keys';
 
 import type {
   CategoryDetailResponse,

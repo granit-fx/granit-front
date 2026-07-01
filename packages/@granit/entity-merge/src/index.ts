@@ -5,6 +5,8 @@ export type {
   MergeFieldChoices,
   MergeRequest,
   MergeResult,
+  MergeErrorKind,
+  ClassifiedMergeError,
 } from './types/index';
 
 // API
@@ -17,4 +19,3 @@ export {
   resolveWinner,
   classifyMergeError,
 } from './helpers';
-export type { MergeErrorKind, ClassifiedMergeError } from './helpers';

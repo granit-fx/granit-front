@@ -59,11 +59,3 @@ export function useTaxonomyConfig(): ResolvedTaxonomyConfig {
   }
   return ctx;
 }
-
-/** Builds a consistent React Query key for taxonomy operations. */
-export function buildTaxonomyQueryKey(
-  config: ResolvedTaxonomyConfig,
-  ...segments: readonly unknown[]
-): readonly unknown[] {
-  return [...config.queryKeyPrefix, ...segments];
-}

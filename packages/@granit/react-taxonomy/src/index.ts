@@ -1,14 +1,13 @@
 // Provider
-export {
-  buildTaxonomyQueryKey,
-  TaxonomyProvider,
-  useTaxonomyConfig,
-} from './providers/taxonomy-provider';
+export { TaxonomyProvider, useTaxonomyConfig } from './providers/taxonomy-provider';
 export type {
   ResolvedTaxonomyConfig,
   TaxonomyConfig,
   TaxonomyProviderProps,
 } from './providers/taxonomy-provider';
+
+// Query keys
+export { buildTaxonomyQueryKey } from './hooks/query-keys';
 
 // Constants
 export { API_VERSION, DEFAULT_BASE_PATH, DEFAULT_QUERY_KEY_PREFIX, MODULE } from './constants';

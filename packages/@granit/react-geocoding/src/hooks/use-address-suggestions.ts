@@ -8,11 +8,9 @@ import {
   DEFAULT_MIN_QUERY_LENGTH,
   DEFAULT_SUGGESTION_LIMIT,
 } from '../constants';
-import {
-  buildGeocodingQueryKey,
-  useOptionalGeocodingConfig,
-} from '../providers/geocoding-provider';
+import { useOptionalGeocodingConfig } from '../providers/geocoding-provider';
 
+import { buildGeocodingQueryKey } from './query-keys';
 import { useDebouncedValue } from './use-debounced-value';
 
 import type { GeocodingSuggestionResponse } from '@granit/geocoding';

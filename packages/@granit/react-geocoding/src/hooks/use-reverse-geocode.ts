@@ -3,10 +3,9 @@
 import { getReverseGeocode } from '@granit/geocoding';
 import { useQuery } from '@tanstack/react-query';
 
-import {
-  buildGeocodingQueryKey,
-  useOptionalGeocodingConfig,
-} from '../providers/geocoding-provider';
+import { useOptionalGeocodingConfig } from '../providers/geocoding-provider';
+
+import { buildGeocodingQueryKey } from './query-keys';
 
 import type { GeocodingReverseResponse } from '@granit/geocoding';
 

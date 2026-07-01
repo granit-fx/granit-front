@@ -9,7 +9,9 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { logMutationError } from '../logger';
-import { buildTaxonomyQueryKey, useTaxonomyConfig } from '../providers/taxonomy-provider';
+import { useTaxonomyConfig } from '../providers/taxonomy-provider';
+
+import { buildTaxonomyQueryKey } from './query-keys';
 
 import type { ResolvedTaxonomyConfig } from '../providers/taxonomy-provider';
 import type {

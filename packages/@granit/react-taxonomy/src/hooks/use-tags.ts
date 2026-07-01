@@ -1,7 +1,9 @@
 import { listAssignedTags, listTags } from '@granit/taxonomy';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { buildTaxonomyQueryKey, useTaxonomyConfig } from '../providers/taxonomy-provider';
+import { useTaxonomyConfig } from '../providers/taxonomy-provider';
+
+import { buildTaxonomyQueryKey } from './query-keys';
 
 import type { TagListFilter, TagResponse, TaxonomyTargetRef } from '@granit/taxonomy';
 import type { UseQueryResult } from '@tanstack/react-query';

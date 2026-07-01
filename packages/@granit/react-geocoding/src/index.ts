@@ -1,7 +1,6 @@
 // Provider
 export {
   GeocodingProvider,
-  buildGeocodingQueryKey,
   useGeocodingConfig,
   useOptionalGeocodingConfig,
 } from './providers/geocoding-provider';
@@ -10,6 +9,9 @@ export type {
   GeocodingProviderProps,
   ResolvedGeocodingConfig,
 } from './providers/geocoding-provider';
+
+// Query keys
+export { buildGeocodingQueryKey } from './hooks/query-keys';
 
 // Hooks
 export { useAddressSuggestions } from './hooks/use-address-suggestions';

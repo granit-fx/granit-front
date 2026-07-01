@@ -85,7 +85,7 @@ describe('@granit/reference-data types', () => {
     it('should have optional sortOrder and validity dates', () => {
       expectTypeOf<ReferenceDataCreateRequest['sortOrder']>().toEqualTypeOf<number | undefined>();
       expectTypeOf<ReferenceDataCreateRequest['validFrom']>().toEqualTypeOf<
-        string | null | undefined
+        ISODateString | null | undefined
       >();
     });
 

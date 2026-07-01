@@ -1683,17 +1683,6 @@
           "name": "executeMerge",
           "kind": "function",
           "signature": "async function executeMerge<TId extends string = string>( client: AxiosInstance, basePath: string, survivorId: TId, request: MergeRequest<TId>, idempotencyKey?: string ): Promise<MergeResult<TId>>"
-        },
-        {
-          "name": "MergeErrorKind",
-          "kind": "type",
-          "signature": "type MergeErrorKind = 'conflict' | 'domain' | 'notFound' | 'validation' | 'unknown'"
-        },
-        {
-          "name": "ClassifiedMergeError",
-          "kind": "interface",
-          "signature": "interface ClassifiedMergeError",
-          "members": []
         }
       ]
     },
@@ -5939,6 +5928,11 @@
       "description": "React bindings for @granit/geocoding — GeocodingProvider, hooks and AddressAutocompleteInput",
       "exports": [
         {
+          "name": "buildGeocodingQueryKey",
+          "kind": "function",
+          "signature": "function buildGeocodingQueryKey( config: GeocodingConfig | null, ...segments: readonly unknown[] ): readonly unknown[]"
+        },
+        {
           "name": "useAddressSuggestions",
           "kind": "function",
           "signature": "function useAddressSuggestions( search: string, options: UseAddressSuggestionsOptions ="
@@ -7385,6 +7379,21 @@
       "name": "@granit/react-taxonomy",
       "description": "React bindings for @granit/taxonomy — TaxonomyProvider, hooks, components",
       "exports": [
+        {
+          "name": "TaxonomyProvider",
+          "kind": "function",
+          "signature": "function TaxonomyProvider("
+        },
+        {
+          "name": "useTaxonomyConfig",
+          "kind": "function",
+          "signature": "function useTaxonomyConfig(): ResolvedTaxonomyConfig"
+        },
+        {
+          "name": "buildTaxonomyQueryKey",
+          "kind": "function",
+          "signature": "function buildTaxonomyQueryKey( config: ResolvedTaxonomyConfig, ...segments: readonly unknown[] ): readonly unknown[]"
+        },
         {
           "name": "API_VERSION",
           "kind": "const",

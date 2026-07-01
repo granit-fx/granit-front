@@ -83,3 +83,16 @@ export interface MergeResult<TId extends string = string> {
   /** `true` for previews and explicit dry-runs; `false` for committed merges. */
   readonly dryRun: boolean;
 }
+
+/** Coarse classification of a failed merge request, independent of i18n. */
+export type MergeErrorKind = 'conflict' | 'domain' | 'notFound' | 'validation' | 'unknown';
+
+/** Result of classifying a failed merge request. */
+export interface ClassifiedMergeError {
+  /** Stable kind the UI maps to a localized message. */
+  readonly kind: MergeErrorKind;
+  /** RFC 7807 `detail`/`title` from the ProblemDetails body, if any. */
+  readonly detail: string | null;
+  /** HTTP status code, when available. */
+  readonly status: number | null;
+}

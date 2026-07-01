@@ -54,8 +54,8 @@ export interface ReferenceDataCreateRequest extends Partial<ReferenceDataLabels>
   readonly code: string;
   readonly labelEn: string;
   readonly sortOrder?: number;
-  readonly validFrom?: string | null;
-  readonly validTo?: string | null;
+  readonly validFrom?: ISODateString | null;
+  readonly validTo?: ISODateString | null;
   readonly parentCode?: string | null;
   readonly metadata?: Record<string, string> | null;
 }
@@ -70,8 +70,8 @@ export interface ReferenceDataUpdateRequest extends Partial<ReferenceDataLabels>
   readonly labelEn: string;
   readonly sortOrder?: number;
   readonly activated?: boolean;
-  readonly validFrom?: string | null;
-  readonly validTo?: string | null;
+  readonly validFrom?: ISODateString | null;
+  readonly validTo?: ISODateString | null;
   readonly parentCode?: string | null;
   readonly metadata?: Record<string, string> | null;
 }
