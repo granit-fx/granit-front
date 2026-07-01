@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { NotificationPreferencesPage } from '../notification-preferences-page';
+import { NotificationPreferencesPage } from '../components/notification-preferences-page';
 
 import { renderNotifications } from './test-utils';
 

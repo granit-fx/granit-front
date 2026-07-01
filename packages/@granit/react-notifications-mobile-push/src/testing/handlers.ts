@@ -6,7 +6,10 @@ import { DEFAULT_BASE_PATH } from '../constants';
 
 import { mockMobilePushTokens } from './data';
 
-import type { DeviceTokenDto, MobilePushTokenResponse } from '@granit/notifications-mobile-push';
+import type {
+  MobilePushTokenRegisterRequest,
+  MobilePushTokenResponse,
+} from '@granit/notifications-mobile-push';
 
 /**
  * Create stateful MSW handlers for the mobile-push device-token endpoints.
@@ -28,13 +31,13 @@ export function createMobilePushHandlers(baseUrl = DEFAULT_BASE_PATH) {
 
     // POST register a device token — 204 No Content
     http.post(tokensUrl, async ({ request }) => {
-      const body = (await request.json()) as DeviceTokenDto;
-      const alreadyRegistered = tokens.some((t) => t.deviceToken === body.token);
+      const body = (await request.json()) as MobilePushTokenRegisterRequest;
+      const alreadyRegistered = tokens.some((t) => t.deviceToken === body.deviceToken);
       if (!alreadyRegistered) {
         tokens = [
           ...tokens,
           {
-            deviceToken: body.token,
+            deviceToken: body.deviceToken,
             platform: body.platform,
             createdAt: toISODateString('2026-03-17T12:00:00Z'),
           },

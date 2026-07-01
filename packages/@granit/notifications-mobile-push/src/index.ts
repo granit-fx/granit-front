@@ -3,4 +3,8 @@ export {
   registerDeviceToken,
   unregisterDeviceToken,
 } from './api/mobile-push-api';
-export type { DeviceTokenDto, MobilePlatform, MobilePushTokenResponse } from './types';
+export type {
+  MobilePlatform,
+  MobilePushTokenRegisterRequest,
+  MobilePushTokenResponse,
+} from './types';

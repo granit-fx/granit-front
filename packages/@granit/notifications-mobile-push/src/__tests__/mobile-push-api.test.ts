@@ -13,13 +13,13 @@ describe('mobile-push-api', () => {
     const client = createMockClient();
 
     await registerDeviceToken(client, '/api/v1', {
-      token: 'fcm-token-123',
-      platform: 'android',
+      deviceToken: 'fcm-token-123',
+      platform: 'Android',
     });
 
     expect(client.post).toHaveBeenCalledWith('/api/v1/notifications/mobile-push/tokens', {
-      token: 'fcm-token-123',
-      platform: 'android',
+      deviceToken: 'fcm-token-123',
+      platform: 'Android',
     });
   });
 
@@ -48,12 +48,12 @@ describe('mobile-push-api', () => {
     const tokens = [
       {
         deviceToken: 'token-1',
-        platform: 'android' as const,
+        platform: 'Android' as const,
         createdAt: toISODateString('2026-03-17T10:00:00Z'),
       },
       {
         deviceToken: 'token-2',
-        platform: 'ios' as const,
+        platform: 'Ios' as const,
         createdAt: toISODateString('2026-03-17T11:00:00Z'),
       },
     ];

@@ -1,12 +1,12 @@
 import { buildApiUrl } from '@granit/api-client';
 
-import type { DeviceTokenDto, MobilePushTokenResponse } from '../types';
+import type { MobilePushTokenRegisterRequest, MobilePushTokenResponse } from '../types';
 import type { AxiosInstance } from '@granit/api-client';
 
 export async function registerDeviceToken(
   client: AxiosInstance,
   basePath: string,
-  payload: DeviceTokenDto
+  payload: MobilePushTokenRegisterRequest
 ): Promise<void> {
   await client.post(buildApiUrl(basePath, 'notifications', 'mobile-push', 'tokens'), payload);
 }

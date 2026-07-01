@@ -2229,25 +2229,7 @@
     {
       "name": "@granit/notifications-mobile-push",
       "description": "Mobile push (FCM/APNs) device token registration via Capacitor",
-      "exports": [
-        {
-          "name": "DeviceTokenDto",
-          "kind": "interface",
-          "signature": "interface DeviceTokenDto",
-          "members": []
-        },
-        {
-          "name": "MobilePlatform",
-          "kind": "type",
-          "signature": "type MobilePlatform = 'android' | 'ios'"
-        },
-        {
-          "name": "MobilePushTokenResponse",
-          "kind": "interface",
-          "signature": "interface MobilePushTokenResponse",
-          "members": []
-        }
-      ]
+      "exports": []
     },
     {
       "name": "@granit/notifications-signalr",

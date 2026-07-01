@@ -1,9 +1,9 @@
 import { useTranslation } from '@granit/react-localization';
 
-import { NotificationPreferencesPanel } from './components/notification-preferences-panel';
-import { PushNotificationManager } from './components/push-notification-manager';
+import { NotificationPreferencesPanel } from './notification-preferences-panel';
+import { PushNotificationManager } from './push-notification-manager';
 
-import type { PushNotificationManagerProps } from './components/push-notification-manager';
+import type { PushNotificationManagerProps } from './push-notification-manager';
 
 export type NotificationPreferencesPageProps = PushNotificationManagerProps;
 

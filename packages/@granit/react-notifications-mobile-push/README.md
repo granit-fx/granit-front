@@ -15,7 +15,7 @@ notification, preference and subscription surfaces). The split is two packages �
 there is no `react-ui` admin feature kit:
 
 - [`@granit/notifications-mobile-push`](../notifications-mobile-push) —
-  framework-agnostic core: `DeviceTokenDto` / `MobilePushTokenResponse` DTOs and
+  framework-agnostic core: `MobilePushTokenRegisterRequest` / `MobilePushTokenResponse` DTOs and
   the bare Axios calls (`registerDeviceToken`, `listDeviceTokens`,
   `unregisterDeviceToken`).
 - `@granit/react-notifications-mobile-push` (this package) — React Query hooks,
@@ -53,19 +53,12 @@ the hooks anywhere below it. `useMobilePush` takes only the target `platform`;
 the base path comes from the provider, defaulting to `/api/v1/notifications`.
 
 ```tsx
-import {
-  MobilePushProvider,
-  useMobilePush,
-} from '@granit/react-notifications-mobile-push';
+import { MobilePushProvider, useMobilePush } from '@granit/react-notifications-mobile-push';
 import { useGranitClient } from '@granit/react-api-client';
 
 function App({ children }: { children: React.ReactNode }) {
   // `client` may be omitted if a <GranitClientProvider> is already mounted.
-  return (
-    <MobilePushProvider config={{ client: useGranitClient() }}>
-      {children}
-    </MobilePushProvider>
-  );
+  return <MobilePushProvider config={{ client: useGranitClient() }}>{children}</MobilePushProvider>;
 }
 
 function PushToggle() {
@@ -76,11 +69,7 @@ function PushToggle() {
   });
 
   return (
-    <button
-      type="button"
-      disabled={loading}
-      onClick={isRegistered ? unregister : register}
-    >
+    <button type="button" disabled={loading} onClick={isRegistered ? unregister : register}>
       {isRegistered ? 'Disable' : 'Enable'} push notifications
       {error ? ` — ${error.message}` : ''}
     </button>
@@ -110,17 +99,17 @@ function RegisteredDevices() {
 
 ## Public API
 
-| Symbol | Kind | Purpose |
-| --- | --- | --- |
-| `MobilePushProvider` | provider | Supplies the resolved Axios client + base path to all hooks below it |
-| `useMobilePushConfig` | hook | Read the resolved `{ client, basePath }`; throws outside a provider |
-| `useMobilePush` | hook | Permission prompt + FCM/APNs token capture + register/unregister + refresh |
-| `useDeviceTokens` | hook | `GET .../mobile-push/tokens` — the user's registered tokens (read-only) |
-| `deviceTokenKeys` | const | Query-key factory for the device-token query |
-| `MobilePushHookOptions` | type | `useMobilePush` input — `{ platform }` |
-| `UseMobilePushReturn` | type | `{ isRegistered, loading, error, register, unregister }` |
-| `MobilePushProviderConfig` | type | Resolved config — optional `client`, required `basePath` |
-| `MobilePushProviderProps` | type | `{ config, children }`; `config.basePath` optional (provider defaults it) |
+| Symbol                     | Kind     | Purpose                                                                    |
+| -------------------------- | -------- | -------------------------------------------------------------------------- |
+| `MobilePushProvider`       | provider | Supplies the resolved Axios client + base path to all hooks below it       |
+| `useMobilePushConfig`      | hook     | Read the resolved `{ client, basePath }`; throws outside a provider        |
+| `useMobilePush`            | hook     | Permission prompt + FCM/APNs token capture + register/unregister + refresh |
+| `useDeviceTokens`          | hook     | `GET .../mobile-push/tokens` — the user's registered tokens (read-only)    |
+| `deviceTokenKeys`          | const    | Query-key factory for the device-token query                               |
+| `MobilePushHookOptions`    | type     | `useMobilePush` input — `{ platform }`                                     |
+| `UseMobilePushReturn`      | type     | `{ isRegistered, loading, error, register, unregister }`                   |
+| `MobilePushProviderConfig` | type     | Resolved config — optional `client`, required `basePath`                   |
+| `MobilePushProviderProps`  | type     | `{ config, children }`; `config.basePath` optional (provider defaults it)  |
 
 `./testing` subpath (requires the optional `msw` peer):
 `createMobilePushHandlers` (stateful MSW handlers — register/unregister mutate an

@@ -4,9 +4,9 @@
 // resolves from the host-mounted NotificationProvider / GranitClientProvider.
 
 // Pages
-export { NotificationListPage } from './notification-list-page';
-export { NotificationPreferencesPage } from './notification-preferences-page';
-export type { NotificationPreferencesPageProps } from './notification-preferences-page';
+export { NotificationListPage } from './components/notification-list-page';
+export { NotificationPreferencesPage } from './components/notification-preferences-page';
+export type { NotificationPreferencesPageProps } from './components/notification-preferences-page';
 
 // Components
 export { NotificationBell } from './components/notification-bell';

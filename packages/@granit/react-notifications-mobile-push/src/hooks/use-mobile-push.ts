@@ -88,7 +88,7 @@ export function useMobilePush(options: MobilePushHookOptions): UseMobilePushRetu
           await unregisterDeviceToken(apiClient, basePath, oldToken);
         }
         await registerDeviceToken(apiClient, basePath, {
-          token: token.value,
+          deviceToken: token.value,
           platform: options.platform,
         });
         logger.info('Mobile push device token refreshed', { platform: options.platform });
@@ -128,7 +128,7 @@ export function useMobilePush(options: MobilePushHookOptions): UseMobilePushRetu
       tokenRef.current = token;
 
       await registerDeviceToken(apiClient, basePath, {
-        token,
+        deviceToken: token,
         platform: options.platform,
       });
 

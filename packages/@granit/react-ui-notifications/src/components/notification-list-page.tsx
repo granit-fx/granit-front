@@ -1,6 +1,6 @@
 import { useTranslation } from '@granit/react-localization';
 
-import { NotificationInbox } from './components/notification-inbox';
+import { NotificationInbox } from './notification-inbox';
 
 export function NotificationListPage() {
   const { t } = useTranslation();

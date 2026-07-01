@@ -62,7 +62,7 @@ describe('useMobilePush', () => {
 
   it('should initialize with default state', () => {
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useMobilePush({ platform: 'android' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Android' }), { wrapper });
 
     expect(result.current.isRegistered).toBe(false);
     expect(result.current.loading).toBe(false);
@@ -71,7 +71,7 @@ describe('useMobilePush', () => {
 
   it('should expose register and unregister functions', () => {
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useMobilePush({ platform: 'android' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Android' }), { wrapper });
 
     expect(typeof result.current.register).toBe('function');
     expect(typeof result.current.unregister).toBe('function');
@@ -82,7 +82,7 @@ describe('useMobilePush', () => {
     mockRequestPermissions.mockResolvedValue({ receive: 'denied' });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useMobilePush({ platform: 'android' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Android' }), { wrapper });
 
     await act(async () => {
       await result.current.register();
@@ -108,7 +108,7 @@ describe('useMobilePush', () => {
     });
 
     const { wrapper, client } = createWrapper();
-    const { result } = renderHook(() => useMobilePush({ platform: 'android' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Android' }), { wrapper });
 
     await act(async () => {
       await result.current.register();
@@ -118,8 +118,8 @@ describe('useMobilePush', () => {
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBeNull();
     expect(mockRegisterDeviceToken).toHaveBeenCalledWith(client, '/api/v1/notifications', {
-      token: 'device-token-123',
-      platform: 'android',
+      deviceToken: 'device-token-123',
+      platform: 'Android',
     });
   });
 
@@ -135,7 +135,7 @@ describe('useMobilePush', () => {
     });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useMobilePush({ platform: 'android' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Android' }), { wrapper });
 
     await act(async () => {
       await result.current.register();
@@ -157,7 +157,7 @@ describe('useMobilePush', () => {
     });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useMobilePush({ platform: 'android' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Android' }), { wrapper });
 
     await act(async () => {
       await result.current.register();
@@ -180,7 +180,7 @@ describe('useMobilePush', () => {
     });
 
     const { wrapper, client } = createWrapper({ basePath: '/custom' });
-    const { result } = renderHook(() => useMobilePush({ platform: 'android' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Android' }), { wrapper });
 
     await act(async () => {
       await result.current.register();
@@ -200,7 +200,7 @@ describe('useMobilePush', () => {
 
   it('should handle unregister when no token exists', async () => {
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useMobilePush({ platform: 'android' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Android' }), { wrapper });
 
     await act(async () => {
       await result.current.unregister();
@@ -223,7 +223,7 @@ describe('useMobilePush', () => {
     });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useMobilePush({ platform: 'android' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Android' }), { wrapper });
 
     await act(async () => {
       await result.current.register();
@@ -243,14 +243,14 @@ describe('useMobilePush', () => {
 
   it('should use default basePath from provider', () => {
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useMobilePush({ platform: 'android' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Android' }), { wrapper });
 
     expect(result.current.error).toBeNull();
   });
 
   it('should accept custom basePath via provider', () => {
     const { wrapper } = createWrapper({ basePath: '/custom/api' });
-    const { result } = renderHook(() => useMobilePush({ platform: 'android' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Android' }), { wrapper });
 
     expect(result.current.error).toBeNull();
   });
@@ -259,7 +259,7 @@ describe('useMobilePush', () => {
     mockCheckPermissions.mockRejectedValueOnce('string error');
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useMobilePush({ platform: 'android' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Android' }), { wrapper });
 
     await act(async () => {
       await result.current.register();
@@ -281,7 +281,7 @@ describe('useMobilePush', () => {
     });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useMobilePush({ platform: 'android' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Android' }), { wrapper });
 
     await act(async () => {
       await result.current.register();
@@ -311,7 +311,7 @@ describe('useMobilePush', () => {
     });
 
     const { wrapper, client } = createWrapper();
-    const { result } = renderHook(() => useMobilePush({ platform: 'android' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Android' }), { wrapper });
 
     await act(async () => {
       await result.current.register();
@@ -349,8 +349,8 @@ describe('useMobilePush', () => {
         'initial-token'
       );
       expect(mockRegisterDeviceToken).toHaveBeenCalledWith(client, '/api/v1/notifications', {
-        token: 'refreshed-token',
-        platform: 'android',
+        deviceToken: 'refreshed-token',
+        platform: 'Android',
       });
     }
   });
@@ -367,7 +367,7 @@ describe('useMobilePush', () => {
     });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useMobilePush({ platform: 'ios' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Ios' }), { wrapper });
 
     await act(async () => {
       await result.current.register();
@@ -402,7 +402,7 @@ describe('useMobilePush', () => {
     mockCheckPermissions.mockResolvedValue({ receive: 'denied' });
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useMobilePush({ platform: 'android' }), { wrapper });
+    const { result } = renderHook(() => useMobilePush({ platform: 'Android' }), { wrapper });
 
     await act(async () => {
       await result.current.register();

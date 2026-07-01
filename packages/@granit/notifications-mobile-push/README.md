@@ -35,17 +35,16 @@ import {
   listDeviceTokens,
   unregisterDeviceToken,
 } from '@granit/notifications-mobile-push';
-import type { DeviceTokenDto } from '@granit/notifications-mobile-push';
+import type { MobilePushTokenRegisterRequest } from '@granit/notifications-mobile-push';
 
 // `basePath` is the API root; the calls append
 // `/notifications/mobile-push/tokens` themselves.
 const basePath = '/api/v1';
 
 // 1. Register the token returned by the native FCM/APNs plugin.
-const payload: DeviceTokenDto = {
-  token: fcmToken,        // opaque registration token from the device
-  platform: 'android',    // 'android' (FCM) | 'ios' (APNs)
-  deviceId,               // optional stable per-device id
+const payload: MobilePushTokenRegisterRequest = {
+  deviceToken: fcmToken, // opaque registration token from the device
+  platform: 'Android', // 'Android' (FCM) | 'Ios' (APNs)
 };
 await registerDeviceToken(client, basePath, payload);
 
@@ -62,14 +61,14 @@ await unregisterDeviceToken(client, basePath, fcmToken);
 
 ## Public API
 
-| Symbol                    | Kind | Purpose                                                       |
-| ------------------------- | ---- | ------------------------------------------------------------- |
-| `MobilePlatform`          | type | `'android'` (FCM) \| `'ios'` (APNs)                           |
-| `DeviceTokenDto`          | type | Registration body: `token`, `platform`, optional `deviceId`  |
-| `MobilePushTokenResponse` | type | Listed token: `deviceToken`, `platform`, `createdAt`         |
-| `registerDeviceToken`     | fn   | `POST {basePath}/notifications/mobile-push/tokens`            |
-| `listDeviceTokens`        | fn   | `GET {basePath}/notifications/mobile-push/tokens`             |
-| `unregisterDeviceToken`   | fn   | `DELETE .../tokens/{token}` (token is URL-encoded into path)  |
+| Symbol                           | Kind | Purpose                                                      |
+| -------------------------------- | ---- | ------------------------------------------------------------ |
+| `MobilePlatform`                 | type | `'Android'` (FCM) \| `'Ios'` (APNs)                          |
+| `MobilePushTokenRegisterRequest` | type | Registration body: `deviceToken`, `platform`                 |
+| `MobilePushTokenResponse`        | type | Listed token: `deviceToken`, `platform`, `createdAt`         |
+| `registerDeviceToken`            | fn   | `POST {basePath}/notifications/mobile-push/tokens`           |
+| `listDeviceTokens`               | fn   | `GET {basePath}/notifications/mobile-push/tokens`            |
+| `unregisterDeviceToken`          | fn   | `DELETE .../tokens/{token}` (token is URL-encoded into path) |
 
 ## Out of scope / caveats
 
@@ -80,10 +79,11 @@ await unregisterDeviceToken(client, basePath, fcmToken);
   This package only persists tokens server-side.
 - **No React Query / caching.** These are bare Axios calls; query keys,
   caching and invalidation live in the React layer (`useDeviceTokens`).
-- **Token asymmetry is intentional.** Registration sends a `DeviceTokenDto`
-  (`token`), while the list endpoint returns `MobilePushTokenResponse`
-  (`deviceToken` + `createdAt`) — they mirror the backend request/response
-  shapes and are not interchangeable.
+- **Request and response DTOs both key the token as `deviceToken`.** Registration
+  sends a `MobilePushTokenRegisterRequest` (`deviceToken`, `platform`); the list
+  endpoint returns `MobilePushTokenResponse` (`deviceToken`, `platform`,
+  `createdAt`) — they mirror the backend `MobilePushTokenRegisterRequest` /
+  `MobilePushTokenResponse` shapes and are not interchangeable.
 - **Tokens are sensitive.** A device token can be used to push to a user's
   device; treat it like a credential — never log it, and rely on the
   `@granit/api-client` auth/CSRF interceptors for transport.

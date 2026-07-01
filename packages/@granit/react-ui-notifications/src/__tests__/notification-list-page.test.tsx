@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { NotificationListPage } from '../notification-list-page';
+import { NotificationListPage } from '../components/notification-list-page';
 
 import { renderNotifications } from './test-utils';
 

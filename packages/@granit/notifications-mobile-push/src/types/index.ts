@@ -1,11 +1,11 @@
 import type { ISODateString } from '@granit/types';
 
-export type MobilePlatform = 'android' | 'ios';
+export type MobilePlatform = 'Android' | 'Ios';
 
-export interface DeviceTokenDto {
-  readonly token: string;
+/** Write DTO for token registration. Mirrors `MobilePushTokenRegisterRequest` from .NET. */
+export interface MobilePushTokenRegisterRequest {
+  readonly deviceToken: string;
   readonly platform: MobilePlatform;
-  readonly deviceId?: string;
 }
 
 export interface MobilePushTokenResponse {
