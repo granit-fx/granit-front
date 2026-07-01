@@ -14,12 +14,12 @@ import type {
  */
 export const mockMobilePushTokens: MobilePushTokenResponse[] = [
   {
-    deviceToken: 'token-abc-123',
+    deviceTokenPreview: 'token-abc-123',
     platform: 'Android',
     createdAt: toISODateString('2026-03-17T10:00:00Z'),
   },
   {
-    deviceToken: 'token-def-456',
+    deviceTokenPreview: 'token-def-456',
     platform: 'Ios',
     createdAt: toISODateString('2026-03-17T09:00:00Z'),
   },

@@ -32,12 +32,12 @@ export function createMobilePushHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // POST register a device token — 204 No Content
     http.post(tokensUrl, async ({ request }) => {
       const body = (await request.json()) as MobilePushTokenRegisterRequest;
-      const alreadyRegistered = tokens.some((t) => t.deviceToken === body.deviceToken);
+      const alreadyRegistered = tokens.some((t) => t.deviceTokenPreview === body.deviceToken);
       if (!alreadyRegistered) {
         tokens = [
           ...tokens,
           {
-            deviceToken: body.deviceToken,
+            deviceTokenPreview: body.deviceToken,
             platform: body.platform,
             createdAt: toISODateString('2026-03-17T12:00:00Z'),
           },
@@ -49,7 +49,7 @@ export function createMobilePushHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // DELETE unregister a device token — 204 No Content
     http.delete(`${tokensUrl}/:token`, ({ params }) => {
       const token = decodeURIComponent(params.token as string);
-      tokens = tokens.filter((t) => t.deviceToken !== token);
+      tokens = tokens.filter((t) => t.deviceTokenPreview !== token);
       return noContent();
     }),
   ];

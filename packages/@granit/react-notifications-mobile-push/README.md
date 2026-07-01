@@ -88,7 +88,7 @@ function RegisteredDevices() {
   return (
     <ul>
       {tokens?.map((t) => (
-        <li key={t.deviceToken}>
+        <li key={t.deviceTokenPreview}>
           {t.platform} — registered {t.createdAt}
         </li>
       ))}

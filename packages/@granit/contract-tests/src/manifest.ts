@@ -258,6 +258,16 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'WebPushSubscriptionRemoveRequest',
     ],
   },
+  // Mobile-push device-token endpoints ship their own contract document
+  // (Granit.Notifications.MobilePush.Endpoints). Types-only — the routes use
+  // buildApiUrl, not the `${basePath}` template the endpoint scanner parses.
+  // `MobilePlatform` is a standalone string enum, verified indirectly via the
+  // `platform` fields that reference it.
+  {
+    slug: 'notifications-mobile-push',
+    package: 'notifications-mobile-push',
+    types: ['MobilePushTokenRegisterRequest', 'MobilePushTokenResponse'],
+  },
   {
     slug: 'localization',
     package: 'localization',

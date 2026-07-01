@@ -9,7 +9,8 @@ export interface MobilePushTokenRegisterRequest {
 }
 
 export interface MobilePushTokenResponse {
-  readonly deviceToken: string;
+  /** Masked preview of the stored device token (the full token is never returned). */
+  readonly deviceTokenPreview: string;
   readonly platform: MobilePlatform;
   readonly createdAt: ISODateString;
 }

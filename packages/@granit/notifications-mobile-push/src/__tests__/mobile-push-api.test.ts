@@ -47,12 +47,12 @@ describe('mobile-push-api', () => {
     const client = createMockClient();
     const tokens = [
       {
-        deviceToken: 'token-1',
+        deviceTokenPreview: 'token-1',
         platform: 'Android' as const,
         createdAt: toISODateString('2026-03-17T10:00:00Z'),
       },
       {
-        deviceToken: 'token-2',
+        deviceTokenPreview: 'token-2',
         platform: 'Ios' as const,
         createdAt: toISODateString('2026-03-17T11:00:00Z'),
       },

@@ -51,7 +51,7 @@ await registerDeviceToken(client, basePath, payload);
 // 2. List the tokens currently registered for the signed-in user.
 const tokens = await listDeviceTokens(client, basePath);
 for (const t of tokens) {
-  // t.deviceToken, t.platform, t.createdAt (ISODateString)
+  // t.deviceTokenPreview, t.platform, t.createdAt (ISODateString)
 }
 
 // 3. Unregister on sign-out / token rotation. The token is URL-encoded
@@ -65,7 +65,7 @@ await unregisterDeviceToken(client, basePath, fcmToken);
 | -------------------------------- | ---- | ------------------------------------------------------------ |
 | `MobilePlatform`                 | type | `'Android'` (FCM) \| `'Ios'` (APNs)                          |
 | `MobilePushTokenRegisterRequest` | type | Registration body: `deviceToken`, `platform`                 |
-| `MobilePushTokenResponse`        | type | Listed token: `deviceToken`, `platform`, `createdAt`         |
+| `MobilePushTokenResponse`        | type | Listed token: `deviceTokenPreview`, `platform`, `createdAt`  |
 | `registerDeviceToken`            | fn   | `POST {basePath}/notifications/mobile-push/tokens`           |
 | `listDeviceTokens`               | fn   | `GET {basePath}/notifications/mobile-push/tokens`            |
 | `unregisterDeviceToken`          | fn   | `DELETE .../tokens/{token}` (token is URL-encoded into path) |
@@ -79,14 +79,15 @@ await unregisterDeviceToken(client, basePath, fcmToken);
   This package only persists tokens server-side.
 - **No React Query / caching.** These are bare Axios calls; query keys,
   caching and invalidation live in the React layer (`useDeviceTokens`).
-- **Request and response DTOs both key the token as `deviceToken`.** Registration
-  sends a `MobilePushTokenRegisterRequest` (`deviceToken`, `platform`); the list
-  endpoint returns `MobilePushTokenResponse` (`deviceToken`, `platform`,
-  `createdAt`) — they mirror the backend `MobilePushTokenRegisterRequest` /
-  `MobilePushTokenResponse` shapes and are not interchangeable.
+- **Registration sends the full token; the list returns only a masked preview.**
+  Registration sends a `MobilePushTokenRegisterRequest` (`deviceToken`, `platform`);
+  the list endpoint returns `MobilePushTokenResponse` (`deviceTokenPreview`,
+  `platform`, `createdAt`) — the backend never echoes the full token back, so the
+  two DTOs are not interchangeable.
 - **Tokens are sensitive.** A device token can be used to push to a user's
-  device; treat it like a credential — never log it, and rely on the
-  `@granit/api-client` auth/CSRF interceptors for transport.
+  device; treat it like a credential — never log it (the backend returns only a
+  masked `deviceTokenPreview`), and rely on the `@granit/api-client` auth/CSRF
+  interceptors for transport.
 
 ## License
 
