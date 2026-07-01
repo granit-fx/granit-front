@@ -104,7 +104,13 @@ export function useWebPush(): UseWebPushReturn {
         applicationServerKey: urlBase64ToUint8Array(config.vapidPublicKey).buffer as ArrayBuffer,
       });
 
-      await registerPushSubscription(config.apiClient, basePath, subscription.toJSON());
+      const json = subscription.toJSON();
+      const keys = json.keys ?? {};
+      await registerPushSubscription(config.apiClient, basePath, {
+        endpoint: json.endpoint ?? '',
+        expirationTime: json.expirationTime,
+        keys: { p256dh: keys.p256dh ?? '', auth: keys.auth ?? '' },
+      });
 
       logger.info('Web push subscription registered');
       if (mountedRef.current) {

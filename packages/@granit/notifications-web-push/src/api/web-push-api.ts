@@ -1,13 +1,17 @@
 import { buildApiUrl } from '@granit/api-client';
 
+import type {
+  WebPushSubscriptionRegisterRequest,
+  WebPushSubscriptionRemoveRequest,
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 export async function registerPushSubscription(
   client: AxiosInstance,
   basePath: string,
-  subscription: PushSubscriptionJSON
+  subscription: WebPushSubscriptionRegisterRequest
 ): Promise<void> {
-  await client.post(buildApiUrl(basePath, 'notifications', 'push-subscriptions'), subscription);
+  await client.post(buildApiUrl(basePath, 'notifications', 'push', 'subscriptions'), subscription);
 }
 
 export async function unregisterPushSubscription(
@@ -15,7 +19,8 @@ export async function unregisterPushSubscription(
   basePath: string,
   endpoint: string
 ): Promise<void> {
-  await client.delete(buildApiUrl(basePath, 'notifications', 'push-subscriptions'), {
-    data: { endpoint },
+  const body: WebPushSubscriptionRemoveRequest = { endpoint };
+  await client.delete(buildApiUrl(basePath, 'notifications', 'push', 'subscriptions'), {
+    data: body,
   });
 }

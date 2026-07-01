@@ -44,7 +44,11 @@ function createWrapper(overrides?: Partial<WebPushProviderProps['config']>) {
 
 const mockSubscription = {
   endpoint: 'https://push.example.com/sub/123',
-  toJSON: () => ({ endpoint: 'https://push.example.com/sub/123', keys: {} }),
+  toJSON: () => ({
+    endpoint: 'https://push.example.com/sub/123',
+    expirationTime: null,
+    keys: { p256dh: 'p256dh-key', auth: 'auth-secret' },
+  }),
   unsubscribe: vi.fn().mockResolvedValue(true),
 };
 
@@ -191,11 +195,11 @@ describe('useWebPush', () => {
     expect(result.current.isSubscribed).toBe(true);
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBeNull();
-    expect(mockRegisterPushSubscription).toHaveBeenCalledWith(
-      apiClient,
-      '/api/v1/notifications',
-      mockSubscription.toJSON()
-    );
+    expect(mockRegisterPushSubscription).toHaveBeenCalledWith(apiClient, '/api/v1/notifications', {
+      endpoint: 'https://push.example.com/sub/123',
+      expirationTime: null,
+      keys: { p256dh: 'p256dh-key', auth: 'auth-secret' },
+    });
   });
 
   it('should set error when permission is denied', async () => {

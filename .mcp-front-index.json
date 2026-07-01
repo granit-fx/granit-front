@@ -2272,7 +2272,7 @@
         {
           "name": "registerPushSubscription",
           "kind": "function",
-          "signature": "async function registerPushSubscription( client: AxiosInstance, basePath: string, subscription: PushSubscriptionJSON ): Promise<void>"
+          "signature": "async function registerPushSubscription( client: AxiosInstance, basePath: string, subscription: WebPushSubscriptionRegisterRequest ): Promise<void>"
         },
         {
           "name": "unregisterPushSubscription",

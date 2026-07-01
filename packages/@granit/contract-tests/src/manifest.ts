@@ -244,6 +244,20 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'NotificationPreferenceUpdateRequest',
     ],
   },
+  // Web Push subscription endpoints live in their own contract document
+  // (Granit.Notifications.WebPush.Endpoints, granit-dotnet PR #2883); the routes
+  // are no longer part of notifications.json. Types-only — the two routes are
+  // built via buildApiUrl (not the `${basePath}` template the endpoint scanner
+  // parses), so route conformance is left off.
+  {
+    slug: 'notifications-web-push',
+    package: 'notifications-web-push',
+    types: [
+      'WebPushSubscriptionRegisterRequest',
+      'WebPushSubscriptionKeys',
+      'WebPushSubscriptionRemoveRequest',
+    ],
+  },
   {
     slug: 'localization',
     package: 'localization',
