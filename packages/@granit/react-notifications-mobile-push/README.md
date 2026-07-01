@@ -65,7 +65,7 @@ function PushToggle() {
   // Requests OS permission, captures the FCM/APNs token, and registers it
   // with the backend; re-syncs automatically on token refresh while active.
   const { isRegistered, loading, error, register, unregister } = useMobilePush({
-    platform: 'android', // 'android' (FCM) | 'ios' (APNs)
+    platform: 'Android', // 'Android' (FCM) | 'Ios' (APNs)
   });
 
   return (
