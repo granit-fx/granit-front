@@ -2469,9 +2469,6 @@ importers:
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
-      '@granit/react-ui':
-        specifier: workspace:*
-        version: link:../react-ui
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -5499,6 +5496,34 @@ importers:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.9.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
+  packages/@granit/react-ui-entity-merge:
+    dependencies:
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/entity-merge':
+        specifier: workspace:*
+        version: link:../entity-merge
+      '@granit/react-entity-merge':
+        specifier: workspace:*
+        version: link:../react-entity-merge
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/react-ui':
+        specifier: workspace:*
+        version: link:../react-ui
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@tanstack/react-query':
+        specifier: 5.101.2
+        version: 5.101.2(react@19.2.7)
+
   packages/@granit/react-ui-error-boundary:
     devDependencies:
       '@granit/react-localization':
@@ -6216,6 +6241,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-entity-merge':
+        specifier: workspace:*
+        version: link:../react-ui-entity-merge
       '@granit/react-ui-kit':
         specifier: workspace:*
         version: link:../react-ui-kit

@@ -67,6 +67,10 @@ export default defineConfig({
         __dirname,
         'packages/@granit/react-entity-merge/src/index.ts'
       ),
+      '@granit/react-ui-entity-merge': path.resolve(
+        __dirname,
+        'packages/@granit/react-ui-entity-merge/src/index.ts'
+      ),
       '@granit/entity-merge': path.resolve(__dirname, 'packages/@granit/entity-merge/src/index.ts'),
       '@granit/react-features/testing': path.resolve(
         __dirname,

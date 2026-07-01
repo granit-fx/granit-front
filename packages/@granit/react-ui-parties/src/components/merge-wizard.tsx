@@ -1,8 +1,4 @@
-import {
-  FieldConflictTable,
-  ReferenceRewriterSummary,
-  useFieldChoices,
-} from '@granit/react-entity-merge';
+import { ReferenceRewriterSummary, useFieldChoices } from '@granit/react-entity-merge';
 import {
   isAxiosError,
   useMergePartyMutation,
@@ -10,6 +6,7 @@ import {
   usePartyQuery,
 } from '@granit/react-parties';
 import { Button, Card, CardContent, CardHeader, Label, Textarea } from '@granit/react-ui';
+import { FieldConflictTable } from '@granit/react-ui-entity-merge';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

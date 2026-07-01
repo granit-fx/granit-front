@@ -1,20 +1,23 @@
 import { classifyMergeError } from '@granit/entity-merge';
+import {
+  MergeConfirmDialog,
+  ReferenceRewriterSummary,
+  useFieldChoices,
+  useMergeMutation,
+  useMergePreview,
+} from '@granit/react-entity-merge';
 import { Alert, AlertDescription } from '@granit/react-ui';
 import { useState } from 'react';
 
-import { useFieldChoices } from '../hooks/use-field-choices';
-import { useMergeMutation } from '../hooks/use-merge-mutation';
-import { useMergePreview } from '../hooks/use-merge-preview';
-
 import { FieldConflictTable } from './field-conflict-table';
-import { MergeConfirmDialog } from './merge-confirm-dialog';
-import { ReferenceRewriterSummary } from './reference-rewriter-summary';
 
 import type { FieldConflictTableLabels } from './field-conflict-table';
-import type { MergeConfirmDialogLabels } from './merge-confirm-dialog';
-import type { ReferenceRewriterSummaryLabels } from './reference-rewriter-summary';
-import type { MergeMutationVariables } from '../hooks/use-merge-mutation';
 import type { MergeErrorKind, MergeResult } from '@granit/entity-merge';
+import type {
+  MergeConfirmDialogLabels,
+  ReferenceRewriterSummaryLabels,
+  MergeMutationVariables,
+} from '@granit/react-entity-merge';
 import type { ReactNode } from 'react';
 
 const REASON_MAX_LENGTH = 1000;

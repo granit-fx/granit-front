@@ -1,10 +1,10 @@
+import { mockMergeResult } from '@granit/react-entity-merge/testing';
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { MergeWizard } from '../components/merge-wizard';
 import { entityMergeTranslationsEn } from '../locales/en';
-import { mockMergeResult } from '../testing/data';
 
 import { createEntityMergeHarness } from './test-utils';
 

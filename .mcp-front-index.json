@@ -5751,7 +5751,7 @@
     },
     {
       "name": "@granit/react-entity-merge",
-      "description": "React bindings for @granit/entity-merge — hooks, FieldConflictTable, ReferenceRewriterSummary and a headless MergeWizard",
+      "description": "Headless React bindings for @granit/entity-merge — provider, hooks, ReferenceRewriterSummary and a native-dialog MergeConfirmDialog. The react-ui-styled FieldConflictTable and MergeWizard live in @granit/react-ui-entity-merge.",
       "exports": [
         {
           "name": "API_VERSION",
@@ -5802,11 +5802,6 @@
           "members": []
         },
         {
-          "name": "FieldConflictTable",
-          "kind": "function",
-          "signature": "function FieldConflictTable("
-        },
-        {
           "name": "ReferenceRewriterSummary",
           "kind": "function",
           "signature": "function ReferenceRewriterSummary("
@@ -5815,23 +5810,6 @@
           "name": "MergeConfirmDialog",
           "kind": "function",
           "signature": "function MergeConfirmDialog("
-        },
-        {
-          "name": "MergeWizard",
-          "kind": "function",
-          "signature": "function MergeWizard<TId extends string = string>("
-        },
-        {
-          "name": "MergeWizardProps",
-          "kind": "interface",
-          "signature": "interface MergeWizardProps<TId extends string = string>",
-          "members": []
-        },
-        {
-          "name": "MergeWizardLabels",
-          "kind": "interface",
-          "signature": "interface MergeWizardLabels",
-          "members": []
         }
       ]
     },
@@ -9197,6 +9175,34 @@
           "name": "WorkspaceCustomizationTab",
           "kind": "function",
           "signature": "function WorkspaceCustomizationTab()"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-entity-merge",
+      "description": "react-ui-styled rendering layer for the generic entity-merge flow — FieldConflictTable and the label-driven MergeWizard. Composes the headless @granit/react-entity-merge (provider, hooks, MergeConfirmDialog, ReferenceRewriterSummary) with @granit/react-ui.",
+      "exports": [
+        {
+          "name": "FieldConflictTable",
+          "kind": "function",
+          "signature": "function FieldConflictTable("
+        },
+        {
+          "name": "MergeWizard",
+          "kind": "function",
+          "signature": "function MergeWizard<TId extends string = string>("
+        },
+        {
+          "name": "MergeWizardProps",
+          "kind": "interface",
+          "signature": "interface MergeWizardProps<TId extends string = string>",
+          "members": []
+        },
+        {
+          "name": "MergeWizardLabels",
+          "kind": "interface",
+          "signature": "interface MergeWizardLabels",
+          "members": []
         }
       ]
     },

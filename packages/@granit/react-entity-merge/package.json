@@ -1,6 +1,6 @@
 {
   "name": "@granit/react-entity-merge",
-  "description": "React bindings for @granit/entity-merge — hooks, FieldConflictTable, ReferenceRewriterSummary and a headless MergeWizard",
+  "description": "Headless React bindings for @granit/entity-merge — provider, hooks, ReferenceRewriterSummary and a native-dialog MergeConfirmDialog. The react-ui-styled FieldConflictTable and MergeWizard live in @granit/react-ui-entity-merge.",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -18,7 +18,6 @@
     "@granit/api-client": "workspace:*",
     "@granit/entity-merge": "workspace:*",
     "@granit/react-api-client": "workspace:*",
-    "@granit/react-ui": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "msw": "^2.12.0",
     "react": "^19.0.0"
@@ -46,7 +45,6 @@
     "@granit/entity-merge": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
-    "@granit/react-ui": "workspace:*",
     "@granit/testing": "workspace:*"
   }
 }

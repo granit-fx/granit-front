@@ -1,0 +1,40 @@
+{
+  "name": "@granit/react-ui-entity-merge",
+  "description": "react-ui-styled rendering layer for the generic entity-merge flow — FieldConflictTable and the label-driven MergeWizard. Composes the headless @granit/react-entity-merge (provider, hooks, MergeConfirmDialog, ReferenceRewriterSummary) with @granit/react-ui.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/entity-merge": "workspace:*",
+    "@granit/react-entity-merge": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "react": "^19.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/entity-merge": "workspace:*",
+    "@granit/react-entity-merge": "workspace:*",
+    "@granit/react-testing": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@tanstack/react-query": "^5.0.0"
+  }
+}

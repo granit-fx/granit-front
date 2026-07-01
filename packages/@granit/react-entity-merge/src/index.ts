@@ -22,12 +22,8 @@ export type { MergeMutationVariables } from './hooks/use-merge-mutation';
 export { useFieldChoices } from './hooks/use-field-choices';
 export type { UseFieldChoicesResult } from './hooks/use-field-choices';
 
-// Components
-export { FieldConflictTable } from './components/field-conflict-table';
-export type {
-  FieldConflictTableProps,
-  FieldConflictTableLabels,
-} from './components/field-conflict-table';
+// Components (headless — the react-ui-styled FieldConflictTable and MergeWizard
+// live in @granit/react-ui-entity-merge)
 export { ReferenceRewriterSummary } from './components/reference-rewriter-summary';
 export type {
   ReferenceRewriterSummaryProps,
@@ -38,8 +34,3 @@ export type {
   MergeConfirmDialogProps,
   MergeConfirmDialogLabels,
 } from './components/merge-confirm-dialog';
-export { MergeWizard } from './components/merge-wizard';
-export type { MergeWizardProps, MergeWizardLabels } from './components/merge-wizard';
-
-// i18n label bags (convenience defaults)
-export { entityMergeTranslationsEn, entityMergeTranslationsFr } from './locales/index';

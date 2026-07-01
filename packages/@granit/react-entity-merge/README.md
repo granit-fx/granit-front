@@ -1,27 +1,36 @@
 # @granit/react-entity-merge
 
 React bindings for the Granit **entity merge** flow — TanStack Query hooks, a
-shared `EntityMergeProvider`, and headless presentational building blocks
-(`FieldConflictTable`, `ReferenceRewriterSummary`, `MergeConfirmDialog`) topped
-by a complete, label-driven `MergeWizard`. This is the **React hooks + headless
-components layer**: it wraps the framework-agnostic DTOs and Axios calls from
+shared `EntityMergeProvider`, and the genuinely-headless presentational building
+blocks `ReferenceRewriterSummary` and the native-`<dialog>` `MergeConfirmDialog`
+(no `@granit/react-ui`). This is the **React hooks + headless layer**: it wraps
+the framework-agnostic DTOs and Axios calls from
 [`@granit/entity-merge`](../entity-merge) and owns no DTO or HTTP logic of its
 own. It is the React counterpart of the .NET `Granit.EntityMerge` module
 ([rename PR](https://github.com/granit-fx/granit-dotnet/pull/2422)).
+
+The react-ui-styled rendering surface — the `FieldConflictTable` (styled with
+`@granit/react-ui`'s `Alert`) and the complete, label-driven `MergeWizard` — now
+lives one tier up in
+[`@granit/react-ui-entity-merge`](../react-ui-entity-merge), keeping this package
+free of any `@granit/react-ui` dependency (Option-b strict tiers).
 
 A merge folds a **loser** aggregate into a **survivor**: scalar conflicts are
 resolved per-field, cross-module foreign keys are rewritten, and the loser is
 soft-archived (tombstoned). The flow is dry-run preview → resolve conflicts →
 confirm → commit. Everything here is **headless and label-driven** — components
 take a `labels` bag plus optional `translate*` callbacks, so they drop into any
-design system or i18n setup. The split is two packages over the same backend:
+design system or i18n setup. The split is three packages over the same backend:
 
 - [`@granit/entity-merge`](../entity-merge) — framework-agnostic core: merge
   DTOs, the Axios calls (`previewMerge`, `executeMerge`, …), and pure helpers
   (`seedFieldChoices`, `resolveWinner`, `classifyMergeError`).
 - `@granit/react-entity-merge` (this package) — React Query hooks, provider, and
-  headless components. There is no `react-ui` admin feature kit; domain packages
-  (`@granit/react-parties`, …) compose these building blocks directly.
+  headless building blocks (`ReferenceRewriterSummary`, `MergeConfirmDialog`).
+- [`@granit/react-ui-entity-merge`](../react-ui-entity-merge) — the react-ui
+  rendering layer (`FieldConflictTable`, `MergeWizard`). Domain packages
+  (`@granit/react-ui-parties`, …) compose the styled pieces from there and the
+  hooks from here.
 
 ## Install
 
@@ -46,11 +55,8 @@ Wire the provider once (it resolves the Axios client and the aggregate's
 React Query `<QueryClientProvider>` ancestor is required.
 
 ```tsx
-import {
-  EntityMergeProvider,
-  MergeWizard,
-  entityMergeTranslationsEn,
-} from '@granit/react-entity-merge';
+import { EntityMergeProvider, entityMergeTranslationsEn } from '@granit/react-entity-merge';
+import { MergeWizard } from '@granit/react-ui-entity-merge';
 
 // `basePath` is the mergeable aggregate's collection root — the
 // `/{survivorId}/merge[/preview]` suffix is appended by the hooks.
@@ -79,9 +85,9 @@ import {
   useMergePreview,
   useFieldChoices,
   useMergeMutation,
-  FieldConflictTable,
   ReferenceRewriterSummary,
 } from '@granit/react-entity-merge';
+import { FieldConflictTable } from '@granit/react-ui-entity-merge';
 
 function CustomMerge({ survivorId, loserId, labels }: MergeProps) {
   const { data: preview, isLoading, isError } = useMergePreview(survivorId, loserId);
@@ -122,30 +128,26 @@ cached preview after a committed (non-dry-run) merge, and accepts an
 
 ## Public API
 
-| Symbol                      | Kind      | Purpose                                                                        |
-| --------------------------- | --------- | ------------------------------------------------------------------------------ |
-| `EntityMergeProvider`       | provider  | Supplies the resolved Axios client, `basePath`, and query-key prefix to hooks  |
-| `useEntityMergeConfig`      | hook      | Read the resolved config; throws outside a provider                            |
-| `buildEntityMergeQueryKey`  | fn        | Query-key factory prepending the configured `queryKeyPrefix`                   |
-| `entityMergeKeys`           | const     | Query-key segment factory (`all`, `preview(survivorId, loserId)`)              |
-| `useMergePreview`           | hook      | Dry-run preview for a `(survivor, loser)` pair; disabled until ids differ      |
-| `useMergeMutation`          | hook      | Commit the live merge; auto idempotency key + cache invalidation on success    |
-| `useFieldChoices`           | hook      | Local per-field choice state seeded from each conflict's recommended default   |
-| `MergeWizard`               | component | Full headless flow: preview → resolve → confirm → commit                       |
-| `FieldConflictTable`        | component | Headless radio-group table, one Survivor/Loser choice per conflict             |
-| `ReferenceRewriterSummary`  | component | Headless recap of non-zero cross-module rewrite counts                         |
-| `MergeConfirmDialog`        | component | Minimal accessible confirm step with an irreversibility warning                |
-| `entityMergeTranslationsEn` | const     | Default English `MergeWizardLabels` bag (convenience)                          |
-| `entityMergeTranslationsFr` | const     | Default French `MergeWizardLabels` bag (convenience)                           |
-| `API_VERSION`               | const     | Current wire API version (`'v1'`)                                              |
-| `DEFAULT_QUERY_KEY_PREFIX`  | const     | Fallback query-key prefix (`['entity-merge']`)                                 |
-| `EntityMergeConfig`         | type      | Provider input (optional `client`, required `basePath`, optional prefix)       |
-| `ResolvedEntityMergeConfig` | type      | Provider output with the resolved required `client`                            |
-| `EntityMergeProviderProps`  | type      | `{ config, children }`                                                         |
-| `UseMergePreviewOptions`    | type      | `{ enabled? }` for `useMergePreview`                                           |
-| `MergeMutationVariables`    | type      | `{ request, idempotencyKey? }` for `useMergeMutation`                          |
-| `UseFieldChoicesResult`     | type      | `{ choices, winnerFor, setChoice, reset }`                                     |
-| `*Props` / `*Labels`        | type      | Per-component props and label bags for the four headless components            |
+| Symbol                      | Kind      | Purpose                                                                       |
+| --------------------------- | --------- | ----------------------------------------------------------------------------- |
+| `EntityMergeProvider`       | provider  | Supplies the resolved Axios client, `basePath`, and query-key prefix to hooks |
+| `useEntityMergeConfig`      | hook      | Read the resolved config; throws outside a provider                           |
+| `buildEntityMergeQueryKey`  | fn        | Query-key factory prepending the configured `queryKeyPrefix`                  |
+| `entityMergeKeys`           | const     | Query-key segment factory (`all`, `preview(survivorId, loserId)`)             |
+| `useMergePreview`           | hook      | Dry-run preview for a `(survivor, loser)` pair; disabled until ids differ     |
+| `useMergeMutation`          | hook      | Commit the live merge; auto idempotency key + cache invalidation on success   |
+| `useFieldChoices`           | hook      | Local per-field choice state seeded from each conflict's recommended default  |
+| `ReferenceRewriterSummary`  | component | Headless recap of non-zero cross-module rewrite counts                        |
+| `MergeConfirmDialog`        | component | Minimal accessible confirm step with an irreversibility warning               |
+| `API_VERSION`               | const     | Current wire API version (`'v1'`)                                             |
+| `DEFAULT_QUERY_KEY_PREFIX`  | const     | Fallback query-key prefix (`['entity-merge']`)                                |
+| `EntityMergeConfig`         | type      | Provider input (optional `client`, required `basePath`, optional prefix)      |
+| `ResolvedEntityMergeConfig` | type      | Provider output with the resolved required `client`                           |
+| `EntityMergeProviderProps`  | type      | `{ config, children }`                                                        |
+| `UseMergePreviewOptions`    | type      | `{ enabled? }` for `useMergePreview`                                          |
+| `MergeMutationVariables`    | type      | `{ request, idempotencyKey? }` for `useMergeMutation`                         |
+| `UseFieldChoicesResult`     | type      | `{ choices, winnerFor, setChoice, reset }`                                    |
+| `*Props` / `*Labels`        | type      | Per-component props and label bags for the headless components                |
 
 The merge DTOs themselves (`MergeResult`, `MergeRequest`, `FieldConflict`,
 `WinnerSide`, `MergeFieldChoices`, `MergeErrorKind`) are owned by and imported
@@ -172,13 +174,16 @@ alongside, plus the `CreateEntityMergeHandlersOptions` type.
 - **A merge is irreversible.** There is no un-merge — the loser is soft-archived
   and its references reattach to the survivor. `MergeConfirmDialog` and the
   default label bags carry that warning; keep it when supplying your own labels.
-- **i18n stays the caller's job.** `MergeWizard` maps `MergeErrorKind` to copy
-  through its `labels.errors` bag (enriching `domain`/`validation`/`unknown`
-  with the server `detail`); `entityMergeTranslationsEn`/`Fr` are convenience
-  defaults — domain packages build their own labels from translation keys.
-- **Components are headless.** They carry only minimal Tailwind utility classes
-  and shadcn-style design tokens (`text-muted-foreground`, `bg-destructive`, …);
-  wrap and theme them with the host design system.
+- **i18n stays the caller's job.** The `MergeWizard`
+  ([`@granit/react-ui-entity-merge`](../react-ui-entity-merge)) maps
+  `MergeErrorKind` to copy through its `labels.errors` bag (enriching
+  `domain`/`validation`/`unknown` with the server `detail`); the
+  `entityMergeTranslationsEn`/`Fr` convenience defaults ship there too — domain
+  packages build their own labels from translation keys.
+- **Components are headless.** `ReferenceRewriterSummary` and `MergeConfirmDialog`
+  carry only minimal Tailwind utility classes and shadcn-style design tokens
+  (`text-muted-foreground`, `bg-destructive`, …) with no `@granit/react-ui`
+  dependency; wrap and theme them with the host design system.
 
 ## Out of scope
 
