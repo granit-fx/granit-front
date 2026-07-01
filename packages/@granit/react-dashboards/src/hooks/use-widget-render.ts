@@ -7,6 +7,8 @@ import { useDashboardFilters } from '../components/dashboard-filter-context';
 import { mergeFilterValuesIntoRequest } from '../lib/merge-filter-values';
 import { useDashboardsConfig } from '../providers/dashboards-provider';
 
+import { buildDashboardsQueryKey } from './query-keys';
+
 import type {
   DashboardRenderedWidget,
   RefreshHint,
@@ -63,12 +65,16 @@ export type WidgetRenderKind = 'kpi' | 'chart' | 'table' | 'pivot' | 'map';
  * `(kind, definition, context)` so semantically-identical inputs
  * collapse to the same cache entry / in-flight request — same
  * convention as the bundle path's `dashboardRenderQueryKey`.
+ *
+ * @deprecated Use {@link buildDashboardsQueryKey} with the segments
+ * `'widget', kind, 'render', definition, context`. Kept as a byte-identical
+ * alias.
  */
 export const widgetRenderQueryKey = <TDefinition extends WidgetDefinitionBase>(
   kind: WidgetRenderKind,
   definition: TDefinition,
   context: WidgetRenderContext
-) => ['widget', kind, 'render', definition, context] as const;
+) => buildDashboardsQueryKey({}, 'widget', kind, 'render', definition, context);
 
 export interface UseWidgetRenderOptions {
   /** Disable the request — useful when the parent isn't ready (e.g. tenant pending). */

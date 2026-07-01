@@ -11,6 +11,8 @@ import { useEffect, useMemo } from 'react';
 
 import { useDashboardsConfig } from '../providers/dashboards-provider';
 
+import { buildDashboardsQueryKey } from './query-keys';
+
 import type {
   DashboardRenderedWidget,
   DashboardRenderRequest,
@@ -53,17 +55,27 @@ export interface UseDashboardRenderOptions {
 /**
  * Cache key composer. Exported for tests + for sibling hooks that need to
  * address the same query without going through the hook itself.
+ *
+ * @deprecated Use {@link buildDashboardsQueryKey} with the segments
+ * `'dashboard', dashboardId, 'render', request`. Kept as a byte-identical alias.
  */
 export const dashboardRenderQueryKey = (dashboardId: string, request: DashboardRenderRequest) =>
-  ['dashboard', dashboardId, 'render', request] as const;
+  buildDashboardsQueryKey({}, 'dashboard', dashboardId, 'render', request);
 
 /**
  * Cache key composer for the **per-widget** TanStack entries the hook
  * populates from the bundle response (ADR-039 §6.2). Use it from
  * {@link useDashboardWidget} to read a single widget's envelope.
+ *
+ * **SSE-identity anchor**: `usePushedDashboard` writes push snapshots to this
+ * exact key and `useDashboardWidget` reads it — the tuple must stay
+ * byte-identical. See the `push-key-identity` test.
+ *
+ * @deprecated Use {@link buildDashboardsQueryKey} with the segments
+ * `'dashboard', dashboardId, 'widget', widgetId`. Kept as a byte-identical alias.
  */
 export const dashboardWidgetQueryKey = (dashboardId: string, widgetId: string) =>
-  ['dashboard', dashboardId, 'widget', widgetId] as const;
+  buildDashboardsQueryKey({}, 'dashboard', dashboardId, 'widget', widgetId);
 
 /**
  * Calls `POST /dashboards/{id}/render` and returns the bundle response.

@@ -3,6 +3,8 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
 import { useDashboardsConfig } from '../providers/dashboards-provider';
 
+import { buildDashboardsQueryKey } from './query-keys';
+
 import type { DashboardStatus, DashboardSummaryResponse, PagedResponse } from '@granit/dashboards';
 
 export interface UseDashboardListParams {
@@ -18,9 +20,12 @@ export interface UseDashboardListParams {
  * Cache key composer for the persisted-dashboard list. The params get
  * baked into the key so each filter / page combination caches
  * independently.
+ *
+ * @deprecated Use {@link buildDashboardsQueryKey} with the segments
+ * `'dashboards', 'list', params`. Kept as a byte-identical alias.
  */
 export const dashboardListQueryKey = (params: UseDashboardListParams) =>
-  ['dashboards', 'list', params] as const;
+  buildDashboardsQueryKey({}, 'dashboards', 'list', params);
 
 /**
  * `GET /dashboards/?status=&page=&pageSize=` — returns a paged list of

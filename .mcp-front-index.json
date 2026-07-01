@@ -4652,6 +4652,11 @@
           "signature": "const useDashboardsConfig"
         },
         {
+          "name": "buildDashboardsQueryKey",
+          "kind": "function",
+          "signature": "function buildDashboardsQueryKey( config: Pick<DashboardsConfig, 'queryKeyPrefix'>, ...segments: readonly unknown[] ): readonly unknown[]"
+        },
+        {
           "name": "UseDashboardRenderOptions",
           "kind": "interface",
           "signature": "interface UseDashboardRenderOptions",

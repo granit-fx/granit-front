@@ -10,6 +10,10 @@ export type {
   ResolvedDashboardsConfig,
 } from './providers/dashboards-provider';
 
+// Query-key factory (family-standard `build{Module}QueryKey(config, ...segments)`).
+// The per-operation `*QueryKey` fns below are `@deprecated` byte-identical aliases.
+export { buildDashboardsQueryKey } from './hooks/query-keys';
+
 // Render hook (B4-render — POST /dashboards/{id}/render bundle + per-widget cache split)
 export {
   dashboardRenderQueryKey,
