@@ -9,7 +9,7 @@ import type { TemplateEditorHandle } from '../components/template-editor';
 import type * as ReactTemplating from '@granit/react-templating';
 
 // The generic formatting toolbar + HTML round-trip are owned (and tested) by
-// @granit/react-rich-text. These tests cover only what this wrapper adds: the
+// @granit/react-ui-rich-text. These tests cover only what this wrapper adds: the
 // templating toolbar extras (variable picker, switch-to-code) and the
 // re-exposed insertAtCursor handle.
 

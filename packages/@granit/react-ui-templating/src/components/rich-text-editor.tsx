@@ -1,9 +1,9 @@
 import { useTranslation } from '@granit/react-localization';
+import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@granit/react-ui';
 import {
   RichTextEditor as SharedRichTextEditor,
   type RichTextEditorHandle,
-} from '@granit/react-rich-text';
-import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@granit/react-ui';
+} from '@granit/react-ui-rich-text';
 import { Code } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
@@ -26,7 +26,7 @@ const PLACEHOLDER = '<h1>{{ model.title }}</h1>';
 
 /**
  * Templating's WYSIWYG — a thin wrapper over the shared
- * {@link @granit/react-rich-text!RichTextEditor}. It owns only the
+ * {@link @granit/react-ui-rich-text!RichTextEditor}. It owns only the
  * templating-specific toolbar extras (the `{{ variable }}` picker and the
  * switch-to-code toggle); the generic formatting toolbar + HTML round-trip
  * live in the shared editor so every Granit HTML editor stays consistent.

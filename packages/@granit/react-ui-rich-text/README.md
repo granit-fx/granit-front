@@ -1,4 +1,4 @@
-# @granit/react-rich-text
+# @granit/react-ui-rich-text
 
 Shared rich-text editor for the Granit framework — a generic
 [TipTap](https://tiptap.dev)-based WYSIWYG that takes HTML in and emits HTML out.
@@ -24,7 +24,7 @@ declares these peers:
 ## Usage
 
 ```tsx
-import { RichTextEditor, type RichTextEditorHandle } from '@granit/react-rich-text';
+import { RichTextEditor, type RichTextEditorHandle } from '@granit/react-ui-rich-text';
 import { useRef, useState } from 'react';
 
 function MyEditor() {

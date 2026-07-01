@@ -7099,57 +7099,6 @@
       ]
     },
     {
-      "name": "@granit/react-rich-text",
-      "description": "Granit shared rich-text editor — a generic TipTap-based WYSIWYG (HTML in/out) with a configurable toolbar slot, a Notion-style slash (/) block menu and a selection bubble menu. The base every Granit HTML editor (templating, dashboards, …) composes, replacing per-feature editors and raw Markdown widgets.",
-      "exports": [
-        {
-          "name": "RichTextEditor",
-          "kind": "const",
-          "signature": "const RichTextEditor"
-        },
-        {
-          "name": "RichTextEditorHandle",
-          "kind": "interface",
-          "signature": "interface RichTextEditorHandle",
-          "members": [
-            {
-              "name": "insertAtCursor",
-              "kind": "method",
-              "signature": "insertAtCursor: (text: string) => void"
-            }
-          ]
-        },
-        {
-          "name": "RichTextEditorProps",
-          "kind": "interface",
-          "signature": "interface RichTextEditorProps",
-          "members": []
-        },
-        {
-          "name": "SlashCommand",
-          "kind": "const",
-          "signature": "const SlashCommand"
-        },
-        {
-          "name": "createDefaultSlashItems",
-          "kind": "function",
-          "signature": "function createDefaultSlashItems(t: TFunction): readonly SlashCommandItem[]"
-        },
-        {
-          "name": "SlashCommandItem",
-          "kind": "interface",
-          "signature": "interface SlashCommandItem",
-          "members": []
-        },
-        {
-          "name": "SlashCommandOptions",
-          "kind": "interface",
-          "signature": "interface SlashCommandOptions",
-          "members": []
-        }
-      ]
-    },
-    {
       "name": "@granit/react-scheduling",
       "description": "React hooks for scheduled action management — useScheduledActions, useCancelScheduledAction, useRescheduleScheduledAction",
       "exports": [
@@ -10346,6 +10295,57 @@
           "name": "ReferenceDataEditPageShell",
           "kind": "function",
           "signature": "function ReferenceDataEditPageShell("
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-rich-text",
+      "description": "Granit shared rich-text editor — a generic TipTap-based WYSIWYG (HTML in/out) with a configurable toolbar slot, a Notion-style slash (/) block menu and a selection bubble menu. The base every Granit HTML editor (templating, dashboards, …) composes, replacing per-feature editors and raw Markdown widgets.",
+      "exports": [
+        {
+          "name": "RichTextEditor",
+          "kind": "const",
+          "signature": "const RichTextEditor"
+        },
+        {
+          "name": "RichTextEditorHandle",
+          "kind": "interface",
+          "signature": "interface RichTextEditorHandle",
+          "members": [
+            {
+              "name": "insertAtCursor",
+              "kind": "method",
+              "signature": "insertAtCursor: (text: string) => void"
+            }
+          ]
+        },
+        {
+          "name": "RichTextEditorProps",
+          "kind": "interface",
+          "signature": "interface RichTextEditorProps",
+          "members": []
+        },
+        {
+          "name": "SlashCommand",
+          "kind": "const",
+          "signature": "const SlashCommand"
+        },
+        {
+          "name": "createDefaultSlashItems",
+          "kind": "function",
+          "signature": "function createDefaultSlashItems(t: TFunction): readonly SlashCommandItem[]"
+        },
+        {
+          "name": "SlashCommandItem",
+          "kind": "interface",
+          "signature": "interface SlashCommandItem",
+          "members": []
+        },
+        {
+          "name": "SlashCommandOptions",
+          "kind": "interface",
+          "signature": "interface SlashCommandOptions",
+          "members": []
         }
       ]
     },

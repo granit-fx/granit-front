@@ -1,4 +1,4 @@
-// @granit/react-rich-text — shared TipTap-based rich-text editor (HTML in / out).
+// @granit/react-ui-rich-text — shared TipTap-based rich-text editor (HTML in / out).
 // The base every Granit HTML editor composes; feature packages wrap it and inject
 // their own toolbar controls via `RichTextEditorProps.toolbarExtras`.
 

@@ -1,4 +1,4 @@
-// @granit/react-rich-text — i18next resource bundle (flat keys, "translation" ns).
+// @granit/react-ui-rich-text — i18next resource bundle (flat keys, "translation" ns).
 // All editor labels also pass a `defaultValue`, so the editor is fully usable
 // without registering this bundle; register it to localize the toolbar.
 

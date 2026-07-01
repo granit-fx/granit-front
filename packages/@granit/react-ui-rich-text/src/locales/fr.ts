@@ -1,4 +1,4 @@
-// @granit/react-rich-text — i18next resource bundle (flat keys, "translation" ns), French.
+// @granit/react-ui-rich-text — i18next resource bundle (flat keys, "translation" ns), French.
 
 export const richTextTranslationsFr = {
   'RichText.Bold': 'Gras',
