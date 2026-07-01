@@ -1,13 +1,9 @@
 import { Datasource, isMetricDatasource, isQueryAggregateDatasource } from '@granit/dashboards';
+import { useQueryFieldMetadata } from '@granit/react-analytics';
 import { Combobox } from '@granit/react-ui';
 import { useTranslation } from 'react-i18next';
 
-import {
-  EnumSelect,
-  QueryNameCombobox,
-  RequiredMark,
-  useQueryFieldMetadata,
-} from './query-field-controls';
+import { EnumSelect, QueryNameCombobox, RequiredMark } from './query-field-controls';
 
 import type { KpiWidgetDefinition } from '@granit/analytics';
 import type { AggregateFunction } from '@granit/dashboards';

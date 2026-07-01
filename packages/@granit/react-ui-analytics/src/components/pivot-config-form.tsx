@@ -1,3 +1,4 @@
+import { useQueryFieldMetadata } from '@granit/react-analytics';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -6,7 +7,6 @@ import {
   MetaMultiFieldInput,
   QueryNameCombobox,
   RequiredMark,
-  useQueryFieldMetadata,
 } from './query-field-controls';
 
 import type { PivotWidgetDefinition } from '@granit/analytics';

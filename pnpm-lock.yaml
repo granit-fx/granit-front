@@ -1393,9 +1393,6 @@ importers:
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
-      '@granit/react-ui':
-        specifier: workspace:*
-        version: link:../react-ui
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -2752,6 +2749,9 @@ importers:
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
+      '@granit/react-ui-analytics':
+        specifier: workspace:*
+        version: link:../react-ui-analytics
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
@@ -4002,6 +4002,46 @@ importers:
         specifier: ^7.18.0
         version: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
+  packages/@granit/react-ui-analytics:
+    dependencies:
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+      react-i18next:
+        specifier: ^17.0.0
+        version: 17.0.8(i18next@26.3.3(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+    devDependencies:
+      '@granit/analytics':
+        specifier: workspace:*
+        version: link:../analytics
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/dashboards':
+        specifier: workspace:*
+        version: link:../dashboards
+      '@granit/query-engine':
+        specifier: workspace:*
+        version: link:../query-engine
+      '@granit/react-analytics':
+        specifier: workspace:*
+        version: link:../react-analytics
+      '@granit/react-dashboard-editor':
+        specifier: workspace:*
+        version: link:../react-dashboard-editor
+      '@granit/react-query-engine':
+        specifier: workspace:*
+        version: link:../react-query-engine
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/react-ui':
+        specifier: workspace:*
+        version: link:../react-ui
+      i18next:
+        specifier: ^26.0.0
+        version: 26.3.3(typescript@6.0.3)
+
   packages/@granit/react-ui-auditing:
     dependencies:
       i18next:
@@ -5184,6 +5224,9 @@ importers:
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@granit/react-ui-analytics':
+        specifier: workspace:*
+        version: link:../react-ui-analytics
       '@granit/react-ui-kit':
         specifier: workspace:*
         version: link:../react-ui-kit

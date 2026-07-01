@@ -4,11 +4,7 @@ import {
   type DashboardDefinition,
   type WidgetDefinition,
 } from '@granit/dashboards';
-import {
-  analyticsWidgetCatalog,
-  analyticsWidgetConfigFormRegistry,
-  validateWidgetConfig,
-} from '@granit/react-analytics/editor';
+import { analyticsWidgetCatalog, validateWidgetConfig } from '@granit/react-analytics/editor';
 import {
   addWidget,
   composeCatalogs,
@@ -44,6 +40,7 @@ import {
   DialogTitle,
   toast,
 } from '@granit/react-ui';
+import { analyticsWidgetConfigFormRegistry } from '@granit/react-ui-analytics';
 import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { ArrowLeft, Plus, RotateCcw, Save, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';

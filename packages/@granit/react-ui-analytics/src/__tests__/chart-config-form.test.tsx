@@ -8,7 +8,7 @@ import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { ChartConfigForm } from '../editor/chart-config-form';
+import { ChartConfigForm } from '../components/chart-config-form';
 
 import type { ChartWidgetDefinition } from '@granit/analytics';
 import type { AxiosInstance } from '@granit/api-client';

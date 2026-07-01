@@ -2,9 +2,13 @@
 // @granit/react-analytics — public API
 // ---------------------------------------------------------------------------
 
-// Hook
+// Hooks
 export { useMetric } from './hooks/use-metric';
 export type { UseMetricOptions } from './hooks/use-metric';
+// Headless query-field metadata — resolves the query catalogue + selected-query
+// column metadata into the option lists the (react-ui) config forms render.
+export { useQueryFieldMetadata } from './editor/use-query-field-metadata';
+export type { FieldOption, QueryFieldMetadata } from './editor/use-query-field-metadata';
 
 // Widget renderers — definition-driven. `KpiTile` predates the
 // per-widget render endpoint (P3) and uses the `useMetric` path which

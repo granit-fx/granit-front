@@ -3324,6 +3324,23 @@
           "members": []
         },
         {
+          "name": "useQueryFieldMetadata",
+          "kind": "function",
+          "signature": "function useQueryFieldMetadata(queryName: string): QueryFieldMetadata"
+        },
+        {
+          "name": "FieldOption",
+          "kind": "interface",
+          "signature": "interface FieldOption",
+          "members": []
+        },
+        {
+          "name": "QueryFieldMetadata",
+          "kind": "interface",
+          "signature": "interface QueryFieldMetadata",
+          "members": []
+        },
+        {
           "name": "KpiTile",
           "kind": "function",
           "signature": "function KpiTile("
@@ -8118,6 +8135,37 @@
               "signature": "iconColor: string | null"
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-analytics",
+      "description": "shadcn-styled config forms for the analytics dashboard widgets (kpi / chart / table / pivot) plus the shared query-binding editor controls. Composes @granit/react-analytics (headless hooks + widget metadata) with the foundation UI packages for the dashboard composer.",
+      "exports": [
+        {
+          "name": "analyticsWidgetConfigFormRegistry",
+          "kind": "const",
+          "signature": "const analyticsWidgetConfigFormRegistry: WidgetConfigFormRegistry"
+        },
+        {
+          "name": "ChartConfigForm",
+          "kind": "function",
+          "signature": "function ChartConfigForm("
+        },
+        {
+          "name": "KpiConfigForm",
+          "kind": "function",
+          "signature": "function KpiConfigForm("
+        },
+        {
+          "name": "PivotConfigForm",
+          "kind": "function",
+          "signature": "function PivotConfigForm("
+        },
+        {
+          "name": "TableConfigForm",
+          "kind": "function",
+          "signature": "function TableConfigForm("
         }
       ]
     },

@@ -1,16 +1,16 @@
 import { QueryCatalogProvider } from '@granit/react-query-engine';
 import { createTestQueryClient } from '@granit/react-testing';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { TableConfigForm } from '../editor/table-config-form';
+import { PivotConfigForm } from '../components/pivot-config-form';
 
-import type { TableWidgetDefinition } from '@granit/analytics';
+import type { PivotWidgetDefinition } from '@granit/analytics';
 import type { AxiosInstance } from '@granit/api-client';
 import type { ReactNode } from 'react';
 
@@ -24,14 +24,16 @@ void testI18n.use(initReactI18next).init({
   interpolation: { escapeValue: false },
 });
 
-const baseTable: TableWidgetDefinition = {
-  slug: 'T',
-  type: 'table',
+const basePivot: PivotWidgetDefinition = {
+  slug: 'P',
+  type: 'pivot',
   position: 0,
   size: { width: 6, height: 3 },
   queryName: 'Granit.Test.Query',
-  visibleColumns: null,
-  pageSize: 25,
+  rowFields: ['Status'],
+  columnFields: [],
+  valueField: 'Amount',
+  valueAggregation: 'Sum',
 };
 
 function mockCatalogClient() {
@@ -53,10 +55,13 @@ function mockCatalogClient() {
       return Promise.resolve({
         data: {
           columns: [
-            { name: 'Name', label: 'Name', type: 'String' },
             { name: 'Amount', label: 'Amount', type: 'Decimal' },
+            { name: 'Name', label: 'Name', type: 'String' },
           ],
-          groupByFields: [],
+          groupByFields: [
+            { name: 'Status', type: 'String' },
+            { name: 'Region', type: 'String' },
+          ],
         },
       });
     }
@@ -86,33 +91,45 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('TableConfigForm', () => {
-  it('renders the query combobox, the columns multi-select and the page-size input', () => {
-    const { container } = wrap(<TableConfigForm widget={baseTable} onChange={vi.fn()} />);
-    expect(container.querySelector('[data-slot="table-query-name"]')).not.toBeNull();
-    expect(container.querySelector('[data-slot="table-visible-columns"]')).not.toBeNull();
-    expect(container.querySelector('input[data-slot="table-page-size"]')).not.toBeNull();
+describe('PivotConfigForm', () => {
+  it('renders combobox + select triggers for every field', () => {
+    const { container } = wrap(<PivotConfigForm widget={basePivot} onChange={vi.fn()} />);
+    for (const slot of [
+      'pivot-query-name',
+      'pivot-row-fields',
+      'pivot-column-fields',
+      'pivot-value-field',
+      'pivot-value-aggregation',
+    ]) {
+      expect(container.querySelector(`[data-slot="${slot}"]`)).not.toBeNull();
+    }
   });
 
-  it('emits page-size changes', () => {
-    const onChange = vi.fn();
-    const { container } = wrap(<TableConfigForm widget={baseTable} onChange={onChange} />);
-    const input = container.querySelector('input[data-slot="table-page-size"]');
-    fireEvent.change(input!, { target: { value: '50' } });
-    expect(onChange.mock.calls.at(-1)?.[0]?.pageSize).toBe(50);
+  it('disables the value field for Count aggregation', () => {
+    const countPivot: PivotWidgetDefinition = {
+      ...basePivot,
+      valueAggregation: 'Count',
+      valueField: null,
+    };
+    const { container } = wrap(<PivotConfigForm widget={countPivot} onChange={vi.fn()} />);
+    const field = container.querySelector('[data-slot="pivot-value-field"]');
+    expect((field as HTMLButtonElement).disabled).toBe(true);
   });
 
-  it('toggles a visible column from the metadata multi-select', async () => {
+  it('sources dimensions from group-by fields and the value field from numeric columns', async () => {
     const user = userEvent.setup();
-    const onChange = vi.fn();
     const { container } = wrap(
-      <TableConfigForm widget={baseTable} onChange={onChange} />,
+      <PivotConfigForm widget={basePivot} onChange={vi.fn()} />,
       mockCatalogClient()
     );
 
-    await user.click(container.querySelector('[data-slot="table-visible-columns"]')!);
-    expect(await screen.findByRole('option', { name: 'Name' })).toBeInTheDocument();
-    await user.click(await screen.findByRole('option', { name: 'Amount' }));
-    expect(onChange.mock.calls.at(-1)?.[0]?.visibleColumns).toEqual(['Amount']);
+    await user.click(container.querySelector('[data-slot="pivot-row-fields"]')!);
+    expect(await screen.findByRole('option', { name: 'Status' })).toBeInTheDocument();
+    expect(await screen.findByRole('option', { name: 'Region' })).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+
+    await user.click(container.querySelector('[data-slot="pivot-value-field"]')!);
+    expect(await screen.findByRole('option', { name: 'Amount' })).toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: 'Name' })).toBeNull();
   });
 });

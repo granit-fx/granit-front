@@ -1,12 +1,8 @@
+import { useQueryFieldMetadata } from '@granit/react-analytics';
 import { Input } from '@granit/react-ui';
 import { useTranslation } from 'react-i18next';
 
-import {
-  MetaMultiFieldInput,
-  QueryNameCombobox,
-  RequiredMark,
-  useQueryFieldMetadata,
-} from './query-field-controls';
+import { MetaMultiFieldInput, QueryNameCombobox, RequiredMark } from './query-field-controls';
 
 import type { TableWidgetDefinition } from '@granit/analytics';
 import type { WidgetConfigFormProps } from '@granit/react-dashboard-editor';

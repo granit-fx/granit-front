@@ -3,14 +3,14 @@ import {
   isGeographyMapPointSource,
   isLatLngMapPointSource,
 } from '@granit/analytics';
+import { useQueryFieldMetadata } from '@granit/react-analytics/editor';
 import {
   EnumSelect,
   MetaFieldInput,
   MetaMultiFieldInput,
   QueryNameCombobox,
   RequiredMark,
-  useQueryFieldMetadata,
-} from '@granit/react-analytics/editor';
+} from '@granit/react-ui-analytics';
 import { useTranslation } from 'react-i18next';
 
 import type { MapTileLayerKind, MapWidgetDefinition } from '@granit/analytics';
