@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
-import { DashboardViewPage } from '../dashboard-view-page';
+import { DashboardViewPage } from '../components/dashboard-view-page';
 
 import { renderDashboards } from './test-utils';
 

@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { DashboardComposer } from './components/dashboard-composer';
+import { DashboardComposer } from './dashboard-composer';
 
 /**
  * Standalone per-dashboard composer route (`/dashboards/manage/:id/edit`). Thin

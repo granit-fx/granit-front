@@ -1,6 +1,7 @@
 import { resyncDashboard } from '@granit/dashboards';
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 
+import { logger } from '../logger';
 import { useDashboardsConfig } from '../providers/dashboards-provider';
 
 import { dashboardDetailQueryKey } from './use-dashboard-detail';
@@ -35,7 +36,14 @@ export function useResyncDashboard(): UseMutationResult<DashboardResyncResponse,
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => resyncDashboard(client, basePath, id),
-    onSuccess: async (_response, id) => {
+    onSuccess: async (response, id) => {
+      logger.debug('Dashboard resynced', {
+        id,
+        version: response.sourceDefinitionVersion,
+        widgetsAdded: response.widgetsAdded,
+        widgetsRemoved: response.widgetsRemoved,
+        overridesCarriedOver: response.overridesCarriedOver,
+      });
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['dashboards', 'list'] }),
         queryClient.invalidateQueries({ queryKey: ['dashboards', 'catalog'] }),

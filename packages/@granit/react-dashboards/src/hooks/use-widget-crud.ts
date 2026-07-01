@@ -1,6 +1,7 @@
 import { createWidget, deleteWidget, updateWidget } from '@granit/dashboards';
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 
+import { logger } from '../logger';
 import { useDashboardsConfig } from '../providers/dashboards-provider';
 
 import { dashboardDetailQueryKey } from './use-dashboard-detail';
@@ -55,8 +56,10 @@ export function useAddWidget(): UseMutationResult<
   return useMutation({
     mutationFn: ({ dashboardId, request }: AddWidgetVariables) =>
       createWidget(client, basePath, dashboardId, request),
-    onSuccess: (_widget, { dashboardId }) =>
-      queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) }),
+    onSuccess: (widget, { dashboardId }) => {
+      logger.debug('Widget added', { dashboardId, widgetId: widget.id });
+      return queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) });
+    },
   });
 }
 
@@ -78,8 +81,10 @@ export function useUpdateWidget(): UseMutationResult<
   return useMutation({
     mutationFn: ({ dashboardId, widgetId, request }: UpdateWidgetVariables) =>
       updateWidget(client, basePath, dashboardId, widgetId, request),
-    onSuccess: (_widget, { dashboardId }) =>
-      queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) }),
+    onSuccess: (widget, { dashboardId }) => {
+      logger.debug('Widget updated', { dashboardId, widgetId: widget.id });
+      return queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) });
+    },
   });
 }
 
@@ -94,7 +99,9 @@ export function useRemoveWidget(): UseMutationResult<void, Error, RemoveWidgetVa
   return useMutation({
     mutationFn: ({ dashboardId, widgetId }: RemoveWidgetVariables) =>
       deleteWidget(client, basePath, dashboardId, widgetId),
-    onSuccess: (_void, { dashboardId }) =>
-      queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) }),
+    onSuccess: (_void, { dashboardId, widgetId }) => {
+      logger.debug('Widget removed', { dashboardId, widgetId });
+      return queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) });
+    },
   });
 }

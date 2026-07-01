@@ -6,8 +6,8 @@ import { ArrowLeft, LayoutDashboard, Pencil } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { DashboardComposer } from './components/dashboard-composer';
-import { StatusBadge } from './components/dashboard-status-badge';
+import { DashboardComposer } from './dashboard-composer';
+import { StatusBadge } from './dashboard-status-badge';
 
 /**
  * Single-dashboard page with an **inline edit toggle** (Grafana/luzmo style).

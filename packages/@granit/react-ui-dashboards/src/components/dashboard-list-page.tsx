@@ -27,16 +27,16 @@ import {
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { DriftBadge } from './components/dashboard-drift-badge';
-import { DashboardImportFromCatalog } from './components/dashboard-import-from-catalog';
-import { LifecycleConfirmDialog } from './components/dashboard-lifecycle-dialog';
+import { DriftBadge } from './dashboard-drift-badge';
+import { DashboardImportFromCatalog } from './dashboard-import-from-catalog';
+import { LifecycleConfirmDialog } from './dashboard-lifecycle-dialog';
 import {
   LIFECYCLE_TOAST_DEFAULTS,
   actionTitle,
   pickStatusMutation,
   type PendingLifecycle,
-} from './components/dashboard-lifecycle-types';
-import { StatusBadge } from './components/dashboard-status-badge';
+} from './dashboard-lifecycle-types';
+import { StatusBadge } from './dashboard-status-badge';
 
 const STATUS_FILTERS: readonly (DashboardStatus | 'All')[] = [
   'All',

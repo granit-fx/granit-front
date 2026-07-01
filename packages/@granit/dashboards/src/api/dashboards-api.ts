@@ -37,7 +37,7 @@ export type {
  * `DashboardDefinition` descriptors. Mirrors
  * `Granit.Dashboards.Endpoints.DashboardCatalogEndpoints`.
  */
-export async function getDashboardCatalog(
+export async function listDashboardCatalog(
   client: AxiosInstance,
   basePath: string,
   params?: DashboardCatalogParams,

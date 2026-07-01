@@ -1,6 +1,7 @@
 import { archiveDashboard, publishDashboard, restoreDashboard } from '@granit/dashboards';
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 
+import { logger } from '../logger';
 import { useDashboardsConfig } from '../providers/dashboards-provider';
 
 import { dashboardDetailQueryKey } from './use-dashboard-detail';
@@ -53,6 +54,7 @@ export function usePublishDashboard(): UseMutationResult<DashboardSummaryRespons
   return useMutation({
     mutationFn: (id: string) => publishDashboard(client, basePath, id),
     onSuccess: (summary, id) => {
+      logger.debug('Dashboard published', { id });
       patchListCache(queryClient, summary);
       return invalidateAfterTransition(queryClient, id);
     },
@@ -73,6 +75,7 @@ export function useArchiveDashboard(): UseMutationResult<DashboardSummaryRespons
   return useMutation({
     mutationFn: (id: string) => archiveDashboard(client, basePath, id),
     onSuccess: (summary, id) => {
+      logger.debug('Dashboard archived', { id });
       patchListCache(queryClient, summary);
       return invalidateAfterTransition(queryClient, id);
     },
@@ -90,6 +93,7 @@ export function useRestoreDashboard(): UseMutationResult<DashboardSummaryRespons
   return useMutation({
     mutationFn: (id: string) => restoreDashboard(client, basePath, id),
     onSuccess: (summary, id) => {
+      logger.debug('Dashboard restored', { id });
       patchListCache(queryClient, summary);
       return invalidateAfterTransition(queryClient, id);
     },

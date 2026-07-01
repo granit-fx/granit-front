@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   archiveDashboard,
   getDashboard,
-  getDashboardCatalog,
+  listDashboardCatalog,
   listDashboards,
   publishDashboard,
   renderDashboard,
@@ -62,12 +62,12 @@ const RENDER_RESPONSE: DashboardRenderResponse = {
   widgets: [],
 };
 
-describe('getDashboardCatalog', () => {
+describe('listDashboardCatalog', () => {
   it('calls GET {basePath}/catalog and returns the array', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse([CATALOG_ENTRY]));
 
-    const result = await getDashboardCatalog(client, BASE);
+    const result = await listDashboardCatalog(client, BASE);
 
     expect(client.get).toHaveBeenCalledWith(`${BASE}/catalog`, { params: { category: undefined } });
     expect(result).toEqual([CATALOG_ENTRY]);
@@ -77,7 +77,7 @@ describe('getDashboardCatalog', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(axiosResponse([CATALOG_ENTRY]));
 
-    await getDashboardCatalog(client, BASE, { category: 'Finance' });
+    await listDashboardCatalog(client, BASE, { category: 'Finance' });
 
     expect(client.get).toHaveBeenCalledWith(`${BASE}/catalog`, { params: { category: 'Finance' } });
   });

@@ -4,9 +4,9 @@
 // packages. The Axios client resolves from a DashboardsProvider (which falls back
 // to a host GranitClientProvider) in the host tree.
 
-export { DashboardListPage } from './dashboard-list-page';
-export { DashboardEditPage } from './dashboard-edit-page';
-export { DashboardViewPage } from './dashboard-view-page';
+export { DashboardListPage } from './components/dashboard-list-page';
+export { DashboardEditPage } from './components/dashboard-edit-page';
+export { DashboardViewPage } from './components/dashboard-view-page';
 export { DashboardComposer } from './components/dashboard-composer';
 export type { DashboardComposerProps } from './components/dashboard-composer';
 

@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
-import { DashboardListPage } from '../dashboard-list-page';
+import { DashboardListPage } from '../components/dashboard-list-page';
 
 import { renderDashboards } from './test-utils';
 

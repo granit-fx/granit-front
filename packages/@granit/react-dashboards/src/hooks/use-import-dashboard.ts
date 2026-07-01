@@ -1,6 +1,7 @@
 import { importDashboard } from '@granit/dashboards';
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 
+import { logger } from '../logger';
 import { useDashboardsConfig } from '../providers/dashboards-provider';
 
 import { dashboardDetailQueryKey } from './use-dashboard-detail';
@@ -28,6 +29,10 @@ export function useImportDashboard(): UseMutationResult<DashboardImportResponse,
   return useMutation({
     mutationFn: (definitionName: string) => importDashboard(client, basePath, definitionName),
     onSuccess: async (imported) => {
+      logger.debug('Dashboard imported', {
+        id: imported.id,
+        source: imported.sourceDefinitionName,
+      });
       // Drop any stale detail cache for the freshly imported id (most
       // likely none, but cheap to clear).
       queryClient.removeQueries({ queryKey: dashboardDetailQueryKey(imported.id) });

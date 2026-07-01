@@ -2,7 +2,7 @@ import { defaultWidgetRegistry, WidgetRegistryProvider } from '@granit/react-das
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { DashboardEditPage } from '../dashboard-edit-page';
+import { DashboardEditPage } from '../components/dashboard-edit-page';
 
 import { renderDashboards } from './test-utils';
 

@@ -112,78 +112,78 @@ async function loadAndRender(client: AxiosInstance) {
 
 ### Declarative model
 
-| Symbol | Kind | Purpose |
-| --- | --- | --- |
-| `DashboardDefinition` | type | Top-level declarative catalog entry shipped by a module |
-| `DashboardDefinitionDescriptor` | type | Type-erased view of a definition exposed by the registry (full declarative content) |
-| `DashboardDefinitionRegistry` | type | Host plug-in contract — `list()` / `get(name)` for a host's preferred definition-fetching strategy |
-| `WidgetDefinition` | type | Open union: `FrameworkWidgetDefinition \| WidgetDefinitionBase` |
-| `WidgetDefinitionBase` | type | Common base every widget shares (`slug` / `type` / `position` / …) |
-| `FrameworkWidgetDefinition` | type | Closed union of built-in kinds (markdown / image / text) |
-| `MarkdownWidgetDefinition` · `ImageWidgetDefinition` · `TextWidgetDefinition` | type | Built-in presentation widgets; `ImageFit` / `TextWidgetStyle` enums |
-| `DashboardLayout` · `DashboardLayoutOverride` · `DashboardBreakpoint` | type | Responsive grid (base + per-breakpoint overrides) |
-| `WidgetSize` | type | Widget width / height in grid cells |
-| `DashboardTimeWindow` · `DashboardPeriod` · `TimeWindowKind` | type | Dashboard-wide time window (token or absolute range) |
-| `DashboardView` · `DashboardCategory` | type | Multi-view arrangements (P2.1); catalog grouping |
-| `DashboardFilter` · `DashboardFilterClause` · `DashboardFilterOperation` · `DashboardFilterOperator` | type | Dashboard-scoped toolbar / silent filters (P2.5) |
-| `EntityAlias` · `EntityAliasResolver` (+ 5 resolver variants) | type | Named entity bindings resolved at render time (P2.3) |
-| `Datasource` (+ `MetricDatasource` / `QueryAggregateDatasource` / `TelemetryDatasource`) | type | Abstract widget data binding (P2.2) |
-| `AggregateFunction` · `TelemetryAggregation` · `DataKeyFormat` | type | Aggregation kinds + per-series presentation hints |
-| `WidgetAction` · `WidgetActionKind` · `WidgetActionTrigger` | type | Declarative click-handler descriptors (no code injection, P1.5) |
-| `RefreshHint` | type | Pull / push transport hint (`Static` / `Dynamic` / `Realtime`) |
-| `DASHBOARD_TIME_WINDOW` | const | Conventional time-window presets (`Last30Days`, `Mtd`, …) |
-| `DEFAULT_DASHBOARD_LAYOUT` · `WIDGET_SIZE` | const | 12-column / 80 px default layout; conventional widget sizes |
-| `Datasource` | const | Factory namespace (`Datasource.metric()` / `.queryAggregate()` / `.telemetry()`) |
-| `isMetricDatasource` · `isQueryAggregateDatasource` · `isTelemetryDatasource` | fn | Narrow a `Datasource` to its variant |
-| `is{RouteParam,ViewEntity,TenantContext,UserSelection,StaticEntity}Resolver` | fn | Narrow an `EntityAliasResolver` to its variant |
+| Symbol                                                                                               | Kind  | Purpose                                                                                            |
+| ---------------------------------------------------------------------------------------------------- | ----- | -------------------------------------------------------------------------------------------------- |
+| `DashboardDefinition`                                                                                | type  | Top-level declarative catalog entry shipped by a module                                            |
+| `DashboardDefinitionDescriptor`                                                                      | type  | Type-erased view of a definition exposed by the registry (full declarative content)                |
+| `DashboardDefinitionRegistry`                                                                        | type  | Host plug-in contract — `list()` / `get(name)` for a host's preferred definition-fetching strategy |
+| `WidgetDefinition`                                                                                   | type  | Open union: `FrameworkWidgetDefinition \| WidgetDefinitionBase`                                    |
+| `WidgetDefinitionBase`                                                                               | type  | Common base every widget shares (`slug` / `type` / `position` / …)                                 |
+| `FrameworkWidgetDefinition`                                                                          | type  | Closed union of built-in kinds (markdown / image / text)                                           |
+| `MarkdownWidgetDefinition` · `ImageWidgetDefinition` · `TextWidgetDefinition`                        | type  | Built-in presentation widgets; `ImageFit` / `TextWidgetStyle` enums                                |
+| `DashboardLayout` · `DashboardLayoutOverride` · `DashboardBreakpoint`                                | type  | Responsive grid (base + per-breakpoint overrides)                                                  |
+| `WidgetSize`                                                                                         | type  | Widget width / height in grid cells                                                                |
+| `DashboardTimeWindow` · `DashboardPeriod` · `TimeWindowKind`                                         | type  | Dashboard-wide time window (token or absolute range)                                               |
+| `DashboardView` · `DashboardCategory`                                                                | type  | Multi-view arrangements (P2.1); catalog grouping                                                   |
+| `DashboardFilter` · `DashboardFilterClause` · `DashboardFilterOperation` · `DashboardFilterOperator` | type  | Dashboard-scoped toolbar / silent filters (P2.5)                                                   |
+| `EntityAlias` · `EntityAliasResolver` (+ 5 resolver variants)                                        | type  | Named entity bindings resolved at render time (P2.3)                                               |
+| `Datasource` (+ `MetricDatasource` / `QueryAggregateDatasource` / `TelemetryDatasource`)             | type  | Abstract widget data binding (P2.2)                                                                |
+| `AggregateFunction` · `TelemetryAggregation` · `DataKeyFormat`                                       | type  | Aggregation kinds + per-series presentation hints                                                  |
+| `WidgetAction` · `WidgetActionKind` · `WidgetActionTrigger`                                          | type  | Declarative click-handler descriptors (no code injection, P1.5)                                    |
+| `RefreshHint`                                                                                        | type  | Pull / push transport hint (`Static` / `Dynamic` / `Realtime`)                                     |
+| `DASHBOARD_TIME_WINDOW`                                                                              | const | Conventional time-window presets (`Last30Days`, `Mtd`, …)                                          |
+| `DEFAULT_DASHBOARD_LAYOUT` · `WIDGET_SIZE`                                                           | const | 12-column / 80 px default layout; conventional widget sizes                                        |
+| `Datasource`                                                                                         | const | Factory namespace (`Datasource.metric()` / `.queryAggregate()` / `.telemetry()`)                   |
+| `isMetricDatasource` · `isQueryAggregateDatasource` · `isTelemetryDatasource`                        | fn    | Narrow a `Datasource` to its variant                                                               |
+| `is{RouteParam,ViewEntity,TenantContext,UserSelection,StaticEntity}Resolver`                         | fn    | Narrow an `EntityAliasResolver` to its variant                                                     |
 
 ### Persistence DTOs + HTTP API
 
-| Symbol | Kind | Purpose |
-| --- | --- | --- |
-| `DashboardSummaryResponse` · `DashboardDetailResponse` | type | List-row and full-detail wire shapes (`status` / widget pool) |
-| `DashboardCatalogEntryResponse` | type | A single catalog entry (an importable definition) |
-| `WidgetInstanceResponse` | type | Persisted widget (id-keyed, `configJson` blob) |
-| `AddWidgetRequest` · `UpdateWidgetRequest` · `DashboardMetadataUpdateRequest` | type | CRUD request bodies |
-| `DashboardImportResponse` · `DashboardResyncResponse` | type | Import / re-sync results |
-| `DashboardStatus` · `PagedResponse<T>` | type | Lifecycle state (`Draft`/`Published`/`Archived`); paged envelope |
-| `DashboardCatalogParams` · `DashboardListParams` · `DashboardsRequestOptions` | type | Query params; per-call `{ signal }` cancellation options |
-| `WidgetRenderBody<T>` · `WidgetRenderContextPayload` · `WidgetRenderKind` | type | Per-widget render endpoint inputs |
-| `getDashboardCatalog` | fn | `GET {basePath}/catalog?category=` |
-| `listDashboards` | fn | `GET {basePath}?status=&page=&pageSize=` |
-| `getDashboard` | fn | `GET {basePath}/{id}` |
-| `importDashboard` | fn | `POST {basePath}/from-definition/{name}` |
-| `updateDashboardMetadata` | fn | `PUT {basePath}/{id}` (name + grid layout) |
-| `publishDashboard` · `archiveDashboard` · `restoreDashboard` | fn | `POST {basePath}/{id}/{publish,archive,restore}` |
-| `resyncDashboard` | fn | `POST {basePath}/{id}/resync` (replay source definition) |
-| `createWidget` · `updateWidget` · `deleteWidget` | fn | Widget-pool CRUD under `{basePath}/{id}/widgets` |
-| `renderDashboard` | fn | `POST {basePath}/{id}/render` (snapshot bundle) |
-| `renderWidget` | fn | `POST {widgetsBasePath}/{kind}/render` (per-widget; separate root) |
+| Symbol                                                                        | Kind | Purpose                                                            |
+| ----------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------ |
+| `DashboardSummaryResponse` · `DashboardDetailResponse`                        | type | List-row and full-detail wire shapes (`status` / widget pool)      |
+| `DashboardCatalogEntryResponse`                                               | type | A single catalog entry (an importable definition)                  |
+| `WidgetInstanceResponse`                                                      | type | Persisted widget (id-keyed, `configJson` blob)                     |
+| `AddWidgetRequest` · `UpdateWidgetRequest` · `DashboardMetadataUpdateRequest` | type | CRUD request bodies                                                |
+| `DashboardImportResponse` · `DashboardResyncResponse`                         | type | Import / re-sync results                                           |
+| `DashboardStatus` · `PagedResponse<T>`                                        | type | Lifecycle state (`Draft`/`Published`/`Archived`); paged envelope   |
+| `DashboardCatalogParams` · `DashboardListParams` · `DashboardsRequestOptions` | type | Query params; per-call `{ signal }` cancellation options           |
+| `WidgetRenderBody<T>` · `WidgetRenderContextPayload` · `WidgetRenderKind`     | type | Per-widget render endpoint inputs                                  |
+| `listDashboardCatalog`                                                        | fn   | `GET {basePath}/catalog?category=`                                 |
+| `listDashboards`                                                              | fn   | `GET {basePath}?status=&page=&pageSize=`                           |
+| `getDashboard`                                                                | fn   | `GET {basePath}/{id}`                                              |
+| `importDashboard`                                                             | fn   | `POST {basePath}/from-definition/{name}`                           |
+| `updateDashboardMetadata`                                                     | fn   | `PUT {basePath}/{id}` (name + grid layout)                         |
+| `publishDashboard` · `archiveDashboard` · `restoreDashboard`                  | fn   | `POST {basePath}/{id}/{publish,archive,restore}`                   |
+| `resyncDashboard`                                                             | fn   | `POST {basePath}/{id}/resync` (replay source definition)           |
+| `createWidget` · `updateWidget` · `deleteWidget`                              | fn   | Widget-pool CRUD under `{basePath}/{id}/widgets`                   |
+| `renderDashboard`                                                             | fn   | `POST {basePath}/{id}/render` (snapshot bundle)                    |
+| `renderWidget`                                                                | fn   | `POST {widgetsBasePath}/{kind}/render` (per-widget; separate root) |
 
 ### Rendering wire contracts
 
-| Symbol | Kind | Purpose |
-| --- | --- | --- |
-| `DashboardRenderRequest` · `DashboardRenderResponse` · `DashboardRenderPeriod` | type | `POST .../render` request / response / echoed period |
-| `ResolvedPeriod` | type | Absolute `[from, to)` UTC window after named-token expansion (mirrors `Granit.Analytics.ResolvedPeriod`) |
-| `DashboardRenderedWidget` | type | One widget's slot in the render bundle |
-| `WidgetSnapshotEnvelope` · `WidgetSnapshotEnvelopeOf<K, S>` | type | Per-widget envelope; generic narrowing helper for downstream kinds |
-| `WidgetSnapshotStatus` · `WidgetTransport` · `DashboardDriftStatus` | type | Runtime outcome; effective transport; bundle-level drift status |
-| `MarkdownWidgetSnapshot` · `ImageWidgetSnapshot` · `TextWidgetSnapshot` | type | Built-in per-kind snapshot payloads |
-| `MarkdownSnapshotEnvelope` · `ImageSnapshotEnvelope` · `TextSnapshotEnvelope` | type | Narrowed envelopes for the built-in kinds |
-| `isMarkdownSnapshotEnvelope` · `isImageSnapshotEnvelope` · `isTextSnapshotEnvelope` | fn | Narrow a heterogeneous envelope to a built-in kind |
+| Symbol                                                                              | Kind | Purpose                                                                                                  |
+| ----------------------------------------------------------------------------------- | ---- | -------------------------------------------------------------------------------------------------------- |
+| `DashboardRenderRequest` · `DashboardRenderResponse` · `DashboardRenderPeriod`      | type | `POST .../render` request / response / echoed period                                                     |
+| `ResolvedPeriod`                                                                    | type | Absolute `[from, to)` UTC window after named-token expansion (mirrors `Granit.Analytics.ResolvedPeriod`) |
+| `DashboardRenderedWidget`                                                           | type | One widget's slot in the render bundle                                                                   |
+| `WidgetSnapshotEnvelope` · `WidgetSnapshotEnvelopeOf<K, S>`                         | type | Per-widget envelope; generic narrowing helper for downstream kinds                                       |
+| `WidgetSnapshotStatus` · `WidgetTransport` · `DashboardDriftStatus`                 | type | Runtime outcome; effective transport; bundle-level drift status                                          |
+| `MarkdownWidgetSnapshot` · `ImageWidgetSnapshot` · `TextWidgetSnapshot`             | type | Built-in per-kind snapshot payloads                                                                      |
+| `MarkdownSnapshotEnvelope` · `ImageSnapshotEnvelope` · `TextSnapshotEnvelope`       | type | Narrowed envelopes for the built-in kinds                                                                |
+| `isMarkdownSnapshotEnvelope` · `isImageSnapshotEnvelope` · `isTextSnapshotEnvelope` | fn   | Narrow a heterogeneous envelope to a built-in kind                                                       |
 
 ### Bridge + drift helpers
 
-| Symbol | Kind | Purpose |
-| --- | --- | --- |
-| `dashboardDetailToDefinition` · `widgetInstanceToDefinition` | fn | Persistence → declarative (editor) shape |
-| `widgetDefinitionToAddRequest` · `widgetDefinitionToUpdateRequest` | fn | Declarative → CRUD request bodies |
-| `diffDashboardWidgets` | fn | Editor ↔ server widget pools → ordered CRUD ops (`DashboardWidgetDiff`) |
-| `extractSlugFromTitleKey` | fn | Recover a widget slug from its `titleLocalizationKey` |
-| `STRUCTURAL_WIDGET_FIELDS` | const | Fields kept outside `configJson` (sync custom serializers) |
-| `detectVersionDrift` | fn | Semver-compare persisted vs catalog version → `DashboardVersionDrift` |
-| `parseDurationToMs` · `formatDurationFromMs` | fn | `System.TimeSpan` ISO string ↔ milliseconds |
+| Symbol                                                             | Kind  | Purpose                                                                 |
+| ------------------------------------------------------------------ | ----- | ----------------------------------------------------------------------- |
+| `dashboardDetailToDefinition` · `widgetInstanceToDefinition`       | fn    | Persistence → declarative (editor) shape                                |
+| `widgetDefinitionToAddRequest` · `widgetDefinitionToUpdateRequest` | fn    | Declarative → CRUD request bodies                                       |
+| `diffDashboardWidgets`                                             | fn    | Editor ↔ server widget pools → ordered CRUD ops (`DashboardWidgetDiff`) |
+| `extractSlugFromTitleKey`                                          | fn    | Recover a widget slug from its `titleLocalizationKey`                   |
+| `STRUCTURAL_WIDGET_FIELDS`                                         | const | Fields kept outside `configJson` (sync custom serializers)              |
+| `detectVersionDrift`                                               | fn    | Semver-compare persisted vs catalog version → `DashboardVersionDrift`   |
+| `parseDurationToMs` · `formatDurationFromMs`                       | fn    | `System.TimeSpan` ISO string ↔ milliseconds                             |
 
 ## Out of scope / caveats
 
