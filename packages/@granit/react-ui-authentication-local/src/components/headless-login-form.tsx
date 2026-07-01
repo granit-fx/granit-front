@@ -15,9 +15,10 @@ import { AlertCircle, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
+import { logger } from '../logger';
+
 import { CredentialForm } from './credential-form';
 import { ExternalLoginButtons } from './external-login-buttons';
-import { logger } from './logger';
 import { PublicLayout } from './public-layout';
 import { TwoFactorForm } from './two-factor-form';
 

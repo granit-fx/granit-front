@@ -1,4 +1,3 @@
-import { useGranitClient } from '@granit/react-api-client';
 import {
   useApiKey,
   useRevokeApiKey,
@@ -36,12 +35,11 @@ export function ApiKeyDetailPage() {
   const { formatTimeAgo } = useDateFormatter();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const client = useGranitClient();
-  const { data: apiKey, isLoading } = useApiKey(id ?? '', { client });
+  const { data: apiKey, isLoading } = useApiKey(id ?? '');
 
-  const revokeMutation = useRevokeApiKey({ client });
-  const rotateMutation = useRotateApiKey({ client });
-  const updateScopesMutation = useUpdateApiKeyScopes({ client });
+  const revokeMutation = useRevokeApiKey();
+  const rotateMutation = useRotateApiKey();
+  const updateScopesMutation = useUpdateApiKeyScopes();
 
   const [showRevokeDialog, setShowRevokeDialog] = useState(false);
   const [showRotateDialog, setShowRotateDialog] = useState(false);

@@ -1,8 +1,8 @@
 import type {
   IdentityUser,
   IdentityUserCacheStats,
-  IdentityUserCacheSyncAllResult,
-  IdentityUserCacheSyncStaleResult,
+  IdentityUserCacheSyncAllResponse,
+  IdentityUserCacheSyncStaleResponse,
   IdentityUserListParams,
   IdentityUserPage,
 } from '../types/index';
@@ -86,8 +86,8 @@ export async function syncUsers(
 export async function syncAllUsers(
   client: AxiosInstance,
   basePath: string
-): Promise<IdentityUserCacheSyncAllResult> {
-  const response = await client.post<IdentityUserCacheSyncAllResult>(`${basePath}/sync-all`);
+): Promise<IdentityUserCacheSyncAllResponse> {
+  const response = await client.post<IdentityUserCacheSyncAllResponse>(`${basePath}/sync-all`);
   return response.data;
 }
 
@@ -99,8 +99,8 @@ export async function syncAllUsers(
 export async function syncStaleUsers(
   client: AxiosInstance,
   basePath: string
-): Promise<IdentityUserCacheSyncStaleResult> {
-  const response = await client.post<IdentityUserCacheSyncStaleResult>(`${basePath}/sync-stale`);
+): Promise<IdentityUserCacheSyncStaleResponse> {
+  const response = await client.post<IdentityUserCacheSyncStaleResponse>(`${basePath}/sync-stale`);
   return response.data;
 }
 

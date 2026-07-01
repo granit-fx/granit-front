@@ -1501,6 +1501,9 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
@@ -1669,9 +1672,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.101.2
         version: 5.101.2(react@19.2.7)
-      axios:
-        specifier: 1.18.1
-        version: 1.18.1
       msw:
         specifier: ^2.14.6
         version: 2.14.6(@types/node@26.0.1)(typescript@6.0.3)

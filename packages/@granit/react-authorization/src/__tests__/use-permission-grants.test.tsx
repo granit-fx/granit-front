@@ -1,23 +1,13 @@
-import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
-import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { usePermissionGrantMeta, usePermissionGrants } from '../hooks/use-permission-grants';
 
+import { createAuthorizationWrapper } from './test-wrapper';
+
 import type { PermissionGrant } from '@granit/authorization';
 import type { QueryMetadata, PagedResult } from '@granit/query-engine';
-
-function createWrapper() {
-  const queryClient = createTestQueryClient();
-  return {
-    wrapper: ({ children }: { children: React.ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    ),
-  };
-}
 
 const MOCK_PAGE: PagedResult<PermissionGrant> = {
   items: [],
@@ -42,8 +32,9 @@ describe('usePermissionGrants', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: MOCK_PAGE });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => usePermissionGrants({ client }), { wrapper });
+    const { result } = renderHook(() => usePermissionGrants(), {
+      wrapper: createAuthorizationWrapper(client),
+    });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(client.get).toHaveBeenCalledWith(
@@ -56,10 +47,9 @@ describe('usePermissionGrants', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: MOCK_PAGE });
 
-    const { wrapper } = createWrapper();
     const { result } = renderHook(
-      () => usePermissionGrants({ client, basePath: '/api/v2/authorization' }),
-      { wrapper }
+      () => usePermissionGrants({ basePath: '/api/v2/authorization' }),
+      { wrapper: createAuthorizationWrapper(client, { basePath: '/api/v2/authorization' }) }
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -72,9 +62,8 @@ describe('usePermissionGrants', () => {
   it('does not fetch when enabled is false', () => {
     const client = createMockClient();
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => usePermissionGrants({ client, enabled: false }), {
-      wrapper,
+    const { result } = renderHook(() => usePermissionGrants({ enabled: false }), {
+      wrapper: createAuthorizationWrapper(client),
     });
 
     expect(result.current.fetchStatus).toBe('idle');
@@ -87,8 +76,9 @@ describe('usePermissionGrantMeta', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue({ data: MOCK_META });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => usePermissionGrantMeta({ client }), { wrapper });
+    const { result } = renderHook(() => usePermissionGrantMeta(), {
+      wrapper: createAuthorizationWrapper(client),
+    });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(client.get).toHaveBeenCalledWith(
@@ -100,9 +90,8 @@ describe('usePermissionGrantMeta', () => {
   it('does not fetch when enabled is false', () => {
     const client = createMockClient();
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => usePermissionGrantMeta({ client, enabled: false }), {
-      wrapper,
+    const { result } = renderHook(() => usePermissionGrantMeta({ enabled: false }), {
+      wrapper: createAuthorizationWrapper(client),
     });
 
     expect(result.current.fetchStatus).toBe('idle');

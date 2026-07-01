@@ -5,10 +5,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
-import { fn } from 'storybook/test';
 
-import { CredentialForm } from './credential-form';
-import { authLocalTranslationsEn } from './locales';
+import { authLocalTranslationsEn } from '../locales';
+
+import { HeadlessLoginForm } from './headless-login-form';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -20,7 +20,15 @@ await storyI18n.use(initReactI18next).init({
   defaultNS: 'translation',
   nsSeparator: false,
   keySeparator: false,
-  resources: { en: { translation: { ...authLocalTranslationsEn } } },
+  resources: {
+    en: {
+      translation: {
+        ...authLocalTranslationsEn,
+        'Common.AppName': 'Granit',
+        'Auth.LoginPage.PlatformTitle': 'Administration',
+      },
+    },
+  },
   interpolation: { escapeValue: false },
 });
 
@@ -29,11 +37,11 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
 });
 
-const meta: Meta<typeof CredentialForm> = {
-  title: 'Auth Local/CredentialForm',
-  component: CredentialForm,
+const meta: Meta<typeof HeadlessLoginForm> = {
+  title: 'Auth Local/HeadlessLoginForm',
+  component: HeadlessLoginForm,
   tags: ['autodocs'],
-  parameters: { layout: 'centered' },
+  parameters: { layout: 'fullscreen' },
   decorators: [
     (Story) => (
       <I18nextProvider i18n={storyI18n}>
@@ -41,9 +49,7 @@ const meta: Meta<typeof CredentialForm> = {
           <AccountProvider config={{ client }}>
             <LocalAuthProvider config={{ client }}>
               <MemoryRouter>
-                <div className="w-80">
-                  <Story />
-                </div>
+                <Story />
               </MemoryRouter>
             </LocalAuthProvider>
           </AccountProvider>
@@ -51,20 +57,13 @@ const meta: Meta<typeof CredentialForm> = {
       </I18nextProvider>
     ),
   ],
-  args: {
-    serverError: null,
-    setServerError: fn(),
-    onTwoFactorRequired: fn(),
-  },
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Login / password form with the optional passkey path. */
+/**
+ * The full self-hosted login experience: credential form, passkey option, and
+ * the direct-login demo, wrapped in the public auth layout.
+ */
 export const Default: Story = {};
-
-/** A server-side error (e.g. invalid credentials) surfaces above the form. */
-export const WithServerError: Story = {
-  args: { serverError: 'Invalid username or password.' },
-};

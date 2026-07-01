@@ -1,6 +1,6 @@
 // Types
 export type {
-  AdminImpersonationResult,
+  AdminImpersonationResponse,
   AdminOidcApplicationResponse,
   AdminOidcCreateApplicationRequest,
   AdminOidcRotateSecretResponse,

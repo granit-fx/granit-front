@@ -2293,7 +2293,7 @@
         {
           "name": "impersonateUser",
           "kind": "function",
-          "signature": "async function impersonateUser( client: AxiosInstance, basePath: string, id: string ): Promise<AdminImpersonationResult>"
+          "signature": "async function impersonateUser( client: AxiosInstance, basePath: string, id: string ): Promise<AdminImpersonationResponse>"
         },
         {
           "name": "listUsers",
@@ -3504,23 +3504,18 @@
         {
           "name": "useApiKeys",
           "kind": "function",
-          "signature": "function useApiKeys( options: ApiKeyHookOptions, params: UseApiKeysParams ="
+          "signature": "function useApiKeys( options: ApiKeyHookOptions ="
         },
         {
           "name": "useApiKeysQueryMeta",
           "kind": "function",
-          "signature": "function useApiKeysQueryMeta( options: ApiKeyHookOptions, queryOptions?: ApiKeyQueryOptions ): UseQueryResult<QueryMetadata>"
+          "signature": "function useApiKeysQueryMeta( options: ApiKeyHookOptions ="
         },
         {
           "name": "ApiKeyHookOptions",
           "kind": "interface",
           "signature": "interface ApiKeyHookOptions",
           "members": [
-            {
-              "name": "client",
-              "kind": "property",
-              "signature": "client: AxiosInstance"
-            },
             {
               "name": "basePath",
               "kind": "property",
@@ -3578,12 +3573,12 @@
         {
           "name": "buildApiKeyQueryKey",
           "kind": "function",
-          "signature": "function buildApiKeyQueryKey( config: Pick<ApiKeyHookOptions, 'queryKeyPrefix'>, ...segments: readonly unknown[] ): readonly unknown[]"
+          "signature": "function buildApiKeyQueryKey( config:"
         },
         {
           "name": "useApiKey",
           "kind": "function",
-          "signature": "function useApiKey( id: string, options: ApiKeyHookOptions, queryOptions?: ApiKeyQueryOptions ): UseQueryResult<ApiKeyResponse>"
+          "signature": "function useApiKey( id: string, options: ApiKeyHookOptions ="
         },
         {
           "name": "UpdateApiKeyScopesVariables",
@@ -3873,7 +3868,7 @@
         {
           "name": "usePermissionGrant",
           "kind": "function",
-          "signature": "function usePermissionGrant(options: UsePermissionGrantOptions ="
+          "signature": "function usePermissionGrant( options: UsePermissionGrantOptions ="
         },
         {
           "name": "usePermissionGrants",
@@ -6689,7 +6684,7 @@
         {
           "name": "useImpersonateUser",
           "kind": "function",
-          "signature": "function useImpersonateUser(): UseMutationResult<AdminImpersonationResult, Error, string>"
+          "signature": "function useImpersonateUser(): UseMutationResult<AdminImpersonationResponse, Error, string>"
         },
         {
           "name": "useConsentApplication",
@@ -8412,16 +8407,6 @@
           "name": "PublicLayout",
           "kind": "function",
           "signature": "function PublicLayout("
-        },
-        {
-          "name": "TokenConfirmationResult",
-          "kind": "function",
-          "signature": "function TokenConfirmationResult("
-        },
-        {
-          "name": "ConfirmationStatus",
-          "kind": "type",
-          "signature": "type ConfirmationStatus = 'loading' | 'success' | 'error'"
         },
         {
           "name": "TwoFactorForm",

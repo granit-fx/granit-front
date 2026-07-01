@@ -2,7 +2,8 @@ import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
 
-import { authLocalTranslationsEn } from './locales';
+import { authLocalTranslationsEn } from '../locales';
+
 import { TokenConfirmationResult } from './token-confirmation-result';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';

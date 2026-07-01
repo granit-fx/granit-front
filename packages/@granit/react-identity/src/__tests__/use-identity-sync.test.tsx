@@ -11,8 +11,8 @@ import { IdentityProvider } from '../providers/identity-provider';
 
 import type { IdentityProviderProps } from '../providers/identity-provider';
 import type {
-  IdentityUserCacheSyncAllResult,
-  IdentityUserCacheSyncStaleResult,
+  IdentityUserCacheSyncAllResponse,
+  IdentityUserCacheSyncStaleResponse,
 } from '@granit/identity';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
@@ -33,8 +33,8 @@ function createWrapper(client: AxiosInstance, basePath?: string) {
   };
 }
 
-const mockSyncAllResult: IdentityUserCacheSyncAllResult = { syncedCount: 42 };
-const mockSyncStaleResult: IdentityUserCacheSyncStaleResult = { refreshedCount: 5 };
+const mockSyncAllResult: IdentityUserCacheSyncAllResponse = { syncedCount: 42 };
+const mockSyncStaleResult: IdentityUserCacheSyncStaleResponse = { refreshedCount: 5 };
 
 // ---------------------------------------------------------------------------
 // Tests

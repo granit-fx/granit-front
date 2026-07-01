@@ -4,7 +4,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admin-provider';
 
 import type {
-  AdminImpersonationResult,
+  AdminImpersonationResponse,
   AdminUserListParams,
   AdminUserPage,
 } from '@granit/openiddict-admin';
@@ -21,7 +21,7 @@ export function useAdminUsers(params?: AdminUserListParams): UseQueryResult<Admi
 }
 
 /** Impersonates a user. Returns new tokens. */
-export function useImpersonateUser(): UseMutationResult<AdminImpersonationResult, Error, string> {
+export function useImpersonateUser(): UseMutationResult<AdminImpersonationResponse, Error, string> {
   const config = useAdminConfig();
 
   return useMutation({

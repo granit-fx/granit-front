@@ -17,8 +17,8 @@ import {
 import type {
   IdentityUser,
   IdentityUserCacheStats,
-  IdentityUserCacheSyncAllResult,
-  IdentityUserCacheSyncStaleResult,
+  IdentityUserCacheSyncAllResponse,
+  IdentityUserCacheSyncStaleResponse,
   IdentityUserPage,
 } from '../types/index';
 
@@ -146,7 +146,7 @@ describe('identity-user-cache-api', () => {
   describe('syncAllUsers', () => {
     it('should POST {basePath}/sync-all', async () => {
       const client = createMockClient();
-      const result: IdentityUserCacheSyncAllResult = { syncedCount: 100 };
+      const result: IdentityUserCacheSyncAllResponse = { syncedCount: 100 };
       vi.mocked(client.post).mockResolvedValue(axiosResponse(result));
 
       const actual = await syncAllUsers(client, basePath);
@@ -159,7 +159,7 @@ describe('identity-user-cache-api', () => {
   describe('syncStaleUsers', () => {
     it('should POST {basePath}/sync-stale', async () => {
       const client = createMockClient();
-      const result: IdentityUserCacheSyncStaleResult = { refreshedCount: 5 };
+      const result: IdentityUserCacheSyncStaleResponse = { refreshedCount: 5 };
       vi.mocked(client.post).mockResolvedValue(axiosResponse(result));
 
       const actual = await syncStaleUsers(client, basePath);

@@ -3,7 +3,8 @@ import { useTranslation } from '@granit/react-localization';
 import { toast, Button } from '@granit/react-ui';
 import { useEffect, useState } from 'react';
 
-import { logger } from './logger';
+import { logger } from '../logger';
+
 import { TokenConfirmationResult, type ConfirmationStatus } from './token-confirmation-result';
 
 const log = logger.child('ConfirmEmail');

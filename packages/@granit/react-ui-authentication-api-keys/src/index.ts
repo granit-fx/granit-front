@@ -1,8 +1,8 @@
 // @granit/react-ui-authentication-api-keys — admin UI for the Authentication
 // API keys module. Composes the headless @granit/react-authentication-api-keys
-// (hooks) with the foundation UI packages. The Axios client resolves from a
-// GranitClientProvider in the host tree (the pages call useGranitClient and
-// forward { client } to the hooks); the host supplies routing and i18n. The
+// (hooks) with the foundation UI packages. The Axios client resolves internally
+// from the headless ApiKeysProvider config (the pages no longer forward
+// { client } to the hooks); the host supplies routing and i18n. The
 // create form and the scopes form derive validation from the OpenAPI-backed
 // apiKeysConstraints via createConstraintsResolver (@granit/react-validation).
 

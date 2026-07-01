@@ -20,9 +20,10 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
-import { logger } from './logger';
+import { logger } from '../logger';
+import { registerConstraints, type RegisterFormValues } from '../validation';
+
 import { PublicLayout } from './public-layout';
-import { registerConstraints, type RegisterFormValues } from './validation';
 
 import type { Resolver } from 'react-hook-form';
 

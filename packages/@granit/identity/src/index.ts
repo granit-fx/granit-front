@@ -3,8 +3,8 @@ export type { IdentityProviderCapabilitiesResponse } from './types/index';
 export type {
   IdentityUser,
   IdentityUserCacheStats,
-  IdentityUserCacheSyncAllResult,
-  IdentityUserCacheSyncStaleResult,
+  IdentityUserCacheSyncAllResponse,
+  IdentityUserCacheSyncStaleResponse,
   IdentityUserListParams,
   IdentityUserPage,
 } from './types/index';

@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 
-import { ChangeEmailPage } from '../change-email-page';
+import { ChangeEmailPage } from '../components/change-email-page';
 
 import { renderWithProviders } from './test-utils';
 

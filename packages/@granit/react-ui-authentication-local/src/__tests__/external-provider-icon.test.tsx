@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import { ExternalProviderIcon } from '../external-provider-icon';
+import { ExternalProviderIcon } from '../components/external-provider-icon';
 
 describe('ExternalProviderIcon', () => {
   it.each(['google', 'microsoft', 'apple', 'github', 'facebook'])(

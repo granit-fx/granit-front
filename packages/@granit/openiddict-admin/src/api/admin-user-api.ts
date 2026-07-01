@@ -1,4 +1,8 @@
-import type { AdminImpersonationResult, AdminUserListParams, AdminUserPage } from '../types/index';
+import type {
+  AdminImpersonationResponse,
+  AdminUserListParams,
+  AdminUserPage,
+} from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**
@@ -26,8 +30,8 @@ export async function impersonateUser(
   client: AxiosInstance,
   basePath: string,
   id: string
-): Promise<AdminImpersonationResult> {
-  const { data } = await client.post<AdminImpersonationResult>(
+): Promise<AdminImpersonationResponse> {
+  const { data } = await client.post<AdminImpersonationResponse>(
     `${basePath}/users/${encodeURIComponent(id)}/impersonate`
   );
   return data;

@@ -14,15 +14,12 @@ import type { UseQueryResult } from '@tanstack/react-query';
  * Calls `GET {basePath}/roles/{roleName}` (default `/api/v1/authorization/roles/{roleName}`)
  * and returns the list of granted permission names.
  *
- * @param options - Axios client, role name, and optional configuration.
+ * @param options - The `roleName` and optional configuration. The Axios client is resolved from the nearest `<AuthorizationProvider>`.
  * @returns Standard React Query result with the role's permission grant.
  *
  * @example
  * ```tsx
- * const { data: grant, isLoading } = useRolePermissions({
- *   client: api,
- *   roleName: 'admin',
- * });
+ * const { data: grant, isLoading } = useRolePermissions({ roleName: 'admin' });
  *
  * if (isLoading) return <Spinner />;
  * return <p>{grant?.permissions.length} permissions</p>;

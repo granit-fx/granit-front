@@ -15,13 +15,13 @@ import type { UseQueryResult } from '@tanstack/react-query';
  * Calls `GET {basePath}/grants` (default `/api/v1/authorization/grants`).
  * Keeps the previous page visible while the next one loads.
  *
- * @param options - Axios client instance and optional configuration.
+ * @param options - Optional configuration (`basePath`, `enabled`, `queryKeyPrefix`). The Axios client is resolved from the nearest `<AuthorizationProvider>`.
  * @param request - Optional query request (pagination, filters, sort, search).
  * @returns Standard React Query result with a `PagedResult<PermissionGrant>`.
  *
  * @example
  * ```tsx
- * const { data } = usePermissionGrants({ client: api }, { search: 'admin' });
+ * const { data } = usePermissionGrants({}, { search: 'admin' });
  * // data.items, data.totalCount, data.hasMore
  * ```
  */
@@ -34,7 +34,8 @@ export function usePermissionGrants(
 
   return useQuery({
     queryKey: buildPermissionQueryKey(config, 'grants', request),
-    queryFn: ({ signal }) => queryPermissionGrants(config.client, config.basePath, request, { signal }),
+    queryFn: ({ signal }) =>
+      queryPermissionGrants(config.client, config.basePath, request, { signal }),
     enabled: enabled ?? true,
     placeholderData: keepPreviousData,
   });
@@ -45,7 +46,7 @@ export function usePermissionGrants(
  *
  * Calls `GET {basePath}/grants/meta` (default `/api/v1/authorization/grants/meta`).
  *
- * @param options - Axios client instance and optional configuration.
+ * @param options - Optional configuration (`basePath`, `enabled`, `queryKeyPrefix`). The Axios client is resolved from the nearest `<AuthorizationProvider>`.
  * @returns Standard React Query result with the query metadata.
  */
 export function usePermissionGrantMeta(

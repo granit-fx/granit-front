@@ -21,12 +21,12 @@ export type UsePermissionGrantReturn = {
  *
  * Both mutations automatically invalidate the role's permission cache on success.
  *
- * @param options - Axios client and optional base path.
+ * @param options - Optional configuration (`basePath`, `queryKeyPrefix`). The Axios client is resolved from the nearest `<AuthorizationProvider>`.
  * @returns Object with `grant` and `revoke` mutation results.
  *
  * @example
  * ```tsx
- * const { grant, revoke } = usePermissionGrant({ client: api });
+ * const { grant, revoke } = usePermissionGrant();
  *
  * // Grant
  * grant.mutate({ roleName: 'editor', permissionName: 'Invoices.Create' });
@@ -35,7 +35,9 @@ export type UsePermissionGrantReturn = {
  * revoke.mutate({ roleName: 'editor', permissionName: 'Invoices.Delete' });
  * ```
  */
-export function usePermissionGrant(options: UsePermissionGrantOptions = {}): UsePermissionGrantReturn {
+export function usePermissionGrant(
+  options: UsePermissionGrantOptions = {}
+): UsePermissionGrantReturn {
   const config = useResolvedAuthorizationConfig(options);
   const queryClient = useQueryClient();
 

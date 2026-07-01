@@ -10,8 +10,8 @@ import type {
 
 describe('@granit/react-authorization hook types', () => {
   describe('UsePermissionsOptions', () => {
-    it('should require a client', () => {
-      expectTypeOf<UsePermissionsOptions>().toHaveProperty('client');
+    it('should not carry a client — it is resolved from the provider', () => {
+      expectTypeOf<UsePermissionsOptions>().not.toHaveProperty('client');
     });
 
     it('should have optional basePath and enabled', () => {
@@ -36,21 +36,21 @@ describe('@granit/react-authorization hook types', () => {
   });
 
   describe('UsePermissionDefinitionsOptions', () => {
-    it('should require client', () => {
-      expectTypeOf<UsePermissionDefinitionsOptions>().toHaveProperty('client');
+    it('should not carry a client', () => {
+      expectTypeOf<UsePermissionDefinitionsOptions>().not.toHaveProperty('client');
     });
   });
 
   describe('UseRolePermissionsOptions', () => {
-    it('should require client and roleName', () => {
-      expectTypeOf<UseRolePermissionsOptions>().toHaveProperty('client');
+    it('should require roleName and not carry a client', () => {
       expectTypeOf<UseRolePermissionsOptions>().toHaveProperty('roleName');
+      expectTypeOf<UseRolePermissionsOptions>().not.toHaveProperty('client');
     });
   });
 
   describe('UsePermissionGrantOptions', () => {
-    it('should require client', () => {
-      expectTypeOf<UsePermissionGrantOptions>().toHaveProperty('client');
+    it('should not carry a client', () => {
+      expectTypeOf<UsePermissionGrantOptions>().not.toHaveProperty('client');
     });
   });
 });

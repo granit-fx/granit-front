@@ -23,11 +23,11 @@ export type IdentityUserCacheStats = {
   readonly newestSyncAt: ISODateString | null;
 };
 
-export type IdentityUserCacheSyncAllResult = {
+export type IdentityUserCacheSyncAllResponse = {
   readonly syncedCount: number;
 };
 
-export type IdentityUserCacheSyncStaleResult = {
+export type IdentityUserCacheSyncStaleResponse = {
   readonly refreshedCount: number;
 };
 

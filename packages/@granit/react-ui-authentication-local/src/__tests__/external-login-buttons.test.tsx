@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
 
-import { ExternalLoginButtons } from '../external-login-buttons';
+import { ExternalLoginButtons } from '../components/external-login-buttons';
 
 import { testI18n } from './test-utils';
 

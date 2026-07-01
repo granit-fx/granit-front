@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
 
-import { ForgotPasswordPage } from '../forgot-password-page';
+import { ForgotPasswordPage } from '../components/forgot-password-page';
 
 import { testI18n } from './test-utils';
 

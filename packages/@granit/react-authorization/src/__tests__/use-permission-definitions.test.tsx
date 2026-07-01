@@ -1,4 +1,3 @@
-import { createQueryWrapper } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
@@ -7,13 +6,15 @@ import { mockPermissionGroups } from '@granit/react-authorization/testing';
 
 import { usePermissionDefinitions } from '../hooks/use-permission-definitions';
 
+import { createAuthorizationWrapper } from './test-wrapper';
+
 describe('usePermissionDefinitions', () => {
   it('should fetch and return permission groups', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockPermissionGroups });
 
-    const { result } = renderHook(() => usePermissionDefinitions({ client }), {
-      wrapper: createQueryWrapper(),
+    const { result } = renderHook(() => usePermissionDefinitions(), {
+      wrapper: createAuthorizationWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -27,8 +28,8 @@ describe('usePermissionDefinitions', () => {
     vi.mocked(client.get).mockResolvedValueOnce({ data: [] });
 
     const { result } = renderHook(
-      () => usePermissionDefinitions({ client, basePath: '/api/v1/authorization' }),
-      { wrapper: createQueryWrapper() }
+      () => usePermissionDefinitions({ basePath: '/api/v1/authorization' }),
+      { wrapper: createAuthorizationWrapper(client) }
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -39,8 +40,8 @@ describe('usePermissionDefinitions', () => {
   it('should not fetch when disabled', () => {
     const client = createMockClient();
 
-    const { result } = renderHook(() => usePermissionDefinitions({ client, enabled: false }), {
-      wrapper: createQueryWrapper(),
+    const { result } = renderHook(() => usePermissionDefinitions({ enabled: false }), {
+      wrapper: createAuthorizationWrapper(client),
     });
 
     expect(result.current.fetchStatus).toBe('idle');
@@ -51,8 +52,8 @@ describe('usePermissionDefinitions', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockRejectedValueOnce(new Error('Forbidden'));
 
-    const { result } = renderHook(() => usePermissionDefinitions({ client }), {
-      wrapper: createQueryWrapper(),
+    const { result } = renderHook(() => usePermissionDefinitions(), {
+      wrapper: createAuthorizationWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isError).toBe(true));

@@ -1,7 +1,7 @@
 import { useOptionalGranitClient } from '@granit/react-api-client';
 
 import { DEFAULT_BASE_PATH } from '../constants';
-import { useOptionalAuthorizationConfig } from '../providers/authorization-provider';
+import { useOptionalApiKeysConfig } from '../providers/api-keys-provider';
 
 import type { AxiosInstance } from '@granit/api-client';
 
@@ -17,18 +17,18 @@ interface ResolvedConfig {
 }
 
 /**
- * Resolves the effective authorization config for a hook. The Axios client and
- * defaults come from the nearest `<AuthorizationProvider>` when present,
- * otherwise the client falls back to the nearest `<GranitClientProvider>`.
- * `basePath` and `queryKeyPrefix` may be overridden per call.
+ * Resolves the effective api-keys config for a hook. The Axios client and
+ * defaults come from the nearest `<ApiKeysProvider>` when present, otherwise
+ * the client falls back to the nearest `<GranitClientProvider>`. `basePath` and
+ * `queryKeyPrefix` may be overridden per call.
  */
-export function useResolvedAuthorizationConfig(options: ConfigInput = {}): ResolvedConfig {
-  const ctx = useOptionalAuthorizationConfig();
+export function useResolvedApiKeysConfig(options: ConfigInput = {}): ResolvedConfig {
+  const ctx = useOptionalApiKeysConfig();
   const contextClient = useOptionalGranitClient();
   const client = ctx?.client ?? contextClient;
   if (!client) {
     throw new Error(
-      'Authorization hooks require an Axios client. Wrap your app in an <AuthorizationProvider> or a <GranitClientProvider>.'
+      'API key hooks require an Axios client. Wrap your app in an <ApiKeysProvider> or a <GranitClientProvider>.'
     );
   }
   return {

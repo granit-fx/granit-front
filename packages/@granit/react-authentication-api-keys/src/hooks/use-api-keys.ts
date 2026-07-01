@@ -1,12 +1,11 @@
 import { getApiKeysQueryMeta, listApiKeys } from '@granit/authentication-api-keys';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants';
 import { logger } from '../logger';
 
 import { buildApiKeyQueryKey } from './query-keys';
+import { useResolvedApiKeysConfig } from './use-api-keys-config';
 
-import type { AxiosInstance } from '@granit/api-client';
 import type { ApiKeyListPage, ListApiKeysParams } from '@granit/authentication-api-keys';
 import type { QueryMetadata } from '@granit/query-engine';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -15,10 +14,11 @@ import type { UseQueryResult } from '@tanstack/react-query';
 // Types
 // ---------------------------------------------------------------------------
 
-/** Options accepted by all hooks in this module. */
+/**
+ * Options accepted by all hooks in this module. The Axios client is resolved
+ * internally from the nearest `<ApiKeysProvider>`.
+ */
 export interface ApiKeyHookOptions {
-  /** Axios instance to use for HTTP requests. */
-  client: AxiosInstance;
   /** API base path. Defaults to `/api/v1/authentication`. */
   basePath?: string;
   /** Custom prefix for all query keys produced by this module. */
@@ -65,7 +65,8 @@ export interface ApiKeyQueryOptions {
  * cancelled when the query is superseded (the request's `AbortSignal` is
  * forwarded to Axios).
  *
- * @param options - Axios client and optional base path.
+ * @param options - Optional base path / query-key prefix. The Axios client is
+ *   resolved from the nearest `<ApiKeysProvider>`.
  * @param params - Optional QueryEngine parameters (`search`, `filters`,
  *   `quickFilters`, `sort`, `page`, `pageSize`). By default only active keys
  *   are returned.
@@ -75,7 +76,7 @@ export interface ApiKeyQueryOptions {
  * ```tsx
  * // Secret keys, including revoked ones, newest first.
  * const { data, isLoading } = useApiKeys(
- *   { client: api },
+ *   {},
  *   {
  *     search: 'labo',
  *     filters: [{ field: 'type', operator: 'Eq', value: 'Secret' }],
@@ -87,17 +88,17 @@ export interface ApiKeyQueryOptions {
  * ```
  */
 export function useApiKeys(
-  options: ApiKeyHookOptions,
+  options: ApiKeyHookOptions = {},
   params: UseApiKeysParams = {},
   queryOptions?: ApiKeyQueryOptions
 ): UseQueryResult<ApiKeyListPage> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+  const config = useResolvedApiKeysConfig(options);
 
   return useQuery({
-    queryKey: buildApiKeyQueryKey(options, 'list', params),
+    queryKey: buildApiKeyQueryKey(config, 'list', params),
     queryFn: async ({ signal }) => {
       logger.debug('fetching api keys');
-      const result = await listApiKeys(client, basePath, params, { signal });
+      const result = await listApiKeys(config.client, config.basePath, params, { signal });
       logger.debug(`api keys loaded count=${result.items.length}`);
       return result;
     },
@@ -113,18 +114,19 @@ export function useApiKeys(
  * Calls `GET {basePath}/api-keys/meta`. Useful to drive a generic, dynamically
  * configured DataGrid. Metadata is static, so it defaults to a long `staleTime`.
  *
- * @param options - Axios client and optional base path.
+ * @param options - Optional base path / query-key prefix. The Axios client is
+ *   resolved from the nearest `<ApiKeysProvider>`.
  * @param queryOptions - Optional TanStack Query overrides.
  */
 export function useApiKeysQueryMeta(
-  options: ApiKeyHookOptions,
+  options: ApiKeyHookOptions = {},
   queryOptions?: ApiKeyQueryOptions
 ): UseQueryResult<QueryMetadata> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+  const config = useResolvedApiKeysConfig(options);
 
   return useQuery({
-    queryKey: buildApiKeyQueryKey(options, 'meta'),
-    queryFn: ({ signal }) => getApiKeysQueryMeta(client, basePath, { signal }),
+    queryKey: buildApiKeyQueryKey(config, 'meta'),
+    queryFn: ({ signal }) => getApiKeysQueryMeta(config.client, config.basePath, { signal }),
     staleTime: Infinity,
     ...queryOptions,
   });

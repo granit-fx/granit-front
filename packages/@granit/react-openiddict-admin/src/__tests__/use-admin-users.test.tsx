@@ -11,7 +11,7 @@ import { mockAdminUsers } from '@granit/react-openiddict-admin/testing';
 import { useAdminUsers, useImpersonateUser } from '../hooks/use-admin-users';
 import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider';
 
-import type { AdminImpersonationResult, AdminUserPage } from '@granit/openiddict-admin';
+import type { AdminImpersonationResponse, AdminUserPage } from '@granit/openiddict-admin';
 
 vi.mock('@granit/openiddict-admin', () => ({
   listUsers: vi.fn(),
@@ -84,7 +84,7 @@ describe('useAdminUsers', () => {
 });
 
 describe('useImpersonateUser', () => {
-  const mockImpersonation: AdminImpersonationResult = {
+  const mockImpersonation: AdminImpersonationResponse = {
     accessToken: 'impersonated-access-token',
     refreshToken: 'impersonated-refresh-token',
     expiresIn: 3600,

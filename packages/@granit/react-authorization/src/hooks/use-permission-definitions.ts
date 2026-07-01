@@ -14,12 +14,12 @@ import type { UseQueryResult } from '@tanstack/react-query';
  * Calls `GET {basePath}/permissions/definitions` (default `/api/v1/authorization/permissions/definitions`) and returns
  * the full permission tree used for admin UIs (role-permission matrix).
  *
- * @param options - Axios client instance and optional configuration.
+ * @param options - Optional configuration (`basePath`, `enabled`, `queryKeyPrefix`). The Axios client is resolved from the nearest `<AuthorizationProvider>`.
  * @returns Standard React Query result with permission groups.
  *
  * @example
  * ```tsx
- * const { data: groups, isLoading } = usePermissionDefinitions({ client: api });
+ * const { data: groups, isLoading } = usePermissionDefinitions();
  *
  * if (isLoading) return <Spinner />;
  * return groups?.map(g => <PermissionGroup key={g.name} group={g} />);

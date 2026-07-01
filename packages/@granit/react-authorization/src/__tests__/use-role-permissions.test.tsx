@@ -1,9 +1,10 @@
-import { createQueryWrapper } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useRolePermissions } from '../hooks/use-role-permissions';
+
+import { createAuthorizationWrapper } from './test-wrapper';
 
 import type { PermissionGrantResponse } from '@granit/authorization';
 
@@ -17,8 +18,8 @@ describe('useRolePermissions', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: MOCK_GRANT });
 
-    const { result } = renderHook(() => useRolePermissions({ client, roleName: 'admin' }), {
-      wrapper: createQueryWrapper(),
+    const { result } = renderHook(() => useRolePermissions({ roleName: 'admin' }), {
+      wrapper: createAuthorizationWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -32,8 +33,8 @@ describe('useRolePermissions', () => {
     vi.mocked(client.get).mockResolvedValueOnce({ data: MOCK_GRANT });
 
     const { result } = renderHook(
-      () => useRolePermissions({ client, roleName: 'editor', basePath: '/api/v1/authorization' }),
-      { wrapper: createQueryWrapper() }
+      () => useRolePermissions({ roleName: 'editor', basePath: '/api/v1/authorization' }),
+      { wrapper: createAuthorizationWrapper(client, { basePath: '/api/v1/authorization' }) }
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -47,8 +48,8 @@ describe('useRolePermissions', () => {
       data: { roleName: 'rôle spécial', permissions: [] },
     });
 
-    const { result } = renderHook(() => useRolePermissions({ client, roleName: 'rôle spécial' }), {
-      wrapper: createQueryWrapper(),
+    const { result } = renderHook(() => useRolePermissions({ roleName: 'rôle spécial' }), {
+      wrapper: createAuthorizationWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -59,10 +60,9 @@ describe('useRolePermissions', () => {
   it('should not fetch when disabled', () => {
     const client = createMockClient();
 
-    const { result } = renderHook(
-      () => useRolePermissions({ client, roleName: 'admin', enabled: false }),
-      { wrapper: createQueryWrapper() }
-    );
+    const { result } = renderHook(() => useRolePermissions({ roleName: 'admin', enabled: false }), {
+      wrapper: createAuthorizationWrapper(client),
+    });
 
     expect(result.current.fetchStatus).toBe('idle');
     expect(client.get).not.toHaveBeenCalled();
@@ -72,8 +72,8 @@ describe('useRolePermissions', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockRejectedValueOnce(new Error('Not Found'));
 
-    const { result } = renderHook(() => useRolePermissions({ client, roleName: 'unknown' }), {
-      wrapper: createQueryWrapper(),
+    const { result } = renderHook(() => useRolePermissions({ roleName: 'unknown' }), {
+      wrapper: createAuthorizationWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isError).toBe(true));

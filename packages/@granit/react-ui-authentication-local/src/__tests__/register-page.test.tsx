@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
 
-import { RegisterPage } from '../register-page';
+import { RegisterPage } from '../components/register-page';
 
 import { testI18n } from './test-utils';
 

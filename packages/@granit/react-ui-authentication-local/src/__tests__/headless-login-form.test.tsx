@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
 
-import { HeadlessLoginForm } from '../headless-login-form';
+import { HeadlessLoginForm } from '../components/headless-login-form';
 
 import { testI18n } from './test-utils';
 

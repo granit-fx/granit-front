@@ -16,8 +16,8 @@ import { CheckCircle, Mail } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { logger } from './logger';
-import { changeEmailConstraints, type ChangeEmailFormValues } from './validation';
+import { logger } from '../logger';
+import { changeEmailConstraints, type ChangeEmailFormValues } from '../validation';
 
 import type { Resolver } from 'react-hook-form';
 

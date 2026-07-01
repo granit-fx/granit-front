@@ -1,4 +1,5 @@
 import { createApiClient } from '@granit/api-client';
+import { AccountProvider } from '@granit/react-account';
 import { LocalAuthProvider } from '@granit/react-authentication-local';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import i18next from 'i18next';
@@ -6,8 +7,9 @@ import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
 import { fn } from 'storybook/test';
 
-import { authLocalTranslationsEn } from './locales';
-import { TwoFactorForm } from './two-factor-form';
+import { authLocalTranslationsEn } from '../locales';
+
+import { CredentialForm } from './credential-form';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -28,22 +30,24 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
 });
 
-const meta: Meta<typeof TwoFactorForm> = {
-  title: 'Auth Local/TwoFactorForm',
-  component: TwoFactorForm,
+const meta: Meta<typeof CredentialForm> = {
+  title: 'Auth Local/CredentialForm',
+  component: CredentialForm,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
   decorators: [
     (Story) => (
       <I18nextProvider i18n={storyI18n}>
         <QueryClientProvider client={queryClient}>
-          <LocalAuthProvider config={{ client }}>
-            <MemoryRouter>
-              <div className="w-80">
-                <Story />
-              </div>
-            </MemoryRouter>
-          </LocalAuthProvider>
+          <AccountProvider config={{ client }}>
+            <LocalAuthProvider config={{ client }}>
+              <MemoryRouter>
+                <div className="w-80">
+                  <Story />
+                </div>
+              </MemoryRouter>
+            </LocalAuthProvider>
+          </AccountProvider>
         </QueryClientProvider>
       </I18nextProvider>
     ),
@@ -51,24 +55,17 @@ const meta: Meta<typeof TwoFactorForm> = {
   args: {
     serverError: null,
     setServerError: fn(),
-    onBack: fn(),
+    onTwoFactorRequired: fn(),
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Authenticator-app code entry (the default when no methods are advertised). */
-export const Authenticator: Story = {
-  args: { methods: ['Authenticator'] },
-};
+/** Login / password form with the optional passkey path. */
+export const Default: Story = {};
 
-/** The user has enrolled multiple factors and can switch between them. */
-export const MultipleMethods: Story = {
-  args: { methods: ['Authenticator', 'Email', 'RecoveryCode'] },
-};
-
-/** A verification error surfaces above the code field. */
+/** A server-side error (e.g. invalid credentials) surfaces above the form. */
 export const WithServerError: Story = {
-  args: { methods: ['Authenticator'], serverError: 'Invalid verification code.' },
+  args: { serverError: 'Invalid username or password.' },
 };

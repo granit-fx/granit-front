@@ -15,13 +15,13 @@ import type { UseQueryResult } from '@tanstack/react-query';
  * Calls `GET {basePath}/role-metadata` (default `/api/v1/authorization/role-metadata`).
  * Keeps the previous page visible while the next one loads.
  *
- * @param options - Axios client instance and optional configuration.
+ * @param options - Optional configuration (`basePath`, `enabled`, `queryKeyPrefix`). The Axios client is resolved from the nearest `<AuthorizationProvider>`.
  * @param request - Optional query request (pagination, filters, sort, search).
  * @returns Standard React Query result with a `PagedResult<RoleMetadata>`.
  *
  * @example
  * ```tsx
- * const { data } = useRoleMetadata({ client: api }, { sort: [{ field: 'name', direction: 'asc' }] });
+ * const { data } = useRoleMetadata({}, { sort: [{ field: 'name', direction: 'asc' }] });
  * // data.items, data.totalCount, data.hasMore
  * ```
  */
@@ -45,7 +45,7 @@ export function useRoleMetadata(
  *
  * Calls `GET {basePath}/role-metadata/meta` (default `/api/v1/authorization/role-metadata/meta`).
  *
- * @param options - Axios client instance and optional configuration.
+ * @param options - Optional configuration (`basePath`, `enabled`, `queryKeyPrefix`). The Axios client is resolved from the nearest `<AuthorizationProvider>`.
  * @returns Standard React Query result with the query metadata.
  */
 export function useRoleMetadataMeta(

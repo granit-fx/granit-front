@@ -18,7 +18,7 @@ export type {
 } from './admin-oidc-scope';
 
 export type {
-  AdminImpersonationResult,
+  AdminImpersonationResponse,
   AdminUser,
   AdminUserListParams,
   AdminUserPage,

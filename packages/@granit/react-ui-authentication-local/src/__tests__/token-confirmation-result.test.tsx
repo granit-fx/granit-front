@@ -3,11 +3,11 @@ import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
 
-import { TokenConfirmationResult } from '../token-confirmation-result';
+import { TokenConfirmationResult } from '../components/token-confirmation-result';
 
 import { testI18n } from './test-utils';
 
-import type { ConfirmationStatus } from '../token-confirmation-result';
+import type { ConfirmationStatus } from '../components/token-confirmation-result';
 
 const PREFIX = 'Auth.ConfirmEmail';
 

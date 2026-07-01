@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { I18nextProvider } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
 
-import { ConfirmEmailChangePage } from '../confirm-email-change-page';
+import { ConfirmEmailChangePage } from '../components/confirm-email-change-page';
 
 import { testI18n } from './test-utils';
 

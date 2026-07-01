@@ -26,7 +26,7 @@ export interface AdminUser {
 export type AdminUserPage = PagedResult<AdminUser>;
 
 /** Response from impersonation endpoints. */
-export interface AdminImpersonationResult {
+export interface AdminImpersonationResponse {
   readonly accessToken: string;
   readonly refreshToken: string;
   readonly expiresIn: number;

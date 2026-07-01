@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
 
-import { LocalLoginPage } from '../local-login-page';
+import { LocalLoginPage } from '../components/local-login-page';
 
 import { testI18n } from './test-utils';
 

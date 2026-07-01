@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
 
-import { CredentialForm } from '../credential-form';
+import { CredentialForm } from '../components/credential-form';
 
 import { testI18n } from './test-utils';
 

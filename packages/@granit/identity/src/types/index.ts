@@ -1,8 +1,8 @@
 export type {
   IdentityUser,
   IdentityUserCacheStats,
-  IdentityUserCacheSyncAllResult,
-  IdentityUserCacheSyncStaleResult,
+  IdentityUserCacheSyncAllResponse,
+  IdentityUserCacheSyncStaleResponse,
   IdentityUserListParams,
   IdentityUserPage,
 } from './identity-user';

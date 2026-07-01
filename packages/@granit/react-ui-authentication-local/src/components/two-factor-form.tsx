@@ -21,9 +21,9 @@ import { AlertCircle, CheckCircle, Mail } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { logger } from './logger';
-import { handleLoginError, redirectToReturnUrl } from './login-helpers';
-import { twoFactorConstraints, type TwoFactorFormValues } from './validation';
+import { logger } from '../logger';
+import { handleLoginError, redirectToReturnUrl } from '../login-helpers';
+import { twoFactorConstraints, type TwoFactorFormValues } from '../validation';
 
 import type { TwoFactorMethod } from '@granit/authentication-local';
 import type { Resolver } from 'react-hook-form';

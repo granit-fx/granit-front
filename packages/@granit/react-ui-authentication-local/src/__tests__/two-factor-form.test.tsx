@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
 
-import { TwoFactorForm } from '../two-factor-form';
+import { TwoFactorForm } from '../components/two-factor-form';
 
 import { testI18n } from './test-utils';
 

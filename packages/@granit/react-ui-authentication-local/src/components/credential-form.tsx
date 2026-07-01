@@ -24,14 +24,14 @@ import { AlertCircle, Fingerprint } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
-import { logger } from './logger';
+import { logger } from '../logger';
 import {
   fromBase64Url,
   handleLoginError,
   redirectToReturnUrl,
   serializeCredential,
-} from './login-helpers';
-import { loginConstraints, type LoginFormValues } from './validation';
+} from '../login-helpers';
+import { loginConstraints, type LoginFormValues } from '../validation';
 
 import type { Resolver } from 'react-hook-form';
 

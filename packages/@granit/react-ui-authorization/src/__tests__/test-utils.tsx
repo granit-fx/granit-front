@@ -12,9 +12,9 @@ import type { ReactElement, ReactNode } from 'react';
 
 // Local UI render helper. Tests stub the data layer (vi.mock
 // @granit/react-authorization / @granit/react-identity in-workspace); the
-// role-metadata page additionally resolves an Axios client via useGranitClient,
-// so a GranitClientProvider is supplied. i18n uses the package's own flat bundle
-// plus the app-global Common.* keys the pages render.
+// authorization hooks resolve their Axios client internally from the nearest
+// GranitClientProvider, so one is supplied. i18n uses the package's own flat
+// bundle plus the app-global Common.* keys the pages render.
 const testI18n = i18next.createInstance();
 void testI18n.use(initReactI18next).init({
   lng: 'en',

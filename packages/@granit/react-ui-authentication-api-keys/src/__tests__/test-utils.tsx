@@ -14,8 +14,8 @@ import type { ReactElement, ReactNode } from 'react';
 // @granit/react-authentication-api-keys in-workspace), so only i18n (the
 // package's own flat ApiKeys.* bundle plus the host-owned Common.* keys these
 // pages reference, flat keys with separators disabled), a router
-// (useNavigate / useParams), and the GranitClientProvider (the pages call
-// useGranitClient at mount even though the hooks are stubbed) are needed.
+// (useNavigate / useParams), and a GranitClientProvider (the api-key hooks
+// resolve their client from it when no <ApiKeysProvider> is present) are needed.
 const Common = {
   'Common.Add': 'Add',
   'Common.All': 'All',

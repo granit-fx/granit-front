@@ -1,5 +1,4 @@
 import { ApiKeyQuickFilters } from '@granit/authentication-api-keys';
-import { useGranitClient } from '@granit/react-api-client';
 import {
   useApiKeys,
   useApiKeysQueryMeta,
@@ -41,7 +40,6 @@ function capitalize(value: string): string {
 export function ApiKeyListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const client = useGranitClient();
 
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebouncedValue(search, 300);
@@ -59,7 +57,7 @@ export function ApiKeyListPage() {
   }
 
   const { data, isLoading } = useApiKeys(
-    { client },
+    {},
     {
       search: debouncedSearch || undefined,
       filters: filters.length > 0 ? filters : undefined,
@@ -69,9 +67,9 @@ export function ApiKeyListPage() {
     }
   );
 
-  const { data: queryMeta } = useApiKeysQueryMeta({ client });
-  const revokeMutation = useRevokeApiKey({ client });
-  const rotateMutation = useRotateApiKey({ client });
+  const { data: queryMeta } = useApiKeysQueryMeta();
+  const revokeMutation = useRevokeApiKey();
+  const rotateMutation = useRotateApiKey();
 
   const [revokeTarget, setRevokeTarget] = useState<ApiKeyListItemResponse | null>(null);
   const [rotateTarget, setRotateTarget] = useState<ApiKeyListItemResponse | null>(null);

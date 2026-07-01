@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { impersonateUser, listUsers } from '../api/admin-user-api';
 
-import type { AdminImpersonationResult, AdminUser, AdminUserPage } from '../types/index';
+import type { AdminImpersonationResponse, AdminUser, AdminUserPage } from '../types/index';
 
 const BASE = '/admin';
 
@@ -50,7 +50,7 @@ describe('admin-user-api', () => {
   describe('impersonateUser', () => {
     it('sends POST to /users/{id}/impersonate', async () => {
       const client = createMockClient();
-      const response: AdminImpersonationResult = {
+      const response: AdminImpersonationResponse = {
         accessToken: 'eyJ...',
         refreshToken: 'ref...',
         expiresIn: 3600,

@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { PublicLayout } from '../public-layout';
+import { PublicLayout } from '../components/public-layout';
 
 import { renderWithProviders } from './test-utils';
 

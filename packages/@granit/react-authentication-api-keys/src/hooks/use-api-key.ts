@@ -1,10 +1,10 @@
 import { getApiKey } from '@granit/authentication-api-keys';
 import { useQuery } from '@tanstack/react-query';
 
-import { DEFAULT_BASE_PATH } from '../constants';
 import { logger } from '../logger';
 
 import { buildApiKeyQueryKey } from './query-keys';
+import { useResolvedApiKeysConfig } from './use-api-keys-config';
 
 import type { ApiKeyHookOptions, ApiKeyQueryOptions } from './use-api-keys';
 import type { ApiKeyResponse } from '@granit/authentication-api-keys';
@@ -16,26 +16,27 @@ import type { UseQueryResult } from '@tanstack/react-query';
  * Calls `GET {basePath}/api-keys/{id}`.
  *
  * @param id - The API key ID to fetch.
- * @param options - Axios client and optional base path.
+ * @param options - Optional base path / query-key prefix. The Axios client is
+ *   resolved from the nearest `<ApiKeysProvider>`.
  * @param queryOptions - Optional TanStack Query overrides (e.g. `staleTime`).
  *
  * @example
  * ```tsx
- * const { data: apiKey, isLoading } = useApiKey('key-123', { client: api });
+ * const { data: apiKey, isLoading } = useApiKey('key-123');
  * ```
  */
 export function useApiKey(
   id: string,
-  options: ApiKeyHookOptions,
+  options: ApiKeyHookOptions = {},
   queryOptions?: ApiKeyQueryOptions
 ): UseQueryResult<ApiKeyResponse> {
-  const { client, basePath = DEFAULT_BASE_PATH } = options;
+  const config = useResolvedApiKeysConfig(options);
 
   return useQuery({
-    queryKey: buildApiKeyQueryKey(options, 'detail', id),
+    queryKey: buildApiKeyQueryKey(config, 'detail', id),
     queryFn: async () => {
       logger.debug(`fetching api key id=${id}`);
-      const result = await getApiKey(client, basePath, id);
+      const result = await getApiKey(config.client, config.basePath, id);
       logger.debug(`api key loaded id=${id}`);
       return result;
     },

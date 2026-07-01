@@ -1,8 +1,5 @@
-import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
-import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
-import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { mockApiKeys } from '@granit/react-authentication-api-keys/testing';
@@ -11,21 +8,13 @@ import { buildApiKeyQueryKey } from '../hooks/query-keys';
 import { useApiKey } from '../hooks/use-api-key';
 import { useApiKeys, useApiKeysQueryMeta } from '../hooks/use-api-keys';
 
+import { createApiKeysWrapper } from './test-wrapper';
+
 import type { ApiKeyListItemResponse, ApiKeyListPage } from '@granit/authentication-api-keys';
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function createWrapper() {
-  const queryClient = createTestQueryClient();
-  return {
-    wrapper: ({ children }: { children: React.ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    ),
-    queryClient,
-  };
-}
 
 const mockApiKey = mockApiKeys[0]!;
 
@@ -94,8 +83,7 @@ describe('useApiKeys', () => {
       data: { items: [mockListItem], totalCount: 1, hasMore: false, nextCursor: null },
     });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useApiKeys({ client }), { wrapper });
+    const { result } = renderHook(() => useApiKeys(), { wrapper: createApiKeysWrapper(client) });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
@@ -109,8 +97,7 @@ describe('useApiKeys', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: emptyPage });
 
-    const { wrapper } = createWrapper();
-    renderHook(() => useApiKeys({ client }), { wrapper });
+    renderHook(() => useApiKeys(), { wrapper: createApiKeysWrapper(client) });
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
@@ -124,8 +111,7 @@ describe('useApiKeys', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: emptyPage });
 
-    const { wrapper } = createWrapper();
-    renderHook(() => useApiKeys({ client }, { search: 'prod' }), { wrapper });
+    renderHook(() => useApiKeys({}, { search: 'prod' }), { wrapper: createApiKeysWrapper(client) });
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
@@ -136,11 +122,9 @@ describe('useApiKeys', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: emptyPage });
 
-    const { wrapper } = createWrapper();
     renderHook(
-      () =>
-        useApiKeys({ client }, { filters: [{ field: 'type', operator: 'Eq', value: 'Secret' }] }),
-      { wrapper }
+      () => useApiKeys({}, { filters: [{ field: 'type', operator: 'Eq', value: 'Secret' }] }),
+      { wrapper: createApiKeysWrapper(client) }
     );
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
@@ -152,14 +136,10 @@ describe('useApiKeys', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: emptyPage });
 
-    const { wrapper } = createWrapper();
     renderHook(
       () =>
-        useApiKeys(
-          { client },
-          { filters: [{ field: 'environment', operator: 'Eq', value: 'staging' }] }
-        ),
-      { wrapper }
+        useApiKeys({}, { filters: [{ field: 'environment', operator: 'Eq', value: 'staging' }] }),
+      { wrapper: createApiKeysWrapper(client) }
     );
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
@@ -171,8 +151,9 @@ describe('useApiKeys', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: emptyPage });
 
-    const { wrapper } = createWrapper();
-    renderHook(() => useApiKeys({ client }, { quickFilters: ['includeRevoked'] }), { wrapper });
+    renderHook(() => useApiKeys({}, { quickFilters: ['includeRevoked'] }), {
+      wrapper: createApiKeysWrapper(client),
+    });
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
@@ -183,8 +164,9 @@ describe('useApiKeys', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: emptyPage });
 
-    const { wrapper } = createWrapper();
-    renderHook(() => useApiKeys({ client }, { page: 2, pageSize: 25 }), { wrapper });
+    renderHook(() => useApiKeys({}, { page: 2, pageSize: 25 }), {
+      wrapper: createApiKeysWrapper(client),
+    });
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
@@ -197,8 +179,9 @@ describe('useApiKeys', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: emptyPage });
 
-    const { wrapper } = createWrapper();
-    renderHook(() => useApiKeys({ client, basePath: '/api/v2/authentication' }), { wrapper });
+    renderHook(() => useApiKeys({ basePath: '/api/v2/authentication' }), {
+      wrapper: createApiKeysWrapper(client, { basePath: '/api/v2/authentication' }),
+    });
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
 
@@ -209,8 +192,7 @@ describe('useApiKeys', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockRejectedValueOnce(new Error('Unauthorized'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useApiKeys({ client }), { wrapper });
+    const { result } = renderHook(() => useApiKeys(), { wrapper: createApiKeysWrapper(client) });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 
@@ -221,8 +203,7 @@ describe('useApiKeys', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: emptyPage });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useApiKeys({ client }), { wrapper });
+    const { result } = renderHook(() => useApiKeys(), { wrapper: createApiKeysWrapper(client) });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
@@ -236,9 +217,8 @@ describe('useApiKeys', () => {
       data: { items: [mockListItem], totalCount: 1, hasMore: false, nextCursor: null },
     });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useApiKeys({ client }, {}, { staleTime: 60_000 }), {
-      wrapper,
+    const { result } = renderHook(() => useApiKeys({}, {}, { staleTime: 60_000 }), {
+      wrapper: createApiKeysWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -261,8 +241,9 @@ describe('useApiKeysQueryMeta', () => {
       data: { columns: [], filterableFields: [], quickFilters: [] },
     });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useApiKeysQueryMeta({ client }), { wrapper });
+    const { result } = renderHook(() => useApiKeysQueryMeta(), {
+      wrapper: createApiKeysWrapper(client),
+    });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
@@ -286,8 +267,9 @@ describe('useApiKey', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockApiKey });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useApiKey('key-1', { client }), { wrapper });
+    const { result } = renderHook(() => useApiKey('key-1'), {
+      wrapper: createApiKeysWrapper(client),
+    });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
@@ -300,9 +282,8 @@ describe('useApiKey', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValueOnce({ data: mockApiKey });
 
-    const { wrapper } = createWrapper();
-    renderHook(() => useApiKey('key-1', { client, basePath: '/api/v2/authentication' }), {
-      wrapper,
+    renderHook(() => useApiKey('key-1', { basePath: '/api/v2/authentication' }), {
+      wrapper: createApiKeysWrapper(client, { basePath: '/api/v2/authentication' }),
     });
 
     await waitFor(() => expect(client.get).toHaveBeenCalledOnce());
@@ -313,8 +294,7 @@ describe('useApiKey', () => {
   it('should not fetch when id is empty', async () => {
     const client = createMockClient();
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useApiKey('', { client }), { wrapper });
+    const { result } = renderHook(() => useApiKey(''), { wrapper: createApiKeysWrapper(client) });
 
     await new Promise((resolve) => setTimeout(resolve, 50));
 
@@ -326,8 +306,9 @@ describe('useApiKey', () => {
     const client = createMockClient();
     vi.mocked(client.get).mockRejectedValueOnce(new Error('Not found'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useApiKey('key-999', { client }), { wrapper });
+    const { result } = renderHook(() => useApiKey('key-999'), {
+      wrapper: createApiKeysWrapper(client),
+    });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 

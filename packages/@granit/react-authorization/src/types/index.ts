@@ -1,13 +1,12 @@
-import type { AxiosInstance } from '@granit/api-client';
-
 // ---------------------------------------------------------------------------
 // Permissions (usePermissions hook)
 // ---------------------------------------------------------------------------
 
-/** Configuration options for the {@link usePermissions} hook. */
+/**
+ * Configuration options for the {@link usePermissions} hook. The Axios client is
+ * resolved internally from the nearest `<AuthorizationProvider>`.
+ */
 export type UsePermissionsOptions = {
-  /** Axios instance to use for the API call. Falls back to {@link AuthorizationProvider} context when omitted. */
-  client?: AxiosInstance;
   /** Base path for the authorization API. Default: `'/api/v1/authorization'`. */
   basePath?: string;
   /** Override the enabled state. Default: `true` when authenticated. */
@@ -40,7 +39,6 @@ export type UsePermissionsReturn = {
 
 /** Options for the {@link usePermissionDefinitions} hook. */
 export type UsePermissionDefinitionsOptions = {
-  client?: AxiosInstance;
   basePath?: string;
   enabled?: boolean;
   /** Custom prefix for all query keys produced by this module. */
@@ -49,7 +47,6 @@ export type UsePermissionDefinitionsOptions = {
 
 /** Options for the {@link useRolePermissions} hook. */
 export type UseRolePermissionsOptions = {
-  client?: AxiosInstance;
   roleName: string;
   basePath?: string;
   enabled?: boolean;
@@ -59,7 +56,6 @@ export type UseRolePermissionsOptions = {
 
 /** Options for the {@link usePermissionGrant} hook. */
 export type UsePermissionGrantOptions = {
-  client?: AxiosInstance;
   basePath?: string;
   /** Custom prefix for all query keys produced by this module. */
   queryKeyPrefix?: readonly string[];
@@ -67,7 +63,6 @@ export type UsePermissionGrantOptions = {
 
 /** Options for the {@link usePermissionGrants} / {@link usePermissionGrantMeta} hooks. */
 export type UsePermissionGrantsOptions = {
-  client?: AxiosInstance;
   basePath?: string;
   enabled?: boolean;
   /** Custom prefix for all query keys produced by this module. */
@@ -76,7 +71,6 @@ export type UsePermissionGrantsOptions = {
 
 /** Options for the {@link useRoleMetadata} / {@link useRoleMetadataMeta} hooks. */
 export type UseRoleMetadataOptions = {
-  client?: AxiosInstance;
   basePath?: string;
   enabled?: boolean;
   /** Custom prefix for all query keys produced by this module. */

@@ -5,8 +5,8 @@ import { buildIdentityQueryKey, useIdentityConfig } from '../providers/identity-
 
 import type {
   IdentityUser,
-  IdentityUserCacheSyncAllResult,
-  IdentityUserCacheSyncStaleResult,
+  IdentityUserCacheSyncAllResponse,
+  IdentityUserCacheSyncStaleResponse,
 } from '@granit/identity';
 import type { UserId } from '@granit/types';
 import type { UseMutationResult } from '@tanstack/react-query';
@@ -28,8 +28,8 @@ import type { UseMutationResult } from '@tanstack/react-query';
  */
 export function useIdentitySync(): {
   sync: UseMutationResult<readonly IdentityUser[], Error, UserId[]>;
-  syncAll: UseMutationResult<IdentityUserCacheSyncAllResult, Error, void>;
-  syncStale: UseMutationResult<IdentityUserCacheSyncStaleResult, Error, void>;
+  syncAll: UseMutationResult<IdentityUserCacheSyncAllResponse, Error, void>;
+  syncStale: UseMutationResult<IdentityUserCacheSyncStaleResponse, Error, void>;
 } {
   const config = useIdentityConfig();
   const queryClient = useQueryClient();

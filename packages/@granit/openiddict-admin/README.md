@@ -86,7 +86,7 @@ OpenIddictPermissions.Applications.Rotate; // 'OpenIddict.Applications.Rotate'
 | `AdminUser`                           | type  | Admin user descriptor (`userId`, `username`, `email`, `enabled`)  |
 | `AdminUserListParams`                 | type  | `GET {basePath}/users` query (`search`, `page`, `pageSize`)       |
 | `AdminUserPage`                       | type  | `PagedResult<AdminUser>` — paginated user listing                 |
-| `AdminImpersonationResult`            | type  | `{ accessToken, refreshToken, expiresIn }` from impersonation     |
+| `AdminImpersonationResponse`          | type  | `{ accessToken, refreshToken, expiresIn }` from impersonation     |
 | `AdminOidcApplicationResponse`        | type  | OIDC application descriptor (`clientId`, URIs, `clientSide`, …)   |
 | `AdminOidcCreateApplicationRequest`   | type  | `POST .../oidc/applications` body                                 |
 | `AdminOidcUpdateApplicationRequest`   | type  | `PUT .../oidc/applications/{clientId}` body (`null` clears field) |
@@ -125,13 +125,13 @@ consent prompt — no permission required.
 - **Secrets are shown once.** `rotateApplicationSecret` and a `clientSecret` passed
   to `createApplication` are sensitive. Surface `newClientSecret` to the admin
   inline and never log, persist client-side, or send it to telemetry.
-- **Impersonation tokens are credentials.** `AdminImpersonationResult` holds a live
+- **Impersonation tokens are credentials.** `AdminImpersonationResponse` holds a live
   access + refresh token. Hand them to the auth layer; never log them or write them
   to anywhere durable.
 - **`signingKeyJwk` is a JSON string.** Private JWK params are stripped server-side;
   on update, an empty string clears the key while `null` leaves it unchanged.
 - **Optionality mirrors the OpenAPI `required` array, not nullability.** Response
-  fields typed `T | null` are *required keys with nullable values* (e.g.
+  fields typed `T | null` are _required keys with nullable values_ (e.g.
   `clientId: string | null`); request fields typed `T?` are genuinely optional.
   On the update requests, an explicit `null` clears a field — distinct from omitting
   the key, which leaves it unchanged.

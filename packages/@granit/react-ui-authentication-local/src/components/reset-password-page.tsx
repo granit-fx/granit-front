@@ -19,10 +19,11 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
-import { logger } from './logger';
+import { logger } from '../logger';
+import { safeReturnUrl } from '../safe-return-url';
+import { resetPasswordConstraints, type ResetPasswordFormValues } from '../validation';
+
 import { PublicLayout } from './public-layout';
-import { safeReturnUrl } from './safe-return-url';
-import { resetPasswordConstraints, type ResetPasswordFormValues } from './validation';
 
 import type { Resolver } from 'react-hook-form';
 

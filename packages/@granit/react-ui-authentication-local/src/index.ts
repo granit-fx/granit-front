@@ -9,22 +9,25 @@
 // from @granit/react-validation.
 
 // Pages
-export { ChangeEmailPage } from './change-email-page';
-export { ConfirmEmailChangePage } from './confirm-email-change-page';
-export { ConfirmEmailPage } from './confirm-email-page';
-export { ForgotPasswordPage } from './forgot-password-page';
-export { LocalLoginPage } from './local-login-page';
-export { RegisterPage } from './register-page';
-export { ResetPasswordPage } from './reset-password-page';
+export { ChangeEmailPage } from './components/change-email-page';
+export { ConfirmEmailChangePage } from './components/confirm-email-change-page';
+export { ConfirmEmailPage } from './components/confirm-email-page';
+export { ForgotPasswordPage } from './components/forgot-password-page';
+export { LocalLoginPage } from './components/local-login-page';
+export { RegisterPage } from './components/register-page';
+export { ResetPasswordPage } from './components/reset-password-page';
 
 // Reusable form components (compose your own login experience)
-export { CredentialForm } from './credential-form';
-export { ExternalLoginButtons } from './external-login-buttons';
-export { ExternalProviderIcon } from './external-provider-icon';
-export { HeadlessLoginForm } from './headless-login-form';
-export { PublicLayout } from './public-layout';
-export { TokenConfirmationResult, type ConfirmationStatus } from './token-confirmation-result';
-export { TwoFactorForm } from './two-factor-form';
+export { CredentialForm } from './components/credential-form';
+export { ExternalLoginButtons } from './components/external-login-buttons';
+export { ExternalProviderIcon } from './components/external-provider-icon';
+export { HeadlessLoginForm } from './components/headless-login-form';
+export { PublicLayout } from './components/public-layout';
+export {
+  TokenConfirmationResult,
+  type ConfirmationStatus,
+} from './components/token-confirmation-result';
+export { TwoFactorForm } from './components/two-factor-form';
 
 // Spec-style validation constraints + form value types
 export {

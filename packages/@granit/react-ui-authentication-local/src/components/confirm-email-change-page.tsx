@@ -1,7 +1,8 @@
 import { useConfirmEmailChange } from '@granit/react-account';
 import { useEffect, useState } from 'react';
 
-import { logger } from './logger';
+import { logger } from '../logger';
+
 import { TokenConfirmationResult, type ConfirmationStatus } from './token-confirmation-result';
 
 const log = logger.child('ConfirmEmailChange');

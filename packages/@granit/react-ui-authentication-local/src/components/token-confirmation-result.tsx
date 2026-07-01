@@ -3,8 +3,9 @@ import { Alert, AlertDescription, Button, Spinner } from '@granit/react-ui';
 import { AlertCircle, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import { safeReturnUrl } from '../safe-return-url';
+
 import { PublicLayout } from './public-layout';
-import { safeReturnUrl } from './safe-return-url';
 
 export type ConfirmationStatus = 'loading' | 'success' | 'error';
 

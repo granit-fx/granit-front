@@ -16,7 +16,6 @@
   "peerDependencies": {
     "@granit/authorization": "workspace:*",
     "@granit/query-engine": "workspace:*",
-    "@granit/react-api-client": "workspace:*",
     "@granit/react-authorization": "workspace:*",
     "@granit/react-identity": "workspace:*",
     "@granit/react-localization": "workspace:*",

@@ -1,9 +1,7 @@
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient } from '@granit/testing';
 import { toISODateString } from '@granit/types';
-import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
-import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -13,6 +11,9 @@ import {
   useUpdateApiKeyScopes,
 } from '../hooks/use-api-key-mutations';
 
+import { createApiKeysWrapper } from './test-wrapper';
+
+import type { AxiosInstance } from '@granit/api-client';
 import type {
   ApiKeyCreateRequest,
   ApiKeyCreateResponse,
@@ -23,12 +24,10 @@ import type {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function createWrapper() {
+function createWrapper(client: AxiosInstance, basePath?: string) {
   const queryClient = createTestQueryClient();
   return {
-    wrapper: ({ children }: { children: React.ReactNode }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    ),
+    wrapper: createApiKeysWrapper(client, { basePath, queryClient }),
     queryClient,
   };
 }
@@ -56,8 +55,8 @@ describe('useCreateApiKey', () => {
     };
     vi.mocked(client.post).mockResolvedValueOnce({ data: createResponse });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useCreateApiKey({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useCreateApiKey(), { wrapper });
 
     const request: ApiKeyCreateRequest = {
       name: 'My Key',
@@ -87,13 +86,10 @@ describe('useCreateApiKey', () => {
     };
     vi.mocked(client.post).mockResolvedValueOnce({ data: createResponse });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(
-      () => useCreateApiKey({ client, basePath: '/api/v2/authentication' }),
-      {
-        wrapper,
-      }
-    );
+    const { wrapper } = createWrapper(client, '/api/v2/authentication');
+    const { result } = renderHook(() => useCreateApiKey({ basePath: '/api/v2/authentication' }), {
+      wrapper,
+    });
 
     result.current.mutate({ name: 'V2 Key', type: 'Publishable', environment: 'staging' });
 
@@ -117,10 +113,10 @@ describe('useCreateApiKey', () => {
       },
     });
 
-    const { wrapper, queryClient } = createWrapper();
+    const { wrapper, queryClient } = createWrapper(client);
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => useCreateApiKey({ client }), { wrapper });
+    const { result } = renderHook(() => useCreateApiKey(), { wrapper });
 
     result.current.mutate({ name: 'n', type: 'Secret', environment: 'production' });
 
@@ -135,8 +131,8 @@ describe('useCreateApiKey', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValueOnce(new Error('Validation failed'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useCreateApiKey({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useCreateApiKey(), { wrapper });
 
     result.current.mutate({ name: 'Bad Key', type: 'Secret', environment: 'production' });
 
@@ -160,8 +156,8 @@ describe('useCreateApiKey', () => {
       },
     });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useCreateApiKey({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useCreateApiKey(), { wrapper });
 
     const request: ApiKeyCreateRequest = {
       name: 'Opt Key',
@@ -193,8 +189,8 @@ describe('useRevokeApiKey', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useRevokeApiKey({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useRevokeApiKey(), { wrapper });
 
     result.current.mutate('key-1');
 
@@ -207,13 +203,10 @@ describe('useRevokeApiKey', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(
-      () => useRevokeApiKey({ client, basePath: '/api/v2/authentication' }),
-      {
-        wrapper,
-      }
-    );
+    const { wrapper } = createWrapper(client, '/api/v2/authentication');
+    const { result } = renderHook(() => useRevokeApiKey({ basePath: '/api/v2/authentication' }), {
+      wrapper,
+    });
 
     result.current.mutate('key-1');
 
@@ -226,10 +219,10 @@ describe('useRevokeApiKey', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValueOnce({ data: undefined });
 
-    const { wrapper, queryClient } = createWrapper();
+    const { wrapper, queryClient } = createWrapper(client);
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => useRevokeApiKey({ client }), { wrapper });
+    const { result } = renderHook(() => useRevokeApiKey(), { wrapper });
 
     result.current.mutate('key-1');
 
@@ -243,8 +236,8 @@ describe('useRevokeApiKey', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValueOnce(new Error('Already revoked'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useRevokeApiKey({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useRevokeApiKey(), { wrapper });
 
     result.current.mutate('key-1');
 
@@ -274,8 +267,8 @@ describe('useRotateApiKey', () => {
     };
     vi.mocked(client.post).mockResolvedValueOnce({ data: rotateResponse });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useRotateApiKey({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useRotateApiKey(), { wrapper });
 
     result.current.mutate('key-old');
 
@@ -299,13 +292,10 @@ describe('useRotateApiKey', () => {
       },
     });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(
-      () => useRotateApiKey({ client, basePath: '/api/v2/authentication' }),
-      {
-        wrapper,
-      }
-    );
+    const { wrapper } = createWrapper(client, '/api/v2/authentication');
+    const { result } = renderHook(() => useRotateApiKey({ basePath: '/api/v2/authentication' }), {
+      wrapper,
+    });
 
     result.current.mutate('k1');
 
@@ -326,10 +316,10 @@ describe('useRotateApiKey', () => {
       },
     });
 
-    const { wrapper, queryClient } = createWrapper();
+    const { wrapper, queryClient } = createWrapper(client);
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => useRotateApiKey({ client }), { wrapper });
+    const { result } = renderHook(() => useRotateApiKey(), { wrapper });
 
     result.current.mutate('key-1');
 
@@ -343,8 +333,8 @@ describe('useRotateApiKey', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockRejectedValueOnce(new Error('Key not found'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useRotateApiKey({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useRotateApiKey(), { wrapper });
 
     result.current.mutate('key-missing');
 
@@ -367,8 +357,8 @@ describe('useUpdateApiKeyScopes', () => {
     const client = createMockClient();
     vi.mocked(client.put).mockResolvedValueOnce({ data: undefined });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useUpdateApiKeyScopes({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useUpdateApiKeyScopes(), { wrapper });
 
     result.current.mutate({
       id: 'key-1',
@@ -390,9 +380,9 @@ describe('useUpdateApiKeyScopes', () => {
     const client = createMockClient();
     vi.mocked(client.put).mockResolvedValueOnce({ data: undefined });
 
-    const { wrapper } = createWrapper();
+    const { wrapper } = createWrapper(client, '/api/v2/authentication');
     const { result } = renderHook(
-      () => useUpdateApiKeyScopes({ client, basePath: '/api/v2/authentication' }),
+      () => useUpdateApiKeyScopes({ basePath: '/api/v2/authentication' }),
       { wrapper }
     );
 
@@ -413,10 +403,10 @@ describe('useUpdateApiKeyScopes', () => {
     const client = createMockClient();
     vi.mocked(client.put).mockResolvedValueOnce({ data: undefined });
 
-    const { wrapper, queryClient } = createWrapper();
+    const { wrapper, queryClient } = createWrapper(client);
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => useUpdateApiKeyScopes({ client }), { wrapper });
+    const { result } = renderHook(() => useUpdateApiKeyScopes(), { wrapper });
 
     result.current.mutate({
       id: 'key-1',
@@ -433,8 +423,8 @@ describe('useUpdateApiKeyScopes', () => {
     const client = createMockClient();
     vi.mocked(client.put).mockRejectedValueOnce(new Error('Forbidden'));
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useUpdateApiKeyScopes({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useUpdateApiKeyScopes(), { wrapper });
 
     result.current.mutate({
       id: 'key-1',
@@ -450,8 +440,8 @@ describe('useUpdateApiKeyScopes', () => {
     const client = createMockClient();
     vi.mocked(client.put).mockResolvedValueOnce({ data: undefined });
 
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useUpdateApiKeyScopes({ client }), { wrapper });
+    const { wrapper } = createWrapper(client);
+    const { result } = renderHook(() => useUpdateApiKeyScopes(), { wrapper });
 
     result.current.mutate({
       id: 'key-1',

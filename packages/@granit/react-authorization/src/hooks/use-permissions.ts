@@ -24,12 +24,12 @@ const EMPTY_SET: ReadonlySet<string> = new Set<string>();
  * Permissions are cached for the lifetime of the Keycloak session
  * (`staleTime: Infinity`). Call `refetch()` to force a refresh.
  *
- * @param options - Axios client instance and optional configuration.
+ * @param options - Optional configuration (`basePath`, `enabled`, `queryKeyPrefix`). The Axios client is resolved from the nearest `<AuthorizationProvider>`.
  * @returns Object with permissions set and helper functions.
  *
  * @example
  * ```tsx
- * const { hasPermission, isLoading } = usePermissions({ client: api });
+ * const { hasPermission, isLoading } = usePermissions();
  *
  * if (isLoading) return <Spinner />;
  * if (!hasPermission('Invoices.Delete')) return null;

@@ -4,8 +4,9 @@ import { useTranslation } from '@granit/react-localization';
 import { toast, Button } from '@granit/react-ui';
 import { useState } from 'react';
 
+import { logger } from '../logger';
+
 import { ExternalProviderIcon } from './external-provider-icon';
-import { logger } from './logger';
 
 import type { ExternalLoginProvider } from '@granit/account';
 

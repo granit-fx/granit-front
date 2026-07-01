@@ -1,5 +1,4 @@
 import { apiKeysConstraints } from '@granit/authentication-api-keys';
-import { useGranitClient } from '@granit/react-api-client';
 import { useCreateApiKey } from '@granit/react-authentication-api-keys';
 import { useTranslation } from '@granit/react-localization';
 import {
@@ -52,8 +51,7 @@ function tomorrowDateInputValue(): string {
 export function ApiKeyCreatePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const client = useGranitClient();
-  const createMutation = useCreateApiKey({ client });
+  const createMutation = useCreateApiKey();
 
   const [createdSecret, setCreatedSecret] = useState<string | null>(null);
   const [createdId, setCreatedId] = useState<string | null>(null);

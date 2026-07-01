@@ -1,4 +1,3 @@
-import { useGranitClient } from '@granit/react-api-client';
 import { useRoleMetadata, useRoleMetadataMeta } from '@granit/react-authorization';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Badge, Input, Spinner } from '@granit/react-ui';
@@ -36,13 +35,12 @@ function RoleIsSystemBadgeCell({ row }: { readonly row: { readonly original: Rol
  * Admin discovery surface for the `GET /authorization/role-metadata` query endpoint.
  *
  * Exercises `useRoleMetadata` + `useRoleMetadataMeta` from
- * `@granit/react-authorization`. The Axios client is resolved from a
- * `GranitClientProvider` in the host tree.
+ * `@granit/react-authorization`. The Axios client is resolved internally by the
+ * hooks from the nearest `<AuthorizationProvider>` (or `GranitClientProvider`).
  */
 export function RoleMetadataPage() {
   const { t } = useTranslation();
   const { formatDate } = useDateFormatter();
-  const client = useGranitClient();
 
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebouncedValue(search, 300);
@@ -50,9 +48,9 @@ export function RoleMetadataPage() {
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [sort, setSort] = useState<SortEntry[]>([{ field: 'name', direction: 'asc' }]);
 
-  const meta = useRoleMetadataMeta({ client });
+  const meta = useRoleMetadataMeta();
   const { data, isLoading } = useRoleMetadata(
-    { client },
+    {},
     { page, pageSize, sort, search: debouncedSearch || undefined }
   );
 
