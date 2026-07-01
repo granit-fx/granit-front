@@ -140,7 +140,11 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'BlobCleanupOrphansResponse',
     ],
     checkEndpoints: true,
-    endpointIgnore: ['', '/meta'],
+    // '' + '/meta' → the query grid, consumed generically via @granit/react-query-engine.
+    // '/{}/download' → the direct download-by-id route (DownloadBlob): a 302 redirect
+    //   consumed as a plain <img src> by @granit/react-blob-storage's BlobImage — no
+    //   axios api function by design (browser-native request, no JS fetch).
+    endpointIgnore: ['', '/meta', '/{}/download'],
   },
   {
     slug: 'api-keys',

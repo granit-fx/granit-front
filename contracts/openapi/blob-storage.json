@@ -169,6 +169,81 @@
         }
       }
     },
+    "/blob-storage/blobs/{id}/download": {
+      "get": {
+        "tags": ["Blob Storage"],
+        "summary": "Redirects to a fresh pre-signed URL for direct blob download.",
+        "description": "Resolves a Valid blob by its identifier within the current tenant and issues a 302 redirect to a freshly generated pre-signed download URL. Designed for direct <img src>/browser consumption over the cookie/BFF session: honouring the module's Direct-to-Cloud contract, the application server never streams the bytes. The container is resolved server-side from the identifier, so no query parameter is required. Only blobs in the Valid state are served; returns 404 for missing, pending, rejected, or deleted blobs.",
+        "operationId": "DownloadBlob",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Found"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/blob-storage/blobs/upload": {
       "post": {
         "tags": ["Blob Storage"],
