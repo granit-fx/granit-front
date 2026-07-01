@@ -9,6 +9,7 @@ import {
   scanAxiosImports,
   scanConsole,
   scanFetch,
+  stripComments,
   walkSourceFiles,
 } from '@granit/arch-tests-kit';
 import { describe, expect, it } from 'vitest';
@@ -188,7 +189,11 @@ describe('imports — granit-specific rules', () => {
       if (pkg.name === '@granit/logger') continue;
       let count = 0;
       for (const f of walkSourceFiles(pkg.srcDir, (file) => !isTestFile(file))) {
-        count += (fs.readFileSync(f, 'utf8').match(/\bcreateLogger\s*\(/g) ?? []).length;
+        // Strip comments first — a `createLogger('pkg')` mention inside a JSDoc
+        // block (e.g. @granit/api-client) is a doc reference, not a second
+        // instance. Mirrors the comment-aware scan every other rule uses.
+        count += (stripComments(fs.readFileSync(f, 'utf8')).match(/\bcreateLogger\s*\(/g) ?? [])
+          .length;
       }
       if (count > 1 && !LOGGER_MULTI_INSTANCE_BASELINE.includes(pkg.name)) {
         offenders.push(`${pkg.name} (${count} createLogger calls)`);
