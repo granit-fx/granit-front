@@ -10,7 +10,7 @@ import {
   TableRow,
 } from '@granit/react-ui';
 import { ConfirmActionDialog } from '@granit/react-ui-kit';
-import { useRevokeSigningKey, useRotateSigningKey, useSigningKeys } from '@granit/react-webhooks';
+import { useCreateSigningKey, useDeleteSigningKey, useSigningKeys } from '@granit/react-webhooks';
 import { WebhookSigningKeyStatus } from '@granit/webhooks';
 import { RefreshCw } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
@@ -32,8 +32,8 @@ export function WebhookSigningKeys({
   const { formatDateTime } = useDateFormatter();
 
   const { data: keys, isLoading } = useSigningKeys(subscriptionId);
-  const rotateMutation = useRotateSigningKey();
-  const revokeMutation = useRevokeSigningKey();
+  const rotateMutation = useCreateSigningKey();
+  const revokeMutation = useDeleteSigningKey();
 
   const [rotatedSecret, setRotatedSecret] = useState<string | null>(null);
   const [keyToRevoke, setKeyToRevoke] = useState<string | null>(null);

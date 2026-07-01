@@ -30,7 +30,7 @@ const NotificationContext = createContext<NotificationContextValue | null>(null)
 export function useNotificationConfig(): NotificationContextValue {
   const ctx = useContext(NotificationContext);
   if (!ctx) {
-    throw new Error('useNotificationConfig must be used within a <NotificationProvider>');
+    throw new Error('useNotificationConfig must be used within a <NotificationsProvider>');
   }
   return ctx;
 }
@@ -39,18 +39,18 @@ export function useNotificationConfig(): NotificationContextValue {
 // Provider
 // ---------------------------------------------------------------------------
 
-interface NotificationProviderProps {
+interface NotificationsProviderProps {
   children: React.ReactNode;
   config: NotificationConfig;
   /** Optional real-time transport. When omitted, only REST API polling is available. */
   transport?: NotificationTransport;
 }
 
-export function NotificationProvider({
+export function NotificationsProvider({
   children,
   config,
   transport,
-}: Readonly<NotificationProviderProps>) {
+}: Readonly<NotificationsProviderProps>) {
   const [connectionState, setConnectionState] = useState<ConnectionState>('disconnected');
   const [lastMessage, setLastMessage] = useState<NotificationTransportMessage | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);

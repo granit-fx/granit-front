@@ -14,7 +14,7 @@ sibling [`@granit/notifications-signalr`](../notifications-signalr) implements
 the same `NotificationTransport` contract over a WebSocket/SignalR hub — pick
 one per app. The transport is consumed by the React layer
 [`@granit/react-notifications`](../react-notifications), whose
-`NotificationProvider` accepts an optional `transport` prop; the admin feature
+`NotificationsProvider` accepts an optional `transport` prop; the admin feature
 kit is [`@granit/react-ui-notifications`](../react-ui-notifications). The backend
 counterpart is the `Granit.Notifications` .NET module (wire contract:
 `contracts/openapi/notifications.json`).
@@ -33,13 +33,13 @@ installed from a public registry for app consumption. Declare the peers:
 ## Quick start
 
 `createSseTransport` returns a `NotificationTransport`. Hand it to the
-`NotificationProvider` from `@granit/react-notifications`; the provider drives
+`NotificationsProvider` from `@granit/react-notifications`; the provider drives
 `connect()` / `disconnect()` and subscribes to its callbacks. When omitted, the
 provider falls back to REST polling only.
 
 ```tsx
 import { createSseTransport } from '@granit/notifications-sse';
-import { NotificationProvider } from '@granit/react-notifications';
+import { NotificationsProvider } from '@granit/react-notifications';
 
 // Built once, outside render — same-origin streamUrl, Bearer token re-read on
 // every (re)connect via tokenGetter.
@@ -50,9 +50,9 @@ const transport = createSseTransport({
 
 export function App({ children }: { children: React.ReactNode }) {
   return (
-    <NotificationProvider config={{ apiClient }} transport={transport}>
+    <NotificationsProvider config={{ apiClient }} transport={transport}>
       {children}
-    </NotificationProvider>
+    </NotificationsProvider>
   );
 }
 ```
@@ -80,16 +80,16 @@ await transport.disconnect();
 
 ## Public API
 
-| Symbol               | Kind | Purpose                                                        |
-| -------------------- | ---- | -------------------------------------------------------------- |
-| `createSseTransport` | fn   | Builds a `NotificationTransport` backed by an SSE stream       |
-| `SseTransportConfig` | type | Factory options (`streamUrl`, `tokenGetter`, heartbeat, CORS)  |
+| Symbol               | Kind | Purpose                                                       |
+| -------------------- | ---- | ------------------------------------------------------------- |
+| `createSseTransport` | fn   | Builds a `NotificationTransport` backed by an SSE stream      |
+| `SseTransportConfig` | type | Factory options (`streamUrl`, `tokenGetter`, heartbeat, CORS) |
 
 ### `SseTransportConfig`
 
 | Field               | Type                            | Default           | Purpose                                                               |
 | ------------------- | ------------------------------- | ----------------- | --------------------------------------------------------------------- |
-| `streamUrl`         | `string`                        | — (required)      | SSE endpoint, e.g. `/api/v1/notifications/stream`.                     |
+| `streamUrl`         | `string`                        | — (required)      | SSE endpoint, e.g. `/api/v1/notifications/stream`.                    |
 | `tokenGetter`       | `() => Promise<string \| null>` | none              | Called on each connection attempt; result is sent as `Bearer` if set. |
 | `heartbeatTypeName` | `string`                        | `'__heartbeat__'` | Event name treated as a keep-alive and filtered from notifications.   |
 | `allowCrossOrigin`  | `boolean`                       | `false`           | Opt in to a cross-origin `streamUrl` (see caveats).                   |

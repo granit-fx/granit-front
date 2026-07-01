@@ -11,22 +11,15 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { API_BASE_PATH } from '../constants';
 import { logger } from '../logger';
-import { useNotificationConfig } from '../providers/notification-provider';
+import { useNotificationConfig } from '../providers/notifications-provider';
+
+import { buildNotificationsQueryKey } from './query-keys';
 
 import type {
   NotificationDefinition,
   NotificationSubscriptionResponse,
 } from '@granit/notifications';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
-
-// ---------------------------------------------------------------------------
-// Query keys
-// ---------------------------------------------------------------------------
-
-const NOTIFICATION_TYPES_KEY = ['notifications', 'types'] as const;
-const SUBSCRIPTIONS_KEY = ['notifications', 'subscriptions'] as const;
-const ENTITY_FOLLOWERS_KEY = (entityType: string, entityId: string) =>
-  ['notifications', 'entity', entityType, entityId, 'followers'] as const;
 
 // ---------------------------------------------------------------------------
 // Notification types — the registry of available notifications
@@ -42,7 +35,7 @@ export function useNotificationTypes(): UseQueryResult<readonly NotificationDefi
   const { config } = useNotificationConfig();
   const basePath = config.basePath ?? API_BASE_PATH;
   return useQuery({
-    queryKey: NOTIFICATION_TYPES_KEY,
+    queryKey: buildNotificationsQueryKey(config, 'types'),
     queryFn: () => listNotificationTypes(config.apiClient, basePath),
     staleTime: 5 * 60_000,
   });
@@ -63,7 +56,7 @@ export function useNotificationSubscriptions(): UseQueryResult<
   const { config } = useNotificationConfig();
   const basePath = config.basePath ?? API_BASE_PATH;
   return useQuery({
-    queryKey: SUBSCRIPTIONS_KEY,
+    queryKey: buildNotificationsQueryKey(config, 'subscriptions'),
     queryFn: () => listSubscriptions(config.apiClient, basePath),
   });
 }
@@ -81,7 +74,9 @@ export function useSubscribeToNotificationType(): UseMutationResult<void, Error,
     mutationFn: (typeName) => subscribeToNotificationType(config.apiClient, basePath, typeName),
     onSuccess: (_data, typeName) => {
       logger.debug('Subscribed to notification type', { typeName });
-      queryClient.invalidateQueries({ queryKey: SUBSCRIPTIONS_KEY });
+      queryClient.invalidateQueries({
+        queryKey: buildNotificationsQueryKey(config, 'subscriptions'),
+      });
     },
   });
 }
@@ -99,7 +94,9 @@ export function useUnsubscribeFromNotificationType(): UseMutationResult<void, Er
     mutationFn: (typeName) => unsubscribeFromNotificationType(config.apiClient, basePath, typeName),
     onSuccess: (_data, typeName) => {
       logger.debug('Unsubscribed from notification type', { typeName });
-      queryClient.invalidateQueries({ queryKey: SUBSCRIPTIONS_KEY });
+      queryClient.invalidateQueries({
+        queryKey: buildNotificationsQueryKey(config, 'subscriptions'),
+      });
     },
   });
 }
@@ -128,7 +125,9 @@ export function useFollowEntity(): UseMutationResult<void, Error, EntityFollowVa
       followEntity(config.apiClient, basePath, entityType, entityId),
     onSuccess: (_data, { entityType, entityId }) => {
       logger.debug('Followed entity', { entityType, entityId });
-      queryClient.invalidateQueries({ queryKey: ENTITY_FOLLOWERS_KEY(entityType, entityId) });
+      queryClient.invalidateQueries({
+        queryKey: buildNotificationsQueryKey(config, 'entity', entityType, entityId, 'followers'),
+      });
     },
   });
 }
@@ -147,7 +146,9 @@ export function useUnfollowEntity(): UseMutationResult<void, Error, EntityFollow
       unfollowEntity(config.apiClient, basePath, entityType, entityId),
     onSuccess: (_data, { entityType, entityId }) => {
       logger.debug('Unfollowed entity', { entityType, entityId });
-      queryClient.invalidateQueries({ queryKey: ENTITY_FOLLOWERS_KEY(entityType, entityId) });
+      queryClient.invalidateQueries({
+        queryKey: buildNotificationsQueryKey(config, 'entity', entityType, entityId, 'followers'),
+      });
     },
   });
 }
@@ -164,7 +165,7 @@ export function useEntityFollowers(
   const { config } = useNotificationConfig();
   const basePath = config.basePath ?? API_BASE_PATH;
   return useQuery({
-    queryKey: ENTITY_FOLLOWERS_KEY(entityType, entityId),
+    queryKey: buildNotificationsQueryKey(config, 'entity', entityType, entityId, 'followers'),
     queryFn: () => listEntityFollowers(config.apiClient, basePath, entityType, entityId),
     enabled: Boolean(entityType) && Boolean(entityId),
   });

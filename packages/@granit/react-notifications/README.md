@@ -6,7 +6,7 @@ feed, preferences, type subscriptions, entity follows, and a pluggable per-type
 rendering registry. This is the **React hooks layer**: it wraps the
 framework-agnostic Axios calls and DTOs from
 [`@granit/notifications`](../notifications) in TanStack Query hooks and a shared
-`NotificationProvider`, and adds the headless rendering primitives that turn a
+`NotificationsProvider`, and adds the headless rendering primitives that turn a
 raw notification payload into a uniform presentation descriptor. It ships no
 chrome — bell, inbox page, preferences panel, and toasts live one layer up.
 
@@ -55,19 +55,19 @@ Wire the provider once (it resolves the Axios client / base path and, optionally
 a real-time transport), then call the hooks anywhere below it.
 
 ```tsx
-import { NotificationProvider } from '@granit/react-notifications';
+import { NotificationsProvider } from '@granit/react-notifications';
 import { useGranitClient } from '@granit/react-api-client';
 import { createSseTransport } from '@granit/notifications-sse';
 
 function App({ children }: { children: React.ReactNode }) {
   const apiClient = useGranitClient();
   return (
-    <NotificationProvider
+    <NotificationsProvider
       config={{ apiClient }}
       transport={createSseTransport({ streamUrl: '/api/v1/notifications/stream' })}
     >
       {children}
-    </NotificationProvider>
+    </NotificationsProvider>
   );
 }
 ```
@@ -99,7 +99,11 @@ function Inbox() {
           </li>
         ))}
       </ul>
-      {hasMore && <button type="button" onClick={loadMore}>Load more</button>}
+      {hasMore && (
+        <button type="button" onClick={loadMore}>
+          Load more
+        </button>
+      )}
     </>
   );
 }
@@ -136,7 +140,7 @@ const presentation = resolveNotificationPresentation(notification, { t });
 
 | Symbol                               | Kind     | Purpose                                                          |
 | ------------------------------------ | -------- | ---------------------------------------------------------------- |
-| `NotificationProvider`               | provider | Supplies config + optional transport; tracks connection / unread |
+| `NotificationsProvider`              | provider | Supplies config + optional transport; tracks connection / unread |
 | `useNotificationConfig`              | hook     | Read the context value (config, connection state, last message)  |
 | `useNotifications`                   | hook     | Paginated inbox, optimistic `markRead` / `markAllRead`           |
 | `useUnreadCount`                     | hook     | Live unread count (push + polling + manual `refresh`)            |

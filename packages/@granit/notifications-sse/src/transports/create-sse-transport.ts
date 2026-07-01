@@ -54,7 +54,7 @@ class FatalError extends Error {}
  *   tokenGetter: () => keycloak.token,
  * });
  *
- * <NotificationProvider config={{ apiClient }} transport={transport}>
+ * <NotificationsProvider config={{ apiClient }} transport={transport}>
  * ```
  */
 export function createSseTransport(config: SseTransportConfig): NotificationTransport {

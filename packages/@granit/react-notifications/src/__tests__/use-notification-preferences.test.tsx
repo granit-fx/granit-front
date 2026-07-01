@@ -4,8 +4,12 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { mockNotificationPreferences } from '@granit/react-notifications/testing';
 
-import { useNotificationPreferences } from '../hooks/use-notification-preferences';
-import { NotificationProvider } from '../providers/notification-provider';
+import { buildNotificationsQueryKey } from '../hooks/query-keys';
+import {
+  useNotificationPreferences,
+  useUpsertNotificationPreference,
+} from '../hooks/use-notification-preferences';
+import { NotificationsProvider } from '../providers/notifications-provider';
 
 import { axiosResponse, createMockClient } from './test-utils';
 
@@ -21,7 +25,7 @@ function createWrapper(client: AxiosInstance, basePath = '/api/v1') {
     const config: NotificationConfig = { apiClient: client, basePath };
     return (
       <QueryClientProvider client={queryClient}>
-        <NotificationProvider config={config}>{children}</NotificationProvider>
+        <NotificationsProvider config={config}>{children}</NotificationsProvider>
       </QueryClientProvider>
     );
   };
@@ -35,7 +39,7 @@ function createWrapperWithoutBasePath(client: AxiosInstance) {
     const config: NotificationConfig = { apiClient: client };
     return (
       <QueryClientProvider client={queryClient}>
-        <NotificationProvider config={config}>{children}</NotificationProvider>
+        <NotificationsProvider config={config}>{children}</NotificationsProvider>
       </QueryClientProvider>
     );
   };
@@ -206,5 +210,67 @@ describe('useNotificationPreferences', () => {
     expect(client.get).toHaveBeenCalledWith(
       expect.stringContaining('/api/v1/notifications/preferences')
     );
+  });
+});
+
+describe('useUpsertNotificationPreference', () => {
+  it('should PUT the preference and resolve on success', async () => {
+    const client = createMockClient();
+    vi.mocked(client.put).mockResolvedValue(axiosResponse(undefined));
+
+    const { result } = renderHook(() => useUpsertNotificationPreference(), {
+      wrapper: createWrapper(client),
+    });
+
+    await act(async () => {
+      await result.current.mutateAsync({
+        notificationTypeName: 'security.login',
+        channelName: 'Email',
+        isEnabled: true,
+      });
+    });
+
+    expect(client.put).toHaveBeenCalledWith(
+      expect.stringContaining('/api/v1/notifications/preferences'),
+      { notificationTypeName: 'security.login', channelName: 'Email', isEnabled: true }
+    );
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+  });
+
+  it('should surface the error on failure', async () => {
+    const client = createMockClient();
+    vi.mocked(client.put).mockRejectedValue(new Error('Upsert failed'));
+
+    const { result } = renderHook(() => useUpsertNotificationPreference(), {
+      wrapper: createWrapper(client),
+    });
+
+    await act(async () => {
+      await result.current
+        .mutateAsync({ notificationTypeName: 't', channelName: 'InApp', isEnabled: false })
+        .catch(() => undefined);
+    });
+
+    await waitFor(() => expect(result.current.isError).toBe(true));
+    expect(result.current.error?.message).toBe('Upsert failed');
+  });
+});
+
+describe('buildNotificationsQueryKey', () => {
+  it('should default the prefix to ["notifications"]', () => {
+    const config = { apiClient: createMockClient() };
+    expect(buildNotificationsQueryKey(config, 'preferences')).toEqual([
+      'notifications',
+      'preferences',
+    ]);
+  });
+
+  it('should honour a custom queryKeyPrefix', () => {
+    const config = { apiClient: createMockClient(), queryKeyPrefix: ['scope', 'notifs'] as const };
+    expect(buildNotificationsQueryKey(config, 'subscriptions')).toEqual([
+      'scope',
+      'notifs',
+      'subscriptions',
+    ]);
   });
 });

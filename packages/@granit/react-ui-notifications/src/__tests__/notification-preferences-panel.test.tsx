@@ -5,21 +5,20 @@ import { NotificationPreferencesPanel } from '../components/notification-prefere
 
 import { renderNotifications } from './test-utils';
 
-const { mockUseNotificationPreferences, mockUseNotificationTypes, mockUseNotificationConfig } =
-  vi.hoisted(() => ({
-    mockUseNotificationPreferences: vi.fn(),
-    mockUseNotificationTypes: vi.fn(),
-    mockUseNotificationConfig: vi.fn(),
-  }));
+const {
+  mockUseNotificationPreferences,
+  mockUseNotificationTypes,
+  mockUseUpsertNotificationPreference,
+} = vi.hoisted(() => ({
+  mockUseNotificationPreferences: vi.fn(),
+  mockUseNotificationTypes: vi.fn(),
+  mockUseUpsertNotificationPreference: vi.fn(),
+}));
 
 vi.mock('@granit/react-notifications', () => ({
   useNotificationPreferences: mockUseNotificationPreferences,
   useNotificationTypes: mockUseNotificationTypes,
-  useNotificationConfig: mockUseNotificationConfig,
-}));
-
-vi.mock('@granit/notifications', () => ({
-  updatePreference: vi.fn(),
+  useUpsertNotificationPreference: mockUseUpsertNotificationPreference,
 }));
 
 const mockDefinitions = [
@@ -63,8 +62,9 @@ const mockPreferences = [
 ];
 
 beforeEach(() => {
-  mockUseNotificationConfig.mockReturnValue({
-    config: { apiClient: {}, basePath: '/api/v1' },
+  mockUseUpsertNotificationPreference.mockReturnValue({
+    mutateAsync: vi.fn().mockResolvedValue(undefined),
+    isPending: false,
   });
   mockUseNotificationTypes.mockReturnValue({ data: mockDefinitions, isLoading: false });
   mockUseNotificationPreferences.mockReturnValue({

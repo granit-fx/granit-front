@@ -21,7 +21,7 @@ export interface SignalRTransportConfig {
  *   tokenGetter: () => keycloak.token,
  * });
  *
- * <NotificationProvider config={{ apiClient }} transport={transport}>
+ * <NotificationsProvider config={{ apiClient }} transport={transport}>
  * ```
  */
 export function createSignalRTransport(config: SignalRTransportConfig): NotificationTransport {

@@ -1,5 +1,5 @@
 import { createApiClient } from '@granit/api-client';
-import { NotificationProvider } from '@granit/react-notifications';
+import { NotificationsProvider } from '@granit/react-notifications';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { NotificationPreferencesPanel } from './notification-preferences-panel';
@@ -19,9 +19,9 @@ const meta: Meta<typeof NotificationPreferencesPanel> = {
   decorators: [
     (Story) => (
       <QueryClientProvider client={queryClient}>
-        <NotificationProvider config={{ apiClient: client, basePath: '/api/v1' }}>
+        <NotificationsProvider config={{ apiClient: client, basePath: '/api/v1' }}>
           <Story />
-        </NotificationProvider>
+        </NotificationsProvider>
       </QueryClientProvider>
     ),
   ],

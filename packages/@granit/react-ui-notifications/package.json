@@ -16,7 +16,6 @@
   "peerDependencies": {
     "@granit/notifications": "workspace:*",
     "@granit/react-activities": "workspace:*",
-    "@granit/react-api-client": "workspace:*",
     "@granit/react-localization": "workspace:*",
     "@granit/react-notifications": "workspace:*",
     "@granit/react-notifications-web-push": "workspace:*",

@@ -12,7 +12,7 @@ connection lifecycle and delegates all listener bookkeeping to
 `createTransportListeners` from the core. It is the WebSocket/long-polling
 sibling of the EventSource adapter [`@granit/notifications-sse`](../notifications-sse);
 both produce the same `NotificationTransport` shape and are interchangeable at
-the `NotificationProvider` wiring point. React hooks, the provider, and the
+the `NotificationsProvider` wiring point. React hooks, the provider, and the
 admin feature kit live in [`@granit/react-notifications`](../react-notifications)
 and [`@granit/react-ui-notifications`](../react-ui-notifications) respectively —
 none of that lives here.
@@ -32,7 +32,7 @@ as a published dependency for app consumption. Declare the two peers:
 
 ```ts
 import { createSignalRTransport } from '@granit/notifications-signalr';
-import { NotificationProvider } from '@granit/react-notifications';
+import { NotificationsProvider } from '@granit/react-notifications';
 
 // Build the transport once and pass it to the provider. `hubUrl` points at the
 // .NET notifications hub; `tokenGetter` is called on every connection attempt
@@ -44,9 +44,9 @@ const transport = createSignalRTransport({
 
 function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <NotificationProvider config={{ apiClient }} transport={transport}>
+    <NotificationsProvider config={{ apiClient }} transport={transport}>
       {children}
-    </NotificationProvider>
+    </NotificationsProvider>
   );
 }
 ```

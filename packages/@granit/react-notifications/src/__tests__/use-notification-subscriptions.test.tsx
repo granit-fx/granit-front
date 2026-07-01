@@ -11,7 +11,7 @@ import {
   useUnfollowEntity,
   useUnsubscribeFromNotificationType,
 } from '../hooks/use-notification-subscriptions';
-import { NotificationProvider } from '../providers/notification-provider';
+import { NotificationsProvider } from '../providers/notifications-provider';
 
 import { axiosResponse, createMockClient } from './test-utils';
 
@@ -31,7 +31,7 @@ function createWrapper(client: AxiosInstance, basePath = '/api/v1') {
     const config: NotificationConfig = { apiClient: client, basePath };
     return (
       <QueryClientProvider client={queryClient}>
-        <NotificationProvider config={config}>{children}</NotificationProvider>
+        <NotificationsProvider config={config}>{children}</NotificationsProvider>
       </QueryClientProvider>
     );
   };

@@ -22,8 +22,10 @@ export type {
 // API
 export {
   activateSubscription,
+  createSigningKey,
   createSubscription,
   deactivateSubscription,
+  deleteSigningKey,
   deleteSubscription,
   getConfig,
   getEventTypes,
@@ -31,8 +33,6 @@ export {
   getSubscription,
   listSigningKeys,
   retryDelivery,
-  revokeSigningKey,
-  rotateSigningKey,
   suspendSubscription,
   testPing,
   updateSubscription,

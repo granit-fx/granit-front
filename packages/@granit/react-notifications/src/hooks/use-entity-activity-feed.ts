@@ -3,7 +3,7 @@ import { useInfiniteScroll as usePaginatedFetch } from '@granit/react-query-engi
 import { useCallback } from 'react';
 
 import { API_BASE_PATH } from '../constants';
-import { useNotificationConfig } from '../providers/notification-provider';
+import { useNotificationConfig } from '../providers/notifications-provider';
 
 import type { UserNotification, UserNotificationPage } from '@granit/notifications';
 

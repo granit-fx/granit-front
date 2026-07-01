@@ -6356,17 +6356,22 @@
     },
     {
       "name": "@granit/react-notifications",
-      "description": "React bindings for @granit/notifications — NotificationProvider, hooks",
+      "description": "React bindings for @granit/notifications — NotificationsProvider, hooks",
       "exports": [
         {
-          "name": "NotificationProvider",
+          "name": "NotificationsProvider",
           "kind": "function",
-          "signature": "function NotificationProvider("
+          "signature": "function NotificationsProvider("
         },
         {
           "name": "useNotificationConfig",
           "kind": "function",
           "signature": "function useNotificationConfig(): NotificationContextValue"
+        },
+        {
+          "name": "buildNotificationsQueryKey",
+          "kind": "function",
+          "signature": "function buildNotificationsQueryKey( config: NotificationConfig &"
         },
         {
           "name": "registerNotificationView",
@@ -6522,11 +6527,6 @@
           "name": "useEntityActivityFeed",
           "kind": "function",
           "signature": "function useEntityActivityFeed( options: UseEntityActivityFeedOptions ): UseEntityActivityFeedReturn"
-        },
-        {
-          "name": "useNotificationPreferences",
-          "kind": "function",
-          "signature": "function useNotificationPreferences(): UseNotificationPreferencesReturn"
         },
         {
           "name": "UseNotificationPreferencesReturn",
@@ -11407,14 +11407,14 @@
           "signature": "function useTestPing(): UseMutationResult< WebhookSubscriptionTestPingResponse, Error, string >"
         },
         {
-          "name": "useRevokeSigningKey",
+          "name": "useCreateSigningKey",
           "kind": "function",
-          "signature": "function useRevokeSigningKey(): UseMutationResult< void, Error,"
+          "signature": "function useCreateSigningKey(): UseMutationResult< WebhookSigningKeyCreatedResponse, Error, string >"
         },
         {
-          "name": "useRotateSigningKey",
+          "name": "useDeleteSigningKey",
           "kind": "function",
-          "signature": "function useRotateSigningKey(): UseMutationResult< WebhookSigningKeyCreatedResponse, Error, string >"
+          "signature": "function useDeleteSigningKey(): UseMutationResult< void, Error,"
         },
         {
           "name": "useSigningKeys",

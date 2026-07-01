@@ -9,8 +9,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { webhooksKeys } from '../hooks/query-keys';
 import {
-  useRevokeSigningKey,
-  useRotateSigningKey,
+  useCreateSigningKey,
+  useDeleteSigningKey,
   useSigningKeys,
 } from '../hooks/use-signing-keys';
 import { WebhooksProvider } from '../providers/webhooks-provider';
@@ -67,7 +67,7 @@ describe('useSigningKeys', () => {
   });
 });
 
-describe('useRotateSigningKey', () => {
+describe('useCreateSigningKey', () => {
   it('should POST /{id}/keys and invalidate keys + subscription', async () => {
     const client = createMockClient();
     const response: WebhookSigningKeyCreatedResponse = {
@@ -81,7 +81,7 @@ describe('useRotateSigningKey', () => {
     const { wrapper, queryClient } = createWrapper(client);
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => useRotateSigningKey(), { wrapper });
+    const { result } = renderHook(() => useCreateSigningKey(), { wrapper });
     result.current.mutate('sub-001');
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -101,7 +101,7 @@ describe('useRotateSigningKey', () => {
     vi.mocked(client.post).mockRejectedValueOnce(new Error('Forbidden'));
 
     const { wrapper } = createWrapper(client);
-    const { result } = renderHook(() => useRotateSigningKey(), { wrapper });
+    const { result } = renderHook(() => useCreateSigningKey(), { wrapper });
     result.current.mutate('sub-001');
 
     await waitFor(() => expect(result.current.isError).toBe(true));
@@ -109,7 +109,7 @@ describe('useRotateSigningKey', () => {
   });
 });
 
-describe('useRevokeSigningKey', () => {
+describe('useDeleteSigningKey', () => {
   it('should DELETE /{id}/keys/{keyId} and invalidate keys', async () => {
     const client = createMockClient();
     vi.mocked(client.delete).mockResolvedValueOnce({ data: undefined });
@@ -117,7 +117,7 @@ describe('useRevokeSigningKey', () => {
     const { wrapper, queryClient } = createWrapper(client);
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
-    const { result } = renderHook(() => useRevokeSigningKey(), { wrapper });
+    const { result } = renderHook(() => useDeleteSigningKey(), { wrapper });
     result.current.mutate({ subscriptionId: 'sub-001', keyId: 'wsk-001' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -135,7 +135,7 @@ describe('useRevokeSigningKey', () => {
     vi.mocked(client.delete).mockRejectedValueOnce(new Error('Bad Request'));
 
     const { wrapper } = createWrapper(client);
-    const { result } = renderHook(() => useRevokeSigningKey(), { wrapper });
+    const { result } = renderHook(() => useDeleteSigningKey(), { wrapper });
     result.current.mutate({ subscriptionId: 'sub-001', keyId: 'wsk-001' });
 
     await waitFor(() => expect(result.current.isError).toBe(true));

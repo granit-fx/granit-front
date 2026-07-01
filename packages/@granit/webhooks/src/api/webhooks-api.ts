@@ -147,12 +147,12 @@ export async function listSigningKeys(
 }
 
 /**
- * Rotate the signing key of a subscription. The previous Active key moves to
+ * Create a new signing key for a subscription. The previous Active key moves to
  * Retired for a grace period; the new plaintext secret is returned exactly once.
  *
  * `POST {basePath}/{id}/keys`
  */
-export async function rotateSigningKey(
+export async function createSigningKey(
   client: AxiosInstance,
   basePath: string,
   id: string
@@ -164,12 +164,12 @@ export async function rotateSigningKey(
 }
 
 /**
- * Revoke a specific signing key. The last Active key cannot be revoked — rotate
- * first to introduce a new Active key, then revoke the old one.
+ * Delete a specific signing key. The last Active key cannot be deleted — create
+ * a new key first to introduce a fresh Active key, then delete the old one.
  *
  * `DELETE {basePath}/{id}/keys/{keyId}`
  */
-export async function revokeSigningKey(
+export async function deleteSigningKey(
   client: AxiosInstance,
   basePath: string,
   id: string,

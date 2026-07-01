@@ -1,6 +1,6 @@
 export { axiosResponse, createMockClient } from '@granit/testing';
 
-import { NotificationProvider } from '../providers/notification-provider';
+import { NotificationsProvider } from '../providers/notifications-provider';
 
 import type { NotificationConfig } from '@granit/notifications';
 import type { AxiosInstance } from 'axios';
@@ -11,7 +11,7 @@ export function createWrapper(client: AxiosInstance, basePath = '/api/v1') {
       apiClient: client,
       basePath,
     };
-    return <NotificationProvider config={config}>{children}</NotificationProvider>;
+    return <NotificationsProvider config={config}>{children}</NotificationsProvider>;
   };
 }
 
@@ -22,6 +22,6 @@ export function createWrapper(client: AxiosInstance, basePath = '/api/v1') {
 export function createWrapperWithoutBasePath(client: AxiosInstance) {
   return function Wrapper({ children }: Readonly<{ children: React.ReactNode }>) {
     const config: NotificationConfig = { apiClient: client };
-    return <NotificationProvider config={config}>{children}</NotificationProvider>;
+    return <NotificationsProvider config={config}>{children}</NotificationsProvider>;
   };
 }

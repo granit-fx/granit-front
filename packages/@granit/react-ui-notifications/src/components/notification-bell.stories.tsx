@@ -1,5 +1,5 @@
 import { createApiClient } from '@granit/api-client';
-import { NotificationProvider } from '@granit/react-notifications';
+import { NotificationsProvider } from '@granit/react-notifications';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -21,11 +21,11 @@ const meta: Meta<typeof NotificationBell> = {
     (Story) => (
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <NotificationProvider config={{ apiClient: client, basePath: '/api/v1' }}>
+          <NotificationsProvider config={{ apiClient: client, basePath: '/api/v1' }}>
             <div className="flex items-center gap-4 p-8">
               <Story />
             </div>
-          </NotificationProvider>
+          </NotificationsProvider>
         </MemoryRouter>
       </QueryClientProvider>
     ),

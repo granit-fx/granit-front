@@ -4,8 +4,10 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   activateSubscription,
+  createSigningKey,
   createSubscription,
   deactivateSubscription,
+  deleteSigningKey,
   deleteSubscription,
   getConfig,
   getEventTypes,
@@ -13,8 +15,6 @@ import {
   getSubscription,
   listSigningKeys,
   retryDelivery,
-  revokeSigningKey,
-  rotateSigningKey,
   suspendSubscription,
   testPing,
   updateSubscription,
@@ -189,7 +189,7 @@ describe('webhooks-api', () => {
     });
   });
 
-  describe('rotateSigningKey', () => {
+  describe('createSigningKey', () => {
     it('sends POST to /{id}/keys and returns the created key', async () => {
       const client = createMockClient();
       const response: WebhookSigningKeyCreatedResponse = {
@@ -200,19 +200,19 @@ describe('webhooks-api', () => {
       };
       vi.mocked(client.post).mockResolvedValueOnce({ data: response });
 
-      const result = await rotateSigningKey(client, BASE, 'sub-001');
+      const result = await createSigningKey(client, BASE, 'sub-001');
 
       expect(client.post).toHaveBeenCalledWith(`${BASE}/sub-001/keys`);
       expect(result).toEqual(response);
     });
   });
 
-  describe('revokeSigningKey', () => {
+  describe('deleteSigningKey', () => {
     it('sends DELETE to /{id}/keys/{keyId}', async () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockResolvedValueOnce({ data: undefined });
 
-      await revokeSigningKey(client, BASE, 'sub-001', 'wsk-001');
+      await deleteSigningKey(client, BASE, 'sub-001', 'wsk-001');
 
       expect(client.delete).toHaveBeenCalledWith(`${BASE}/sub-001/keys/wsk-001`);
     });
@@ -221,7 +221,7 @@ describe('webhooks-api', () => {
       const client = createMockClient();
       vi.mocked(client.delete).mockResolvedValueOnce({ data: undefined });
 
-      await revokeSigningKey(client, BASE, 'id/slash', 'key/slash');
+      await deleteSigningKey(client, BASE, 'id/slash', 'key/slash');
 
       expect(client.delete).toHaveBeenCalledWith(`${BASE}/id%2Fslash/keys/key%2Fslash`);
     });

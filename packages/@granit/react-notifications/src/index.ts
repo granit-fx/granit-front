@@ -1,5 +1,8 @@
 // Provider
-export { NotificationProvider, useNotificationConfig } from './providers/notification-provider';
+export { NotificationsProvider, useNotificationConfig } from './providers/notifications-provider';
+
+// Query keys
+export { buildNotificationsQueryKey } from './hooks/query-keys';
 
 // Rendering — view registry, resolution, default view
 export { registerNotificationView, getNotificationView } from './rendering/registry';
@@ -30,7 +33,10 @@ export type {
   UseEntityActivityFeedReturn,
 } from './hooks/use-entity-activity-feed';
 
-export { useNotificationPreferences } from './hooks/use-notification-preferences';
+export {
+  useNotificationPreferences,
+  useUpsertNotificationPreference,
+} from './hooks/use-notification-preferences';
 export type { UseNotificationPreferencesReturn } from './hooks/use-notification-preferences';
 
 export {

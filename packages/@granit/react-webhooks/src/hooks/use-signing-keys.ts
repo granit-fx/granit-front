@@ -1,4 +1,4 @@
-import { listSigningKeys, revokeSigningKey, rotateSigningKey } from '@granit/webhooks';
+import { createSigningKey, deleteSigningKey, listSigningKeys } from '@granit/webhooks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useWebhooksConfig } from '../providers/webhooks-provider';
@@ -27,13 +27,13 @@ export function useSigningKeys(
 }
 
 /**
- * Mutation hook to rotate a subscription's signing key.
+ * Mutation hook to create a new signing key for a subscription.
  *
  * The new plaintext secret is returned exactly once — store it securely.
  * Invalidates the keys list and the subscription (its `signingSecretHint`
  * is refreshed) on success.
  */
-export function useRotateSigningKey(): UseMutationResult<
+export function useCreateSigningKey(): UseMutationResult<
   WebhookSigningKeyCreatedResponse,
   Error,
   string
@@ -42,7 +42,7 @@ export function useRotateSigningKey(): UseMutationResult<
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => rotateSigningKey(client, `${basePath}/subscriptions`, id),
+    mutationFn: (id: string) => createSigningKey(client, `${basePath}/subscriptions`, id),
     onSuccess: async (_data, id) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: webhooksKeys.signingKeys(id) }),
@@ -53,12 +53,13 @@ export function useRotateSigningKey(): UseMutationResult<
 }
 
 /**
- * Mutation hook to revoke a specific signing key.
+ * Mutation hook to delete a specific signing key.
  *
- * The last Active key cannot be revoked — rotate first, then revoke the old one
- * (the backend rejects the request otherwise). Invalidates the keys list on success.
+ * The last Active key cannot be deleted — create a new key first, then delete
+ * the old one (the backend rejects the request otherwise). Invalidates the keys
+ * list on success.
  */
-export function useRevokeSigningKey(): UseMutationResult<
+export function useDeleteSigningKey(): UseMutationResult<
   void,
   Error,
   { subscriptionId: string; keyId: string }
@@ -68,7 +69,7 @@ export function useRevokeSigningKey(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ subscriptionId, keyId }) =>
-      revokeSigningKey(client, `${basePath}/subscriptions`, subscriptionId, keyId),
+      deleteSigningKey(client, `${basePath}/subscriptions`, subscriptionId, keyId),
     onSuccess: async (_data, { subscriptionId }) => {
       await queryClient.invalidateQueries({
         queryKey: webhooksKeys.signingKeys(subscriptionId),

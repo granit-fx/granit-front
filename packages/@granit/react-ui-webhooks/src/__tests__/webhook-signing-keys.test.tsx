@@ -33,8 +33,8 @@ const signingKeysState = {
 
 vi.mock('@granit/react-webhooks', () => ({
   useSigningKeys: () => signingKeysState,
-  useRotateSigningKey: () => ({ mutateAsync: rotateMutateAsync, isPending: false }),
-  useRevokeSigningKey: () => ({ mutateAsync: revokeMutateAsync, isPending: false }),
+  useCreateSigningKey: () => ({ mutateAsync: rotateMutateAsync, isPending: false }),
+  useDeleteSigningKey: () => ({ mutateAsync: revokeMutateAsync, isPending: false }),
 }));
 
 beforeEach(() => {

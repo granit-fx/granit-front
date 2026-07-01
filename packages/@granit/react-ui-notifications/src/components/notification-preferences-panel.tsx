@@ -1,9 +1,8 @@
-import { updatePreference } from '@granit/notifications';
 import { useTranslation } from '@granit/react-localization';
 import {
-  useNotificationConfig,
   useNotificationPreferences,
   useNotificationTypes,
+  useUpsertNotificationPreference,
 } from '@granit/react-notifications';
 import {
   Card,
@@ -20,7 +19,6 @@ import { useState, useTransition } from 'react';
 import type { NotificationChannel, NotificationDefinition } from '@granit/notifications';
 
 const channels: NotificationChannel[] = ['InApp', 'Email', 'Push'];
-const DEFAULT_BASE_PATH = '/api/v1';
 
 type PendingKey = `${string}::${string}`;
 
@@ -28,16 +26,10 @@ const keyOf = (typeName: string, channel: string): PendingKey => `${typeName}::$
 
 export function NotificationPreferencesPanel() {
   const { t } = useTranslation();
-  const { config } = useNotificationConfig();
-  const basePath = config.basePath ?? DEFAULT_BASE_PATH;
 
   const { data: definitions = [], isLoading: typesLoading } = useNotificationTypes();
-  const {
-    preferences,
-    loading: prefsLoading,
-    togglePreference,
-    refresh,
-  } = useNotificationPreferences();
+  const { preferences, loading: prefsLoading, togglePreference } = useNotificationPreferences();
+  const upsertPreference = useUpsertNotificationPreference();
 
   const [pending, setPending] = useState<Map<PendingKey, boolean>>(new Map());
   const [saving, startTransition] = useTransition();
@@ -76,16 +68,15 @@ export function NotificationPreferencesPanel() {
       return;
     }
 
-    // No preference row yet — create one via upsert.
+    // No preference row yet — create one via the headless upsert hook.
     setPending((prev) => new Map(prev).set(key, isEnabled));
     startTransition(async () => {
       try {
-        await updatePreference(config.apiClient, basePath, {
+        await upsertPreference.mutateAsync({
           notificationTypeName: def.name,
           channelName: channel,
           isEnabled,
         });
-        refresh();
       } finally {
         setPending((prev) => {
           const next = new Map(prev);

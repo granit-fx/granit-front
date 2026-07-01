@@ -2,7 +2,7 @@ import { toEntityId, toISODateString } from '@granit/types';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { NotificationProvider, useNotificationConfig } from '../providers/notification-provider';
+import { NotificationsProvider, useNotificationConfig } from '../providers/notifications-provider';
 
 import { createMockClient } from './test-utils';
 
@@ -38,14 +38,14 @@ function createProviderWrapper(
       ...configOverrides,
     };
     return (
-      <NotificationProvider config={config} transport={transport}>
+      <NotificationsProvider config={config} transport={transport}>
         {children}
-      </NotificationProvider>
+      </NotificationsProvider>
     );
   };
 }
 
-describe('NotificationProvider', () => {
+describe('NotificationsProvider', () => {
   let client: AxiosInstance;
 
   beforeEach(() => {
@@ -67,7 +67,7 @@ describe('NotificationProvider', () => {
   it('should throw when used outside provider', () => {
     expect(() => {
       renderHook(() => useNotificationConfig());
-    }).toThrow('useNotificationConfig must be used within a <NotificationProvider>');
+    }).toThrow('useNotificationConfig must be used within a <NotificationsProvider>');
   });
 
   it('should stay disconnected when no transport is provided', () => {

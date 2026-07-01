@@ -1,7 +1,7 @@
 // @granit/react-ui-notifications — admin UI for the Granit.Notifications module.
 // Composes the headless @granit/react-notifications (data hooks + provider + the
 // presentation registry) with the foundation UI packages. The Axios client
-// resolves from the host-mounted NotificationProvider / GranitClientProvider.
+// resolves from the host-mounted NotificationsProvider / GranitClientProvider.
 
 // Pages
 export { NotificationListPage } from './components/notification-list-page';

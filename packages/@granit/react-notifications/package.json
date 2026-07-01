@@ -1,6 +1,6 @@
 {
   "name": "@granit/react-notifications",
-  "description": "React bindings for @granit/notifications — NotificationProvider, hooks",
+  "description": "React bindings for @granit/notifications — NotificationsProvider, hooks",
   "version": "0.2.0",
   "license": "Apache-2.0",
   "type": "module",

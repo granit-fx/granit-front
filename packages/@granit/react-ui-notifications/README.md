@@ -17,7 +17,7 @@ is:
 - [`@granit/notifications`](../notifications) — framework-agnostic core: DTOs +
   Axios calls (`updatePreference`, severity/channel/state enums, `UserNotification`).
 - [`@granit/react-notifications`](../react-notifications) — React Query hooks,
-  `NotificationProvider`, and the headless rendering registry this kit re-exports.
+  `NotificationsProvider`, and the headless rendering registry this kit re-exports.
 - `@granit/react-ui-notifications` (this package) — the admin pages and components.
 
 Transports plug in below the headless layer:
@@ -35,7 +35,7 @@ Workspace-internal — consumed via the `@granit/*` Vite/Vitest aliases, not
 published for app consumption through a public registry. A consumer must declare
 these peers:
 
-- `@granit/react-notifications` — headless data hooks, `NotificationProvider`,
+- `@granit/react-notifications` — headless data hooks, `NotificationsProvider`,
   and the rendering registry this kit composes.
 - `@granit/notifications` — core DTOs (`NotificationSeverity`, `NotificationChannel`,
   `NotificationDefinition`, `UserNotification`) and the `updatePreference` call.
@@ -55,14 +55,14 @@ these peers:
 
 ## Quick start
 
-The host wraps the tree in the headless `NotificationProvider` (which resolves the
+The host wraps the tree in the headless `NotificationsProvider` (which resolves the
 Axios client from the surrounding `GranitClientProvider`), registers the i18n
 bundle, then mounts the bell, the toast handler, and the page routes. Importing any
 rendering symbol self-registers the built-in views (test notification + activity
 notifications) as a side effect.
 
 ```tsx
-import { NotificationProvider } from '@granit/react-notifications';
+import { NotificationsProvider } from '@granit/react-notifications';
 import {
   NotificationListPage,
   NotificationPreferencesPage,
@@ -76,7 +76,7 @@ i18n.addResourceBundle('en', 'translation', notificationsTranslationsEn, true, t
 
 function NotificationsArea() {
   return (
-    <NotificationProvider config={{ apiClient, basePath: '/api/v1' }}>
+    <NotificationsProvider config={{ apiClient, basePath: '/api/v1' }}>
       <NotificationBell />
       <NotificationToastHandler />
       <Routes>
@@ -89,7 +89,7 @@ function NotificationsArea() {
           }
         />
       </Routes>
-    </NotificationProvider>
+    </NotificationsProvider>
   );
 }
 ```
@@ -111,7 +111,10 @@ registerNotificationView<{ title: string; documentId: string }>({
   present: (data, _notification, ctx) => ({
     title: data.title,
     icon: FileText,
-    action: { label: ctx.t('Documents.View', { defaultValue: 'Open' }), to: `/documents/${data.documentId}` },
+    action: {
+      label: ctx.t('Documents.View', { defaultValue: 'Open' }),
+      to: `/documents/${data.documentId}`,
+    },
   }),
 });
 ```
@@ -158,7 +161,7 @@ registration of the built-in views.
 
 ## Injection
 
-- **API client** — the headless `NotificationProvider` (host-mounted) resolves the
+- **API client** — the headless `NotificationsProvider` (host-mounted) resolves the
   Axios client from a `GranitClientProvider`. The `PushNotificationManager` falls
   back to the same provider for its client; the VAPID public key is passed as a
   prop (the host reads it from its env).
