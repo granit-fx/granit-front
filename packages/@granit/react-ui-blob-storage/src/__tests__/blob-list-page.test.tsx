@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 
-import { BlobListPage } from '../blob-list-page';
+import { BlobListPage } from '../components/blob-list-page';
 
 import { renderWithProviders } from './test-utils';
 
@@ -10,6 +10,7 @@ vi.mock('@granit/react-authorization', () => ({
 }));
 
 vi.mock('@granit/react-blob-storage', () => ({
+  useBlobStorageConfig: () => ({ basePath: '/api/v1/blob-storage', client: {} }),
   useDownloadUrl: () => ({ mutateAsync: vi.fn(), isPending: false }),
   useDeleteBlob: () => ({ mutateAsync: vi.fn(), isPending: false }),
   useCleanupOrphans: () => ({ mutateAsync: vi.fn(), isPending: false }),

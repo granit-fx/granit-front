@@ -1,4 +1,4 @@
-export { BlobListPage } from './blob-list-page';
+export { BlobListPage } from './components/blob-list-page';
 export { BlobCleanupOrphansButton } from './components/blob-cleanup-orphans-button';
 export { BlobDeleteDialog } from './components/blob-delete-dialog';
 export { FileUploadField } from './components/file-upload-field';

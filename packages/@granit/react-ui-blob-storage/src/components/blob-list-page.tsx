@@ -1,6 +1,6 @@
 import { BlobStoragePermissions } from '@granit/blob-storage';
 import { usePermissions } from '@granit/react-authorization';
-import { useDeleteBlob, useDownloadUrl } from '@granit/react-blob-storage';
+import { useBlobStorageConfig, useDeleteBlob, useDownloadUrl } from '@granit/react-blob-storage';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { QueryProvider, useQueryEndpoint, useQueryMeta } from '@granit/react-query-engine';
 import {
@@ -25,9 +25,10 @@ import { formatBytes } from '@granit/utils';
 import { Download, MoreHorizontal, Trash2 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
-import { BlobCleanupOrphansButton } from './components/blob-cleanup-orphans-button';
-import { BlobDeleteDialog } from './components/blob-delete-dialog';
-import { logger } from './logger';
+import { logger } from '../logger';
+
+import { BlobCleanupOrphansButton } from './blob-cleanup-orphans-button';
+import { BlobDeleteDialog } from './blob-delete-dialog';
 
 import type { BlobDescriptorListItem, BlobStatus } from '@granit/blob-storage';
 import type { QueryConfig } from '@granit/query-engine';
@@ -35,10 +36,8 @@ import type { CellContext, ColumnDef } from '@tanstack/react-table';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
-const QUERY_CONFIG: QueryConfig = {
-  basePath: '/api/v1/blob-storage/blobs',
-};
-
+/** Scoped logger for the blob list page. */
+const log = logger.child('BlobList');
 
 const STATUS_INTENT: Record<BlobStatus, StatusBadgeIntent> = {
   Pending: 'warning',
@@ -212,7 +211,7 @@ function BlobStorageContent() {
         globalThis.open(downloadUrl, '_blank', 'noopener,noreferrer');
       } catch (err) {
         // API errors are surfaced by the global MutationCache.onError toast.
-        logger.error('[BlobList] Download failed', err);
+        log.error('Download failed', err);
       }
     },
     [downloadMutation]
@@ -234,7 +233,7 @@ function BlobStorageContent() {
       setDeleteTarget(null);
     } catch (err) {
       // API errors are surfaced by the global MutationCache.onError toast.
-      logger.error('[BlobList] Delete failed', err);
+      log.error('Delete failed', err);
     }
   };
 
@@ -344,8 +343,13 @@ function BlobStorageContent() {
 }
 
 export function BlobListPage() {
+  // Single-source the grid base path from the ambient BlobStorageProvider so it
+  // can never drift from the base path the mutation hooks (download/delete) use.
+  const { basePath } = useBlobStorageConfig();
+  const queryConfig = useMemo<QueryConfig>(() => ({ basePath: `${basePath}/blobs` }), [basePath]);
+
   return (
-    <QueryProvider config={QUERY_CONFIG}>
+    <QueryProvider config={queryConfig}>
       <BlobStorageContent />
     </QueryProvider>
   );

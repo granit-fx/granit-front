@@ -4502,6 +4502,9 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/react-api-client':
+        specifier: workspace:*
+        version: link:../react-api-client
       '@granit/react-authorization':
         specifier: workspace:*
         version: link:../react-authorization
