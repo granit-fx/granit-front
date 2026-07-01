@@ -3,18 +3,18 @@ import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import {
-  CustomizationProvider,
+  EntitiesCustomizationProvider,
   buildCustomizationQueryKey,
   useCustomizationConfig,
 } from '../providers/customization-provider';
 
 import type { ReactNode } from 'react';
 
-describe('CustomizationProvider', () => {
+describe('EntitiesCustomizationProvider', () => {
   it('exposes default apiBase and queryKeyPrefix', () => {
     const client = createMockClient();
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <CustomizationProvider config={{ client }}>{children}</CustomizationProvider>
+      <EntitiesCustomizationProvider config={{ client }}>{children}</EntitiesCustomizationProvider>
     );
 
     const { result } = renderHook(() => useCustomizationConfig(), { wrapper });
@@ -27,9 +27,11 @@ describe('CustomizationProvider', () => {
   it('honors apiBase + queryKeyPrefix overrides', () => {
     const client = createMockClient();
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <CustomizationProvider config={{ client, apiBase: '/svc', queryKeyPrefix: ['t', 'cust'] }}>
+      <EntitiesCustomizationProvider
+        config={{ client, apiBase: '/svc', queryKeyPrefix: ['t', 'cust'] }}
+      >
         {children}
-      </CustomizationProvider>
+      </EntitiesCustomizationProvider>
     );
 
     const { result } = renderHook(() => useCustomizationConfig(), { wrapper });
@@ -39,12 +41,14 @@ describe('CustomizationProvider', () => {
   });
 
   it('throws when used outside the provider', () => {
-    expect(() => renderHook(() => useCustomizationConfig())).toThrow(/CustomizationProvider/);
+    expect(() => renderHook(() => useCustomizationConfig())).toThrow(
+      /EntitiesCustomizationProvider/
+    );
   });
 
   it('throws when no client is available', () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <CustomizationProvider config={{}}>{children}</CustomizationProvider>
+      <EntitiesCustomizationProvider config={{}}>{children}</EntitiesCustomizationProvider>
     );
 
     expect(() => renderHook(() => useCustomizationConfig(), { wrapper })).toThrow(
@@ -57,9 +61,9 @@ describe('buildCustomizationQueryKey', () => {
   it('prepends the configured prefix', () => {
     const client = createMockClient();
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <CustomizationProvider config={{ client, queryKeyPrefix: ['p'] }}>
+      <EntitiesCustomizationProvider config={{ client, queryKeyPrefix: ['p'] }}>
         {children}
-      </CustomizationProvider>
+      </EntitiesCustomizationProvider>
     );
 
     const { result } = renderHook(() => useCustomizationConfig(), { wrapper });

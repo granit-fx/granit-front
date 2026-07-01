@@ -1,6 +1,6 @@
-import { useGranitClient } from '@granit/react-api-client';
 import {
   EntityForm,
+  useEntity,
   useEntityActionModal,
   useEntityMetadata,
   useSelection,
@@ -16,7 +16,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@granit/react-ui';
-import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { useEntityActionScope } from './entity-action-scope';
@@ -134,20 +133,13 @@ interface ModalEntityFormProps {
 
 function ModalEntityForm({ rowId, entityName }: ModalEntityFormProps) {
   const { t } = useTranslation();
-  const client = useGranitClient();
   const { data: manifest, isLoading: manifestLoading } = useEntityMetadata(entityName ?? '');
 
-  const { data: initial, isLoading: valuesLoading } = useQuery<Readonly<Record<string, unknown>>>({
-    queryKey: ['entity-action-modal', entityName, rowId],
-    queryFn: async () => {
-      const response = await client.get<Readonly<Record<string, unknown>>>(
-        `/api/v1/${entityName}/${encodeURIComponent(rowId ?? '')}`
-      );
-      return Object.fromEntries(
-        Object.entries(response.data).map(([k, v]) => [k.charAt(0).toUpperCase() + k.slice(1), v])
-      );
-    },
-    enabled: Boolean(entityName) && Boolean(rowId),
+  // Action-overlay reads hang off `/api/v1/{entityName}` (not the discovery
+  // base path); the form wants PascalCase-keyed values.
+  const { data: initial, isLoading: valuesLoading } = useEntity(entityName ?? '', rowId, {
+    basePath: entityName ? `/api/v1/${entityName}` : null,
+    pascalCase: true,
   });
 
   if (!entityName) {

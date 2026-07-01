@@ -9,7 +9,7 @@ import {
   usePutWorkspaceCustomization,
   useWorkspaceCustomization,
 } from '../hooks/use-workspace-customization';
-import { CustomizationProvider } from '../providers/customization-provider';
+import { EntitiesCustomizationProvider } from '../providers/customization-provider';
 
 import type { WorkspaceCustomizationResponse } from '@granit/entities-customization';
 import type { ReactNode } from 'react';
@@ -29,9 +29,9 @@ function createHarness() {
     React.createElement(
       QueryClientProvider,
       { client: queryClient },
-      <CustomizationProvider config={{ client, onWorkspaceCustomizationChanged }}>
+      <EntitiesCustomizationProvider config={{ client, onWorkspaceCustomizationChanged }}>
         {children}
-      </CustomizationProvider>
+      </EntitiesCustomizationProvider>
     );
   return { client, queryClient, onWorkspaceCustomizationChanged, wrapper };
 }

@@ -1,11 +1,13 @@
 import { buildQueryKey } from '@granit/query-engine';
-import { useGranitClient } from '@granit/react-api-client';
-import { useEntityActionDispatcher, type EntityActionHandlers } from '@granit/react-entities';
+import {
+  useEntityActionDispatcher,
+  useUpdateEntity,
+  type EntityActionHandlers,
+} from '@granit/react-entities';
 import { resolveLabel, useDateFormatter, useTranslation } from '@granit/react-localization';
 import { useQueryConfig } from '@granit/react-query-engine';
 import { Button, toast } from '@granit/react-ui';
 import { cn } from '@granit/utils';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   ChevronDown,
   ChevronRight,
@@ -161,8 +163,6 @@ export function EntityKanbanView({
 }: EntityKanbanViewProps) {
   const { t } = useTranslation();
   const queryConfig = useQueryConfig();
-  const queryClient = useQueryClient();
-  const client = useGranitClient();
 
   const groupByJsonKey = useMemo(
     () => camelize(layout.groupByPropertyName),
@@ -215,40 +215,15 @@ export function EntityKanbanView({
     []
   );
 
-  const transition = useMutation({
-    mutationFn: async ({ id, newValue }: { readonly id: string; readonly newValue: string }) => {
-      const url = `${queryConfig.basePath}/${encodeURIComponent(id)}`;
-      const body = { [groupByJsonKey]: newValue };
-      const response = await client.request({ url, method: 'PATCH', data: body });
-      return response.data as Readonly<Record<string, unknown>>;
-    },
-    onMutate: async ({ id, newValue }) => {
-      const listKey = buildQueryKey(queryConfig, 'list');
-      await queryClient.cancelQueries({ queryKey: listKey });
-      const snapshot = queryClient.getQueriesData({ queryKey: listKey });
-      queryClient.setQueriesData({ queryKey: listKey }, (data: unknown) => {
-        if (!data || typeof data !== 'object' || !('items' in data)) return data;
-        const page = data as { items: readonly Readonly<Record<string, unknown>>[] };
-        return {
-          ...page,
-          items: page.items.map((row) =>
-            toScalarString(row.id ?? row.Id) === id ? { ...row, [groupByJsonKey]: newValue } : row
-          ),
-        };
-      });
-      return { snapshot };
-    },
-    onError: (_err, _vars, context) => {
-      if (context?.snapshot) {
-        for (const [key, value] of context.snapshot) {
-          queryClient.setQueryData(key, value);
-        }
-      }
-      // API errors are surfaced by the global MutationCache.onError toast.
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: buildQueryKey(queryConfig, 'list') });
-    },
+  // `PATCH {basePath}/{id}` of the group-by column, with optimistic
+  // list-cache patching + rollback folded into the shared hook. The
+  // kanban reads its rows from the query-engine `list` cache, so it
+  // hands the hook that list key and per-row patcher and asks it to
+  // invalidate the same key on settle.
+  const listKey = buildQueryKey(queryConfig, 'list');
+  const transition = useUpdateEntity(entityName, {
+    basePath: queryConfig.basePath,
+    invalidateOnSettle: [listKey],
   });
 
   const handleDrop = useCallback(
@@ -259,9 +234,17 @@ export function EntityKanbanView({
       const row = rows.find((r) => toScalarString(r.id ?? r.Id) === id);
       const current = row ? toScalarString(row[groupByJsonKey]) : '';
       if (current === newValue) return;
-      transition.mutate({ id, newValue });
+      transition.mutate({
+        id,
+        values: { [groupByJsonKey]: newValue },
+        optimistic: {
+          listKey,
+          patchRow: (r) =>
+            toScalarString(r.id ?? r.Id) === id ? { ...r, [groupByJsonKey]: newValue } : r,
+        },
+      });
     },
-    [rows, groupByJsonKey, transition]
+    [rows, groupByJsonKey, transition, listKey]
   );
 
   const handleDragOver = useCallback(

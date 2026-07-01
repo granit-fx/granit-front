@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { DocumentPropertiesPage } from '../document-properties-page';
+import { DocumentPropertiesPage } from '../components/document-properties-page';
 
 import { renderWithProviders } from './test-utils';
 

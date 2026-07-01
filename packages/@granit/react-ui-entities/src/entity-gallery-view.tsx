@@ -1,5 +1,9 @@
 import { getPage, type PagedResult, type QueryRequest } from '@granit/query-engine';
-import { EntityGallery, type EntityActionHandlers } from '@granit/react-entities';
+import {
+  EntityGallery,
+  entityGalleryGroupedQueryKey,
+  type EntityActionHandlers,
+} from '@granit/react-entities';
 import { useQueryConfig, useQueryEndpointState } from '@granit/react-query-engine';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
@@ -117,7 +121,7 @@ function GroupedGallery({
   }, [params]);
 
   const query = useInfiniteQuery({
-    queryKey: ['granit', 'entity-gallery-grouped', config.basePath, baseRequest] as const,
+    queryKey: entityGalleryGroupedQueryKey(config.basePath, baseRequest),
     queryFn: ({ pageParam }) =>
       getPage<Readonly<Record<string, unknown>>>(config.client, config.basePath, {
         ...baseRequest,

@@ -6,17 +6,18 @@ import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useEntityCustomization, usePutEntityCustomization } from '../hooks/use-form-customization';
-import { CustomizationProvider } from '../providers/customization-provider';
+import { EntitiesCustomizationProvider } from '../providers/customization-provider';
+import { mockEntityCustomization } from '../testing/data';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { EntityCustomizationResponse } from '@granit/entities-customization';
 import type { QueryClient } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 
+// Shipped fixture (id `cust-1`, entity `Quote`, `FormDefault`) with the
+// deltas cleared for the empty-response cases this suite exercises.
 const sampleResponse: EntityCustomizationResponse = {
-  id: 'cust-1',
-  entityName: 'Quote',
-  layoutKind: 'FormDefault',
+  ...mockEntityCustomization,
   deltas: [],
 };
 
@@ -35,9 +36,9 @@ function createHarness(): Harness {
     React.createElement(
       QueryClientProvider,
       { client: queryClient },
-      <CustomizationProvider config={{ client, onFormCustomizationChanged }}>
+      <EntitiesCustomizationProvider config={{ client, onFormCustomizationChanged }}>
         {children}
-      </CustomizationProvider>
+      </EntitiesCustomizationProvider>
     );
   return { client, queryClient, onFormCustomizationChanged, wrapper };
 }

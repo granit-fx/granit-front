@@ -1,12 +1,12 @@
 // Provider
 export {
-  CustomizationProvider,
   buildCustomizationQueryKey,
+  EntitiesCustomizationProvider,
   useCustomizationConfig,
 } from './providers/customization-provider';
 export type {
   CustomizationConfig,
-  CustomizationProviderProps,
+  EntitiesCustomizationProviderProps,
   ResolvedCustomizationConfig,
 } from './providers/customization-provider';
 

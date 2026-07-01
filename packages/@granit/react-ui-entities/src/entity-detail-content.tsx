@@ -1,13 +1,12 @@
-import { useGranitClient } from '@granit/react-api-client';
 import {
   EntityDetail,
+  useEntity,
   useEntityDiscovery,
   useEntityMetadata,
   type EntityActionHandlers,
 } from '@granit/react-entities';
 import { resolveLabel, useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Skeleton } from '@granit/react-ui';
-import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -93,7 +92,6 @@ export function EntityDetailContent({
 }: EntityDetailContentProps) {
   const { t, i18n } = useTranslation();
   const { formatDate, formatDateTime } = useDateFormatter();
-  const client = useGranitClient();
   const navigate = useNavigate();
   const { data: manifestRaw, isLoading: isManifestLoading } = useEntityMetadata(entityName);
   const { data: discovery } = useEntityDiscovery();
@@ -124,17 +122,7 @@ export function EntityDetailContent({
     data: entityData,
     isLoading: isEntityLoading,
     isError: isEntityError,
-  } = useQuery<Readonly<Record<string, unknown>>>({
-    queryKey: ['entity', entityName, entityId],
-    queryFn: async () => {
-      if (!basePath) throw new Error('Missing base path');
-      const response = await client.get<Readonly<Record<string, unknown>>>(
-        `${basePath}/${encodeURIComponent(entityId)}`
-      );
-      return response.data;
-    },
-    enabled: Boolean(basePath),
-  });
+  } = useEntity(entityName, entityId, { basePath });
 
   if (isManifestLoading || isEntityLoading || !discovery) {
     return (

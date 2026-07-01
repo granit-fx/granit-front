@@ -1,3 +1,4 @@
+import { mockPersonalView } from '@granit/react-entities-views/testing';
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -61,19 +62,21 @@ const DISCOVERY = {
 };
 
 function makeView(overrides: Partial<EntityViewResponse> = {}): EntityViewResponse {
+  // Shipped fixture as the base (fully-typed EntityViewResponse), tweaked
+  // to this suite's expected defaults (id `v1`, "My list", a description).
   return {
+    ...mockPersonalView,
     id: 'v1',
     name: 'My list',
     kind: 'list',
     visibility: 'Personal',
     description: 'A description',
-    icon: null,
     state: {},
     isPinned: false,
     isDefault: false,
     isPersonalDefault: false,
     ...overrides,
-  } as EntityViewResponse;
+  };
 }
 
 async function selectCustomer(user: ReturnType<typeof setupUser>) {

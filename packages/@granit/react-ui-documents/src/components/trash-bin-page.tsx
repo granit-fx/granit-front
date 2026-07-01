@@ -2,7 +2,7 @@ import { usePermissions } from '@granit/react-authorization';
 import { TrashBin } from '@granit/react-documents';
 import { useTranslation } from '@granit/react-localization';
 
-import { DOCUMENTS_PERMISSIONS } from './constants';
+import { DOCUMENTS_PERMISSIONS } from '../constants';
 
 export function TrashBinPage() {
   const { t } = useTranslation();

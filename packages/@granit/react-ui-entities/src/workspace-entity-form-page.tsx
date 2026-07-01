@@ -1,33 +1,21 @@
-import { useGranitClient } from '@granit/react-api-client';
+import { toPascalCaseKeys } from '@granit/entities';
 import {
   EntityForm,
+  useCreateEntity,
+  useEntity,
   useEntityDiscovery,
   useEntityForm,
   useEntityMetadata,
+  useUpdateEntity,
 } from '@granit/react-entities';
 import { resolveLabel, useTranslation } from '@granit/react-localization';
 import { Button, Skeleton, toast } from '@granit/react-ui';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { CollectionSectionCard } from './collection-section-card';
 import { EntityPageLayout } from './entity-page-layout';
 import { asExtended } from './manifest-extensions';
-
-// Wire convention is camelCase JSON, manifest uses PascalCase. Use lower-
-// case keys when sending to the server, PascalCase when feeding the form.
-function toPascalCaseKeys(obj: Readonly<Record<string, unknown>>): Record<string, unknown> {
-  return Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [key.charAt(0).toUpperCase() + key.slice(1), value])
-  );
-}
-
-function toCamelCaseKeys(obj: Readonly<Record<string, unknown>>): Record<string, unknown> {
-  return Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [key.charAt(0).toLowerCase() + key.slice(1), value])
-  );
-}
 
 export interface WorkspaceEntityFormPageProps {
   readonly mode: 'create' | 'edit';
@@ -58,8 +46,6 @@ function resolveSubmitLabel(
 export function WorkspaceEntityFormPage({ mode }: WorkspaceEntityFormPageProps) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const client = useGranitClient();
-  const queryClient = useQueryClient();
   const { workspace, entity, id } = useParams<{
     workspace: string;
     entity: string;
@@ -80,17 +66,7 @@ export function WorkspaceEntityFormPage({ mode }: WorkspaceEntityFormPageProps) 
     data: existingEntity,
     isLoading: isEntityLoading,
     isError: isEntityError,
-  } = useQuery<Readonly<Record<string, unknown>>>({
-    queryKey: ['entity', entity, id],
-    queryFn: async () => {
-      if (!basePath || !id) throw new Error('Missing base path or id');
-      const response = await client.get<Readonly<Record<string, unknown>>>(
-        `${basePath}/${encodeURIComponent(id)}`
-      );
-      return response.data;
-    },
-    enabled: isEditMode && Boolean(basePath && id),
-  });
+  } = useEntity(entity ?? '', id, { basePath, enabled: isEditMode });
 
   const formVariant = manifest?.forms?.find((f) => f.name === 'default') ?? manifest?.forms?.[0];
 
@@ -103,7 +79,6 @@ export function WorkspaceEntityFormPage({ mode }: WorkspaceEntityFormPageProps) 
   );
 
   const handleSubmitSuccess = (data: Readonly<Record<string, unknown>>) => {
-    queryClient.invalidateQueries({ queryKey: ['entity', entity] });
     toast.success(
       isEditMode
         ? t('Entity.Form.Updated', 'Saved changes')
@@ -117,18 +92,12 @@ export function WorkspaceEntityFormPage({ mode }: WorkspaceEntityFormPageProps) 
     }
   };
 
-  const submitMutation = useMutation({
-    mutationFn: async (values: Readonly<Record<string, unknown>>) => {
-      if (!basePath) throw new Error('Missing base path');
-      const payload = toCamelCaseKeys(values);
-      const response =
-        isEditMode && id
-          ? await client.patch(`${basePath}/${encodeURIComponent(id)}`, payload)
-          : await client.post(basePath, payload);
-      return response.data as Readonly<Record<string, unknown>>;
-    },
-    onSuccess: handleSubmitSuccess,
-  });
+  // Manifest form values are PascalCase-keyed; the hooks flip them back to
+  // the camelCase wire shape and invalidate the entity's row cache on
+  // success (no manual `invalidateQueries` here).
+  const createMutation = useCreateEntity(entity ?? '', { basePath, fromPascalCase: true });
+  const updateMutation = useUpdateEntity(entity ?? '', { basePath, fromPascalCase: true });
+  const submitPending = createMutation.isPending || updateMutation.isPending;
 
   if (!workspace || !entity || (isEditMode && !id)) {
     return (
@@ -193,7 +162,11 @@ export function WorkspaceEntityFormPage({ mode }: WorkspaceEntityFormPageProps) 
     : t('Entity.Form.Create', 'New {{title}}', { title });
 
   const onSubmit = formApi.handleSubmit((values) => {
-    submitMutation.mutate(values);
+    if (isEditMode && id) {
+      updateMutation.mutate({ id, values }, { onSuccess: handleSubmitSuccess });
+    } else {
+      createMutation.mutate(values, { onSuccess: handleSubmitSuccess });
+    }
   });
 
   return (
@@ -222,16 +195,16 @@ export function WorkspaceEntityFormPage({ mode }: WorkspaceEntityFormPageProps) 
             onClick={() =>
               navigate(`/w/${encodeURIComponent(workspace)}/${encodeURIComponent(entity)}`)
             }
-            disabled={submitMutation.isPending}
+            disabled={submitPending}
           >
             {t('Common.Cancel', 'Cancel')}
           </Button>
           <Button
             type="submit"
             form="workspace-entity-form"
-            disabled={submitMutation.isPending || !formApi.isDirty}
+            disabled={submitPending || !formApi.isDirty}
           >
-            {resolveSubmitLabel(submitMutation.isPending, isEditMode, t)}
+            {resolveSubmitLabel(submitPending, isEditMode, t)}
           </Button>
         </>
       }

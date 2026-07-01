@@ -1,6 +1,6 @@
 import { createApiClient } from '@granit/api-client';
 import { GranitClientProvider } from '@granit/react-api-client';
-import { CustomizationProvider } from '@granit/react-entities-customization';
+import { EntitiesCustomizationProvider } from '@granit/react-entities-customization';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
 
@@ -67,9 +67,9 @@ const meta: Meta<typeof WorkspaceCustomizationTab> = {
     (Story) => (
       <QueryClientProvider client={queryClient}>
         <GranitClientProvider client={api}>
-          <CustomizationProvider config={{ client: api, apiBase: '/api/v1' }}>
+          <EntitiesCustomizationProvider config={{ client: api, apiBase: '/api/v1' }}>
             <Story />
-          </CustomizationProvider>
+          </EntitiesCustomizationProvider>
         </GranitClientProvider>
       </QueryClientProvider>
     ),

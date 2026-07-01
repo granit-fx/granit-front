@@ -1651,6 +1651,11 @@
           "name": "executeBulkAction",
           "kind": "function",
           "signature": "async function executeBulkAction( client: AxiosInstance, entityName: string, action: string, request: BulkActionRequest ): Promise<BulkActionResponse>"
+        },
+        {
+          "name": "EntityRow",
+          "kind": "type",
+          "signature": "type EntityRow = Readonly<Record<string, unknown>>"
         }
       ]
     },
@@ -5629,32 +5634,6 @@
           "kind": "interface",
           "signature": "interface SelectionProviderProps",
           "members": []
-        },
-        {
-          "name": "useEntityCalendar",
-          "kind": "function",
-          "signature": "function useEntityCalendar( entityName: string, from: string, to: string, options: UseEntityCalendarOptions ="
-        },
-        {
-          "name": "useEntityDiscovery",
-          "kind": "function",
-          "signature": "function useEntityDiscovery( options:"
-        },
-        {
-          "name": "useEntityRelationAggregates",
-          "kind": "function",
-          "signature": "function useEntityRelationAggregates( entityName: string, entityId: string, options:"
-        },
-        {
-          "name": "RelationAggregateParentRef",
-          "kind": "interface",
-          "signature": "interface RelationAggregateParentRef",
-          "members": []
-        },
-        {
-          "name": "useEntityMetadata",
-          "kind": "function",
-          "signature": "function useEntityMetadata( name: string, options:"
         }
       ]
     },

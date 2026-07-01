@@ -44,12 +44,12 @@ these peers (all `workspace:*`):
 ## Quick start
 
 Mount `CustomizationPage` under a `GranitClientProvider` plus the
-`CustomizationProvider` from `@granit/react-entities-customization` (which
+`EntitiesCustomizationProvider` from `@granit/react-entities-customization` (which
 resolves the Axios client, base path and query-key prefix that all the wrapped
 hooks read). Register the bundled strings, then route to the page:
 
 ```tsx
-import { CustomizationProvider } from '@granit/react-entities-customization';
+import { EntitiesCustomizationProvider } from '@granit/react-entities-customization';
 import {
   CustomizationPage,
   entitiesCustomizationAdminTranslationsEn,
@@ -63,9 +63,9 @@ i18n.addResourceBundle('en', 'translation', entitiesCustomizationAdminTranslatio
 
 function CustomizationRoute() {
   return (
-    <CustomizationProvider config={{ client: useGranitClient() }}>
+    <EntitiesCustomizationProvider config={{ client: useGranitClient() }}>
       <Route path="/settings/customization" element={<CustomizationPage />} />
-    </CustomizationProvider>
+    </EntitiesCustomizationProvider>
   );
 }
 ```
@@ -108,7 +108,7 @@ canonical wiring).
 
 ## Injection
 
-- **API client** — nothing is baked in. The host wraps `CustomizationProvider`
+- **API client** — nothing is baked in. The host wraps `EntitiesCustomizationProvider`
   (from `@granit/react-entities-customization`), which resolves the Axios client
   from a `GranitClientProvider` higher in the tree (via
   `@granit/react-api-client`); the views and workspace hooks resolve the same

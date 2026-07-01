@@ -4,7 +4,7 @@ import { useTranslation } from '@granit/react-localization';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { DOCUMENTS_PERMISSIONS } from './constants';
+import { DOCUMENTS_PERMISSIONS } from '../constants';
 
 import type { DocumentsExplorerLabels } from '@granit/react-documents';
 

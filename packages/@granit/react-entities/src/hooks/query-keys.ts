@@ -1,5 +1,5 @@
 import type { EntityFacet } from '@granit/entities';
-import type { FilterEntry } from '@granit/query-engine';
+import type { FilterEntry, QueryRequest } from '@granit/query-engine';
 
 /**
  * Cache key for one calendar range query. Keyed by
@@ -44,6 +44,45 @@ export function entityCalendarQueryKey(
     filtersKey,
     search ?? null,
   ] as const;
+}
+
+/**
+ * Cache key for one entity row read (`GET {basePath}/{id}`). Keyed by
+ * `(entityName, id)` so the calendar, kanban, detail, and form pages all
+ * share one cache slot per row, and
+ * `queryClient.invalidateQueries({ queryKey: ['entities', 'row', entityName] })`
+ * blasts every cached row for one entity after a mutation. `entityName`
+ * is the wire identifier (e.g. `Granit.Parties.Party`); using it — not the
+ * base path — keeps the key stable across the two URL schemes the read
+ * call-sites use (`{basePath}/{id}` vs `/api/v1/{entityName}/{id}`).
+ */
+export function entityRowQueryKey(
+  entityName: string,
+  id: string
+): readonly ['entities', 'row', string, string] {
+  return ['entities', 'row', entityName, id] as const;
+}
+
+/**
+ * Prefix for every cached row of one entity — pass to `invalidateQueries`
+ * after a create / update / delete so all open reads for that entity
+ * refetch.
+ */
+export function entityRowsQueryKey(entityName: string): readonly ['entities', 'row', string] {
+  return ['entities', 'row', entityName] as const;
+}
+
+/**
+ * Cache key for the host gallery view's grouped infinite query. Keyed by
+ * `(basePath, request)` so distinct filter / sort / groupBy windows don't
+ * collide. The `granit` root and `entity-gallery-grouped` segment keep it
+ * distinct from the flat `<EntityGallery>` query the framework owns.
+ */
+export function entityGalleryGroupedQueryKey(
+  basePath: string,
+  request: QueryRequest
+): readonly ['granit', 'entity-gallery-grouped', string, QueryRequest] {
+  return ['granit', 'entity-gallery-grouped', basePath, request] as const;
 }
 
 /**

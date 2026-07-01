@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { TrashBinPage } from '../trash-bin-page';
+import { TrashBinPage } from '../components/trash-bin-page';
 
 import { renderWithProviders } from './test-utils';
 

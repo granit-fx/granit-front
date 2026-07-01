@@ -5,7 +5,7 @@ customization** module — read and replace the **layout deltas** that reorder,
 regroup or hide fields on an entity form/view or a workspace. This is the
 **React hooks layer**: it wraps the framework-agnostic Axios calls and DTOs from
 [`@granit/entities-customization`](../entities-customization) in TanStack Query
-hooks behind a shared `CustomizationProvider`, and adds pure delta helpers plus
+hooks behind a shared `EntitiesCustomizationProvider`, and adds pure delta helpers plus
 unstyled (`data-*`-marked) editor and inspector components.
 
 The split is three packages over the same .NET `Granit.EntitiesCustomization`
@@ -53,7 +53,7 @@ Layer 1 customization spans both.
 
 ```tsx
 import {
-  CustomizationProvider,
+  EntitiesCustomizationProvider,
   useEntityCustomization,
   usePutEntityCustomization,
   FormLayoutEditor,
@@ -64,9 +64,9 @@ import type { SchemaField } from '@granit/react-entities-customization';
 function App({ children }: { children: React.ReactNode }) {
   // `client` may be omitted if a <GranitClientProvider> is already mounted.
   return (
-    <CustomizationProvider config={{ client: useGranitClient() }}>
+    <EntitiesCustomizationProvider config={{ client: useGranitClient() }}>
       {children}
-    </CustomizationProvider>
+    </EntitiesCustomizationProvider>
   );
 }
 
@@ -92,11 +92,7 @@ The delta helpers are pure and React-free, so an app can compute the next
 `deltas` list (with its own undo/redo) before persisting:
 
 ```ts
-import {
-  applyDeltas,
-  moveFieldUp,
-  toggleFieldHidden,
-} from '@granit/react-entities-customization';
+import { applyDeltas, moveFieldUp, toggleFieldHidden } from '@granit/react-entities-customization';
 
 const effective = applyDeltas(fields, deltas); // ordered, with hidden/group resolved
 const reordered = moveFieldUp(fields, deltas, 'amount'); // appends a `reorder` delta
@@ -111,32 +107,32 @@ not depend on directly.
 
 ## Public API
 
-| Symbol                                                         | Kind      | Purpose                                                               |
-| -------------------------------------------------------------- | --------- | --------------------------------------------------------------------- |
-| `CustomizationProvider`                                        | provider  | Supplies client, `apiBase`, query-key prefix + change-invalidators    |
-| `useCustomizationConfig`                                       | hook      | Read the resolved config; throws outside a provider                   |
-| `buildCustomizationQueryKey`                                   | fn        | Query-key factory honoring the configured `queryKeyPrefix`            |
-| `useEntityCustomization`                                       | hook      | `GET .../entities/{name}/customization/{layoutKind}` — read deltas    |
-| `usePutEntityCustomization`                                    | hook      | `PUT` entity deltas; invalidates + fires `onFormCustomizationChanged` |
-| `useWorkspaceCustomization`                                    | hook      | `GET .../workspaces/{name}/customization` — read deltas               |
-| `usePutWorkspaceCustomization`                                 | hook      | `PUT` workspace deltas; invalidates + fires the workspace hook        |
-| `applyDeltas`                                                  | fn        | Pure: fold deltas over schema fields → ordered `EffectiveField[]`     |
-| `moveFieldUp` / `moveFieldDown`                                | fn        | Pure: append a `reorder` delta (or return input if at an edge)        |
-| `toggleFieldHidden`                                            | fn        | Pure: append a `hide` delta, or strip it when un-hiding               |
-| `setFieldGroup`                                                | fn        | Pure: set/clear a field's `regroup` delta                             |
-| `FormLayoutEditor`                                             | component | Headless per-field rows: move up/down, hide/show, group `<select>`    |
-| `WorkspaceLayoutEditor`                                        | component | Same editor, named for workspace tiles (delegates to the form one)    |
-| `FieldInspectorOverlay`                                        | component | Headless `<dialog>` showing the 5-layer resolution chain              |
-| `RESOLUTION_LAYERS`                                            | const     | Frozen ordered list of the 5 `ResolutionLayer` keys                   |
-| `DEFAULT_API_BASE` / `API_VERSION`                             | const     | Provider API-base default (`/api/v1`) and its version segment `v1`    |
-| `DEFAULT_QUERY_KEY_PREFIX`                                     | const     | Default query-key prefix (`['entities-customization']`)               |
-| `customizationTranslationsEn` / `customizationTranslationsFr`  | const     | i18next resource bundles (namespace `customization`)                  |
-| `SchemaField` / `EffectiveField`                               | type      | Field before / after deltas apply                                     |
-| `ResolutionLayer` / `FieldResolutionEntry`                     | type      | One layer key / one contributing source for the inspector             |
-| `CustomizationConfig` / `ResolvedCustomizationConfig`          | type      | Provider input / resolved output                                      |
-| `CustomizationProviderProps`                                   | type      | `{ config, children }`                                                |
-| `*EditorProps` / `*Labels`                                     | type      | Per-component props and label overrides                               |
-| `CustomizationTranslations`                                    | type      | Shape of the i18n resource bundles                                    |
+| Symbol                                                        | Kind      | Purpose                                                               |
+| ------------------------------------------------------------- | --------- | --------------------------------------------------------------------- |
+| `EntitiesCustomizationProvider`                               | provider  | Supplies client, `apiBase`, query-key prefix + change-invalidators    |
+| `useCustomizationConfig`                                      | hook      | Read the resolved config; throws outside a provider                   |
+| `buildCustomizationQueryKey`                                  | fn        | Query-key factory honoring the configured `queryKeyPrefix`            |
+| `useEntityCustomization`                                      | hook      | `GET .../entities/{name}/customization/{layoutKind}` — read deltas    |
+| `usePutEntityCustomization`                                   | hook      | `PUT` entity deltas; invalidates + fires `onFormCustomizationChanged` |
+| `useWorkspaceCustomization`                                   | hook      | `GET .../workspaces/{name}/customization` — read deltas               |
+| `usePutWorkspaceCustomization`                                | hook      | `PUT` workspace deltas; invalidates + fires the workspace hook        |
+| `applyDeltas`                                                 | fn        | Pure: fold deltas over schema fields → ordered `EffectiveField[]`     |
+| `moveFieldUp` / `moveFieldDown`                               | fn        | Pure: append a `reorder` delta (or return input if at an edge)        |
+| `toggleFieldHidden`                                           | fn        | Pure: append a `hide` delta, or strip it when un-hiding               |
+| `setFieldGroup`                                               | fn        | Pure: set/clear a field's `regroup` delta                             |
+| `FormLayoutEditor`                                            | component | Headless per-field rows: move up/down, hide/show, group `<select>`    |
+| `WorkspaceLayoutEditor`                                       | component | Same editor, named for workspace tiles (delegates to the form one)    |
+| `FieldInspectorOverlay`                                       | component | Headless `<dialog>` showing the 5-layer resolution chain              |
+| `RESOLUTION_LAYERS`                                           | const     | Frozen ordered list of the 5 `ResolutionLayer` keys                   |
+| `DEFAULT_API_BASE` / `API_VERSION`                            | const     | Provider API-base default (`/api/v1`) and its version segment `v1`    |
+| `DEFAULT_QUERY_KEY_PREFIX`                                    | const     | Default query-key prefix (`['entities-customization']`)               |
+| `customizationTranslationsEn` / `customizationTranslationsFr` | const     | i18next resource bundles (namespace `customization`)                  |
+| `SchemaField` / `EffectiveField`                              | type      | Field before / after deltas apply                                     |
+| `ResolutionLayer` / `FieldResolutionEntry`                    | type      | One layer key / one contributing source for the inspector             |
+| `CustomizationConfig` / `ResolvedCustomizationConfig`         | type      | Provider input / resolved output                                      |
+| `EntitiesCustomizationProviderProps`                          | type      | `{ config, children }`                                                |
+| `*EditorProps` / `*Labels`                                    | type      | Per-component props and label overrides                               |
+| `CustomizationTranslations`                                   | type      | Shape of the i18n resource bundles                                    |
 
 `./testing` subpath (requires the optional `msw` peer):
 `createEntityCustomizationHandlers` and `createWorkspaceCustomizationHandlers`

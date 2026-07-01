@@ -1,5 +1,5 @@
 import { createApiClient } from '@granit/api-client';
-import { CustomizationProvider } from '@granit/react-entities-customization';
+import { EntitiesCustomizationProvider } from '@granit/react-entities-customization';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
 import { MemoryRouter } from 'react-router-dom';
@@ -91,9 +91,9 @@ const meta: Meta<typeof CustomizationPage> = {
     (Story) => (
       <MemoryRouter>
         <QueryClientProvider client={queryClient}>
-          <CustomizationProvider config={{ client, apiBase: '/api/v1' }}>
+          <EntitiesCustomizationProvider config={{ client, apiBase: '/api/v1' }}>
             <Story />
-          </CustomizationProvider>
+          </EntitiesCustomizationProvider>
         </QueryClientProvider>
       </MemoryRouter>
     ),

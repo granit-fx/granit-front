@@ -15,6 +15,14 @@
 
 export { evaluateVisibility } from './helpers/index';
 export { executeBulkAction } from './api/bulk-action-api';
+export {
+  createEntity,
+  getEntity,
+  toCamelCaseKeys,
+  toPascalCaseKeys,
+  updateEntity,
+} from './api/entity-crud-api';
+export type { EntityRow } from './api/entity-crud-api';
 export { ALL_ENTITY_FACETS, MANIFEST_SCHEMA_VERSION } from './types/index';
 export type {
   BulkActionFailure,

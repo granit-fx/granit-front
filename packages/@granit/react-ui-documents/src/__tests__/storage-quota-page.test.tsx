@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { StorageQuotaPage } from '../storage-quota-page';
+import { StorageQuotaPage } from '../components/storage-quota-page';
 
 import { renderWithProviders } from './test-utils';
 

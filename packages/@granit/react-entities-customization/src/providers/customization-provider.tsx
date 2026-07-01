@@ -34,20 +34,23 @@ export interface ResolvedCustomizationConfig extends CustomizationConfig {
   readonly queryKeyPrefix: readonly string[];
 }
 
-export interface CustomizationProviderProps {
+export interface EntitiesCustomizationProviderProps {
   readonly config: CustomizationConfig;
   readonly children: ReactNode;
 }
 
 const CustomizationConfigContext = createContext<ResolvedCustomizationConfig | null>(null);
 
-export function CustomizationProvider({ config, children }: Readonly<CustomizationProviderProps>) {
+export function EntitiesCustomizationProvider({
+  config,
+  children,
+}: Readonly<EntitiesCustomizationProviderProps>) {
   const contextClient = useOptionalGranitClient();
   const value = useMemo<ResolvedCustomizationConfig>(() => {
     const client = config.client ?? contextClient;
     if (!client) {
       throw new Error(
-        'CustomizationProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
+        'EntitiesCustomizationProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
       );
     }
     return {
@@ -63,7 +66,7 @@ export function CustomizationProvider({ config, children }: Readonly<Customizati
 export function useCustomizationConfig(): ResolvedCustomizationConfig {
   const ctx = useContext(CustomizationConfigContext);
   if (!ctx) {
-    throw new Error('useCustomizationConfig must be used within a CustomizationProvider');
+    throw new Error('useCustomizationConfig must be used within an EntitiesCustomizationProvider');
   }
   return ctx;
 }

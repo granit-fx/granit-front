@@ -1,5 +1,9 @@
-import { useGranitClient } from '@granit/react-api-client';
-import { EntityDetail, useEntityActionDrawer, useEntityMetadata } from '@granit/react-entities';
+import {
+  EntityDetail,
+  useEntity,
+  useEntityActionDrawer,
+  useEntityMetadata,
+} from '@granit/react-entities';
 import { useTranslation } from '@granit/react-localization';
 import {
   Skeleton,
@@ -9,7 +13,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@granit/react-ui';
-import { useQuery } from '@tanstack/react-query';
 
 import { useEntityActionScope } from './entity-action-scope';
 
@@ -76,18 +79,13 @@ interface DrawerEntityDetailProps {
 
 function DrawerEntityDetail({ rowId, entityName }: DrawerEntityDetailProps) {
   const { t } = useTranslation();
-  const client = useGranitClient();
   const { data: manifest, isLoading: manifestLoading } = useEntityMetadata(entityName ?? '');
 
-  const { data: values, isLoading: valuesLoading } = useQuery<Readonly<Record<string, unknown>>>({
-    queryKey: ['entity-action-drawer', entityName, rowId],
-    queryFn: async () => {
-      const response = await client.get<Readonly<Record<string, unknown>>>(
-        `/api/v1/${entityName}/${encodeURIComponent(rowId ?? '')}`
-      );
-      return response.data;
-    },
-    enabled: Boolean(entityName) && Boolean(rowId),
+  // Action-overlay reads hang off `/api/v1/{entityName}`; PascalCase-keyed
+  // for `<EntityDetail>`.
+  const { data: pascalValues, isLoading: valuesLoading } = useEntity(entityName ?? '', rowId, {
+    basePath: entityName ? `/api/v1/${entityName}` : null,
+    pascalCase: true,
   });
 
   if (!entityName || !rowId) {
@@ -106,16 +104,13 @@ function DrawerEntityDetail({ rowId, entityName }: DrawerEntityDetailProps) {
     );
   }
   const variant = manifest?.details?.[0];
-  if (!manifest || !variant || !values) {
+  if (!manifest || !variant || !pascalValues) {
     return (
       <p className="text-sm text-muted-foreground">
         {t('Common.SelectionAction.NoDetail', 'No details available.')}
       </p>
     );
   }
-  const pascalValues = Object.fromEntries(
-    Object.entries(values).map(([k, v]) => [k.charAt(0).toUpperCase() + k.slice(1), v])
-  );
   return (
     <EntityDetail
       variant={variant}

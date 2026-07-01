@@ -9,7 +9,7 @@ import { Button } from '@granit/react-ui';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { DOCUMENTS_PERMISSIONS } from './constants';
+import { DOCUMENTS_PERMISSIONS } from '../constants';
 
 import type { PublicLinkScope } from '@granit/documents';
 

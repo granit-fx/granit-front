@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { DocumentPublicLinksPage } from '../document-public-links-page';
+import { DocumentPublicLinksPage } from '../components/document-public-links-page';
 
 import { renderWithProviders } from './test-utils';
 

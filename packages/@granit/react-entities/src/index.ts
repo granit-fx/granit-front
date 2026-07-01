@@ -72,23 +72,37 @@ export { executeBulkAction } from '@granit/entities';
 // i18n resource bundles (namespace: 'entities')
 export { entitiesTranslationsEn, entitiesTranslationsFr } from './locales/index';
 export type { EntitiesTranslations } from './locales/index';
+// Hooks + query-key factories — routed through the single hooks barrel.
 export {
   entityCalendarQueryKey,
   entityDiscoveryQueryKey,
+  entityGalleryGroupedQueryKey,
   entityManifestQueryKey,
   entityRelationAggregatesQueryKey,
-} from './hooks/query-keys';
-export { useEntityCalendar } from './hooks/use-entity-calendar';
-export { useEntityDiscovery } from './hooks/use-entity-discovery';
-export { useEntityRelationAggregates } from './hooks/use-entity-relation-aggregates';
-export {
+  entityRowQueryKey,
+  entityRowsQueryKey,
   parseRelationAggregateParentMarker,
+  useCreateEntity,
+  useEntity,
+  useEntityCalendar,
+  useEntityDiscovery,
+  useEntityForm,
+  useEntityMetadata,
+  useEntityRelationAggregates,
   useInvalidateEntityRelationAggregates,
-} from './hooks/use-invalidate-entity-relation-aggregates';
-export type { RelationAggregateParentRef } from './hooks/use-invalidate-entity-relation-aggregates';
-export { useEntityMetadata } from './hooks/use-entity-metadata';
-export { useEntityForm } from './hooks/index';
-export type { UseEntityFormOptions, UseEntityFormReturn } from './hooks/index';
+  useUpdateEntity,
+} from './hooks/index';
+export type {
+  EntityRow,
+  OptimisticListPatch,
+  RelationAggregateParentRef,
+  UseCreateEntityOptions,
+  UseEntityFormOptions,
+  UseEntityFormReturn,
+  UseEntityOptions,
+  UseUpdateEntityOptions,
+  UseUpdateEntityVariables,
+} from './hooks/index';
 export {
   EMPTY_COMPONENT_CATALOG,
   EntityRendererProvider,

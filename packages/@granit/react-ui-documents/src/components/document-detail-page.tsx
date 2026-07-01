@@ -11,7 +11,7 @@ import {
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { DOCUMENTS_PERMISSIONS } from './constants';
+import { DOCUMENTS_PERMISSIONS } from '../constants';
 
 export function DocumentDetailPage() {
   const { t } = useTranslation();

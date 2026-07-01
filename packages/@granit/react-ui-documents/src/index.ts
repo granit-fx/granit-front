@@ -1,10 +1,10 @@
-export { DocumentsExplorerPage } from './documents-explorer-page';
-export { DocumentDetailPage } from './document-detail-page';
-export { DocumentPropertiesPage } from './document-properties-page';
-export { DocumentPublicLinksPage } from './document-public-links-page';
-export { DocumentRenditionsPage } from './document-renditions-page';
-export { DocumentResolutionPage } from './document-resolution-page';
-export { TrashBinPage } from './trash-bin-page';
-export { StorageQuotaPage } from './storage-quota-page';
+export { DocumentsExplorerPage } from './components/documents-explorer-page';
+export { DocumentDetailPage } from './components/document-detail-page';
+export { DocumentPropertiesPage } from './components/document-properties-page';
+export { DocumentPublicLinksPage } from './components/document-public-links-page';
+export { DocumentRenditionsPage } from './components/document-renditions-page';
+export { DocumentResolutionPage } from './components/document-resolution-page';
+export { TrashBinPage } from './components/trash-bin-page';
+export { StorageQuotaPage } from './components/storage-quota-page';
 export { DOCUMENTS_PERMISSIONS } from './constants';
 export { documentsAdminTranslationsEn, documentsAdminTranslationsFr } from './locales';

@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { DocumentResolutionPage } from '../document-resolution-page';
+import { DocumentResolutionPage } from '../components/document-resolution-page';
 
 import { renderWithProviders } from './test-utils';
 

@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 
-import { DocumentDetailPage } from '../document-detail-page';
+import { DocumentDetailPage } from '../components/document-detail-page';
 
 import { renderWithProviders } from './test-utils';
 
