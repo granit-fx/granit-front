@@ -3,12 +3,12 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useTemplatingConfig } from '../providers/templating-provider';
 
-import { templateKeys } from './query-keys';
+import { templatingKeys } from './query-keys';
 
 export function useTemplateLayouts() {
   const { client, basePath, queryKeyPrefix } = useTemplatingConfig();
   return useQuery({
-    queryKey: templateKeys.layouts(queryKeyPrefix),
+    queryKey: templatingKeys.layouts(queryKeyPrefix),
     queryFn: () => getLayouts(client, basePath),
     staleTime: 5 * 60 * 1000,
   });

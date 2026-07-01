@@ -25,7 +25,7 @@ function templateUrl(basePath: string, name: string, ...segments: string[]): str
 // Templates CRUD
 // ---------------------------------------------------------------------------
 
-export async function getTemplates(
+export async function listTemplates(
   client: AxiosInstance,
   basePath: string,
   params?: TemplateListParams

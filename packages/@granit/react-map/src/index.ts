@@ -12,11 +12,8 @@ export type { MapTileProps } from './components/map-tile';
 export { defaultMapWidgetRegistry } from './registry/default-map-widget-registry';
 
 // Tile provider context — apps select the active provider once at the root
-export {
-  MapTileProviderProvider,
-  useMapTileProvider,
-} from './components/map-tile-provider-context';
-export type { MapTileProviderProviderProps } from './components/map-tile-provider-context';
+export { MapTileSourceProvider, useMapTileProvider } from './components/map-tile-provider-context';
+export type { MapTileSourceProviderProps } from './components/map-tile-provider-context';
 
 // Built-in providers
 export { osmProvider } from './providers/osm-provider';

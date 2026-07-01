@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { MapTileProviderProvider } from '../components/map-tile-provider-context';
+import { MapTileSourceProvider } from '../components/map-tile-provider-context';
 import { spwProvider } from '../providers/spw-provider';
 import { MapSnapshotWidget } from '../snapshot/map-snapshot-widget';
 
@@ -106,11 +106,11 @@ describe('MapSnapshotWidget — dispatcher', () => {
     expect(slot?.getAttribute('data-tile-provider')).toBe('osm');
   });
 
-  it('reflects the active provider id when wrapped in MapTileProviderProvider', () => {
+  it('reflects the active provider id when wrapped in MapTileSourceProvider', () => {
     const { container } = render(
-      <MapTileProviderProvider provider={spwProvider}>
+      <MapTileSourceProvider provider={spwProvider}>
         <MapSnapshotWidget widget={mapEnvelope(SAMPLE)} />
-      </MapTileProviderProvider>
+      </MapTileSourceProvider>
     );
     expect(
       container

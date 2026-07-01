@@ -21,4 +21,4 @@ export { useTemplateVariables } from './hooks/use-template-variables';
 export { useTemplates } from './hooks/use-templates';
 
 // Query keys
-export { templateKeys } from './hooks/query-keys';
+export { templatingKeys } from './hooks/query-keys';

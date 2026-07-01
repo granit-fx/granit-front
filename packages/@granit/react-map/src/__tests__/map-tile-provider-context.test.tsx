@@ -1,10 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import {
-  MapTileProviderProvider,
-  useMapTileProvider,
-} from '../components/map-tile-provider-context';
+import { MapTileSourceProvider, useMapTileProvider } from '../components/map-tile-provider-context';
 import { osmProvider } from '../providers/osm-provider';
 import { spwProvider } from '../providers/spw-provider';
 
@@ -18,7 +15,7 @@ describe('MapTileProvider context', () => {
 
   it('returns the active provider when wrapped', () => {
     const wrapper = ({ children }: { readonly children: ReactNode }) => (
-      <MapTileProviderProvider provider={spwProvider}>{children}</MapTileProviderProvider>
+      <MapTileSourceProvider provider={spwProvider}>{children}</MapTileSourceProvider>
     );
     const { result } = renderHook(() => useMapTileProvider(), { wrapper });
     expect(result.current).toBe(spwProvider);

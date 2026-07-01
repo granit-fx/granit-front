@@ -25,10 +25,11 @@ import { FolderOpen, Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { TemplateCategoriesDialog } from './components/template-categories-dialog';
-import { createTemplateColumns } from './components/template-columns';
-import { TemplateDashboard } from './components/template-dashboard';
-import { DEFAULT_PAGE_SIZE, QUERY_CONFIG, TEMPLATING_CONFIG } from './constants';
+import { DEFAULT_PAGE_SIZE, QUERY_CONFIG, TEMPLATING_CONFIG } from '../constants';
+
+import { TemplateCategoriesDialog } from './template-categories-dialog';
+import { createTemplateColumns } from './template-columns';
+import { TemplateDashboard } from './template-dashboard';
 
 import type { TemplateListItem } from '@granit/templating';
 

@@ -6,7 +6,7 @@ import type { MapTileProvider } from '../types/index';
 
 const MapTileProviderContext = createContext<MapTileProvider>(osmProvider);
 
-export interface MapTileProviderProviderProps {
+export interface MapTileSourceProviderProps {
   /**
    * Provider mounted on every {@link MapSnapshotWidget} below the provider.
    * Defaults to {@link osmProvider} when no context is supplied — apps
@@ -22,7 +22,7 @@ export interface MapTileProviderProviderProps {
  * Apps configure this once at the root — typically:
  *
  *     // Belgian public-sector deployment
- *     <MapTileProviderProvider provider={spwProvider}>
+ *     <MapTileSourceProvider provider={spwProvider}>
  *       <SnapshotWidgetRegistryProvider registries={[
  *         defaultSnapshotWidgetRegistry,
  *         defaultAnalyticsSnapshotWidgetRegistry,
@@ -30,12 +30,12 @@ export interface MapTileProviderProviderProps {
  *       ]}>
  *         <RenderedDashboard dashboardId={id} />
  *       </SnapshotWidgetRegistryProvider>
- *     </MapTileProviderProvider>
+ *     </MapTileSourceProvider>
  *
  * Per-widget tile-URL overrides via `MapWidgetSnapshot.tileUrlTemplate`
  * still take precedence (escape hatch for one-off widgets).
  */
-export function MapTileProviderProvider({ provider, children }: MapTileProviderProviderProps) {
+export function MapTileSourceProvider({ provider, children }: MapTileSourceProviderProps) {
   return (
     <MapTileProviderContext.Provider value={provider}>{children}</MapTileProviderContext.Provider>
   );

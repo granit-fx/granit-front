@@ -14,16 +14,17 @@ import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-import { TemplateForm } from './components/template-form';
-import { TemplateHistory } from './components/template-history';
-import { TemplateLifecycleActions } from './components/template-lifecycle-actions';
-import { TemplatePreview } from './components/template-preview';
-import { TemplateRevisionDiff } from './components/template-revision-diff';
-import { TemplateStatusBadge } from './components/template-status-badge';
-import { TEMPLATING_CONFIG } from './constants';
-import { logger } from './logger';
+import { TEMPLATING_CONFIG } from '../constants';
+import { logger } from '../logger';
 
-import type { TemplateFormValues } from './validation';
+import { TemplateForm } from './template-form';
+import { TemplateHistory } from './template-history';
+import { TemplateLifecycleActions } from './template-lifecycle-actions';
+import { TemplatePreview } from './template-preview';
+import { TemplateRevisionDiff } from './template-revision-diff';
+import { TemplateStatusBadge } from './template-status-badge';
+
+import type { TemplateFormValues } from '../validation';
 
 export function TemplateEditPage() {
   const { name } = useParams<{ name: string }>();

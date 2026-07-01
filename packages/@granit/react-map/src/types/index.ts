@@ -71,7 +71,7 @@ export interface MapTileLayer {
  * - {@link arcGisProvider} — Esri World basemaps (Topo / Imagery / Streets / Hybrid).
  *
  * Apps register custom providers (MapTiler, Stadia, white-label) via the
- * same shape and pass them to {@link MapTileProviderProvider}.
+ * same shape and pass them to {@link MapTileSourceProvider}.
  */
 export interface MapTileProvider {
   /** Stable identifier (e.g. `'osm'` / `'spw'` / `'arcgis'`). */

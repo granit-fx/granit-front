@@ -4,11 +4,12 @@ import { toast, Button, Separator } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { TemplateForm } from './components/template-form';
-import { TEMPLATING_CONFIG } from './constants';
-import { logger } from './logger';
+import { TEMPLATING_CONFIG } from '../constants';
+import { logger } from '../logger';
 
-import type { TemplateFormValues } from './validation';
+import { TemplateForm } from './template-form';
+
+import type { TemplateFormValues } from '../validation';
 
 export function TemplateCreatePage() {
   return (

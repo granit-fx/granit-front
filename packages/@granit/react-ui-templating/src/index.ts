@@ -3,9 +3,9 @@
 // ---------------------------------------------------------------------------
 
 // Pages
-export { TemplateCreatePage } from './template-create-page';
-export { TemplateEditPage } from './template-edit-page';
-export { TemplateListPage } from './template-list-page';
+export { TemplateCreatePage } from './components/template-create-page';
+export { TemplateEditPage } from './components/template-edit-page';
+export { TemplateListPage } from './components/template-list-page';
 
 // Components
 export { TemplateCategoriesDialog } from './components/template-categories-dialog';

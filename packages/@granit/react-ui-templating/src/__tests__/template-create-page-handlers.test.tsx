@@ -1,7 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { TemplateCreatePage } from '../template-create-page';
+import { TemplateCreatePage } from '../components/template-create-page';
 
 import { renderWithProviders } from './test-utils';
 

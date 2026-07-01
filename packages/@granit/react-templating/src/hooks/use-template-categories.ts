@@ -3,14 +3,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useTemplatingConfig } from '../providers/templating-provider';
 
-import { templateKeys } from './query-keys';
+import { templatingKeys } from './query-keys';
 
 import type { SaveTemplateCategoryRequest } from '@granit/templating';
 
 export function useTemplateCategories() {
   const { client, basePath, queryKeyPrefix } = useTemplatingConfig();
   return useQuery({
-    queryKey: templateKeys.categories(queryKeyPrefix),
+    queryKey: templatingKeys.categories(queryKeyPrefix),
     queryFn: () => getCategories(client, basePath),
     staleTime: 5 * 60 * 1000,
   });
@@ -21,7 +21,7 @@ export function useTemplateCategoryMutations() {
   const queryClient = useQueryClient();
 
   const invalidateCategories = () =>
-    queryClient.invalidateQueries({ queryKey: templateKeys.categories(queryKeyPrefix) });
+    queryClient.invalidateQueries({ queryKey: templatingKeys.categories(queryKeyPrefix) });
 
   const createMutation = useMutation({
     mutationFn: (request: SaveTemplateCategoryRequest) => createCategory(client, basePath, request),

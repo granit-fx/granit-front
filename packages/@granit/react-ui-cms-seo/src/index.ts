@@ -5,7 +5,7 @@
 // The SEO defaults form validates against the spec-derived
 // `cmsSeoConstraints.SiteSeoDefaultsRequest` via @granit/react-validation.
 
-export { SeoDashboardPage } from './seo-dashboard-page';
+export { SeoDashboardPage } from './components/seo-dashboard-page';
 
 // i18next resource bundles (flat keys, literal `cms:` prefix, "translation" ns)
 export { cmsSeoTranslationsEn, cmsSeoTranslationsFr } from './locales/index';

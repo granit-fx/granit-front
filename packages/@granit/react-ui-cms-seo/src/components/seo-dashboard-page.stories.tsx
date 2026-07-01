@@ -5,7 +5,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import i18next from 'i18next';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import { cmsSeoTranslationsEn } from './locales';
+import { cmsSeoTranslationsEn } from '../locales';
+
 import { SeoDashboardPage } from './seo-dashboard-page';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';

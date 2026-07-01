@@ -9,7 +9,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useTemplatingConfig } from '../providers/templating-provider';
 
-import { templateKeys } from './query-keys';
+import { templatingKeys } from './query-keys';
 
 import type { SaveTemplateRequest } from '@granit/templating';
 
@@ -18,14 +18,14 @@ export function useTemplateMutations() {
   const queryClient = useQueryClient();
 
   const invalidateAll = () =>
-    queryClient.invalidateQueries({ queryKey: templateKeys.all(queryKeyPrefix) });
+    queryClient.invalidateQueries({ queryKey: templatingKeys.all(queryKeyPrefix) });
 
   const invalidateDetail = (name: string) =>
-    queryClient.invalidateQueries({ queryKey: templateKeys.detail(queryKeyPrefix, name) });
+    queryClient.invalidateQueries({ queryKey: templatingKeys.detail(queryKeyPrefix, name) });
 
   const invalidateLifecycle = (name: string) => {
-    queryClient.invalidateQueries({ queryKey: templateKeys.history(queryKeyPrefix, name) });
-    queryClient.invalidateQueries({ queryKey: templateKeys.lifecycle(queryKeyPrefix, name) });
+    queryClient.invalidateQueries({ queryKey: templatingKeys.history(queryKeyPrefix, name) });
+    queryClient.invalidateQueries({ queryKey: templatingKeys.lifecycle(queryKeyPrefix, name) });
   };
 
   const saveDraftMutation = useMutation({
@@ -55,7 +55,7 @@ export function useTemplateMutations() {
     mutationFn: ({ name, culture }: { name: string; culture?: string }) =>
       publishTemplate(client, basePath, name, culture),
     onSuccess: (data, vars) => {
-      queryClient.setQueryData(templateKeys.detail(queryKeyPrefix, vars.name), data);
+      queryClient.setQueryData(templatingKeys.detail(queryKeyPrefix, vars.name), data);
       invalidateAll();
       invalidateLifecycle(vars.name);
     },

@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { SeoDashboardPage } from '../seo-dashboard-page';
+import { SeoDashboardPage } from '../components/seo-dashboard-page';
 
 import { renderCmsSeo } from './test-utils';
 

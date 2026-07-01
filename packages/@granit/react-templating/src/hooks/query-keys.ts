@@ -1,13 +1,13 @@
 import type { TemplateListParams } from '@granit/templating';
 
-export const templateKeys = {
+export const templatingKeys = {
   all: (prefix: readonly string[]) => [...prefix] as const,
   lists: (prefix: readonly string[]) => [...prefix, 'list'] as const,
   list: (prefix: readonly string[], params: TemplateListParams) =>
-    [...templateKeys.lists(prefix), params] as const,
+    [...templatingKeys.lists(prefix), params] as const,
   details: (prefix: readonly string[]) => [...prefix, 'detail'] as const,
   detail: (prefix: readonly string[], name: string) =>
-    [...templateKeys.details(prefix), name] as const,
+    [...templatingKeys.details(prefix), name] as const,
   history: (prefix: readonly string[], name: string) => [...prefix, 'history', name] as const,
   revision: (prefix: readonly string[], name: string, revisionId: string) =>
     [...prefix, 'revision', name, revisionId] as const,

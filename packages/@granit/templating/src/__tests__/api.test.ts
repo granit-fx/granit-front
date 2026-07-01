@@ -12,8 +12,8 @@ import {
   getLifecycleInfo,
   getRevision,
   getTemplate,
-  getTemplates,
   getVariables,
+  listTemplates,
   previewTemplate,
   publishTemplate,
   saveDraft,
@@ -38,7 +38,7 @@ import type { PagedResult } from '@granit/query-engine';
 const basePath = '/api/v1/templating';
 
 describe('templates-api', () => {
-  describe('getTemplates', () => {
+  describe('listTemplates', () => {
     it('should call GET /templates with params', async () => {
       const client = createMockClient();
       const response: PagedResult<TemplateListItem> = {
@@ -59,7 +59,7 @@ describe('templates-api', () => {
       };
       vi.mocked(client.get).mockResolvedValue(axiosResponse(response));
 
-      const result = await getTemplates(client, basePath, {
+      const result = await listTemplates(client, basePath, {
         status: TemplateLifecycleStatus.Draft,
       });
 
@@ -75,7 +75,7 @@ describe('templates-api', () => {
         axiosResponse({ items: [], totalCount: 0, hasMore: false })
       );
 
-      await getTemplates(client, basePath);
+      await listTemplates(client, basePath);
 
       expect(client.get).toHaveBeenCalledWith('/api/v1/templating/templates', {
         params: undefined,

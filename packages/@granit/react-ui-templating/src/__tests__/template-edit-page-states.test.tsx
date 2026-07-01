@@ -2,7 +2,7 @@ import { mockTemplatesData, toTemplateDetail } from '@granit/react-templating/te
 import { screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { TemplateEditPage } from '../template-edit-page';
+import { TemplateEditPage } from '../components/template-edit-page';
 
 import { renderWithProviders } from './test-utils';
 

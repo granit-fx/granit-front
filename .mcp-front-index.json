@@ -6237,9 +6237,19 @@
           "signature": "const defaultMapWidgetRegistry: WidgetRegistry"
         },
         {
-          "name": "MapTileProviderProviderProps",
+          "name": "MapTileSourceProvider",
+          "kind": "function",
+          "signature": "function MapTileSourceProvider("
+        },
+        {
+          "name": "useMapTileProvider",
+          "kind": "function",
+          "signature": "function useMapTileProvider(): MapTileProvider"
+        },
+        {
+          "name": "MapTileSourceProviderProps",
           "kind": "interface",
-          "signature": "interface MapTileProviderProviderProps",
+          "signature": "interface MapTileSourceProviderProps",
           "members": []
         },
         {
@@ -7595,9 +7605,9 @@
           "signature": "function useTemplates(params?: TemplateListParams)"
         },
         {
-          "name": "templateKeys",
+          "name": "templatingKeys",
           "kind": "const",
-          "signature": "const templateKeys"
+          "signature": "const templatingKeys"
         }
       ]
     },
