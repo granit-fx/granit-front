@@ -13,7 +13,7 @@ popups, the Keycloak silent-renew iframe, …) ships its own narrowly scoped
 policy under a `<pkg>/csp` subpath and registers it here at install time. The
 `trusted-types` directive is then derived from exactly the policies the app
 installed — narrow by default, no opaque catch-all. The two scoped providers
-that exist today are [`@granit/react-map`](../react-map) (`granit-map`) and
+that exist today are [`@granit/react-ui-map`](../react-ui-map) (`granit-map`) and
 [`@granit/react-authentication-keycloak`](../react-authentication-keycloak)
 (`granit-keycloak`); the convention is enforced by `pnpm check:csp`
 (`scripts/check-csp-policies.mjs`).
@@ -32,7 +32,7 @@ renders. Each scoped-policy provider installs itself the same way:
 
 ```ts
 import { installPolicy as installCore } from '@granit/csp';
-import { installPolicy as installMap } from '@granit/react-map/csp';
+import { installPolicy as installMap } from '@granit/react-ui-map/csp';
 
 installCore(); // 'granit' — refuses all sinks; throws loudly if misused
 installMap(); // 'granit-map' — registers itself in the shared registry
@@ -97,7 +97,7 @@ production bundles.
   must register their own scoped policy.
 - **No sink sanitization lives here.** This package owns install/registration/
   directive plumbing only. The actual `createHTML` sanitization logic belongs
-  to each scoped provider (e.g. `@granit/react-map/csp`), co-located with the
+  to each scoped provider (e.g. `@granit/react-ui-map/csp`), co-located with the
   code that writes to the sink.
 - **Trusted Types is browser-enforced and best-effort.** `installNamedPolicy`
   no-ops (returns `unsupported`) outside a `window` / `trustedTypes` runtime —

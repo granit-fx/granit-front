@@ -6158,81 +6158,6 @@
       ]
     },
     {
-      "name": "@granit/react-map",
-      "description": "React Map primitives for Granit — vanilla Leaflet wrapper with multi-provider tile support (OpenStreetMap default, SPW Walloon geoportal, ArcGIS, custom). Ships <MapSnapshotWidget> registered into the dashboard snapshot widget registry; mandatory tile-provider attribution. No react-leaflet dep (Hippocratic license rejected for compliance).",
-      "exports": [
-        {
-          "name": "MapSnapshotWidget",
-          "kind": "function",
-          "signature": "function MapSnapshotWidget("
-        },
-        {
-          "name": "defaultMapSnapshotWidgetRegistry",
-          "kind": "const",
-          "signature": "const defaultMapSnapshotWidgetRegistry: SnapshotWidgetRegistry"
-        },
-        {
-          "name": "MapTile",
-          "kind": "function",
-          "signature": "function MapTile("
-        },
-        {
-          "name": "MapTileProps",
-          "kind": "interface",
-          "signature": "interface MapTileProps",
-          "members": []
-        },
-        {
-          "name": "defaultMapWidgetRegistry",
-          "kind": "const",
-          "signature": "const defaultMapWidgetRegistry: WidgetRegistry"
-        },
-        {
-          "name": "MapTileSourceProvider",
-          "kind": "function",
-          "signature": "function MapTileSourceProvider("
-        },
-        {
-          "name": "useMapTileProvider",
-          "kind": "function",
-          "signature": "function useMapTileProvider(): MapTileProvider"
-        },
-        {
-          "name": "MapTileSourceProviderProps",
-          "kind": "interface",
-          "signature": "interface MapTileSourceProviderProps",
-          "members": []
-        },
-        {
-          "name": "osmProvider",
-          "kind": "const",
-          "signature": "const osmProvider: MapTileProvider"
-        },
-        {
-          "name": "spwProvider",
-          "kind": "const",
-          "signature": "const spwProvider: MapTileProvider"
-        },
-        {
-          "name": "arcGisProvider",
-          "kind": "const",
-          "signature": "const arcGisProvider: MapTileProvider"
-        },
-        {
-          "name": "MapTileLayer",
-          "kind": "interface",
-          "signature": "interface MapTileLayer",
-          "members": []
-        },
-        {
-          "name": "MapTileProvider",
-          "kind": "interface",
-          "signature": "interface MapTileProvider",
-          "members": []
-        }
-      ]
-    },
-    {
       "name": "@granit/react-metering",
       "description": "React bindings for @granit/metering — MeteringProvider and hooks",
       "exports": [
@@ -9616,6 +9541,81 @@
           "name": "useLanguages",
           "kind": "function",
           "signature": "function useLanguages(): LanguageInfo[]"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-map",
+      "description": "React Map primitives for Granit — vanilla Leaflet wrapper with multi-provider tile support (OpenStreetMap default, SPW Walloon geoportal, ArcGIS, custom). Ships <MapSnapshotWidget> registered into the dashboard snapshot widget registry; mandatory tile-provider attribution. No react-leaflet dep (Hippocratic license rejected for compliance).",
+      "exports": [
+        {
+          "name": "MapSnapshotWidget",
+          "kind": "function",
+          "signature": "function MapSnapshotWidget("
+        },
+        {
+          "name": "defaultMapSnapshotWidgetRegistry",
+          "kind": "const",
+          "signature": "const defaultMapSnapshotWidgetRegistry: SnapshotWidgetRegistry"
+        },
+        {
+          "name": "MapTile",
+          "kind": "function",
+          "signature": "function MapTile("
+        },
+        {
+          "name": "MapTileProps",
+          "kind": "interface",
+          "signature": "interface MapTileProps",
+          "members": []
+        },
+        {
+          "name": "defaultMapWidgetRegistry",
+          "kind": "const",
+          "signature": "const defaultMapWidgetRegistry: WidgetRegistry"
+        },
+        {
+          "name": "MapTileSourceProvider",
+          "kind": "function",
+          "signature": "function MapTileSourceProvider("
+        },
+        {
+          "name": "useMapTileProvider",
+          "kind": "function",
+          "signature": "function useMapTileProvider(): MapTileProvider"
+        },
+        {
+          "name": "MapTileSourceProviderProps",
+          "kind": "interface",
+          "signature": "interface MapTileSourceProviderProps",
+          "members": []
+        },
+        {
+          "name": "osmProvider",
+          "kind": "const",
+          "signature": "const osmProvider: MapTileProvider"
+        },
+        {
+          "name": "spwProvider",
+          "kind": "const",
+          "signature": "const spwProvider: MapTileProvider"
+        },
+        {
+          "name": "arcGisProvider",
+          "kind": "const",
+          "signature": "const arcGisProvider: MapTileProvider"
+        },
+        {
+          "name": "MapTileLayer",
+          "kind": "interface",
+          "signature": "interface MapTileLayer",
+          "members": []
+        },
+        {
+          "name": "MapTileProvider",
+          "kind": "interface",
+          "signature": "interface MapTileProvider",
+          "members": []
         }
       ]
     },

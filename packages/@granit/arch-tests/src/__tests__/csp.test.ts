@@ -8,7 +8,7 @@ const ctx = { modules: toModules(listPackages()), repoRoot: REPO_ROOT };
 describe('csp (delegated to kit)', () => {
   it('every package writing to a DOM-script sink ships a <pkg>/csp subpath', () => {
     // Mirrors `pnpm check:csp` inside the Vitest suite. Packages that legitimately
-    // touch a sink (react-map, react-authentication-keycloak) already ship
+    // touch a sink (react-ui-map, react-authentication-keycloak) already ship
     // src/csp/index.ts and pass without an allowlist.
     expect(scanDomScriptSinks(ctx)).toEqual([]);
   });

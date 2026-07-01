@@ -1,4 +1,4 @@
-# @granit/react-map
+# @granit/react-ui-map
 
 React **map widget** primitives for Granit dashboards — a vanilla Leaflet wrapper
 (no `react-leaflet` dependency) that renders the `Map` dashboard widget kind with
@@ -17,7 +17,7 @@ backend (contract: `contracts/openapi/analytics.json`, render route
 runtime in [`@granit/react-dashboards`](../react-dashboards) and the composer in
 [`@granit/react-dashboard-editor`](../react-dashboard-editor); there is no
 `@granit/map` core sibling and no `react-ui-map` admin kit — the tile-provider
-context, providers, and registries shipped here *are* the public surface.
+context, providers, and registries shipped here _are_ the public surface.
 
 ## Install
 
@@ -32,12 +32,12 @@ these peers:
 - `@granit/react-dashboards` — the `SnapshotWidgetRegistry` / `WidgetRegistry`
   types and `useWidgetRender` / `RenderedWidget` host plumbing.
 - `@granit/csp` — `installNamedPolicy` for the `granit-map` Trusted Types policy
-  (`@granit/react-map/csp` subpath).
+  (`@granit/react-ui-map/csp` subpath).
 - `@granit/utils` — `assertSafeUrl`, used to reject `javascript:` / protocol-
   relative marker `detailRoute` templates.
 - `leaflet` (`^1.9.4`) and `react` (`^19`).
 - `@granit/react-dashboard-editor` (**optional**) — only for the
-  `@granit/react-map/editor` composer subpath (catalog + config form).
+  `@granit/react-ui-map/editor` composer subpath (catalog + config form).
 - `leaflet.markercluster` (`^1.5.3`, **optional**) — enables marker clustering
   above the snapshot's `clusterThreshold`; absent, the threshold is a soft hint
   and markers render unclustered.
@@ -57,7 +57,7 @@ import {
   MapTileProviderProvider,
   defaultMapSnapshotWidgetRegistry,
   spwProvider,
-} from '@granit/react-map';
+} from '@granit/react-ui-map';
 import {
   RenderedDashboard,
   SnapshotWidgetRegistryProvider,
@@ -93,7 +93,7 @@ For the definition path (composer / catalogue preview), register the renderer th
 fetches `POST /analytics/widgets/map/render` instead:
 
 ```tsx
-import { defaultMapWidgetRegistry } from '@granit/react-map';
+import { defaultMapWidgetRegistry } from '@granit/react-ui-map';
 import { WidgetRegistryProvider, defaultWidgetRegistry } from '@granit/react-dashboards';
 import { defaultAnalyticsWidgetRegistry } from '@granit/react-analytics';
 
@@ -102,7 +102,7 @@ import { defaultAnalyticsWidgetRegistry } from '@granit/react-analytics';
 />;
 ```
 
-The `@granit/react-map/editor` subpath contributes the composer surface —
+The `@granit/react-ui-map/editor` subpath contributes the composer surface —
 `mapWidgetCatalog` (palette entry, default 6×4 size), `MapConfigForm`, and the
 pre-composed `mapWidgetConfigFormRegistry` — keyed by the `'map'` widget type.
 
@@ -125,12 +125,12 @@ pre-composed `mapWidgetConfigFormRegistry` — keyed by the `'map'` widget type.
 | `MapTileLayer`                     | type      | One layer (url, attribution, zoom, subdomains, tileSize)    |
 | `MapTileLayerKind`                 | type      | Re-export of the `@granit/analytics` layer-kind union       |
 
-`@granit/react-map/editor` subpath (requires the optional
+`@granit/react-ui-map/editor` subpath (requires the optional
 `@granit/react-dashboard-editor` peer): `mapWidgetCatalog` (palette `WidgetCatalogEntry`),
 `MapConfigForm` (`WidgetConfigForm` for `MapWidgetDefinition`), and
 `mapWidgetConfigFormRegistry` (frozen `{ map: MapConfigForm }`).
 
-`@granit/react-map/csp` subpath: `installPolicy()` (idempotent, SSR-safe, no-op
+`@granit/react-ui-map/csp` subpath: `installPolicy()` (idempotent, SSR-safe, no-op
 without Trusted Types) registering the `granit-map` policy, plus the
 `GRANIT_MAP_POLICY_NAME` constant.
 

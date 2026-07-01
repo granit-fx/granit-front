@@ -7,7 +7,7 @@ import type { WidgetDefinitionBase } from '@granit/dashboards';
  * values per ADR-039 §6.1.
  *
  * Lives in `@granit/analytics` as the canonical wire identity. Editor-side
- * concerns (`@granit/react-map`) re-export the same union so a single
+ * concerns (`@granit/react-ui-map`) re-export the same union so a single
  * source of truth drives both the wire shape and the runtime layer
  * resolution.
  *
@@ -74,10 +74,7 @@ export interface AddressMapPointSource {
   readonly countryColumn: string;
 }
 
-export type MapPointSource =
-  | LatLngMapPointSource
-  | GeographyMapPointSource
-  | AddressMapPointSource;
+export type MapPointSource = LatLngMapPointSource | GeographyMapPointSource | AddressMapPointSource;
 
 /**
  * Latitude / longitude pair seeding {@link MapWidgetDefinition.defaultCenter}.

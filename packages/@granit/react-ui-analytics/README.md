@@ -25,14 +25,14 @@ validation, while this package owns everything that renders shadcn primitives.
   `MetaMultiFieldInput`, `EnumSelect`, `RequiredMark`. Catalogue-backed comboboxes
   that also accept a typed value, so they degrade to free-text-with-suggestions
   when no `<QueryCatalogProvider>` is present. Reused by the map widget config
-  form ([`@granit/react-map`](../react-map)) and any downstream widget that binds
+  form ([`@granit/react-ui-map`](../react-ui-map)) and any downstream widget that binds
   to a query-engine query.
 
 ## Consumers
 
 - [`@granit/react-ui-dashboards`](../react-ui-dashboards) — the dashboard
   composer wires `analyticsWidgetConfigFormRegistry` into the editor.
-- [`@granit/react-map`](../react-map) — the map widget config form reuses the
+- [`@granit/react-ui-map`](../react-ui-map) — the map widget config form reuses the
   shared query-binding controls.
 
 ## Data wiring

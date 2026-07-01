@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// @granit/react-map/editor — catalog + config form for the dashboard
+// @granit/react-ui-map/editor — catalog + config form for the dashboard
 // composer (B5-C). Imported only by editor-enabled apps; tree-shaken away
 // for read-only consumers.
 // ---------------------------------------------------------------------------

@@ -2707,64 +2707,6 @@ importers:
         specifier: workspace:*
         version: link:../utils
 
-  packages/@granit/react-map:
-    dependencies:
-      react:
-        specifier: 19.2.7
-        version: 19.2.7
-      react-i18next:
-        specifier: ^17.0.0
-        version: 17.0.8(i18next@26.3.3(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
-    devDependencies:
-      '@granit/analytics':
-        specifier: workspace:*
-        version: link:../analytics
-      '@granit/csp':
-        specifier: workspace:*
-        version: link:../csp
-      '@granit/dashboards':
-        specifier: workspace:*
-        version: link:../dashboards
-      '@granit/react-analytics':
-        specifier: workspace:*
-        version: link:../react-analytics
-      '@granit/react-dashboard-editor':
-        specifier: workspace:*
-        version: link:../react-dashboard-editor
-      '@granit/react-dashboards':
-        specifier: workspace:*
-        version: link:../react-dashboards
-      '@granit/react-testing':
-        specifier: workspace:*
-        version: link:../react-testing
-      '@granit/react-ui-analytics':
-        specifier: workspace:*
-        version: link:../react-ui-analytics
-      '@granit/testing':
-        specifier: workspace:*
-        version: link:../testing
-      '@granit/utils':
-        specifier: workspace:*
-        version: link:../utils
-      '@tanstack/react-query':
-        specifier: 5.101.2
-        version: 5.101.2(react@19.2.7)
-      '@types/leaflet':
-        specifier: ^1.9.21
-        version: 1.9.21
-      '@types/leaflet.markercluster':
-        specifier: ^1.5.6
-        version: 1.5.6
-      dompurify:
-        specifier: '>=3.4.11'
-        version: 3.4.11
-      leaflet:
-        specifier: ^1.9.4
-        version: 1.9.4
-      leaflet.markercluster:
-        specifier: ^1.5.3
-        version: 1.5.3(leaflet@1.9.4)
-
   packages/@granit/react-metering:
     dependencies:
       '@granit/metering':
@@ -5146,9 +5088,6 @@ importers:
       '@granit/react-localization':
         specifier: workspace:*
         version: link:../react-localization
-      '@granit/react-map':
-        specifier: workspace:*
-        version: link:../react-map
       '@granit/react-ui':
         specifier: workspace:*
         version: link:../react-ui
@@ -5158,6 +5097,9 @@ importers:
       '@granit/react-ui-kit':
         specifier: workspace:*
         version: link:../react-ui-kit
+      '@granit/react-ui-map':
+        specifier: workspace:*
+        version: link:../react-ui-map
       '@storybook/react-vite':
         specifier: ^10.4.6
         version: 10.4.6(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rollup@4.62.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.9.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)(vite@8.1.0(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
@@ -5947,6 +5889,64 @@ importers:
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.9.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+
+  packages/@granit/react-ui-map:
+    dependencies:
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+      react-i18next:
+        specifier: ^17.0.0
+        version: 17.0.8(i18next@26.3.3(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+    devDependencies:
+      '@granit/analytics':
+        specifier: workspace:*
+        version: link:../analytics
+      '@granit/csp':
+        specifier: workspace:*
+        version: link:../csp
+      '@granit/dashboards':
+        specifier: workspace:*
+        version: link:../dashboards
+      '@granit/react-analytics':
+        specifier: workspace:*
+        version: link:../react-analytics
+      '@granit/react-dashboard-editor':
+        specifier: workspace:*
+        version: link:../react-dashboard-editor
+      '@granit/react-dashboards':
+        specifier: workspace:*
+        version: link:../react-dashboards
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/react-ui-analytics':
+        specifier: workspace:*
+        version: link:../react-ui-analytics
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@tanstack/react-query':
+        specifier: 5.101.2
+        version: 5.101.2(react@19.2.7)
+      '@types/leaflet':
+        specifier: ^1.9.21
+        version: 1.9.21
+      '@types/leaflet.markercluster':
+        specifier: ^1.5.6
+        version: 1.5.6
+      dompurify:
+        specifier: '>=3.4.11'
+        version: 3.4.11
+      leaflet:
+        specifier: ^1.9.4
+        version: 1.9.4
+      leaflet.markercluster:
+        specifier: ^1.5.3
+        version: 1.5.3(leaflet@1.9.4)
 
   packages/@granit/react-ui-metering:
     dependencies:

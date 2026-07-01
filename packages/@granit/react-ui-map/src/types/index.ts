@@ -65,7 +65,7 @@ export interface MapTileLayer {
  * mounts the provider's first {@link layers} entry by default and surfaces
  * a Leaflet layer-switcher when more than one is declared.
  *
- * Built-in providers shipped by `@granit/react-map`:
+ * Built-in providers shipped by `@granit/react-ui-map`:
  * - {@link osmProvider} — OpenStreetMap raster tiles (default).
  * - {@link spwProvider} — Wallonian geoportal (ortho + topo + hybride).
  * - {@link arcGisProvider} — Esri World basemaps (Topo / Imagery / Streets / Hybrid).

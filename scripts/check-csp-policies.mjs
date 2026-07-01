@@ -15,7 +15,7 @@
 //   - direct .src = on iframe/script variables
 //
 // Exceptions (justified, hard-coded):
-//   - packages/@granit/react-map/src/snapshot/map-snapshot-widget.tsx
+//   - packages/@granit/react-ui-map/src/snapshot/map-snapshot-widget.tsx
 //     → bindPopup uses the granit-map policy (registered in /csp).
 //   - packages/@granit/react-authentication-keycloak/src/hooks/use-keycloak-core.ts
 //     → keycloak-js internals call iframe.setAttribute('src', …) under the hood;
@@ -39,7 +39,7 @@ const SINK_PATTERNS = [
 ];
 
 const KNOWN_PROVIDERS = new Map([
-  ['react-map', { policy: 'granit-map', subpath: 'src/csp/index.ts' }],
+  ['react-ui-map', { policy: 'granit-map', subpath: 'src/csp/index.ts' }],
   [
     'react-authentication-keycloak',
     { policy: 'granit-keycloak', subpath: 'src/csp/index.ts' },

@@ -498,9 +498,9 @@ export default defineConfig({
       '@granit/tracing': path.resolve(__dirname, 'packages/@granit/tracing/src/index.ts'),
       '@granit/csp/testing': path.resolve(__dirname, 'packages/@granit/csp/src/testing/index.ts'),
       '@granit/csp': path.resolve(__dirname, 'packages/@granit/csp/src/index.ts'),
-      '@granit/react-map/csp': path.resolve(
+      '@granit/react-ui-map/csp': path.resolve(
         __dirname,
-        'packages/@granit/react-map/src/csp/index.ts'
+        'packages/@granit/react-ui-map/src/csp/index.ts'
       ),
       '@granit/react-authentication-keycloak/csp': path.resolve(
         __dirname,

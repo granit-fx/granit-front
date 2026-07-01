@@ -46,7 +46,7 @@ export interface UseReverseGeocodeResult {
  * a map pin-drop. Pass the clicked coordinate (or `null` to disable); on a hit,
  * `address` carries the structured fields to pre-fill a form.
  *
- * `@granit/react-map` is presentation-only (no interactive click callback), so
+ * `@granit/react-ui-map` is presentation-only (no interactive click callback), so
  * this hook is intentionally headless: wire it to whichever map a consuming app
  * uses. Out-of-range (422) and no-match / not-mapped (404) responses resolve to
  * `address: null` without surfacing an error.

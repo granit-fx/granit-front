@@ -27,7 +27,6 @@ import {
   useUpdateWidget,
 } from '@granit/react-dashboards';
 import { useTranslation } from '@granit/react-localization';
-import { mapWidgetCatalog, mapWidgetConfigFormRegistry } from '@granit/react-map/editor';
 import {
   Button,
   Spinner,
@@ -42,6 +41,7 @@ import {
 } from '@granit/react-ui';
 import { analyticsWidgetConfigFormRegistry } from '@granit/react-ui-analytics';
 import { ConfirmActionDialog } from '@granit/react-ui-kit';
+import { mapWidgetCatalog, mapWidgetConfigFormRegistry } from '@granit/react-ui-map/editor';
 import { ArrowLeft, Plus, RotateCcw, Save, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 

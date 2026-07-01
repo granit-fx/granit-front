@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
 // `granit-map` Trusted Types policy — covers the Leaflet sinks reached by
-// `@granit/react-map`. Leaflet's `bindPopup(htmlString)` and similar APIs
+// `@granit/react-ui-map`. Leaflet's `bindPopup(htmlString)` and similar APIs
 // write to `innerHTML` under the hood; under CSP `require-trusted-types-for
 // 'script'` those writes need a TrustedHTML.
 //

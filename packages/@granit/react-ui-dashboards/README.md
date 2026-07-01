@@ -25,7 +25,7 @@ layers below into ready-to-route pages and shadcn-styled components:
 
 The composer merges three widget catalogs in one pass — the framework default
 plus the analytics ([`@granit/react-analytics`](../react-analytics)) and map
-([`@granit/react-map`](../react-map)) catalogs — so any host that mounts these
+([`@granit/react-ui-map`](../react-ui-map)) catalogs — so any host that mounts these
 pages gets KPI, chart, table, pivot and map widgets without extra wiring.
 
 ## Install
@@ -38,7 +38,7 @@ these peers (all `workspace:*` inside the monorepo):
   `@granit/react-dashboard-editor` — the three headless layers this kit composes.
 - `@granit/analytics` and `@granit/react-analytics` — the analytics widget
   catalog + config-form registry merged into the editor.
-- `@granit/react-map` — the map widget catalog + config-form registry.
+- `@granit/react-ui-map` — the map widget catalog + config-form registry.
 - `@granit/react-ui` — the foundation shadcn components (`Button`, `Spinner`,
   `Dialog`, `AlertDialog`, `toast`).
 - `@granit/react-localization` — `useTranslation` for the `Dashboards.*` /

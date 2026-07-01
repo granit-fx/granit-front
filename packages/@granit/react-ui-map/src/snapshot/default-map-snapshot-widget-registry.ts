@@ -3,7 +3,7 @@ import { MapSnapshotWidget } from './map-snapshot-widget';
 import type { SnapshotWidgetRegistry } from '@granit/react-dashboards';
 
 /**
- * Snapshot renderer registry contributed by `@granit/react-map`. Compose
+ * Snapshot renderer registry contributed by `@granit/react-ui-map`. Compose
  * with the framework default + analytics registries at the app root:
  *
  *     <MapTileSourceProvider provider={spwProvider}>

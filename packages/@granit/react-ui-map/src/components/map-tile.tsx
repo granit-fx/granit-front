@@ -17,7 +17,7 @@ import type { MapWidgetDefinition } from '@granit/analytics';
  * leverages the same `<MapSnapshotWidget>` the bundle path uses.
  *
  * The `<MapTileProvider>` (multi-provider context shipped from
- * `@granit/react-map`) still drives tile-layer selection inside
+ * `@granit/react-ui-map`) still drives tile-layer selection inside
  * `<MapSnapshotWidget>` — the rendered envelope only carries the
  * snapshot points / camera / threshold, not the active provider.
  */

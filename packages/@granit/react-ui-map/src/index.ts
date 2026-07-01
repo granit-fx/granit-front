@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// @granit/react-map — public API
+// @granit/react-ui-map — public API
 // ---------------------------------------------------------------------------
 
 // Snapshot renderer (B5-B PR 4 — Map kind for <RenderedDashboard>)

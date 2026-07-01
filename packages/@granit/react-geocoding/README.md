@@ -45,7 +45,7 @@ function AddressField() {
 
 ### Reverse pin-drop
 
-`@granit/react-map` is presentation-only (no interactive click callback), so the
+`@granit/react-ui-map` is presentation-only (no interactive click callback), so the
 reverse flow is intentionally headless — wire `useReverseGeocode` to whichever
 map your app uses:
 

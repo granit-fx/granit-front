@@ -18,7 +18,7 @@ export const GRANIT_CORE_POLICY_NAME = 'granit' as const;
  *
  * ```ts
  * import { installPolicy as installCore } from '@granit/csp';
- * import { installPolicy as installMap } from '@granit/react-map/csp';
+ * import { installPolicy as installMap } from '@granit/react-ui-map/csp';
  *
  * installCore();
  * installMap();

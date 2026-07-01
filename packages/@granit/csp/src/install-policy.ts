@@ -14,7 +14,7 @@ const installed = new Set<GranitPolicyName>();
  * test environments — returns `'unsupported'` instead of throwing.
  *
  * @internal Per-package wrapper. Consumers should call the package's own
- * `installPolicy()` (e.g. from `@granit/csp`, `@granit/react-map/csp`)
+ * `installPolicy()` (e.g. from `@granit/csp`, `@granit/react-ui-map/csp`)
  * which calls this with the appropriate name and options.
  */
 export function installNamedPolicy(

@@ -1,5 +1,5 @@
 {
-  "name": "@granit/react-map",
+  "name": "@granit/react-ui-map",
   "description": "React Map primitives for Granit — vanilla Leaflet wrapper with multi-provider tile support (OpenStreetMap default, SPW Walloon geoportal, ArcGIS, custom). Ships <MapSnapshotWidget> registered into the dashboard snapshot widget registry; mandatory tile-provider attribution. No react-leaflet dep (Hippocratic license rejected for compliance).",
   "version": "0.1.0",
   "license": "Apache-2.0",
