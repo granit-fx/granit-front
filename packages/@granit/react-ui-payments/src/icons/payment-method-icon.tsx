@@ -1,4 +1,4 @@
-import { useOptionalPaymentsConfig } from '../providers/payments-provider';
+import { useOptionalPaymentsConfig } from '@granit/react-payments';
 
 import { resolveMethodIconStyle } from './method-icon-registry';
 

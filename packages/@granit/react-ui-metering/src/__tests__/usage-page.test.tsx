@@ -1,15 +1,14 @@
 import { screen } from '@testing-library/react';
 
-import { MeteringUsagePage } from '../usage-page';
+import { MeteringUsagePage } from '../components/usage-page';
 
 import { renderWithProviders } from './test-utils';
 
 import type * as React from 'react';
 
-vi.mock('@granit/react-query-engine', () => ({
-  QueryProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  useQueryMeta: () => ({ data: null, isLoading: false }),
-  useQueryEndpoint: () => ({
+vi.mock('@granit/react-metering', () => ({
+  useMeteringConfig: () => ({ client: {}, basePath: '/api/v1/metering' }),
+  useUsageAggregatesQuery: () => ({
     query: { data: { items: [], totalCount: 0 }, isLoading: false },
     groupedQuery: { data: null, isLoading: false },
     params: { page: 1, pageSize: 20, sort: [], groupBy: undefined },
@@ -19,6 +18,11 @@ vi.mock('@granit/react-query-engine', () => ({
     toggleSort: vi.fn(),
     setGroupBy: vi.fn(),
   }),
+}));
+
+vi.mock('@granit/react-query-engine', () => ({
+  QueryProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  useQueryMeta: () => ({ data: null, isLoading: false }),
   useSmartFilter: () => ({
     filters: [],
     search: '',

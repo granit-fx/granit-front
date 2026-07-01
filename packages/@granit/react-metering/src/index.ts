@@ -10,13 +10,22 @@ export type { MeteringConfig, MeteringProviderProps } from './providers/metering
 export {
   useActiveMeters,
   useArchiveMeterDefinition,
+  useBackfillUsageEvents,
   useCreateMeterDefinition,
+  useDeprecateMeterEvent,
   useMeterDefinition,
   useMeteringQuota,
   useMetersQuery,
   usePublishMeterDefinition,
+  useRecomputeMeterUsage,
   useRecordUsageEvents,
   useUpdateMeterDefinition,
+  useUsageAggregatesQuery,
   useUsageForPeriod,
 } from './hooks/use-metering';
-export type { UpdateMeterDefinitionVariables, UsageForPeriodParams } from './hooks/use-metering';
+export type {
+  DeprecateMeterEventVariables,
+  RecomputeMeterUsageVariables,
+  UpdateMeterDefinitionVariables,
+  UsageForPeriodParams,
+} from './hooks/use-metering';

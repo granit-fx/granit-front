@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 
-import { InvoiceDetailPage } from '../invoice-detail-page';
+import { InvoiceDetailPage } from '../components/invoice-detail-page';
 
 import { renderWithProviders } from './test-utils';
 

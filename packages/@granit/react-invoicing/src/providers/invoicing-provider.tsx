@@ -1,16 +1,19 @@
-import { useOptionalGranitClient } from '@granit/react-api-client';
+import { createConfigProvider } from '@granit/react-api-client';
 import { QueryProvider } from '@granit/react-query-engine';
-import { createContext, useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import type { AxiosInstance } from '@granit/api-client';
 import type { QueryConfig } from '@granit/query-engine';
+import type {
+  GranitProviderConfig,
+  GranitProviderProps,
+  ResolvedGranitProviderConfig,
+} from '@granit/react-api-client';
 import type { ReactNode } from 'react';
 
 /** Configuration for the invoicing provider. */
-export interface InvoicingConfig {
-  readonly client?: AxiosInstance;
+export interface InvoicingConfig extends GranitProviderConfig {
   /** Base path for invoicing endpoints (default: `/api/v1/invoicing`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
@@ -20,59 +23,41 @@ export interface InvoicingConfig {
  * InvoicingConfig after the provider has resolved `client` from
  * `config.client` or the nearest `<GranitClientProvider>`.
  */
-export interface ResolvedInvoicingConfig extends InvoicingConfig {
-  readonly client: AxiosInstance;
-  /** Base path after the provider applied the default. */
-  readonly basePath: string;
-}
+export type ResolvedInvoicingConfig = ResolvedGranitProviderConfig<InvoicingConfig>;
 
-export interface InvoicingProviderProps {
-  readonly config: InvoicingConfig;
-  readonly children: ReactNode;
-}
+export type InvoicingProviderProps = GranitProviderProps<InvoicingConfig>;
 
-const InvoicingConfigContext = createContext<ResolvedInvoicingConfig | null>(null);
+const { Provider: ConfigProvider, useConfig } = createConfigProvider<InvoicingConfig>({
+  name: 'Invoicing',
+  defaultBasePath: DEFAULT_BASE_PATH,
+});
 
-/** Provides invoicing configuration to child components and hooks. */
+/**
+ * Provides invoicing configuration to child components and hooks, and wires the
+ * QueryEngine surface for the invoice grid: `GET {basePath}/invoices` is a
+ * `MapGranitQuery<InvoiceResponse>` endpoint (it ships a `/meta`), so the list
+ * is driven by `useInvoiceQuery` (useQueryEndpoint) under this provider.
+ */
 export function InvoicingProvider({ config, children }: Readonly<InvoicingProviderProps>) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo<ResolvedInvoicingConfig>(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'InvoicingProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return {
-      ...config,
-      basePath: config.basePath ?? DEFAULT_BASE_PATH,
-      client,
-    };
-  }, [config, contextClient]);
-
-  // QueryEngine surface for the invoice grid: `GET {basePath}/invoices` is a
-  // `MapGranitQuery<InvoiceResponse>` endpoint (it ships a `/meta`), so the
-  // list is driven by `useInvoiceQuery` (useQueryEndpoint) under this provider.
-  const queryConfig = useMemo<QueryConfig>(
-    () => ({ client: value.client, basePath: `${value.basePath}/invoices` }),
-    [value]
-  );
-
   return (
-    <InvoicingConfigContext value={value}>
-      <QueryProvider config={queryConfig}>{children}</QueryProvider>
-    </InvoicingConfigContext>
+    <ConfigProvider config={config}>
+      <InvoicingQueryScope>{children}</InvoicingQueryScope>
+    </ConfigProvider>
   );
+}
+
+/** Mounts the invoice-grid `QueryProvider` from the resolved config. */
+function InvoicingQueryScope({ children }: { readonly children: ReactNode }) {
+  const config = useConfig();
+  const queryConfig = useMemo<QueryConfig>(
+    () => ({ client: config.client, basePath: `${config.basePath}/invoices` }),
+    [config]
+  );
+  return <QueryProvider config={queryConfig}>{children}</QueryProvider>;
 }
 
 /** Returns the invoicing configuration from the nearest `InvoicingProvider`. */
-export function useInvoicingConfig(): ResolvedInvoicingConfig {
-  const ctx = useContext(InvoicingConfigContext);
-  if (!ctx) {
-    throw new Error('useInvoicingConfig must be used within an InvoicingProvider');
-  }
-  return ctx;
-}
+export const useInvoicingConfig = useConfig;
 
 /** Builds a consistent React Query key for invoicing operations. */
 export function buildInvoicingQueryKey(

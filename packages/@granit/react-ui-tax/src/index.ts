@@ -7,8 +7,8 @@
 // provider. Form validation is spec-driven via @granit/react-validation + the
 // generated @granit/tax constraints.
 
-export { TaxRatesPage } from './tax-rates-page';
-export { TaxValidatePage } from './tax-validate-page';
+export { TaxRatesPage } from './components/tax-rates-page';
+export { TaxValidatePage } from './components/tax-validate-page';
 
 export { createTaxRateColumns } from './components/tax-rate-columns';
 export { TaxRateDetailCard } from './components/tax-rate-detail-card';

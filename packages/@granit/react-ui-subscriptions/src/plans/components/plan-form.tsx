@@ -1,20 +1,35 @@
 import { useTranslation } from '@granit/react-localization';
 import {
   Button,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
   Input,
-  Label,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@granit/react-ui';
-import { useState, type FormEvent } from 'react';
+import { createConstraintsResolver } from '@granit/react-validation';
+import { subscriptionsConstraints } from '@granit/subscriptions';
+import { useMemo } from 'react';
+import { useForm, type Resolver } from 'react-hook-form';
 
 import type { BillingInterval, PlanCreateRequest, PricingModel } from '@granit/subscriptions';
 
 const BILLING_INTERVALS: BillingInterval[] = ['Monthly', 'Quarterly', 'Yearly'];
 const PRICING_MODELS: PricingModel[] = ['Flat', 'PerSeat', 'PerUnit', 'Tiered'];
+
+interface PlanFormValues {
+  name: string;
+  description: string;
+  defaultInterval: BillingInterval;
+  pricingModel: PricingModel;
+}
 
 interface PlanFormProps {
   readonly mode: 'create' | 'edit';
@@ -37,96 +52,132 @@ function pickPlanSubmitLabel(
 
 export function PlanForm({ mode, defaultValues, onSubmit, onCancel, isPending }: PlanFormProps) {
   const { t } = useTranslation();
-  const [name, setName] = useState(defaultValues?.name ?? '');
-  const [description, setDescription] = useState(defaultValues?.description ?? '');
-  const [defaultInterval, setDefaultInterval] = useState<BillingInterval>(
-    defaultValues?.defaultInterval ?? 'Monthly'
-  );
-  const [pricingModel, setPricingModel] = useState<PricingModel>(
-    defaultValues?.pricingModel ?? 'Flat'
+
+  // Validation is spec-driven: constraints are generated from
+  // contracts/openapi/subscriptions.json. The resolver only validates
+  // registered fields; the interval/model selects pass through with defaults.
+  // `Validation:Builtin:*` messages are owned by the host `Granit.Validation`.
+  const formResolver = useMemo(
+    () =>
+      createConstraintsResolver(subscriptionsConstraints.PlanCreateRequest, t, {
+        labelResolver: (field) => t(`Subscriptions.Plans.Form.${field}`, field),
+      }) as unknown as Resolver<PlanFormValues>,
+    [t]
   );
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const form = useForm<PlanFormValues>({
+    resolver: formResolver,
+    defaultValues: {
+      name: defaultValues?.name ?? '',
+      description: defaultValues?.description ?? '',
+      defaultInterval: defaultValues?.defaultInterval ?? 'Monthly',
+      pricingModel: defaultValues?.pricingModel ?? 'Flat',
+    },
+  });
+
+  const handleSubmit = form.handleSubmit((values) => {
     onSubmit({
-      name,
-      description: description || null,
-      defaultInterval,
-      pricingModel,
+      name: values.name,
+      description: values.description || null,
+      defaultInterval: values.defaultInterval,
+      pricingModel: values.pricingModel,
       trialDays: null,
       seatLimit: null,
     });
-  }
+  });
 
   return (
-    <form data-slot="plan-form" onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="plan-name">{t('Subscriptions.Plans.Form.Name')}</Label>
-        <Input
-          id="plan-name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          aria-describedby="plan-name-hint"
+    <Form {...form}>
+      <form data-slot="plan-form" onSubmit={handleSubmit} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t('Subscriptions.Plans.Form.Name')}</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="plan-description">{t('Subscriptions.Plans.Form.Description')}</Label>
-        <Input
-          id="plan-description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t('Subscriptions.Plans.Form.Description')}</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="plan-billing-interval">
-            {t('Subscriptions.Plans.Form.BillingInterval')}
-          </Label>
-          <Select
-            value={defaultInterval}
-            onValueChange={(v) => setDefaultInterval(v as BillingInterval)}
-          >
-            <SelectTrigger id="plan-billing-interval">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {BILLING_INTERVALS.map((interval) => (
-                <SelectItem key={interval} value={interval}>
-                  {t(`Subscriptions.BillingInterval.${interval}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="defaultInterval"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t('Subscriptions.Plans.Form.BillingInterval')}</FormLabel>
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {BILLING_INTERVALS.map((interval) => (
+                      <SelectItem key={interval} value={interval}>
+                        {t(`Subscriptions.BillingInterval.${interval}`)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="pricingModel"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t('Subscriptions.Plans.Form.PricingModel')}</FormLabel>
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {PRICING_MODELS.map((model) => (
+                      <SelectItem key={model} value={model}>
+                        {t(`Subscriptions.PricingModel.${model}`)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="plan-pricing-model">{t('Subscriptions.Plans.Form.PricingModel')}</Label>
-          <Select value={pricingModel} onValueChange={(v) => setPricingModel(v as PricingModel)}>
-            <SelectTrigger id="plan-pricing-model">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {PRICING_MODELS.map((model) => (
-                <SelectItem key={model} value={model}>
-                  {t(`Subscriptions.PricingModel.${model}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="flex justify-end gap-2 pt-2">
+          <Button type="button" variant="outline" onClick={onCancel} disabled={isPending}>
+            {t('Common.Cancel')}
+          </Button>
+          <Button type="submit" disabled={isPending}>
+            {pickPlanSubmitLabel(isPending, mode, t)}
+          </Button>
         </div>
-      </div>
-
-      <div className="flex justify-end gap-2 pt-2">
-        <Button type="button" variant="outline" onClick={onCancel} disabled={isPending}>
-          {t('Common.Cancel')}
-        </Button>
-        <Button type="submit" disabled={isPending}>
-          {pickPlanSubmitLabel(isPending, mode, t)}
-        </Button>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
 }

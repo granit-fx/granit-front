@@ -31,7 +31,3 @@ export {
   useRequestPaymentRefund,
   useResyncPaymentMethod,
 } from './hooks/use-payments';
-
-// Icons
-export { PaymentMethodIcon, ProviderIcon, resolveMethodIconStyle } from './icons/index';
-export type { MethodIconStyle, PaymentMethodIconProps, ProviderIconProps } from './icons/index';

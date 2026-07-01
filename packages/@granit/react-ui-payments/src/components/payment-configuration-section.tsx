@@ -1,6 +1,4 @@
 import {
-  PaymentMethodIcon,
-  ProviderIcon,
   useActivatePaymentMethod,
   useDeactivatePaymentMethod,
   usePaymentMethodConfigurations,
@@ -25,6 +23,7 @@ import {
 } from '@granit/react-ui';
 import { RefreshCw } from 'lucide-react';
 
+import { PaymentMethodIcon, ProviderIcon } from '../icons/index';
 import { categoryIndex } from '../payment-method-category';
 
 import { CapabilityBadges, PendingSnapshotBadge } from './capability-badges';

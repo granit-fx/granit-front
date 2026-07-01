@@ -2,7 +2,7 @@ import { sampleInvoices } from '@granit/react-invoicing/testing';
 import { screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { InvoiceListPage } from '../invoice-list-page';
+import { InvoiceListPage } from '../components/invoice-list-page';
 
 import { renderWithProviders } from './test-utils';
 

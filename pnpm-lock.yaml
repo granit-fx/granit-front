@@ -3032,9 +3032,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.101.2
         version: 5.101.2(react@19.2.7)
-      lucide-react:
-        specifier: ^1.0.0
-        version: 1.22.0(react@19.2.7)
       msw:
         specifier: ^2.14.6
         version: 2.14.6(@types/node@26.0.1)(typescript@6.0.3)
@@ -6693,6 +6690,9 @@ importers:
       react-dom:
         specifier: 19.2.7
         version: 19.2.7(react@19.2.7)
+      react-hook-form:
+        specifier: ^7.80.0
+        version: 7.80.0(react@19.2.7)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -6718,6 +6718,9 @@ importers:
       '@granit/react-ui-kit':
         specifier: workspace:*
         version: link:../react-ui-kit
+      '@granit/react-validation':
+        specifier: workspace:*
+        version: link:../react-validation
       '@granit/subscriptions':
         specifier: workspace:*
         version: link:../subscriptions
@@ -7433,6 +7436,9 @@ importers:
       '@granit/types':
         specifier: workspace:*
         version: link:../types
+      '@granit/validation':
+        specifier: workspace:*
+        version: link:../validation
 
   packages/@granit/tax:
     devDependencies:

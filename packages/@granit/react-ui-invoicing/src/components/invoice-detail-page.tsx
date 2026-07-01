@@ -6,9 +6,9 @@ import { formatCurrency } from '@granit/utils';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { DownloadPdfButton } from './components/download-pdf-button';
-import { InvoiceLineItems } from './components/invoice-line-items';
-import { InvoiceStatusBadge } from './components/invoice-status-badge';
+import { DownloadPdfButton } from './download-pdf-button';
+import { InvoiceLineItems } from './invoice-line-items';
+import { InvoiceStatusBadge } from './invoice-status-badge';
 
 import type { InvoiceId, InvoiceResponse } from '@granit/invoicing';
 

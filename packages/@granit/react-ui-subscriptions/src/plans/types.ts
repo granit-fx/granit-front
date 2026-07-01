@@ -1,4 +1,5 @@
 import type { BillingInterval, PlanLifecycleStatus, PricingModel } from '@granit/subscriptions';
+import type { ISODateString } from '@granit/types';
 
 /**
  * Row shape returned by the `Granit.Subscriptions.PlanQuery`
@@ -11,7 +12,7 @@ export interface PlanQueryItem {
   readonly pricingModel: PricingModel;
   readonly defaultInterval: BillingInterval;
   readonly lifecycleStatus: PlanLifecycleStatus;
-  readonly createdAt: string;
+  readonly createdAt: ISODateString;
 }
 
 export type { PlanCreateRequest } from '@granit/subscriptions';

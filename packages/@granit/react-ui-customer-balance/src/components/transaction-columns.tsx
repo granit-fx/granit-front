@@ -57,7 +57,7 @@ export function createTransactionColumns({
             className={cn('text-sm font-medium', isCredit ? 'text-success' : 'text-destructive')}
           >
             {isCredit ? '+' : ''}
-            {formatNumber(amount / 100, { minimumFractionDigits: 2 }, locale)}
+            {formatNumber(amount, { minimumFractionDigits: 2 }, locale)}
           </span>
         );
       },

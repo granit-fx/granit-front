@@ -7,9 +7,9 @@
 // validation is spec-driven via @granit/react-validation against the generated
 // @granit/metering constraints.
 
-export { MeterListPage } from './meter-list-page';
-export { MeterDetailPage } from './meter-detail-page';
-export { MeteringUsagePage } from './usage-page';
+export { MeterListPage } from './components/meter-list-page';
+export { MeterDetailPage } from './components/meter-detail-page';
+export { MeteringUsagePage } from './components/usage-page';
 
 export { MeterForm } from './components/meter-form';
 export type { MeterFormValues } from './components/meter-form';

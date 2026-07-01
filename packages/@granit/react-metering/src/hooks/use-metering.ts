@@ -1,11 +1,14 @@
 import {
   archiveMeterDefinition,
+  backfillUsageEvents,
   checkMeteringQuota,
   createMeterDefinition,
+  deprecateMeterEvent,
   getMeterDefinition,
   getUsageForPeriod,
   listActiveMeters,
   publishMeterDefinition,
+  recomputeMeterUsage,
   recordUsageEvents,
   updateMeterDefinition,
 } from '@granit/metering';
@@ -15,11 +18,18 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { buildMeteringQueryKey, useMeteringConfig } from '../providers/metering-provider';
 
 import type {
+  BackfillUsageRequest,
+  BackfillUsageResponse,
+  DeprecateEventRequest,
+  DeprecateEventResponse,
   MeterDefinitionCreateRequest,
   MeterDefinitionResponse,
   MeterDefinitionUpdateRequest,
   MeteringQuotaStatusResponse,
+  RecomputeUsageRequest,
+  RecomputeUsageResponse,
   RecordUsageRequest,
+  UsageAggregate,
   UsageAggregateResponse,
 } from '@granit/metering';
 import type { UseQueryEndpointOptions, UseQueryEndpointReturn } from '@granit/react-query-engine';
@@ -297,4 +307,131 @@ export function useRecordUsageEvents(): UseMutationResult<void, Error, RecordUsa
       });
     },
   });
+}
+
+/**
+ * Backfill historical usage events (timestamps up to 365 days in the past). A
+ * fresh `Idempotency-Key` is generated per mutation to protect the batch
+ * against network-level replay. Invalidates usage, quota and usage-aggregate
+ * queries on success.
+ *
+ * @example
+ * ```tsx
+ * const backfill = useBackfillUsageEvents();
+ * await backfill.mutateAsync({ events: [...] });
+ * ```
+ */
+export function useBackfillUsageEvents(): UseMutationResult<
+  BackfillUsageResponse,
+  Error,
+  BackfillUsageRequest
+> {
+  const config = useMeteringConfig();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (request: BackfillUsageRequest) =>
+      backfillUsageEvents(config.client, config.basePath, request, crypto.randomUUID()),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: buildMeteringQueryKey(config, 'usage') });
+      queryClient.invalidateQueries({ queryKey: buildMeteringQueryKey(config, 'quota') });
+      queryClient.invalidateQueries({
+        queryKey: buildMeteringQueryKey(config, 'usage-aggregates'),
+      });
+    },
+  });
+}
+
+/** Variables for `useDeprecateMeterEvent`. */
+export type DeprecateMeterEventVariables = {
+  readonly id: string;
+  readonly request: DeprecateEventRequest;
+};
+
+/**
+ * Soft-deprecate a single meter event so it stops contributing to aggregates.
+ * Invalidates usage and usage-aggregate queries on success.
+ *
+ * @example
+ * ```tsx
+ * const deprecate = useDeprecateMeterEvent();
+ * await deprecate.mutateAsync({ id: 'event-1', request: { reason: 'Duplicate' } });
+ * ```
+ */
+export function useDeprecateMeterEvent(): UseMutationResult<
+  DeprecateEventResponse,
+  Error,
+  DeprecateMeterEventVariables
+> {
+  const config = useMeteringConfig();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, request }: DeprecateMeterEventVariables) =>
+      deprecateMeterEvent(config.client, config.basePath, id, request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: buildMeteringQueryKey(config, 'usage') });
+      queryClient.invalidateQueries({
+        queryKey: buildMeteringQueryKey(config, 'usage-aggregates'),
+      });
+    },
+  });
+}
+
+/** Variables for `useRecomputeMeterUsage`. */
+export type RecomputeMeterUsageVariables = {
+  readonly id: string;
+  readonly request: RecomputeUsageRequest;
+};
+
+/**
+ * Recompute usage aggregates for a meter over the requested `[from, to)`
+ * window. Invalidates usage and usage-aggregate queries on success.
+ *
+ * @example
+ * ```tsx
+ * const recompute = useRecomputeMeterUsage();
+ * await recompute.mutateAsync({ id: 'meter-1', request: { from, to } });
+ * ```
+ */
+export function useRecomputeMeterUsage(): UseMutationResult<
+  RecomputeUsageResponse,
+  Error,
+  RecomputeMeterUsageVariables
+> {
+  const config = useMeteringConfig();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, request }: RecomputeMeterUsageVariables) =>
+      recomputeMeterUsage(config.client, config.basePath, id, request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: buildMeteringQueryKey(config, 'usage') });
+      queryClient.invalidateQueries({
+        queryKey: buildMeteringQueryKey(config, 'usage-aggregates'),
+      });
+    },
+  });
+}
+
+/**
+ * QueryEngine endpoint for usage aggregates ({@link UsageAggregate}), backed by
+ * the `MapGranitQuery<UsageAggregate>()` group under `{basePath}/usage-aggregates`.
+ * Owns the pagination / filter / sort / group-by state and exposes the
+ * dispatchers plus the paged result — the standard surface for the interactive
+ * usage grid.
+ *
+ * Must be used within the usage-aggregates {@link QueryProvider} scope wired by
+ * `MeteringUsagePage` (a sibling grid to the meter catalog).
+ *
+ * @example
+ * ```tsx
+ * const { query, params, setPage } = useUsageAggregatesQuery();
+ * query.data?.items.map((agg) => agg.aggregatedValue);
+ * ```
+ */
+export function useUsageAggregatesQuery(
+  options?: UseQueryEndpointOptions
+): UseQueryEndpointReturn<UsageAggregate> {
+  return useQueryEndpoint<UsageAggregate>(options);
 }

@@ -17,8 +17,8 @@ import {
 import { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { createTaxRateColumns } from './components/tax-rate-columns';
-import { TaxRateDetailCard } from './components/tax-rate-detail-card';
+import { createTaxRateColumns } from './tax-rate-columns';
+import { TaxRateDetailCard } from './tax-rate-detail-card';
 
 import type { QueryConfig } from '@granit/query-engine';
 import type { TaxRateEntry } from '@granit/tax';

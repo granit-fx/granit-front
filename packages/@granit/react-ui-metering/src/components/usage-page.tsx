@@ -1,10 +1,6 @@
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
-import {
-  QueryProvider,
-  useQueryEndpoint,
-  useQueryMeta,
-  useSmartFilter,
-} from '@granit/react-query-engine';
+import { useMeteringConfig, useUsageAggregatesQuery } from '@granit/react-metering';
+import { QueryProvider, useQueryMeta, useSmartFilter } from '@granit/react-query-engine';
 import {
   FilterPresets,
   GroupBySelector,
@@ -17,12 +13,7 @@ import {
 import { useMemo } from 'react';
 
 import type { UsageAggregate } from '@granit/metering';
-import type { QueryConfig } from '@granit/query-engine';
 import type { CellContext, ColumnDef } from '@tanstack/react-table';
-
-const QUERY_CONFIG: QueryConfig = {
-  basePath: '/api/v1/metering/usage-aggregates',
-};
 
 function TenantCell({
   value,
@@ -52,7 +43,7 @@ function renderMonoCellUsage(info: CellContext<UsageAggregate, unknown>): React.
 function UsageAggregatesContent() {
   const { t } = useTranslation();
   const { formatDateTime } = useDateFormatter();
-  const queryEndpoint = useQueryEndpoint<UsageAggregate>();
+  const queryEndpoint = useUsageAggregatesQuery();
   const meta = useQueryMeta();
   const operatorLabels = useOperatorLabels();
 
@@ -172,8 +163,15 @@ function UsageAggregatesContent() {
 }
 
 export function MeteringUsagePage() {
+  // The usage-aggregates grid is a sibling QueryEngine group to the meter
+  // catalog wired by MeteringProvider — it needs its own QueryProvider scope.
+  // Base path + client are derived from the metering config (no hardcoding), so
+  // the two grids stay in sync with the resolved provider basePath.
+  const config = useMeteringConfig();
   return (
-    <QueryProvider config={QUERY_CONFIG}>
+    <QueryProvider
+      config={{ client: config.client, basePath: `${config.basePath}/usage-aggregates` }}
+    >
       <UsageAggregatesContent />
     </QueryProvider>
   );

@@ -16,6 +16,7 @@ import {
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 
 import type { ColumnDef } from '@tanstack/react-table';
+import type { ReactNode } from 'react';
 
 export interface ManualDataTableProps<TData> {
   readonly columns: ColumnDef<TData, unknown>[];
@@ -29,6 +30,8 @@ export interface ManualDataTableProps<TData> {
   readonly onPageSizeChange: (size: number) => void;
   /** Hide the pagination bar entirely when everything fits on a single page. */
   readonly hidePaginationOnSinglePage?: boolean;
+  /** Message shown when `data` is empty. Defaults to the translated `Common.NoResults`. */
+  readonly emptyMessage?: ReactNode;
   readonly 'data-slot'?: string;
 }
 
@@ -49,6 +52,7 @@ export function ManualDataTable<TData>({
   onPageChange,
   onPageSizeChange,
   hidePaginationOnSinglePage = false,
+  emptyMessage,
   'data-slot': dataSlot = 'manual-data-table',
 }: ManualDataTableProps<TData>) {
   const { t } = useTranslation();
@@ -93,7 +97,7 @@ export function ManualDataTable<TData>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  {t('Common.NoResults')}
+                  {emptyMessage ?? t('Common.NoResults')}
                 </TableCell>
               </TableRow>
             )}

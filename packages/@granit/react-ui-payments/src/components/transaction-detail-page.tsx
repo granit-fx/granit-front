@@ -8,17 +8,10 @@ import {
   CardTitle,
   Separator,
   Spinner,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
 } from '@granit/react-ui';
-import { EmptyState } from '@granit/react-ui-kit';
+import { EmptyState, ManualDataTable } from '@granit/react-ui-kit';
 import { toEntityId } from '@granit/types';
 import { formatCurrency } from '@granit/utils';
-import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -29,6 +22,11 @@ import { RefundDialog } from './refund-dialog';
 import { TransactionStatusBadge } from './transaction-status-badge';
 
 import type { PaymentDisputeResponse, PaymentRefundResponse } from '@granit/payments';
+
+// Refunds and disputes are small nested arrays on the transaction — a single
+// page with the pagination bar hidden. Any page size larger than the expected
+// count keeps everything on one page.
+const NESTED_PAGE_SIZE = 100;
 
 export function TransactionDetailPage() {
   const { t, i18n } = useTranslation();
@@ -51,18 +49,6 @@ export function TransactionDetailPage() {
   const transaction = transactionQuery.data;
   const refunds: PaymentRefundResponse[] = [...(transaction?.refunds ?? [])];
   const disputes: PaymentDisputeResponse[] = [...(transaction?.disputes ?? [])];
-
-  const refundTable = useReactTable({
-    data: refunds,
-    columns: refundColumns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  const disputeTable = useReactTable({
-    data: disputes,
-    columns: disputeColumns,
-    getCoreRowModel: getCoreRowModel(),
-  });
 
   if (transactionQuery.isLoading) {
     return (
@@ -153,89 +139,37 @@ export function TransactionDetailPage() {
       {/* Refunds section */}
       <div className="space-y-3">
         <h3 className="text-lg font-semibold text-foreground">{t('Payments.Refunds.Title')}</h3>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              {refundTable.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder ? null : (header.column.columnDef.header as string)}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {refundTable.getRowModel().rows.length > 0 ? (
-                refundTable.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {typeof cell.column.columnDef.cell === 'function'
-                          ? cell.column.columnDef.cell(cell.getContext())
-                          : cell.getValue()}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={refundColumns.length}
-                    className="py-6 text-center text-muted-foreground"
-                  >
-                    {t('Payments.Refunds.NoRefunds')}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+        <ManualDataTable
+          data-slot="refunds-table"
+          columns={refundColumns}
+          data={refunds}
+          totalCount={refunds.length}
+          page={1}
+          pageSize={NESTED_PAGE_SIZE}
+          pageSizes={[NESTED_PAGE_SIZE]}
+          onPageChange={() => undefined}
+          onPageSizeChange={() => undefined}
+          hidePaginationOnSinglePage
+          emptyMessage={t('Payments.Refunds.NoRefunds')}
+        />
       </div>
 
       {/* Disputes section */}
       <div className="space-y-3">
         <h3 className="text-lg font-semibold text-foreground">{t('Payments.Disputes.Title')}</h3>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              {disputeTable.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder ? null : (header.column.columnDef.header as string)}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {disputeTable.getRowModel().rows.length > 0 ? (
-                disputeTable.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {typeof cell.column.columnDef.cell === 'function'
-                          ? cell.column.columnDef.cell(cell.getContext())
-                          : cell.getValue()}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={disputeColumns.length}
-                    className="py-6 text-center text-muted-foreground"
-                  >
-                    {t('Payments.Disputes.NoDisputes')}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+        <ManualDataTable
+          data-slot="disputes-table"
+          columns={disputeColumns}
+          data={disputes}
+          totalCount={disputes.length}
+          page={1}
+          pageSize={NESTED_PAGE_SIZE}
+          pageSizes={[NESTED_PAGE_SIZE]}
+          onPageChange={() => undefined}
+          onPageSizeChange={() => undefined}
+          hidePaginationOnSinglePage
+          emptyMessage={t('Payments.Disputes.NoDisputes')}
+        />
       </div>
 
       {/* Refund dialog */}

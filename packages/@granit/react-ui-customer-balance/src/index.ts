@@ -3,7 +3,7 @@
 // foundation UI packages. The Axios client resolves from a GranitClientProvider
 // in the host tree (via the CustomerBalanceProvider).
 
-export { CustomerBalancePage } from './customer-balance-page';
+export { CustomerBalancePage } from './components/customer-balance-page';
 export { BalanceSummaryCard } from './components/balance-summary-card';
 export { AddCreditDialog } from './components/add-credit-dialog';
 export { ApplyDebitDialog } from './components/apply-debit-dialog';

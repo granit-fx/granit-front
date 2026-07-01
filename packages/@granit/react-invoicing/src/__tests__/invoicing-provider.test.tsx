@@ -36,7 +36,7 @@ describe('InvoicingProvider', () => {
   it('should throw when used outside provider', () => {
     expect(() => {
       renderHook(() => useInvoicingConfig());
-    }).toThrow('useInvoicingConfig must be used within an InvoicingProvider');
+    }).toThrow('useInvoicingConfig must be used within a <InvoicingProvider>');
   });
 });
 

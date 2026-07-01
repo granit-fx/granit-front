@@ -14,10 +14,10 @@ import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { createMeterColumns } from './components/meter-columns';
-import { MeterForm } from './components/meter-form';
+import { createMeterColumns } from './meter-columns';
+import { MeterForm } from './meter-form';
 
-import type { MeterFormValues } from './components/meter-form';
+import type { MeterFormValues } from './meter-form';
 import type { AggregationType } from '@granit/metering';
 
 // The meter catalog grid is driven by the query-engine endpoint, which needs a

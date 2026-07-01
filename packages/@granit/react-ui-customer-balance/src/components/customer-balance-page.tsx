@@ -8,24 +8,19 @@ import {
   SelectTrigger,
   SelectValue,
   Spinner,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
 } from '@granit/react-ui';
-import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { ManualDataTable } from '@granit/react-ui-kit';
 import { Minus, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
-import { AddCreditDialog } from './components/add-credit-dialog';
-import { ApplyDebitDialog } from './components/apply-debit-dialog';
-import { BalanceSummaryCard } from './components/balance-summary-card';
-import { createTransactionColumns } from './components/transaction-columns';
+import { AddCreditDialog } from './add-credit-dialog';
+import { ApplyDebitDialog } from './apply-debit-dialog';
+import { BalanceSummaryCard } from './balance-summary-card';
+import { createTransactionColumns } from './transaction-columns';
 
 const SUPPORTED_CURRENCIES = ['EUR', 'USD', 'GBP', 'CHF'] as const;
 const DEFAULT_PAGE_SIZE = 25;
+const PAGE_SIZES = [10, 25, 50, 100] as const;
 
 export function CustomerBalancePage() {
   const { t, i18n } = useTranslation();
@@ -34,12 +29,13 @@ export function CustomerBalancePage() {
   const [debitOpen, setDebitOpen] = useState(false);
   const [currency, setCurrency] = useState('EUR');
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGE_SIZE);
 
   const balanceQuery = useCustomerBalance(currency);
   const transactionsQuery = useBalanceTransactions({
     currency,
     page,
-    pageSize: DEFAULT_PAGE_SIZE,
+    pageSize,
   });
 
   const columns = useMemo(
@@ -48,13 +44,7 @@ export function CustomerBalancePage() {
   );
 
   const transactions = transactionsQuery.data?.items ?? [];
-  const hasNextPage = transactionsQuery.data?.hasMore ?? false;
-
-  const table = useReactTable({
-    data: [...transactions],
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
+  const totalCount = transactionsQuery.data?.totalCount ?? transactions.length;
 
   if (balanceQuery.isLoading || transactionsQuery.isLoading) {
     return (
@@ -113,70 +103,19 @@ export function CustomerBalancePage() {
       {balanceQuery.data && <BalanceSummaryCard balance={balanceQuery.data} />}
 
       {/* Transactions table */}
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder ? null : (header.column.columnDef.header as string)}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.length > 0 ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {typeof cell.column.columnDef.cell === 'function'
-                        ? cell.column.columnDef.cell(cell.getContext())
-                        : cell.getValue()}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="py-8 text-center text-muted-foreground"
-                >
-                  {t('Common.NoResults')}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Pagination */}
-      {(page > 1 || hasNextPage) && (
-        <div className="flex items-center justify-between">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={page <= 1}
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-          >
-            {t('Common.Previous')}
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            {t('Common.Page')} {page}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={!hasNextPage}
-            onClick={() => setPage((p) => p + 1)}
-          >
-            {t('Common.Next')}
-          </Button>
-        </div>
-      )}
+      <ManualDataTable
+        columns={columns}
+        data={transactions}
+        totalCount={totalCount}
+        page={page}
+        pageSize={pageSize}
+        pageSizes={PAGE_SIZES}
+        onPageChange={setPage}
+        onPageSizeChange={(size) => {
+          setPageSize(size);
+          setPage(1);
+        }}
+      />
 
       {/* Credit dialog */}
       <AddCreditDialog open={creditOpen} onOpenChange={setCreditOpen} defaultCurrency={currency} />

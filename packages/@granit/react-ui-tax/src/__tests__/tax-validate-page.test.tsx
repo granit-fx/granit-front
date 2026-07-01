@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { TaxValidatePage } from '../tax-validate-page';
+import { TaxValidatePage } from '../components/tax-validate-page';
 
 import { renderWithProviders } from './test-utils';
 

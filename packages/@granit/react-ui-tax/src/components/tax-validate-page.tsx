@@ -2,8 +2,8 @@ import { useTranslation } from '@granit/react-localization';
 import { useValidateTaxId } from '@granit/react-tax';
 import { Card, CardContent, CardHeader, CardTitle } from '@granit/react-ui';
 
-import { ValidateTaxForm, type TaxValidateFormValues } from './components/validate-tax-form';
-import { ValidationResultCard } from './components/validation-result-card';
+import { ValidateTaxForm, type TaxValidateFormValues } from './validate-tax-form';
+import { ValidationResultCard } from './validation-result-card';
 
 export function TaxValidatePage() {
   const { t } = useTranslation();

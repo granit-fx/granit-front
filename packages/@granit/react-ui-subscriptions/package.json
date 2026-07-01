@@ -22,12 +22,14 @@
     "@granit/react-subscriptions": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/react-ui-kit": "workspace:*",
+    "@granit/react-validation": "workspace:*",
     "@granit/subscriptions": "workspace:*",
     "@granit/types": "workspace:*",
     "@tanstack/react-table": "^8.21.3",
     "lucide-react": "^1.21.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.80.0",
     "react-router-dom": "^7.18.0"
   },
   "publishConfig": {
@@ -48,6 +50,7 @@
     "@granit/react-subscriptions": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/react-ui-kit": "workspace:*",
+    "@granit/react-validation": "workspace:*",
     "@granit/subscriptions": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/types": "workspace:*",

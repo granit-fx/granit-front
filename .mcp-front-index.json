@@ -6120,14 +6120,13 @@
         {
           "name": "InvoicingConfig",
           "kind": "interface",
-          "signature": "interface InvoicingConfig",
+          "signature": "interface InvoicingConfig extends GranitProviderConfig",
           "members": []
         },
         {
           "name": "InvoicingProviderProps",
-          "kind": "interface",
-          "signature": "interface InvoicingProviderProps",
-          "members": []
+          "kind": "type",
+          "signature": "type InvoicingProviderProps = GranitProviderProps<InvoicingConfig>"
         },
         {
           "name": "InvoiceTransitionVariables",
@@ -6278,25 +6277,13 @@
         {
           "name": "MeteringConfig",
           "kind": "interface",
-          "signature": "interface MeteringConfig",
+          "signature": "interface MeteringConfig extends GranitProviderConfig",
           "members": []
         },
         {
           "name": "MeteringProviderProps",
-          "kind": "interface",
-          "signature": "interface MeteringProviderProps",
-          "members": []
-        },
-        {
-          "name": "UpdateMeterDefinitionVariables",
           "kind": "type",
-          "signature": "type UpdateMeterDefinitionVariables = { readonly id: string; readonly request: MeterDefinitionUpdateRequest; }"
-        },
-        {
-          "name": "UsageForPeriodParams",
-          "kind": "interface",
-          "signature": "interface UsageForPeriodParams",
-          "members": []
+          "signature": "type MeteringProviderProps = GranitProviderProps<MeteringConfig>"
         }
       ]
     },
@@ -7367,6 +7354,11 @@
           "name": "useTaxConfig",
           "kind": "const",
           "signature": "const useTaxConfig"
+        },
+        {
+          "name": "ResolvedTaxConfig",
+          "kind": "type",
+          "signature": "type ResolvedTaxConfig = ResolvedGranitProviderConfig<TaxConfig>"
         },
         {
           "name": "TaxConfig",
@@ -11669,6 +11661,11 @@
           "name": "SubscriptionsPermissions",
           "kind": "const",
           "signature": "const SubscriptionsPermissions"
+        },
+        {
+          "name": "subscriptionsConstraints",
+          "kind": "const",
+          "signature": "const subscriptionsConstraints"
         },
         {
           "name": "assignSeat",

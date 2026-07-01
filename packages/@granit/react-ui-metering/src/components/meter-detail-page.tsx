@@ -27,13 +27,13 @@ import { ArrowLeft, Archive, Pencil, Send, Upload } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { ArchiveMeterDialog } from './components/archive-meter-dialog';
-import { MeterForm } from './components/meter-form';
-import { QuotaStatusCard } from './components/quota-status-card';
-import { RecordEventsDialog } from './components/record-events-dialog';
-import { UsageSummaryCard } from './components/usage-summary-card';
+import { ArchiveMeterDialog } from './archive-meter-dialog';
+import { MeterForm } from './meter-form';
+import { QuotaStatusCard } from './quota-status-card';
+import { RecordEventsDialog } from './record-events-dialog';
+import { UsageSummaryCard } from './usage-summary-card';
 
-import type { MeterFormValues } from './components/meter-form';
+import type { MeterFormValues } from './meter-form';
 
 export function MeterDetailPage() {
   const { id } = useParams<{ id: string }>();

@@ -1,6 +1,5 @@
+import { useOptionalPaymentsConfig } from '@granit/react-payments';
 import { Building2, CircleDollarSign, Landmark, Wallet } from 'lucide-react';
-
-import { useOptionalPaymentsConfig } from '../providers/payments-provider';
 
 import type { LucideIcon } from 'lucide-react';
 import type { CSSProperties, ReactNode } from 'react';

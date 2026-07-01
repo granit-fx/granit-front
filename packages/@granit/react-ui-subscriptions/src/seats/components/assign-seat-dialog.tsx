@@ -1,21 +1,26 @@
 import { useTranslation } from '@granit/react-localization';
 import { useAssignSeat } from '@granit/react-subscriptions';
 import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
   Input,
-  Label,
   toast,
 } from '@granit/react-ui';
+import { FormDialog } from '@granit/react-ui-kit';
+import { createConstraintsResolver } from '@granit/react-validation';
+import { subscriptionsConstraints } from '@granit/subscriptions';
 import { toEntityId } from '@granit/types';
-import { useState, type FormEvent } from 'react';
+import { useForm, type Resolver } from 'react-hook-form';
 
 import type { SubscriptionId } from '@granit/subscriptions';
 import type { UserId } from '@granit/types';
+
+interface AssignSeatFormValues {
+  userId: string;
+}
 
 interface AssignSeatDialogProps {
   readonly subscriptionId: string;
@@ -26,55 +31,57 @@ interface AssignSeatDialogProps {
 export function AssignSeatDialog({ subscriptionId, open, onOpenChange }: AssignSeatDialogProps) {
   const { t } = useTranslation();
   const assignSeat = useAssignSeat(toEntityId<'Subscription'>(subscriptionId) as SubscriptionId);
-  const [userId, setUserId] = useState('');
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const form = useForm<AssignSeatFormValues>({
+    resolver: createConstraintsResolver(subscriptionsConstraints.SeatAssignRequest, t, {
+      labelResolver: (field) => t(`Subscriptions.Seats.Form.${field}`, field),
+    }) as unknown as Resolver<AssignSeatFormValues>,
+    defaultValues: { userId: '' },
+  });
+
+  const handleOpenChange = (next: boolean) => {
+    if (!next) form.reset();
+    onOpenChange(next);
+  };
+
+  function onSubmit(values: AssignSeatFormValues) {
     assignSeat.mutate(
-      { userId: toEntityId<'User'>(userId) as UserId },
+      { userId: toEntityId<'User'>(values.userId) as UserId },
       {
         onSuccess: () => {
           toast.success(t('Subscriptions.Seats.AssignSuccess'));
-          onOpenChange(false);
-          setUserId('');
+          handleOpenChange(false);
         },
       }
     );
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t('Subscriptions.Seats.Assign')}</DialogTitle>
-          <DialogDescription>{t('Subscriptions.Seats.AssignDescription')}</DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="seat-user-id">{t('Subscriptions.Seats.Form.UserId')}</Label>
-            <Input
-              id="seat-user-id"
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="flex justify-end gap-2 pt-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={assignSeat.isPending}
-            >
-              {t('Common.Cancel')}
-            </Button>
-            <Button type="submit" disabled={assignSeat.isPending}>
-              {assignSeat.isPending ? t('Common.Loading') : t('Subscriptions.Seats.Assign')}
-            </Button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
+    <FormDialog
+      open={open}
+      onOpenChange={handleOpenChange}
+      form={form}
+      onSubmit={onSubmit}
+      title={t('Subscriptions.Seats.Assign')}
+      description={t('Subscriptions.Seats.AssignDescription')}
+      submitLabel={t('Subscriptions.Seats.Assign')}
+      busyLabel={t('Common.Loading')}
+      isSubmitting={assignSeat.isPending}
+      data-slot="assign-seat-dialog"
+    >
+      <FormField
+        control={form.control}
+        name="userId"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>{t('Subscriptions.Seats.Form.UserId')}</FormLabel>
+            <FormControl>
+              <Input {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </FormDialog>
   );
 }

@@ -1,7 +1,7 @@
 import { useMeterDefinition } from '@granit/react-metering';
 import { screen } from '@testing-library/react';
 
-import { MeterDetailPage } from '../meter-detail-page';
+import { MeterDetailPage } from '../components/meter-detail-page';
 
 import { renderWithProviders } from './test-utils';
 

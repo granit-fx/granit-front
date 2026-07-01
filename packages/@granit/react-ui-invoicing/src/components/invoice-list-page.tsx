@@ -8,8 +8,8 @@ import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { CreateInvoiceDialog } from './components/create-invoice-dialog';
-import { createInvoiceColumns } from './components/invoice-columns';
+import { CreateInvoiceDialog } from './create-invoice-dialog';
+import { createInvoiceColumns } from './invoice-columns';
 
 import type { KpiWidgetDefinition } from '@granit/analytics';
 

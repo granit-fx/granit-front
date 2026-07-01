@@ -1,7 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 
-import { InvoiceDetailPage } from '../invoice-detail-page';
-import { InvoiceListPage } from '../invoice-list-page';
+import { InvoiceDetailPage } from '../components/invoice-detail-page';
+import { InvoiceListPage } from '../components/invoice-list-page';
 
 import { renderWithProviders } from './test-utils';
 

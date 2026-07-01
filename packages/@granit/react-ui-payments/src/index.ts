@@ -26,6 +26,10 @@ export { createRefundColumns } from './components/refund-columns';
 export { createDisputeColumns } from './components/dispute-columns';
 export { createPaymentHistoryColumns } from './components/payment-history-columns';
 
+// Icons — brand-adjacent (trademark-safe) payment method / provider badges.
+export { PaymentMethodIcon, ProviderIcon, resolveMethodIconStyle } from './icons/index';
+export type { MethodIconStyle, PaymentMethodIconProps, ProviderIconProps } from './icons/index';
+
 // Category helpers
 export {
   categoryIndex,

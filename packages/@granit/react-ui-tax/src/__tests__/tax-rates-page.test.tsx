@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { TaxRatesPage } from '../tax-rates-page';
+import { TaxRatesPage } from '../components/tax-rates-page';
 
 import { renderWithProviders } from './test-utils';
 

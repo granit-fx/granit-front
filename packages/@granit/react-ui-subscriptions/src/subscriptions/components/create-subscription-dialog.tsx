@@ -1,14 +1,12 @@
 import { useTranslation } from '@granit/react-localization';
 import { useActivePlans, useCreateSubscription } from '@granit/react-subscriptions';
 import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
   Input,
-  Label,
   Select,
   SelectContent,
   SelectItem,
@@ -16,11 +14,22 @@ import {
   SelectValue,
   toast,
 } from '@granit/react-ui';
+import { FormDialog } from '@granit/react-ui-kit';
+import { createConstraintsResolver } from '@granit/react-validation';
+import { subscriptionsConstraints } from '@granit/subscriptions';
 import { toEntityId, toISODateString } from '@granit/types';
-import { useState, type FormEvent } from 'react';
+import { useForm, type Resolver } from 'react-hook-form';
 
 import type { PlanId } from '@granit/subscriptions';
 import type { CurrencyCode } from '@granit/types';
+
+interface CreateSubscriptionFormValues {
+  partyId: string;
+  planId: string;
+  currency: string;
+  // `datetime-local` string; converted to an ISO date (or null) on submit.
+  trialEndsAt: string;
+}
 
 interface CreateSubscriptionDialogProps {
   readonly open: boolean;
@@ -31,28 +40,31 @@ export function CreateSubscriptionDialog({ open, onOpenChange }: CreateSubscript
   const { t } = useTranslation();
   const createSubscription = useCreateSubscription();
   const { data: plans } = useActivePlans();
-  const [partyId, setPartyId] = useState('');
-  const [planId, setPlanId] = useState('');
-  const [currency, setCurrency] = useState('EUR');
-  const [trialEndsAt, setTrialEndsAt] = useState('');
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const form = useForm<CreateSubscriptionFormValues>({
+    resolver: createConstraintsResolver(subscriptionsConstraints.SubscriptionCreateRequest, t, {
+      labelResolver: (field) => t(`Subscriptions.List.Form.${field}`, field),
+    }) as unknown as Resolver<CreateSubscriptionFormValues>,
+    defaultValues: { partyId: '', planId: '', currency: 'EUR', trialEndsAt: '' },
+  });
+
+  const handleOpenChange = (next: boolean) => {
+    if (!next) form.reset();
+    onOpenChange(next);
+  };
+
+  function onSubmit(values: CreateSubscriptionFormValues) {
     createSubscription.mutate(
       {
-        partyId,
-        planId: toEntityId<'Plan'>(planId) as PlanId,
-        currency: currency as CurrencyCode,
-        trialEndsAt: trialEndsAt ? toISODateString(trialEndsAt) : null,
+        partyId: values.partyId,
+        planId: toEntityId<'Plan'>(values.planId) as PlanId,
+        currency: values.currency as CurrencyCode,
+        trialEndsAt: values.trialEndsAt ? toISODateString(values.trialEndsAt) : null,
       },
       {
         onSuccess: () => {
           toast.success(t('Subscriptions.List.CreateSuccess'));
-          onOpenChange(false);
-          setPartyId('');
-          setPlanId('');
-          setCurrency('EUR');
-          setTrialEndsAt('');
+          handleOpenChange(false);
         },
       }
     );
@@ -61,29 +73,44 @@ export function CreateSubscriptionDialog({ open, onOpenChange }: CreateSubscript
   const publishedPlans = plans?.filter((p) => p.lifecycleStatus === 'Published') ?? [];
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t('Subscriptions.List.Create')}</DialogTitle>
-          <DialogDescription>{t('Subscriptions.List.CreateDescription')}</DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="sub-party-id">{t('Subscriptions.List.Form.Party')}</Label>
-            <Input
-              id="sub-party-id"
-              value={partyId}
-              onChange={(e) => setPartyId(e.target.value)}
-              required
-            />
-          </div>
+    <FormDialog
+      open={open}
+      onOpenChange={handleOpenChange}
+      form={form}
+      onSubmit={onSubmit}
+      title={t('Subscriptions.List.Create')}
+      description={t('Subscriptions.List.CreateDescription')}
+      submitLabel={t('Subscriptions.List.Create')}
+      busyLabel={t('Common.Loading')}
+      isSubmitting={createSubscription.isPending}
+      data-slot="create-subscription-dialog"
+    >
+      <FormField
+        control={form.control}
+        name="partyId"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>{t('Subscriptions.List.Form.Party')}</FormLabel>
+            <FormControl>
+              <Input {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-          <div className="space-y-2">
-            <Label htmlFor="sub-plan-id">{t('Subscriptions.List.Form.Plan')}</Label>
-            <Select value={planId} onValueChange={setPlanId}>
-              <SelectTrigger id="sub-plan-id">
-                <SelectValue placeholder={t('Subscriptions.List.Form.SelectPlan')} />
-              </SelectTrigger>
+      <FormField
+        control={form.control}
+        name="planId"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>{t('Subscriptions.List.Form.Plan')}</FormLabel>
+            <Select value={field.value} onValueChange={field.onChange}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('Subscriptions.List.Form.SelectPlan')} />
+                </SelectTrigger>
+              </FormControl>
               <SelectContent>
                 {publishedPlans.map((plan) => (
                   <SelectItem key={plan.id} value={plan.id}>
@@ -92,43 +119,38 @@ export function CreateSubscriptionDialog({ open, onOpenChange }: CreateSubscript
                 ))}
               </SelectContent>
             </Select>
-          </div>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-          <div className="space-y-2">
-            <Label htmlFor="sub-currency">{t('Subscriptions.List.Form.Currency')}</Label>
-            <Input
-              id="sub-currency"
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value)}
-              required
-            />
-          </div>
+      <FormField
+        control={form.control}
+        name="currency"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>{t('Subscriptions.List.Form.Currency')}</FormLabel>
+            <FormControl>
+              <Input {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-          <div className="space-y-2">
-            <Label htmlFor="sub-trial-ends-at">{t('Subscriptions.List.Form.TrialEndsAt')}</Label>
-            <Input
-              id="sub-trial-ends-at"
-              type="datetime-local"
-              value={trialEndsAt}
-              onChange={(e) => setTrialEndsAt(e.target.value)}
-            />
-          </div>
-
-          <div className="flex justify-end gap-2 pt-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={createSubscription.isPending}
-            >
-              {t('Common.Cancel')}
-            </Button>
-            <Button type="submit" disabled={createSubscription.isPending || !planId || !partyId}>
-              {createSubscription.isPending ? t('Common.Loading') : t('Subscriptions.List.Create')}
-            </Button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
+      <FormField
+        control={form.control}
+        name="trialEndsAt"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>{t('Subscriptions.List.Form.TrialEndsAt')}</FormLabel>
+            <FormControl>
+              <Input {...field} type="datetime-local" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </FormDialog>
   );
 }

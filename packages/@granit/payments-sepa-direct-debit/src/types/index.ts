@@ -11,12 +11,7 @@ export type ConsentSource = 'AdminConfirm' | 'ProviderWebhook' | 'CustomerSelfSe
 
 /** Settlement status of a single direct-debit collection. */
 export type CollectionStatus =
-  | 'Pending'
-  | 'Submitted'
-  | 'Processing'
-  | 'Succeeded'
-  | 'Failed'
-  | 'Refunded';
+  'Pending' | 'Submitted' | 'Processing' | 'Succeeded' | 'Failed' | 'Refunded';
 
 /**
  * Set up a new mandate for a debtor. The debtor IBAN is validated server-side
@@ -101,7 +96,7 @@ export interface SepaConfigurationResponse {
 
 /** Verifiable consent evidence captured when a mandate is activated. */
 export interface ConsentEvidence {
-  readonly signedAt?: string;
+  readonly signedAt?: ISODateString;
   readonly source?: ConsentSource;
   readonly sourceIpMasked?: string | null;
   readonly actor?: string | null;
@@ -117,9 +112,9 @@ export interface DirectDebitPayment {
   readonly amount?: number;
   readonly currency?: string;
   readonly status?: CollectionStatus;
-  readonly scheduledDate?: string;
-  readonly submittedAt?: string | null;
-  readonly settledAt?: string | null;
+  readonly scheduledDate?: ISODateString;
+  readonly submittedAt?: ISODateString | null;
+  readonly settledAt?: ISODateString | null;
   readonly failureCode?: string | null;
   readonly failureReason?: string | null;
   readonly providerCollectionId?: string | null;
@@ -141,10 +136,10 @@ export interface Mandate {
   readonly creditorId?: string;
   readonly debtorPartyId?: string;
   readonly debtorBankAccountId?: string | null;
-  readonly signedAt?: string | null;
-  readonly activatedAt?: string | null;
-  readonly cancelledAt?: string | null;
-  readonly lastCollectionAt?: string | null;
+  readonly signedAt?: ISODateString | null;
+  readonly activatedAt?: ISODateString | null;
+  readonly cancelledAt?: ISODateString | null;
+  readonly lastCollectionAt?: ISODateString | null;
   readonly providerName?: string | null;
   readonly providerMandateId?: string | null;
   readonly consent?: ConsentEvidence | null;
@@ -152,8 +147,8 @@ export interface Mandate {
   readonly collections?: readonly DirectDebitPayment[] | null;
   readonly tenantId?: string | null;
   readonly concurrencyStamp?: string;
-  readonly modifiedAt?: string | null;
+  readonly modifiedAt?: ISODateString | null;
   readonly modifiedBy?: string | null;
-  readonly createdAt?: string;
+  readonly createdAt?: ISODateString;
   readonly createdBy?: string;
 }

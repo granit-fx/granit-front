@@ -26,6 +26,9 @@ export type {
 // Permissions
 export { SubscriptionsPermissions } from './permissions';
 
+// Validation constraints (generated from contracts/openapi/subscriptions.json)
+export { subscriptionsConstraints } from './constraints';
+
 // API — Plans
 export {
   archivePlan,

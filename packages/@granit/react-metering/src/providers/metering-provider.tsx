@@ -1,16 +1,19 @@
-import { useOptionalGranitClient } from '@granit/react-api-client';
+import { createConfigProvider } from '@granit/react-api-client';
 import { QueryProvider } from '@granit/react-query-engine';
-import { createContext, useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { DEFAULT_BASE_PATH } from '../constants';
 
-import type { AxiosInstance } from '@granit/api-client';
 import type { QueryConfig } from '@granit/query-engine';
+import type {
+  GranitProviderConfig,
+  GranitProviderProps,
+  ResolvedGranitProviderConfig,
+} from '@granit/react-api-client';
 import type { ReactNode } from 'react';
 
 /** Configuration for the metering provider. */
-export interface MeteringConfig {
-  readonly client?: AxiosInstance;
+export interface MeteringConfig extends GranitProviderConfig {
   /** Base path for metering endpoints (default: `/api/v1/metering`). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
@@ -22,58 +25,41 @@ export interface MeteringConfig {
  * `basePath`. Both are guaranteed present, so hooks read them without a
  * non-null assertion.
  */
-export interface ResolvedMeteringConfig extends MeteringConfig {
-  readonly client: AxiosInstance;
-  readonly basePath: string;
-}
+export type ResolvedMeteringConfig = ResolvedGranitProviderConfig<MeteringConfig>;
 
-export interface MeteringProviderProps {
-  readonly config: MeteringConfig;
-  readonly children: ReactNode;
-}
+export type MeteringProviderProps = GranitProviderProps<MeteringConfig>;
 
-const MeteringConfigContext = createContext<ResolvedMeteringConfig | null>(null);
+const { Provider: ConfigProvider, useConfig } = createConfigProvider<MeteringConfig>({
+  name: 'Metering',
+  defaultBasePath: DEFAULT_BASE_PATH,
+});
 
-/** Provides metering configuration to child components and hooks. */
+/**
+ * Provides metering configuration to child components and hooks, and wires the
+ * QueryEngine surface for the meter catalog grid: `GET {basePath}/meters` is a
+ * `MapGranitQuery<MeterDefinitionResponse>` endpoint (it ships a `/meta`), so
+ * the list is driven by `useMetersQuery` (useQueryEndpoint) under this provider.
+ */
 export function MeteringProvider({ config, children }: Readonly<MeteringProviderProps>) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo<ResolvedMeteringConfig>(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'MeteringProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return {
-      ...config,
-      basePath: config.basePath ?? DEFAULT_BASE_PATH,
-      client,
-    };
-  }, [config, contextClient]);
-
-  // QueryEngine surface for the meter catalog grid: `GET {basePath}/meters` is a
-  // `MapGranitQuery<MeterDefinitionResponse>` endpoint (it ships a `/meta`), so the
-  // list is driven by `useMetersQuery` (useQueryEndpoint) under this provider.
-  const queryConfig = useMemo<QueryConfig>(
-    () => ({ client: value.client, basePath: `${value.basePath}/meters` }),
-    [value]
-  );
-
   return (
-    <MeteringConfigContext value={value}>
-      <QueryProvider config={queryConfig}>{children}</QueryProvider>
-    </MeteringConfigContext>
+    <ConfigProvider config={config}>
+      <MeteringQueryScope>{children}</MeteringQueryScope>
+    </ConfigProvider>
   );
+}
+
+/** Mounts the meter-catalog `QueryProvider` from the resolved config. */
+function MeteringQueryScope({ children }: { readonly children: ReactNode }) {
+  const config = useConfig();
+  const queryConfig = useMemo<QueryConfig>(
+    () => ({ client: config.client, basePath: `${config.basePath}/meters` }),
+    [config]
+  );
+  return <QueryProvider config={queryConfig}>{children}</QueryProvider>;
 }
 
 /** Returns the metering configuration from the nearest `MeteringProvider`. */
-export function useMeteringConfig(): ResolvedMeteringConfig {
-  const ctx = useContext(MeteringConfigContext);
-  if (!ctx) {
-    throw new Error('useMeteringConfig must be used within a MeteringProvider');
-  }
-  return ctx;
-}
+export const useMeteringConfig = useConfig;
 
 /** Builds a consistent React Query key for metering operations. */
 export function buildMeteringQueryKey(

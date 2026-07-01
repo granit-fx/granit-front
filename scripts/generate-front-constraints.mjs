@@ -84,6 +84,12 @@ const TARGETS = [
     schemaPattern: /Request$/,
   },
   {
+    spec: 'subscriptions.json',
+    pkg: 'subscriptions',
+    exportName: 'subscriptionsConstraints',
+    schemaPattern: /Request$/,
+  },
+  {
     spec: 'catalog.json',
     pkg: 'catalog',
     exportName: 'catalogConstraints',

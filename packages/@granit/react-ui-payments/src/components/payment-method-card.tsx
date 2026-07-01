@@ -1,5 +1,4 @@
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
-import { PaymentMethodIcon } from '@granit/react-payments';
 import {
   Badge,
   Button,
@@ -14,6 +13,7 @@ import {
 } from '@granit/react-ui';
 import { MoreVertical } from 'lucide-react';
 
+import { PaymentMethodIcon } from '../icons/index';
 import { methodTypeCategoryIndex } from '../payment-method-category';
 
 import type { PaymentMethodResponse } from '@granit/payments';

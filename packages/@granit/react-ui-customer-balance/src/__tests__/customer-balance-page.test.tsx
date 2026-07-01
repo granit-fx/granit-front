@@ -4,7 +4,7 @@ import {
 } from '@granit/react-customer-balance/testing';
 import { screen, waitFor } from '@testing-library/react';
 
-import { CustomerBalancePage } from '../customer-balance-page';
+import { CustomerBalancePage } from '../components/customer-balance-page';
 
 import { renderCustomerBalance } from './test-utils';
 

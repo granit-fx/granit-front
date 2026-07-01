@@ -23,8 +23,8 @@ export interface TaxRateEntry {
   readonly reducedRate?: number | null;
   readonly superReducedRate?: number | null;
   readonly parkingRate?: number | null;
-  readonly effectiveFrom?: string | null;
-  readonly effectiveTo?: string | null;
+  readonly effectiveFrom?: ISODateString | null;
+  readonly effectiveTo?: ISODateString | null;
 }
 
 /** Full tax rate detail for a specific country (`GET /tax/rates/{countryCode}`). */

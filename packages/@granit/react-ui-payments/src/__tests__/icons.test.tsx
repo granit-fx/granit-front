@@ -1,13 +1,13 @@
+import { PaymentsProvider } from '@granit/react-payments';
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import { resolveMethodIconStyle } from '../icons/method-icon-registry';
 import { PaymentMethodIcon } from '../icons/payment-method-icon';
 import { ProviderIcon } from '../icons/provider-icon';
-import { PaymentsProvider } from '../providers/payments-provider';
 
-import type { PaymentBrandIconResolvers } from '../providers/payments-provider';
 import type { AxiosInstance } from '@granit/api-client';
+import type { PaymentBrandIconResolvers } from '@granit/react-payments';
 import type { ReactNode } from 'react';
 
 // PaymentsProvider only needs a truthy client; no request is made in these tests.
@@ -116,7 +116,11 @@ describe('brandIcons resolver via PaymentsProvider', () => {
   it('customIcon prop takes precedence over the method resolver', () => {
     const { getByTestId, queryByTestId } = withBrandIcons(
       { method: () => <svg data-testid="from-resolver" /> },
-      <PaymentMethodIcon methodType="ideal" category={1} customIcon={<svg data-testid="from-prop" />} />
+      <PaymentMethodIcon
+        methodType="ideal"
+        category={1}
+        customIcon={<svg data-testid="from-prop" />}
+      />
     );
     expect(getByTestId('from-prop')).toBeDefined();
     expect(queryByTestId('from-resolver')).toBeNull();

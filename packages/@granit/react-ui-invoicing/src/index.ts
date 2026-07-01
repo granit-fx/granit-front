@@ -1,5 +1,5 @@
-export { InvoiceListPage } from './invoice-list-page';
-export { InvoiceDetailPage } from './invoice-detail-page';
+export { InvoiceListPage } from './components/invoice-list-page';
+export { InvoiceDetailPage } from './components/invoice-detail-page';
 export { CreateInvoiceDialog } from './components/create-invoice-dialog';
 export { DownloadPdfButton } from './components/download-pdf-button';
 export { InvoiceLineItems } from './components/invoice-line-items';

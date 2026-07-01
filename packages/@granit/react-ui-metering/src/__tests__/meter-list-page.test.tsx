@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 
-import { MeterListPage } from '../meter-list-page';
+import { MeterListPage } from '../components/meter-list-page';
 
 import { renderWithProviders } from './test-utils';
 
