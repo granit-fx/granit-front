@@ -138,6 +138,29 @@ export const UI_ROUTER_BASELINE: ReadonlyArray<string> = [
 ];
 
 /**
+ * ADR-010 (strict 3-tier layering) — headless `@granit/react-{module}` packages
+ * (prefixed `react-`, but NOT `react-ui-`) that currently pull the shadcn/`@granit/react-ui`
+ * stack BELOW the UI tier, either via a runtime import in `src/` or via a
+ * (peer)dependency declaration. The rule: the UI stack must live at the UI tier only, so a
+ * headless adapter package stays framework/design-system-agnostic and composable by any
+ * UI shell (web shadcn today, React Native / a different design system tomorrow). The
+ * banned surface is the barrel `@granit/react-ui` (incl. subpaths) plus the shadcn
+ * primitives it re-exports: `radix-ui` / `@radix-ui/*`, `cmdk`, `sonner`,
+ * `class-variance-authority`, `vaul`. This is a RATCHET baseline: no NEW package may be
+ * added, and it must only ever SHRINK to `[]` as the open extraction PRs land
+ * (#878/#880/#881/#882 — analytics/geocoding/entity-merge extracted, rich-text renamed to
+ * `react-ui-rich-text`). It is already EMPTY on develop: those PRs have merged, so the
+ * baseline documents zero remaining debt and any regression fails immediately. Note:
+ * `react-map` is NOT listed — it does not import `@granit/react-ui` directly; it composes
+ * `@granit/react-ui-analytics` (a UI package) and is a candidate for a separate
+ * `react-ui-map` rename, tracked as an ADR-010 follow-up (out of scope for this rule).
+ * Regenerate: for each `packages/@granit/react-*` package that is NOT `react-ui-*`, grep
+ * `src` (excluding test/stories) for the banned specifiers and inspect its
+ * peer/dependencies; map hits to package names, sort -u.
+ */
+export const UI_STACK_BELOW_TIER_BASELINE: ReadonlyArray<string> = [];
+
+/**
  * Storybook coverage ratchet (checklist 7f) — per `react-ui-*` package, the number
  * of `*-page.tsx` / `*-dialog.tsx` components that currently LACK a co-located
  * same-name `*.stories.tsx`. The test asserts each package stays at or below its

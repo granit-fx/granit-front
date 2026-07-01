@@ -22,6 +22,7 @@ import {
   REACT_ECOSYSTEM_CORE_ALLOWLIST,
   REPO_ROOT,
   UI_ROUTER_BASELINE,
+  UI_STACK_BELOW_TIER_BASELINE,
   listPackages,
   toModules,
 } from './helpers';
@@ -176,6 +177,63 @@ describe('imports — granit-specific rules', () => {
       }
     }
     const newOffenders = [...offenders].filter((n) => !UI_ROUTER_BASELINE.includes(n)).sort();
+    expect(newOffenders).toEqual([]);
+  });
+
+  // ADR-010 (strict 3-tier layering) — the shadcn/`@granit/react-ui` stack must NOT
+  // appear below the UI tier. A headless `@granit/react-{module}` package (prefixed
+  // `react-`, NOT `react-ui-`) must not import or (peer)depend on `@granit/react-ui` nor
+  // the shadcn primitives it re-exports (`radix-ui`/`@radix-ui/*`, `cmdk`, `sonner`,
+  // `class-variance-authority`, `vaul`). This keeps the headless adapter tier design-system
+  // -agnostic (multi-platform readiness, single UI source of truth). Ratchet: no NEW
+  // offender beyond UI_STACK_BELOW_TIER_BASELINE (which is `[]` on develop and only shrinks).
+  // Cores (no `react-` prefix) are already covered by the framework-agnostic rule above.
+  it('headless react-{module} packages keep the UI stack at the UI tier (no @granit/react-ui below it)', () => {
+    // Barrel `@granit/react-ui` (and its subpaths) but NOT the `@granit/react-ui-*` UI
+    // packages, plus the shadcn primitives the barrel re-exports.
+    const isBannedSpecifier = (spec: string): boolean =>
+      /^@granit\/react-ui(\/.*)?$/.test(spec) ||
+      /^(radix-ui|cmdk|sonner|class-variance-authority|vaul)$/.test(spec) ||
+      /^@radix-ui\//.test(spec);
+
+    const isHeadlessReactModule = (pkg: (typeof packages)[number]): boolean =>
+      pkg.dirName.startsWith('react-') &&
+      !pkg.dirName.startsWith('react-ui-') &&
+      pkg.dirName !== 'react-ui';
+
+    const notTestSupport = (file: string): boolean =>
+      !isTestFile(file) &&
+      !isTestingDir(file) &&
+      !/[\\/]__tests__[\\/]/.test(file) &&
+      !/test-utils\.tsx?$/.test(file) &&
+      !/\.stories\.tsx?$/.test(file);
+
+    const offenders = new Set<string>();
+    for (const pkg of packages) {
+      if (!isHeadlessReactModule(pkg)) continue;
+
+      // (a) runtime source imports
+      for (const f of walkSourceFiles(pkg.srcDir, notTestSupport)) {
+        for (const spec of collectImports(f)) {
+          if (isBannedSpecifier(spec)) {
+            offenders.add(pkg.name);
+            break;
+          }
+        }
+      }
+
+      // (b) declared (peer)dependencies — a headless package must not even list the
+      // UI stack as a contract, independent of whether it imports it today.
+      const declared = {
+        ...((pkg.packageJson.dependencies ?? {}) as Record<string, string>),
+        ...((pkg.packageJson.peerDependencies ?? {}) as Record<string, string>),
+      };
+      if (Object.keys(declared).some(isBannedSpecifier)) offenders.add(pkg.name);
+    }
+
+    const newOffenders = [...offenders]
+      .filter((n) => !UI_STACK_BELOW_TIER_BASELINE.includes(n))
+      .sort();
     expect(newOffenders).toEqual([]);
   });
 
