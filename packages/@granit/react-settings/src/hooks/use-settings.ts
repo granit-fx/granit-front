@@ -25,7 +25,7 @@ export function useSettings(
 
   return useQuery({
     queryKey: buildSettingsQueryKey(config, scope),
-    queryFn: () => getSettings(config.client, config.basePath ?? '', scope),
+    queryFn: () => getSettings(config.client, config.basePath, scope),
     enabled: options?.enabled ?? true,
   });
 }

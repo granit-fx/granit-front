@@ -31,8 +31,9 @@ these peers:
   403 interceptor installs onto.
 - `@granit/idempotency` — `shouldRetryIgnoringTombstone`, the mutation-retry
   predicate that short-circuits on a tombstoned (replayed) idempotent response.
-- `@tanstack/react-query` (`^5`) — `QueryClient` / `QueryCache` /
-  `MutationCache` built by `createAppQueryClient`.
+- `@tanstack/query-core` (`^5`) — the framework-agnostic `QueryClient` /
+  `QueryCache` / `MutationCache` built by `createAppQueryClient` (this core stays
+  React-free; a React app already has these via `@tanstack/react-query`).
 - `axios` (`^1.6`) — peer of the underlying client.
 - `zustand` (`^5`) — backs the vanilla colour-theme store.
 

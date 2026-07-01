@@ -9,17 +9,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useBackgroundJobsConfig } from '../providers/background-jobs-provider';
 
+import { buildBackgroundJobsQueryKey } from './query-keys';
+
 import type { BackgroundJobListParams, BackgroundJobStatus } from '@granit/background-jobs';
 import type { PagedResult } from '@granit/query-engine';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
-
-/** Query key factory for background jobs queries. */
-export const backgroundJobKeys = {
-  all: ['background-jobs'] as const,
-  list: (params?: BackgroundJobListParams) =>
-    [...backgroundJobKeys.all, 'list', params ?? {}] as const,
-  job: (name: string) => [...backgroundJobKeys.all, 'job', name] as const,
-};
 
 /**
  * Query hook that lists a paginated collection of all background jobs with their current status.
@@ -35,12 +29,12 @@ export const backgroundJobKeys = {
 export function useBackgroundJobs(
   params?: BackgroundJobListParams
 ): UseQueryResult<PagedResult<BackgroundJobStatus>> {
-  const { client, basePath } = useBackgroundJobsConfig();
-  const jobsPath = `${basePath}/jobs`;
+  const config = useBackgroundJobsConfig();
+  const jobsPath = `${config.basePath}/jobs`;
 
   return useQuery({
-    queryKey: backgroundJobKeys.list(params),
-    queryFn: () => listBackgroundJobs(client, jobsPath, params),
+    queryKey: buildBackgroundJobsQueryKey(config, 'list', params ?? {}),
+    queryFn: () => listBackgroundJobs(config.client, jobsPath, params),
     refetchInterval: 15_000,
   });
 }
@@ -57,12 +51,12 @@ export function useBackgroundJobs(
  * ```
  */
 export function useBackgroundJob(name: string): UseQueryResult<BackgroundJobStatus> {
-  const { client, basePath } = useBackgroundJobsConfig();
-  const jobsPath = `${basePath}/jobs`;
+  const config = useBackgroundJobsConfig();
+  const jobsPath = `${config.basePath}/jobs`;
 
   return useQuery({
-    queryKey: backgroundJobKeys.job(name),
-    queryFn: () => getBackgroundJob(client, jobsPath, name),
+    queryKey: buildBackgroundJobsQueryKey(config, 'job', name),
+    queryFn: () => getBackgroundJob(config.client, jobsPath, name),
     refetchInterval: 15_000,
     enabled: name.length > 0,
   });
@@ -80,16 +74,16 @@ export function useBackgroundJob(name: string): UseQueryResult<BackgroundJobStat
  * ```
  */
 export function usePauseJob(): UseMutationResult<void, Error, string> {
-  const { client, basePath } = useBackgroundJobsConfig();
-  const jobsPath = `${basePath}/jobs`;
+  const config = useBackgroundJobsConfig();
+  const jobsPath = `${config.basePath}/jobs`;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (jobName: string) => {
-      await pauseJob(client, jobsPath, jobName);
+      await pauseJob(config.client, jobsPath, jobName);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: backgroundJobKeys.all });
+      await queryClient.invalidateQueries({ queryKey: buildBackgroundJobsQueryKey(config) });
     },
   });
 }
@@ -106,16 +100,16 @@ export function usePauseJob(): UseMutationResult<void, Error, string> {
  * ```
  */
 export function useResumeJob(): UseMutationResult<void, Error, string> {
-  const { client, basePath } = useBackgroundJobsConfig();
-  const jobsPath = `${basePath}/jobs`;
+  const config = useBackgroundJobsConfig();
+  const jobsPath = `${config.basePath}/jobs`;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (jobName: string) => {
-      await resumeJob(client, jobsPath, jobName);
+      await resumeJob(config.client, jobsPath, jobName);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: backgroundJobKeys.all });
+      await queryClient.invalidateQueries({ queryKey: buildBackgroundJobsQueryKey(config) });
     },
   });
 }
@@ -132,16 +126,16 @@ export function useResumeJob(): UseMutationResult<void, Error, string> {
  * ```
  */
 export function useTriggerJob(): UseMutationResult<void, Error, string> {
-  const { client, basePath } = useBackgroundJobsConfig();
-  const jobsPath = `${basePath}/jobs`;
+  const config = useBackgroundJobsConfig();
+  const jobsPath = `${config.basePath}/jobs`;
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (jobName: string) => {
-      await triggerJob(client, jobsPath, jobName);
+      await triggerJob(config.client, jobsPath, jobName);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: backgroundJobKeys.all });
+      await queryClient.invalidateQueries({ queryKey: buildBackgroundJobsQueryKey(config) });
     },
   });
 }

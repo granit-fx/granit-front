@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useBlobStorageConfig } from '../providers/blob-storage-provider';
 
-import { blobListQueryKey, blobStorageKeys } from './query-keys';
+import { blobListQueryKey, buildBlobStorageQueryKey } from './query-keys';
 
 import type {
   BlobCancelPendingRequest,
@@ -69,7 +69,7 @@ export function useConfirmUpload(): UseMutationResult<
       confirmUpload(config.client, `${config.basePath}/blobs`, id, request),
     onSuccess: async () => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: blobStorageKeys.blobs() }),
+        queryClient.invalidateQueries({ queryKey: buildBlobStorageQueryKey(config, 'blob') }),
         queryClient.invalidateQueries({ queryKey: blobListQueryKey(config) }),
       ]);
     },
@@ -101,7 +101,7 @@ export function useDeleteBlob(): UseMutationResult<
       deleteBlob(config.client, `${config.basePath}/blobs`, id, request),
     onSuccess: async () => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: blobStorageKeys.blobs() }),
+        queryClient.invalidateQueries({ queryKey: buildBlobStorageQueryKey(config, 'blob') }),
         queryClient.invalidateQueries({ queryKey: blobListQueryKey(config) }),
       ]);
     },
@@ -137,7 +137,7 @@ export function useCancelPendingUpload(): UseMutationResult<
       cancelPendingUpload(config.client, `${config.basePath}/blobs`, id, request),
     onSuccess: async () => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: blobStorageKeys.blobs() }),
+        queryClient.invalidateQueries({ queryKey: buildBlobStorageQueryKey(config, 'blob') }),
         queryClient.invalidateQueries({ queryKey: blobListQueryKey(config) }),
       ]);
     },

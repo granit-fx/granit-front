@@ -1,12 +1,15 @@
-import { useOptionalGranitClient } from '@granit/react-api-client';
-import { createContext, useContext, useMemo } from 'react';
+import { createConfigProvider } from '@granit/react-api-client';
 
-import type { AxiosInstance } from '@granit/api-client';
-import type { ReactNode } from 'react';
+import type {
+  GranitProviderConfig,
+  GranitProviderProps,
+  ResolvedGranitProviderConfig,
+} from '@granit/react-api-client';
+
+export const DEFAULT_SETTINGS_KEY_PREFIX = ['settings'] as const;
 
 /** Configuration for the settings provider. */
-export interface SettingsConfig {
-  readonly client?: AxiosInstance;
+export interface SettingsConfig extends GranitProviderConfig {
   /** Base path prefix before `/settings/...` (default: empty string). */
   readonly basePath?: string;
   readonly queryKeyPrefix?: readonly string[];
@@ -14,39 +17,26 @@ export interface SettingsConfig {
 
 /**
  * SettingsConfig after the provider has resolved `client` from
- * `config.client` or the nearest `<GranitClientProvider>`.
+ * `config.client` or the nearest `<GranitClientProvider>`, and defaulted
+ * `basePath` and `queryKeyPrefix`.
  */
-export interface ResolvedSettingsConfig extends SettingsConfig {
-  readonly client: AxiosInstance;
+export interface ResolvedSettingsConfig extends ResolvedGranitProviderConfig<SettingsConfig> {
+  readonly queryKeyPrefix: readonly string[];
 }
 
-export interface SettingsProviderProps {
-  readonly config: SettingsConfig;
-  readonly children: ReactNode;
-}
+export type SettingsProviderProps = GranitProviderProps<SettingsConfig>;
 
-const SettingsConfigContext = createContext<ResolvedSettingsConfig | null>(null);
+const { Provider, useConfig } = createConfigProvider<SettingsConfig, ResolvedSettingsConfig>({
+  name: 'Settings',
+  defaultBasePath: '',
+  resolve: (base) => ({
+    ...base,
+    queryKeyPrefix: base.queryKeyPrefix ?? DEFAULT_SETTINGS_KEY_PREFIX,
+  }),
+});
 
 /** Provides settings configuration to child components and hooks. */
-export function SettingsProvider({ config, children }: Readonly<SettingsProviderProps>) {
-  const contextClient = useOptionalGranitClient();
-  const value = useMemo<ResolvedSettingsConfig>(() => {
-    const client = config.client ?? contextClient;
-    if (!client) {
-      throw new Error(
-        'SettingsProvider requires an Axios client. Provide it via config.client or wrap your app in a <GranitClientProvider>.'
-      );
-    }
-    return { ...config, client };
-  }, [config, contextClient]);
-  return <SettingsConfigContext value={value}>{children}</SettingsConfigContext>;
-}
+export const SettingsProvider = Provider;
 
 /** Returns the settings configuration from the nearest `SettingsProvider`. */
-export function useSettingsConfig(): ResolvedSettingsConfig {
-  const ctx = useContext(SettingsConfigContext);
-  if (!ctx) {
-    throw new Error('useSettingsConfig must be used within a SettingsProvider');
-  }
-  return ctx;
-}
+export const useSettingsConfig = useConfig;

@@ -7,7 +7,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { blobListQueryKey, blobStorageKeys } from '../hooks/query-keys';
+import { blobListQueryKey, buildBlobStorageQueryKey } from '../hooks/query-keys';
 import {
   useCancelPendingUpload,
   useConfirmUpload,
@@ -132,7 +132,7 @@ describe('useConfirmUpload', () => {
       containerName: 'docs',
     });
     expect(invalidateSpy).toHaveBeenCalledWith({
-      queryKey: blobStorageKeys.blobs(),
+      queryKey: buildBlobStorageQueryKey({}, 'blob'),
     });
     // Also refreshes the query-engine list (admin table) — the keys are disjoint.
     expect(invalidateSpy).toHaveBeenCalledWith({
@@ -176,7 +176,7 @@ describe('useDeleteBlob', () => {
       data: { containerName: 'docs', deletionReason: 'RGPD Art. 17' },
     });
     expect(invalidateSpy).toHaveBeenCalledWith({
-      queryKey: blobStorageKeys.blobs(),
+      queryKey: buildBlobStorageQueryKey({}, 'blob'),
     });
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: blobListQueryKey({ basePath: '/api/v1/blob-storage' }),

@@ -7,8 +7,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { mockBackgroundJobs } from '@granit/react-background-jobs/testing';
 
+import { buildBackgroundJobsQueryKey } from '../hooks/query-keys';
 import {
-  backgroundJobKeys,
   useBackgroundJobs,
   usePauseJob,
   useResumeJob,
@@ -42,13 +42,13 @@ const mockPage: PagedResult<BackgroundJobStatus> = {
   hasMore: false,
 };
 
-describe('backgroundJobKeys', () => {
+describe('buildBackgroundJobsQueryKey', () => {
   it('should produce stable list key without params', () => {
-    expect(backgroundJobKeys.list()).toEqual(['background-jobs', 'list', {}]);
+    expect(buildBackgroundJobsQueryKey({}, 'list', {})).toEqual(['background-jobs', 'list', {}]);
   });
 
   it('should produce stable list key with params', () => {
-    expect(backgroundJobKeys.list({ page: 2, pageSize: 10 })).toEqual([
+    expect(buildBackgroundJobsQueryKey({}, 'list', { page: 2, pageSize: 10 })).toEqual([
       'background-jobs',
       'list',
       { page: 2, pageSize: 10 },
@@ -56,7 +56,17 @@ describe('backgroundJobKeys', () => {
   });
 
   it('should produce stable job key', () => {
-    expect(backgroundJobKeys.job('InvoiceSync')).toEqual(['background-jobs', 'job', 'InvoiceSync']);
+    expect(buildBackgroundJobsQueryKey({}, 'job', 'InvoiceSync')).toEqual([
+      'background-jobs',
+      'job',
+      'InvoiceSync',
+    ]);
+  });
+
+  it('honours a custom queryKeyPrefix', () => {
+    expect(
+      buildBackgroundJobsQueryKey({ queryKeyPrefix: ['custom'] }, 'job', 'InvoiceSync')
+    ).toEqual(['custom', 'job', 'InvoiceSync']);
   });
 });
 
@@ -129,7 +139,7 @@ describe('usePauseJob', () => {
 
     expect(client.post).toHaveBeenCalledWith('/api/v1/background-jobs/jobs/InvoiceSync/pause');
     expect(invalidateSpy).toHaveBeenCalledWith({
-      queryKey: backgroundJobKeys.all,
+      queryKey: buildBackgroundJobsQueryKey({}),
     });
   });
 
@@ -178,7 +188,7 @@ describe('useResumeJob', () => {
 
     expect(client.post).toHaveBeenCalledWith('/api/v1/background-jobs/jobs/InvoiceSync/resume');
     expect(invalidateSpy).toHaveBeenCalledWith({
-      queryKey: backgroundJobKeys.all,
+      queryKey: buildBackgroundJobsQueryKey({}),
     });
   });
 
@@ -227,7 +237,7 @@ describe('useTriggerJob', () => {
 
     expect(client.post).toHaveBeenCalledWith('/api/v1/background-jobs/jobs/InvoiceSync/trigger');
     expect(invalidateSpy).toHaveBeenCalledWith({
-      queryKey: backgroundJobKeys.all,
+      queryKey: buildBackgroundJobsQueryKey({}),
     });
   });
 

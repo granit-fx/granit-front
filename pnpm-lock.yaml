@@ -7410,9 +7410,9 @@ importers:
       '@granit/idempotency':
         specifier: workspace:*
         version: link:../idempotency
-      '@tanstack/react-query':
-        specifier: 5.101.2
-        version: 5.101.2(react@19.2.7)
+      '@tanstack/query-core':
+        specifier: ^5.100.11
+        version: 5.101.2
       axios:
         specifier: 1.18.1
         version: 1.18.1

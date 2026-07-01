@@ -82,11 +82,9 @@ export const RSC_PACKAGES: ReadonlyArray<string> = ['@granit/react-cms'];
  * R1 (checklist 7g) — framework-agnostic (non-`react-`) packages must not import the
  * React ecosystem (`react`, `react-dom`, `@tanstack/react-query`) so a future
  * non-React adapter can reuse the core. The framework-neutral query core is
- * `@tanstack/query-core`. Allowlisted debt:
- *   @granit/shell-core — `src/query-client.ts` still imports `@tanstack/react-query`
- *   (migrate to `@tanstack/query-core`).
+ * `@tanstack/query-core`. No allowlisted debt remains.
  */
-export const REACT_ECOSYSTEM_CORE_ALLOWLIST: ReadonlyArray<string> = ['@granit/shell-core'];
+export const REACT_ECOSYSTEM_CORE_ALLOWLIST: ReadonlyArray<string> = [];
 
 /**
  * R3 (checklist 7g) — `react-ui-*` packages that currently import a web router

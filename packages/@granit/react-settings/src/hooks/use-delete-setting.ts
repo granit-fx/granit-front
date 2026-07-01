@@ -31,7 +31,7 @@ export function useDeleteSetting(): UseDeleteSettingReturn {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (name: string) => deleteSetting(config.client, config.basePath ?? '', 'user', name),
+    mutationFn: (name: string) => deleteSetting(config.client, config.basePath, 'user', name),
     onSuccess: (_data, name) => {
       queryClient
         .invalidateQueries({ queryKey: buildSettingsQueryKey(config, 'user') })

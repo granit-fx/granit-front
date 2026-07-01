@@ -30,7 +30,7 @@ export function useAdminAppSettings(
 
   return useQuery({
     queryKey: buildSettingsQueryKey(config, 'admin', 'definitions', scope),
-    queryFn: () => getAdminAppSettings(config.client, config.basePath ?? '', scope),
+    queryFn: () => getAdminAppSettings(config.client, config.basePath, scope),
     enabled: options?.enabled ?? true,
     staleTime: 5 * 60 * 1000,
   });
@@ -55,7 +55,7 @@ export function useBulkUpdateSettings(
 
   return useMutation({
     mutationFn: (settings: BulkUpdateSettingsVariables) =>
-      bulkUpdateSettings(config.client, config.basePath ?? '', scope, settings),
+      bulkUpdateSettings(config.client, config.basePath, scope, settings),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: buildSettingsQueryKey(config, 'admin', 'definitions', scope),

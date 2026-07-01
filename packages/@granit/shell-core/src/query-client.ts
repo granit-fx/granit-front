@@ -1,5 +1,5 @@
 import { shouldRetryIgnoringTombstone } from '@granit/idempotency';
-import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient } from '@tanstack/query-core';
 
 export interface CreateAppQueryClientOptions {
   /**

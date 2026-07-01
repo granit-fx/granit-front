@@ -4,9 +4,11 @@ export {
   useBackgroundJobsConfig,
 } from './providers/background-jobs-provider';
 
+// Query key factory
+export { buildBackgroundJobsQueryKey } from './hooks/query-keys';
+
 // Hooks
 export {
-  backgroundJobKeys,
   useBackgroundJob,
   useBackgroundJobs,
   usePauseJob,

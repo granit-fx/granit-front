@@ -88,24 +88,24 @@ function JobsTable() {
 
 `useBackgroundJobs` returns a `PagedResult<BackgroundJobStatus>` (`items`,
 `totalCount`, `hasMore`). Use `useBackgroundJob(name)` for a single job; it stays
-disabled while `name` is empty. Every mutation invalidates `backgroundJobKeys.all`
-on success.
+disabled while `name` is empty. Every mutation invalidates the module root key
+(`buildBackgroundJobsQueryKey(config)`) on success.
 
 ## Public API
 
-| Symbol                         | Kind     | Purpose                                                  |
-| ------------------------------ | -------- | -------------------------------------------------------- |
-| `BackgroundJobsProvider`       | provider | Resolves the Axios client + base path into context       |
-| `useBackgroundJobsConfig`      | hook     | Reads the `ResolvedBackgroundJobsConfig` from context    |
-| `useBackgroundJobs`            | hook     | Paginated list of all jobs; polls 15s (`GET .../jobs`)   |
-| `useBackgroundJob`             | hook     | Single job by name; polls 15s, disabled when empty       |
-| `usePauseJob`                  | hook     | Pause mutation (`POST .../jobs/{name}/pause`)            |
-| `useResumeJob`                 | hook     | Resume mutation (`POST .../jobs/{name}/resume`)          |
-| `useTriggerJob`                | hook     | Manual-run mutation (`POST .../jobs/{name}/trigger`)     |
-| `backgroundJobKeys`            | const    | Query key factory (`all` / `list(params)` / `job(name)`) |
-| `BackgroundJobsConfig`         | type     | Provider input: optional `client` and `basePath`         |
-| `ResolvedBackgroundJobsConfig` | type     | `BackgroundJobsConfig` with a guaranteed `client`        |
-| `BackgroundJobsProviderProps`  | type     | `{ config, children }` for the provider                  |
+| Symbol                         | Kind     | Purpose                                                   |
+| ------------------------------ | -------- | --------------------------------------------------------- |
+| `BackgroundJobsProvider`       | provider | Resolves the Axios client + base path into context        |
+| `useBackgroundJobsConfig`      | hook     | Reads the `ResolvedBackgroundJobsConfig` from context     |
+| `useBackgroundJobs`            | hook     | Paginated list of all jobs; polls 15s (`GET .../jobs`)    |
+| `useBackgroundJob`             | hook     | Single job by name; polls 15s, disabled when empty        |
+| `usePauseJob`                  | hook     | Pause mutation (`POST .../jobs/{name}/pause`)             |
+| `useResumeJob`                 | hook     | Resume mutation (`POST .../jobs/{name}/resume`)           |
+| `useTriggerJob`                | hook     | Manual-run mutation (`POST .../jobs/{name}/trigger`)      |
+| `buildBackgroundJobsQueryKey`  | fn       | Query key factory: `(config, ...segments)`                |
+| `BackgroundJobsConfig`         | type     | Provider input: `client?`, `basePath?`, `queryKeyPrefix?` |
+| `ResolvedBackgroundJobsConfig` | type     | `BackgroundJobsConfig` with a guaranteed `client`         |
+| `BackgroundJobsProviderProps`  | type     | `{ config, children }` for the provider                   |
 
 ### `/testing` subpath
 

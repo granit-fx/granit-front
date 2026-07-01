@@ -28,4 +28,4 @@ export { useBlobUpload } from './hooks/use-blob-upload';
 export type { BlobUploadParams, BlobUploadPhase, BlobUploadState } from './hooks/use-blob-upload';
 
 // Query keys
-export { blobListQueryKey, blobStorageKeys } from './hooks/query-keys';
+export { blobListQueryKey, buildBlobStorageQueryKey } from './hooks/query-keys';

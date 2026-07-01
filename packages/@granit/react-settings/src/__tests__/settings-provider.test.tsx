@@ -34,7 +34,7 @@ describe('SettingsProvider', () => {
   it('should throw when used outside provider', () => {
     expect(() => {
       renderHook(() => useSettingsConfig());
-    }).toThrow('useSettingsConfig must be used within a SettingsProvider');
+    }).toThrow('useSettingsConfig must be used within a <SettingsProvider>');
   });
 
   it('falls back to the GranitClientProvider context client when config.client is omitted', () => {

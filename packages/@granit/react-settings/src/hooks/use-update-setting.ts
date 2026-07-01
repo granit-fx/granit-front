@@ -33,7 +33,7 @@ export function useUpdateSetting(scope: SettingScope): UseUpdateSettingReturn {
 
   const mutation = useMutation({
     mutationFn: ({ name, value }: { name: string; value: string | null }) =>
-      updateSetting(config.client, config.basePath ?? '', scope, name, { value }),
+      updateSetting(config.client, config.basePath, scope, name, { value }),
     onSuccess: (_data, { name }) => {
       queryClient
         .invalidateQueries({ queryKey: buildSettingsQueryKey(config, scope) })

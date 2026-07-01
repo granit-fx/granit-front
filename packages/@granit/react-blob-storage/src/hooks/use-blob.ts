@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useBlobStorageConfig } from '../providers/blob-storage-provider';
 
-import { blobStorageKeys } from './query-keys';
+import { buildBlobStorageQueryKey } from './query-keys';
 
 import type { BlobDescriptorResponse } from '@granit/blob-storage';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -19,11 +19,11 @@ import type { UseQueryResult } from '@tanstack/react-query';
  * ```
  */
 export function useBlob(id: string, containerName: string): UseQueryResult<BlobDescriptorResponse> {
-  const { client, basePath } = useBlobStorageConfig();
+  const config = useBlobStorageConfig();
 
   return useQuery({
-    queryKey: blobStorageKeys.blob(id, containerName),
-    queryFn: () => getBlob(client, `${basePath}/blobs`, id, containerName),
+    queryKey: buildBlobStorageQueryKey(config, 'blob', id, containerName),
+    queryFn: () => getBlob(config.client, `${config.basePath}/blobs`, id, containerName),
     enabled: id.length > 0 && containerName.length > 0,
   });
 }

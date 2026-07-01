@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useBlobStorageConfig } from '../providers/blob-storage-provider';
 
-import { blobListQueryKey, blobStorageKeys } from './query-keys';
+import { blobListQueryKey, buildBlobStorageQueryKey } from './query-keys';
 
 import type { BlobCleanupOrphansResponse } from '@granit/blob-storage';
 import type { UseMutationResult } from '@tanstack/react-query';
@@ -27,7 +27,7 @@ export function useCleanupOrphans(): UseMutationResult<BlobCleanupOrphansRespons
     mutationFn: () => cleanupOrphans(config.client, `${config.basePath}/blobs`),
     onSuccess: async () => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: blobStorageKeys.blobs() }),
+        queryClient.invalidateQueries({ queryKey: buildBlobStorageQueryKey(config, 'blob') }),
         queryClient.invalidateQueries({ queryKey: blobListQueryKey(config) }),
       ]);
     },

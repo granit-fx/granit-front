@@ -69,9 +69,7 @@ function App() {
 // resulting blob id as its value. Renders an unstyled, data-attribute scaffold.
 function AvatarField() {
   const [blobId, setBlobId] = useState<string | null>(null);
-  return (
-    <BlobUploadField value={blobId} onChange={setBlobId} containerName="avatars" />
-  );
+  return <BlobUploadField value={blobId} onChange={setBlobId} containerName="avatars" />;
 }
 
 // Or drive the three-step flow manually.
@@ -129,7 +127,7 @@ function Avatar({ blobId }: { blobId: string | null }) {
 | `useCleanupOrphans`         | hook      | Mutation: `POST .../blobs/cleanup-orphans` -> sweep stuck `Pending` blobs        |
 | `BlobImage`                 | component | Headless `<img>` for a blob id (default BFF/cookie URL or `resolveUrl`)          |
 | `BlobUploadField`           | component | Headless upload field; stores the confirmed blob id as its value                 |
-| `blobStorageKeys`           | const     | React Query key factory for single-descriptor `useBlob` reads                    |
+| `buildBlobStorageQueryKey`  | fn        | Query key factory `(config, ...segments)` for single-descriptor `useBlob` reads  |
 | `blobListQueryKey`          | fn        | Query-engine key of the blobs **list**, for cross-invalidation                   |
 | `BlobStorageConfig`         | type      | Provider input (`client?`, `basePath?`, `queryKeyPrefix?`)                       |
 | `ResolvedBlobStorageConfig` | type      | `BlobStorageConfig` with `client` + `basePath` guaranteed                        |
@@ -146,12 +144,12 @@ Wire DTOs (`BlobDescriptorResponse`, `BlobUploadInitiateRequest`, …) and the
 
 ### Testing subpath (`@granit/react-blob-storage/testing`)
 
-| Symbol                       | Kind  | Purpose                                                     |
-| ---------------------------- | ----- | ----------------------------------------------------------- |
-| `createBlobStorageHandlers`  | fn    | MSW handlers for the blob-storage routes (CRUD + query)     |
-| `blobQueryMetadata`          | const | Mock `/meta` payload mirroring the backend query definition |
-| `mockBlobs`                  | const | Seed `BlobDescriptorResponse[]` fixtures                    |
-| `S`                          | const | Alias of `BlobStatus` for terse fixture construction        |
+| Symbol                      | Kind  | Purpose                                                     |
+| --------------------------- | ----- | ----------------------------------------------------------- |
+| `createBlobStorageHandlers` | fn    | MSW handlers for the blob-storage routes (CRUD + query)     |
+| `blobQueryMetadata`         | const | Mock `/meta` payload mirroring the backend query definition |
+| `mockBlobs`                 | const | Seed `BlobDescriptorResponse[]` fixtures                    |
+| `S`                         | const | Alias of `BlobStatus` for terse fixture construction        |
 
 ## Out of scope / caveats
 
@@ -162,7 +160,7 @@ Wire DTOs (`BlobDescriptorResponse`, `BlobUploadInitiateRequest`, …) and the
 - **Deletion is crypto-shredding (irreversible).** `useDeleteBlob` destroys the
   blob's encryption key — pass a meaningful `deletionReason` (e.g. RGPD Art. 17
   erasure). There is no undelete.
-- **Download URLs are ephemeral.** `useDownloadUrl` is a *mutation* by design so
+- **Download URLs are ephemeral.** `useDownloadUrl` is a _mutation_ by design so
   the pre-signed URL is never cached; presign on demand, don't store the URL.
 - **Direct-to-cloud PUT bypasses Axios.** `useBlobUpload` uploads the file body
   with `XMLHttpRequest` against the pre-signed URL (for progress events). Only the

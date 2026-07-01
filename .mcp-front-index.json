@@ -3905,7 +3905,13 @@
     {
       "name": "@granit/react-background-jobs",
       "description": "React hooks for background job monitoring — useBackgroundJobs, usePauseJob, useResumeJob, useTriggerJob",
-      "exports": []
+      "exports": [
+        {
+          "name": "buildBackgroundJobsQueryKey",
+          "kind": "function",
+          "signature": "function buildBackgroundJobsQueryKey( config: Pick<BackgroundJobsConfig, 'queryKeyPrefix'>, ...segments: readonly unknown[] ): readonly unknown[]"
+        }
+      ]
     },
     {
       "name": "@granit/react-bank-accounts",
@@ -4055,9 +4061,9 @@
           "signature": "function blobListQueryKey(config:"
         },
         {
-          "name": "blobStorageKeys",
-          "kind": "const",
-          "signature": "const blobStorageKeys"
+          "name": "buildBlobStorageQueryKey",
+          "kind": "function",
+          "signature": "function buildBlobStorageQueryKey( config: Pick<BlobStorageConfig, 'queryKeyPrefix'>, ...segments: readonly unknown[] ): readonly unknown[]"
         }
       ]
     },
@@ -7228,25 +7234,24 @@
       "exports": [
         {
           "name": "SettingsProvider",
-          "kind": "function",
-          "signature": "function SettingsProvider("
+          "kind": "const",
+          "signature": "const SettingsProvider"
         },
         {
           "name": "useSettingsConfig",
-          "kind": "function",
-          "signature": "function useSettingsConfig(): ResolvedSettingsConfig"
+          "kind": "const",
+          "signature": "const useSettingsConfig"
         },
         {
           "name": "SettingsConfig",
           "kind": "interface",
-          "signature": "interface SettingsConfig",
+          "signature": "interface SettingsConfig extends GranitProviderConfig",
           "members": []
         },
         {
           "name": "SettingsProviderProps",
-          "kind": "interface",
-          "signature": "interface SettingsProviderProps",
-          "members": []
+          "kind": "type",
+          "signature": "type SettingsProviderProps = GranitProviderProps<SettingsConfig>"
         },
         {
           "name": "buildSettingsQueryKey",

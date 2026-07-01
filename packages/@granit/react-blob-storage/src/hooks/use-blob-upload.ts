@@ -5,18 +5,13 @@ import { useCallback, useRef, useState } from 'react';
 import { logger } from '../logger';
 import { useBlobStorageConfig } from '../providers/blob-storage-provider';
 
-import { blobListQueryKey, blobStorageKeys } from './query-keys';
+import { blobListQueryKey, buildBlobStorageQueryKey } from './query-keys';
 
 import type { BlobConfirmUploadResponse } from '@granit/blob-storage';
 
 /** Upload progress phase. */
 export type BlobUploadPhase =
-  | 'idle'
-  | 'initiating'
-  | 'uploading'
-  | 'confirming'
-  | 'complete'
-  | 'error';
+  'idle' | 'initiating' | 'uploading' | 'confirming' | 'complete' | 'error';
 
 /** Current state of the upload orchestration. */
 export interface BlobUploadState {
@@ -215,7 +210,7 @@ export function useBlobUpload(): UseBlobUploadReturn {
         });
 
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: blobStorageKeys.blobs() }),
+          queryClient.invalidateQueries({ queryKey: buildBlobStorageQueryKey(config, 'blob') }),
           queryClient.invalidateQueries({ queryKey: blobListQueryKey(config) }),
         ]);
 
