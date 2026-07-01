@@ -1,0 +1,43 @@
+{
+  "name": "@granit/react-ui-geocoding",
+  "description": "Styled geocoding UI components — AddressAutocompleteInput and AddressPrecisionBadge. Composes the headless @granit/react-geocoding (provider + hooks) with the foundation @granit/react-ui primitives.",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@granit/geocoding": "workspace:*",
+    "@granit/react-geocoding": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "react": "^19.0.0",
+    "react-i18next": "^17.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/geocoding": "workspace:*",
+    "@granit/react-geocoding": "workspace:*",
+    "@granit/react-testing": "workspace:*",
+    "@granit/react-ui": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@tanstack/react-query": "^5.0.0"
+  }
+}

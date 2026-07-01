@@ -1,0 +1,12 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["@testing-library/jest-dom"],
+    "paths": {
+      "@granit/geocoding": ["../geocoding/src/index.ts"],
+      "@granit/react-geocoding": ["../react-geocoding/src/index.ts"],
+      "@granit/react-geocoding/testing": ["../react-geocoding/src/testing/index.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

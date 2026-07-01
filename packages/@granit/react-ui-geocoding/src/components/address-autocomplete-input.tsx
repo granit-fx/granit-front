@@ -1,15 +1,15 @@
 'use client';
 
+import { useAddressSuggestions } from '@granit/react-geocoding';
 import { Input, Spinner } from '@granit/react-ui';
 import { cn } from '@granit/utils';
 import { useCallback, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { I18N_NAMESPACE } from '../constants';
-import { useAddressSuggestions } from '../hooks/use-address-suggestions';
 
-import type { UseAddressSuggestionsOptions } from '../hooks/use-address-suggestions';
 import type { GeocodingSuggestionResponse } from '@granit/geocoding';
+import type { UseAddressSuggestionsOptions } from '@granit/react-geocoding';
 import type { KeyboardEvent, ReactElement } from 'react';
 
 export interface AddressAutocompleteInputProps extends Pick<

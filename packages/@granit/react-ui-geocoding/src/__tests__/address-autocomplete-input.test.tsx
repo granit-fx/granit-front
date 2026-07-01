@@ -1,3 +1,5 @@
+import { GeocodingProvider } from '@granit/react-geocoding';
+import { sampleSuggestions } from '@granit/react-geocoding/testing';
 import { createTestQueryClient } from '@granit/react-testing';
 import { createMockClient, axiosResponse } from '@granit/testing';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -9,8 +11,6 @@ import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { AddressAutocompleteInput } from '../components/address-autocomplete-input';
 import { geocodingTranslationsEn } from '../locales/en';
-import { GeocodingProvider } from '../providers/geocoding-provider';
-import { sampleSuggestions } from '../testing/data';
 
 import type { AxiosInstance } from '@granit/api-client';
 import type { GeocodingSuggestionResponse } from '@granit/geocoding';

@@ -76,6 +76,14 @@ export default defineConfig({
         __dirname,
         'packages/@granit/react-geocoding/src/testing/index.ts'
       ),
+      '@granit/react-geocoding': path.resolve(
+        __dirname,
+        'packages/@granit/react-geocoding/src/index.ts'
+      ),
+      '@granit/react-ui-geocoding': path.resolve(
+        __dirname,
+        'packages/@granit/react-ui-geocoding/src/index.ts'
+      ),
       '@granit/react-identity/testing': path.resolve(
         __dirname,
         'packages/@granit/react-identity/src/testing/index.ts'

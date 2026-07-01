@@ -1,6 +1,6 @@
 {
   "name": "@granit/react-geocoding",
-  "description": "React bindings for @granit/geocoding — GeocodingProvider, hooks and AddressAutocompleteInput",
+  "description": "Headless React bindings for @granit/geocoding — GeocodingProvider, address-suggestion and reverse-geocode hooks. Styled UI lives in @granit/react-ui-geocoding.",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -18,12 +18,9 @@
     "@granit/api-client": "workspace:*",
     "@granit/geocoding": "workspace:*",
     "@granit/react-api-client": "workspace:*",
-    "@granit/react-ui": "workspace:*",
-    "@granit/utils": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "msw": "^2.12.0",
-    "react": "^19.0.0",
-    "react-i18next": "^17.0.0"
+    "react": "^19.0.0"
   },
   "peerDependenciesMeta": {
     "msw": {
@@ -48,8 +45,6 @@
     "@granit/geocoding": "workspace:*",
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
-    "@granit/react-ui": "workspace:*",
-    "@granit/testing": "workspace:*",
-    "@granit/utils": "workspace:*"
+    "@granit/testing": "workspace:*"
   }
 }

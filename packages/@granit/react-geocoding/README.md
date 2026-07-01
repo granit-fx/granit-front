@@ -1,7 +1,10 @@
 # @granit/react-geocoding
 
-React bindings for [`@granit/geocoding`](../geocoding) — a provider, React Query
-hooks and a ready-to-use **address autocomplete** input.
+Headless React bindings for [`@granit/geocoding`](../geocoding) — a provider and
+React Query hooks. The styled components (`AddressAutocompleteInput`,
+`AddressPrecisionBadge`) and the `geocoding` i18n bundles live one layer up in
+[`@granit/react-ui-geocoding`](../react-ui-geocoding), which keeps this package
+free of any `@granit/react-ui` dependency.
 
 ## What's inside
 
@@ -12,50 +15,31 @@ hooks and a ready-to-use **address autocomplete** input.
   Returns ranked `suggestions` plus `isLoading` / `isError` / `isUnavailable`.
 - **`useReverseGeocode(coordinate, options)`** — headless reverse-geocoding for a
   map pin-drop. Returns the nearest `address` (or `null` for a soft 404/422 miss).
-- **`AddressAutocompleteInput`** — an accessible (WAI-ARIA combobox) text input
-  that suggests addresses as you type and hands the structured components to the
-  caller on select.
-- **`AddressPrecisionBadge`** — a read-only badge for a reverse result's
-  `precision` ("Exact location" / "Approximate location").
 
 ## Progressive enhancement
 
 Geocoding is **never a hard dependency**. When no `GeocodingProvider` is in
 scope, or the endpoint is not mapped (provider not installed → 404), the hooks
-report `isUnavailable` and `AddressAutocompleteInput` silently behaves as a plain
-text input — so a form keeps working with manual entry. Input is debounced
-(~275 ms) before it reaches the shared, rate-limited provider, and in-flight
-requests are cancelled when the text changes.
+report `isUnavailable` — so a form keeps working with manual entry. Input is
+debounced (~275 ms) before it reaches the shared, rate-limited provider, and
+in-flight requests are cancelled when the text changes.
 
 ## Quick start
 
 ```tsx
-import { GeocodingProvider, AddressAutocompleteInput } from '@granit/react-geocoding';
+import { GeocodingProvider, useAddressSuggestions } from '@granit/react-geocoding';
 
-function BillingAddressField() {
+function AddressField() {
   const [text, setText] = useState('');
-  return (
-    <AddressAutocompleteInput
-      aria-label="Billing address"
-      value={text}
-      onValueChange={setText}
-      onSelect={(s) => {
-        // Fill the bound form fields from the structured components.
-        form.setValue('line1', s.street ?? '');
-        form.setValue('postalCode', s.postalCode ?? '');
-        form.setValue('city', s.locality);
-        form.setValue('country', s.country);
-        if (s.latitude != null && s.longitude != null) {
-          form.setValue('coordinate', { lat: s.latitude, lon: s.longitude });
-        }
-      }}
-    />
-  );
+  const { suggestions, isLoading } = useAddressSuggestions(text, { enabled: true });
+  // Render your own input from `suggestions`, or use
+  // <AddressAutocompleteInput> from @granit/react-ui-geocoding.
+  return null;
 }
 
 // Mount once, high in the tree (client comes from <GranitClientProvider>):
 <GeocodingProvider config={{}}>
-  <BillingAddressField />
+  <AddressField />
 </GeocodingProvider>;
 ```
 
@@ -74,15 +58,9 @@ useEffect(() => {
 
 ## i18n
 
-User-facing copy lives in the `geocoding` namespace (brand-neutral). Register the
-bundles with your i18n instance:
-
-```ts
-import { geocodingTranslationsEn, geocodingTranslationsFr } from '@granit/react-geocoding';
-
-i18n.addResourceBundle('en', 'geocoding', geocodingTranslationsEn);
-i18n.addResourceBundle('fr', 'geocoding', geocodingTranslationsFr);
-```
+The hooks in this package emit no user-facing copy. The `geocoding` i18n bundles
+(`geocodingTranslationsEn` / `geocodingTranslationsFr`) ship with the styled
+components in [`@granit/react-ui-geocoding`](../react-ui-geocoding).
 
 ## Testing
 

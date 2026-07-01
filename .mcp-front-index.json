@@ -5905,7 +5905,7 @@
     },
     {
       "name": "@granit/react-geocoding",
-      "description": "React bindings for @granit/geocoding — GeocodingProvider, hooks and AddressAutocompleteInput",
+      "description": "Headless React bindings for @granit/geocoding — GeocodingProvider, address-suggestion and reverse-geocode hooks. Styled UI lives in @granit/react-ui-geocoding.",
       "exports": [
         {
           "name": "buildGeocodingQueryKey",
@@ -5938,28 +5938,6 @@
           "name": "useDebouncedValue",
           "kind": "function",
           "signature": "function useDebouncedValue<T>(value: T, delayMs: number): T"
-        },
-        {
-          "name": "AddressAutocompleteInput",
-          "kind": "function",
-          "signature": "function AddressAutocompleteInput(props: AddressAutocompleteInputProps): ReactElement"
-        },
-        {
-          "name": "AddressAutocompleteInputProps",
-          "kind": "interface",
-          "signature": "interface AddressAutocompleteInputProps extends Pick<",
-          "members": []
-        },
-        {
-          "name": "AddressPrecisionBadge",
-          "kind": "function",
-          "signature": "function AddressPrecisionBadge("
-        },
-        {
-          "name": "AddressPrecisionBadgeProps",
-          "kind": "interface",
-          "signature": "interface AddressPrecisionBadgeProps",
-          "members": []
         }
       ]
     },
@@ -9310,6 +9288,39 @@
           "name": "SetOverrideDialog",
           "kind": "function",
           "signature": "function SetOverrideDialog("
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-geocoding",
+      "description": "Styled geocoding UI components — AddressAutocompleteInput and AddressPrecisionBadge. Composes the headless @granit/react-geocoding (provider + hooks) with the foundation @granit/react-ui primitives.",
+      "exports": [
+        {
+          "name": "AddressAutocompleteInput",
+          "kind": "function",
+          "signature": "function AddressAutocompleteInput(props: AddressAutocompleteInputProps): ReactElement"
+        },
+        {
+          "name": "AddressAutocompleteInputProps",
+          "kind": "interface",
+          "signature": "interface AddressAutocompleteInputProps extends Pick<",
+          "members": []
+        },
+        {
+          "name": "AddressPrecisionBadge",
+          "kind": "function",
+          "signature": "function AddressPrecisionBadge("
+        },
+        {
+          "name": "AddressPrecisionBadgeProps",
+          "kind": "interface",
+          "signature": "interface AddressPrecisionBadgeProps",
+          "members": []
+        },
+        {
+          "name": "I18N_NAMESPACE",
+          "kind": "const",
+          "signature": "const I18N_NAMESPACE"
         }
       ]
     },

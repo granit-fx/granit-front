@@ -2527,9 +2527,6 @@ importers:
       react:
         specifier: 19.2.7
         version: 19.2.7
-      react-i18next:
-        specifier: ^17.0.0
-        version: 17.0.8(i18next@26.3.3(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -2543,15 +2540,9 @@ importers:
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing
-      '@granit/react-ui':
-        specifier: workspace:*
-        version: link:../react-ui
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
-      '@granit/utils':
-        specifier: workspace:*
-        version: link:../utils
 
   packages/@granit/react-hostnames:
     dependencies:
@@ -5574,6 +5565,40 @@ importers:
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.9.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+
+  packages/@granit/react-ui-geocoding:
+    dependencies:
+      react:
+        specifier: 19.2.7
+        version: 19.2.7
+      react-i18next:
+        specifier: ^17.0.0
+        version: 17.0.8(i18next@26.3.3(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)
+    devDependencies:
+      '@granit/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@granit/geocoding':
+        specifier: workspace:*
+        version: link:../geocoding
+      '@granit/react-geocoding':
+        specifier: workspace:*
+        version: link:../react-geocoding
+      '@granit/react-testing':
+        specifier: workspace:*
+        version: link:../react-testing
+      '@granit/react-ui':
+        specifier: workspace:*
+        version: link:../react-ui
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@tanstack/react-query':
+        specifier: 5.101.2
+        version: 5.101.2(react@19.2.7)
 
   packages/@granit/react-ui-hostnames:
     dependencies:
