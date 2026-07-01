@@ -9,8 +9,8 @@ import { renderDataExchange } from './test-utils';
 import type { ImportJobResponse } from '@granit/data-exchange';
 
 // The page consumes the @granit/react-data-exchange hooks directly. ImportProvider
-// is stubbed to a passthrough; useGranitClient still resolves from the real
-// GranitClientProvider supplied by the render helper.
+// is stubbed to a passthrough (the real provider resolves the Axios client from the
+// GranitClientProvider supplied by the render helper).
 const jobsState: {
   data: { items: ImportJobResponse[]; totalCount: number };
   isLoading: boolean;

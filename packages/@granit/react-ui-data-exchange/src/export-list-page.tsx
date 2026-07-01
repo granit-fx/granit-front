@@ -1,6 +1,5 @@
 import { downloadExportFile } from '@granit/data-exchange';
-import { useGranitClient } from '@granit/react-api-client';
-import { ExportProvider, useExportJobs } from '@granit/react-data-exchange';
+import { ExportProvider, useExportConfig, useExportJobs } from '@granit/react-data-exchange';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Spinner } from '@granit/react-ui';
 import { QueryDataTable } from '@granit/react-ui-kit';
@@ -8,27 +7,24 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { createExportHistoryColumns } from './components/export-history-columns';
 import { HistoryFilters } from './components/history-filters';
-import { DEFAULT_PAGE_SIZE } from './constants';
+import { DEFAULT_PAGE_SIZE, EXPORT_CONFIG } from './constants';
 
-import type { AxiosInstance } from '@granit/api-client';
 import type { ExportJobResponse, ExportJobStatus } from '@granit/data-exchange';
 
-const EXPORT_BASE_PATH = '/api/v1/data-exchange';
-
 export function ExportListPage() {
-  // The Axios client is resolved from the GranitClientProvider in the host tree
-  // and handed to the headless data provider — no `@/lib/api` coupling.
-  const client = useGranitClient();
+  // Static config: ExportProvider resolves the Axios client from the host's
+  // GranitClientProvider — the UI page never touches @granit/react-api-client.
   return (
-    <ExportProvider config={{ client, basePath: EXPORT_BASE_PATH }}>
-      <ExportListPageContent client={client} />
+    <ExportProvider config={EXPORT_CONFIG}>
+      <ExportListPageContent />
     </ExportProvider>
   );
 }
 
-function ExportListPageContent({ client }: Readonly<{ client: AxiosInstance }>) {
+function ExportListPageContent() {
   const { t } = useTranslation();
   const { formatDateTime } = useDateFormatter();
+  const { client, basePath } = useExportConfig();
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<ExportJobStatus | undefined>();
 
@@ -40,7 +36,7 @@ function ExportListPageContent({ client }: Readonly<{ client: AxiosInstance }>) 
 
   const handleDownload = useCallback(
     async (job: ExportJobResponse) => {
-      const { blob, fileName } = await downloadExportFile(client, EXPORT_BASE_PATH, job.id);
+      const { blob, fileName } = await downloadExportFile(client, basePath, job.id);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -48,7 +44,7 @@ function ExportListPageContent({ client }: Readonly<{ client: AxiosInstance }>) 
       a.click();
       URL.revokeObjectURL(url);
     },
-    [client]
+    [client, basePath]
   );
 
   const columns = useMemo(

@@ -1,4 +1,3 @@
-import { useGranitClient } from '@granit/react-api-client';
 import { ImportProvider, useImportJobs } from '@granit/react-data-exchange';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Spinner } from '@granit/react-ui';
@@ -8,18 +7,15 @@ import { useCallback, useMemo, useState } from 'react';
 import { HistoryFilters } from './components/history-filters';
 import { createImportHistoryColumns } from './components/import-history-columns';
 import { ImportReportDialog } from './components/import-report-dialog';
-import { DEFAULT_PAGE_SIZE } from './constants';
+import { DEFAULT_PAGE_SIZE, IMPORT_CONFIG } from './constants';
 
 import type { ImportJobResponse, ImportJobStatus } from '@granit/data-exchange';
 
-const IMPORT_BASE_PATH = '/api/v1/data-exchange';
-
 export function ImportListPage() {
-  // The Axios client is resolved from the GranitClientProvider in the host tree
-  // and handed to the headless data provider — no `@/lib/api` coupling.
-  const client = useGranitClient();
+  // Static config: ImportProvider resolves the Axios client from the host's
+  // GranitClientProvider — the UI page never touches @granit/react-api-client.
   return (
-    <ImportProvider config={{ client, basePath: IMPORT_BASE_PATH }}>
+    <ImportProvider config={IMPORT_CONFIG}>
       <ImportListPageContent />
     </ImportProvider>
   );

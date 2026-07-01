@@ -15,7 +15,6 @@
   },
   "peerDependencies": {
     "@granit/data-exchange": "workspace:*",
-    "@granit/react-api-client": "workspace:*",
     "@granit/react-data-exchange": "workspace:*",
     "@granit/react-localization": "workspace:*",
     "@granit/react-ui": "workspace:*",

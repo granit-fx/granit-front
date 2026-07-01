@@ -11,8 +11,8 @@ import type { ExportJobResponse } from '@granit/data-exchange';
 import type * as DataExchange from '@granit/data-exchange';
 
 // The page consumes the @granit/react-data-exchange hooks directly. ExportProvider
-// is stubbed to a passthrough; useGranitClient still resolves from the real
-// GranitClientProvider supplied by the render helper.
+// is stubbed to a passthrough and useExportConfig returns a stub resolved config
+// (the real provider resolves the Axios client from the GranitClientProvider).
 const jobsState: {
   data: { items: ExportJobResponse[]; totalCount: number };
   isLoading: boolean;
@@ -27,6 +27,7 @@ const downloadExportFile = vi.fn();
 
 vi.mock('@granit/react-data-exchange', () => ({
   ExportProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  useExportConfig: () => ({ client: {}, basePath: '/api/v1/data-exchange' }),
   useExportJobs: () => ({
     data: jobsState.data,
     isLoading: jobsState.isLoading,
