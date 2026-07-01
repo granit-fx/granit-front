@@ -14,7 +14,7 @@ describe('web-push-api', () => {
     await registerPushSubscription(client, '/api/v1', subscription);
 
     expect(client.post).toHaveBeenCalledWith(
-      '/api/v1/notifications/push/subscriptions',
+      '/api/v1/notifications/web-push/subscriptions',
       subscription
     );
   });
@@ -25,7 +25,7 @@ describe('web-push-api', () => {
 
     await unregisterPushSubscription(client, '/api/v1', endpoint);
 
-    expect(client.delete).toHaveBeenCalledWith('/api/v1/notifications/push/subscriptions', {
+    expect(client.delete).toHaveBeenCalledWith('/api/v1/notifications/web-push/subscriptions', {
       data: { endpoint },
     });
   });

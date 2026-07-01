@@ -11,7 +11,10 @@ export async function registerPushSubscription(
   basePath: string,
   subscription: WebPushSubscriptionRegisterRequest
 ): Promise<void> {
-  await client.post(buildApiUrl(basePath, 'notifications', 'push', 'subscriptions'), subscription);
+  await client.post(
+    buildApiUrl(basePath, 'notifications', 'web-push', 'subscriptions'),
+    subscription
+  );
 }
 
 export async function unregisterPushSubscription(
@@ -20,7 +23,7 @@ export async function unregisterPushSubscription(
   endpoint: string
 ): Promise<void> {
   const body: WebPushSubscriptionRemoveRequest = { endpoint };
-  await client.delete(buildApiUrl(basePath, 'notifications', 'push', 'subscriptions'), {
+  await client.delete(buildApiUrl(basePath, 'notifications', 'web-push', 'subscriptions'), {
     data: body,
   });
 }

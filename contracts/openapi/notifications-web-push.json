@@ -5,7 +5,7 @@
     "version": "1"
   },
   "paths": {
-    "/notifications/push/subscriptions": {
+    "/notifications/web-push/subscriptions": {
       "post": {
         "tags": ["Notifications - Web Push"],
         "summary": "Registers a browser Web Push subscription.",
