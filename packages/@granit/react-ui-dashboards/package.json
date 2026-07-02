@@ -13,6 +13,10 @@
   "scripts": {
     "build": "tsup"
   },
+  "dependencies": {
+    "react-markdown": "^10",
+    "remark-gfm": "^4"
+  },
   "peerDependencies": {
     "@granit/analytics": "workspace:*",
     "@granit/dashboards": "workspace:*",

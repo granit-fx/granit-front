@@ -17,6 +17,19 @@ export { LifecycleConfirmDialog } from './components/dashboard-lifecycle-dialog'
 export { DashboardImportFromCatalog } from './components/dashboard-import-from-catalog';
 export type { LifecycleAction, PendingLifecycle } from './components/dashboard-lifecycle-types';
 
+// Rich Markdown renderers — opt-in react-markdown overrides for the verbatim
+// `markdown` fallbacks in @granit/react-dashboards. Compose the registry
+// fragments after the framework defaults; the components are exported for apps
+// that wire their own registries.
+export { DashboardMarkdown } from './components/widgets/dashboard-markdown';
+export type { DashboardMarkdownProps } from './components/widgets/dashboard-markdown';
+export { RichMarkdownWidget } from './components/widgets/markdown-widget';
+export { RichMarkdownSnapshotWidget } from './components/widgets/markdown-snapshot-widget';
+export {
+  markdownWidgetRegistry,
+  markdownSnapshotWidgetRegistry,
+} from './registry/markdown-widget-registry';
+
 // i18next resource bundles (flat keys, "translation" ns)
 export { dashboardsTranslationsEn, dashboardsTranslationsFr } from './locales/index';
 export type { DashboardsTranslations } from './locales/index';
