@@ -5,6 +5,8 @@
 // Hooks
 export { useMetric } from './hooks/use-metric';
 export type { UseMetricOptions } from './hooks/use-metric';
+export { useMetricCatalog } from './hooks/use-metric-catalog';
+export type { UseMetricCatalogOptions } from './hooks/use-metric-catalog';
 // Headless query-field metadata — resolves the query catalogue + selected-query
 // column metadata into the option lists the (react-ui) config forms render.
 export { useQueryFieldMetadata } from './editor/use-query-field-metadata';

@@ -2,14 +2,15 @@
 // @granit/analytics — public API (framework-agnostic)
 // ---------------------------------------------------------------------------
 
-// API — runtime metric evaluation
-export { evaluateMetric } from './api/metrics-api';
+// API — runtime metric evaluation + catalogue
+export { evaluateMetric, listMetricCatalog } from './api/metrics-api';
 
 // DTO contracts
 export type {
   // Metrics — runtime evaluation envelopes
   CompareSpec,
   CompareToken,
+  MetricCatalogEntryResponse,
   MetricPreviousPayload,
   MetricRequest,
   MetricResponse,

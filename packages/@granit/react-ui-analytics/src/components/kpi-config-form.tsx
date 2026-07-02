@@ -1,9 +1,13 @@
 import { Datasource, isMetricDatasource, isQueryAggregateDatasource } from '@granit/dashboards';
-import { useQueryFieldMetadata } from '@granit/react-analytics';
-import { Combobox } from '@granit/react-ui';
+import { useMetricCatalog, useQueryFieldMetadata } from '@granit/react-analytics';
 import { useTranslation } from 'react-i18next';
 
-import { EnumSelect, QueryNameCombobox, RequiredMark } from './query-field-controls';
+import {
+  EnumSelect,
+  MetricNameCombobox,
+  QueryNameCombobox,
+  RequiredMark,
+} from './query-field-controls';
 
 import type { KpiWidgetDefinition } from '@granit/analytics';
 import type { AggregateFunction } from '@granit/dashboards';
@@ -21,9 +25,11 @@ const AGGREGATIONS: readonly AggregateFunction[] = ['Sum', 'Avg', 'Min', 'Max', 
  * common datasource flavours — Metric (the typical case) and
  * QueryAggregate (ad-hoc admin pages reusing the widget).
  *
- * The query-aggregate query field is a catalogue-backed combobox (like the
- * chart/table/pivot forms); the metric field is a searchable combobox that
- * also accepts a typed value (there is no metric catalogue yet).
+ * Both datasource fields are catalogue-backed comboboxes that also accept a
+ * typed value: the query field from the query-engine catalogue (like the
+ * chart/table/pivot forms), the metric field from the metric catalogue
+ * (`GET /analytics/metrics/catalog`). Each degrades to free-text when its
+ * catalogue can't be resolved.
  *
  * Telemetry datasources are out of scope for the form: those carry an
  * `entityAlias` that only makes sense in an IoT context. Apps wanting to
@@ -36,6 +42,7 @@ export function KpiConfigForm({ widget, onChange }: WidgetConfigFormProps<KpiWid
 
   const queryName = isQueryAggregateDatasource(datasource) ? datasource.queryName : '';
   const { catalogEntries } = useQueryFieldMetadata(queryName);
+  const { data: metricEntries } = useMetricCatalog();
 
   const handleKindChange = (kind: string) => {
     if (kind === 'metric') {
@@ -65,15 +72,12 @@ export function KpiConfigForm({ widget, onChange }: WidgetConfigFormProps<KpiWid
             {t('Dashboard:Widget.Kpi.MetricName.Label')}
             <RequiredMark />
           </span>
-          <Combobox
+          <MetricNameCombobox
             slot="kpi-metric-name"
             value={datasource.metricName}
-            options={[]}
-            allowCustomValue
             required
-            onValueChange={(value) => onChange({ ...widget, datasource: Datasource.metric(value) })}
-            placeholder="Select a metric…"
-            searchPlaceholder="Search or type a metric name…"
+            onChange={(value) => onChange({ ...widget, datasource: Datasource.metric(value) })}
+            entries={metricEntries}
           />
         </label>
       )}

@@ -22,6 +22,7 @@ import {
 } from '@granit/react-ui';
 import { useTranslation } from 'react-i18next';
 
+import type { MetricCatalogEntryResponse } from '@granit/analytics';
 import type { QueryCatalogEntryResponse } from '@granit/query-engine';
 import type { FieldOption } from '@granit/react-analytics';
 import type { TFunction } from 'i18next';
@@ -120,6 +121,48 @@ export function QueryNameCombobox({
       placeholder="Select a query…"
       searchPlaceholder="Search or type a query name…"
       emptyText="No matching query — type to use a custom name."
+    />
+  );
+}
+
+/**
+ * Metric name picker: a catalogue-backed combobox that also accepts an arbitrary
+ * typed value, so it works with or without a resolvable metric catalogue.
+ *
+ * Unlike {@link QueryNameCombobox}, the option LABEL is the entry's server-resolved
+ * `label` (the backend resolves `Metric:{name}` per request culture, degrading to
+ * `name`) — no client-side i18n. Options are sorted by that displayed label. Every
+ * catalogued metric is invokable (`POST /metrics/{name}`), so there is no
+ * unrouted-entry filtering.
+ */
+export function MetricNameCombobox({
+  slot,
+  value,
+  onChange,
+  entries,
+  required = false,
+}: {
+  readonly slot: string;
+  readonly value: string;
+  readonly onChange: (value: string) => void;
+  readonly entries: readonly MetricCatalogEntryResponse[] | undefined;
+  readonly required?: boolean;
+}) {
+  const options: ComboboxOption[] = (entries ?? [])
+    .map((entry) => ({ value: entry.name, label: entry.label }))
+    .sort((a, b) => (a.label ?? '').localeCompare(b.label ?? ''));
+
+  return (
+    <Combobox
+      slot={slot}
+      value={value}
+      onValueChange={onChange}
+      options={options}
+      allowCustomValue
+      required={required}
+      placeholder="Select a metric…"
+      searchPlaceholder="Search or type a metric name…"
+      emptyText="No matching metric — type to use a custom name."
     />
   );
 }

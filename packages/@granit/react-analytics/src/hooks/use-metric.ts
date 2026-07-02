@@ -8,7 +8,8 @@ import { buildAnalyticsQueryKey } from './query-keys';
 
 import type { MetricRequest, MetricResponse } from '@granit/analytics';
 
-const ANALYTICS_BASE_PATH = '/api/v1/analytics';
+/** Root path where the analytics endpoints (`/metrics/*`) are mounted. */
+export const ANALYTICS_BASE_PATH = '/api/v1/analytics';
 
 const POLLING_INTERVAL_MS: Readonly<Record<MetricResponse['refreshHint'], number | false>> = {
   Static: false,

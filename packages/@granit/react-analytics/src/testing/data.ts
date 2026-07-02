@@ -3,9 +3,40 @@ import { toISODateString } from '@granit/types';
 // @granit/react-analytics/testing — mock data
 // ---------------------------------------------------------------------------
 
-import type { MetricResponse } from '@granit/analytics';
+import type { MetricCatalogEntryResponse, MetricResponse } from '@granit/analytics';
 
 const emittedAt = toISODateString(new Date().toISOString());
+
+/** Mock metric catalogue, served by `GET /metrics/catalog`. Keyed to {@link mockMetricResponses}. */
+export const mockMetricCatalog: readonly MetricCatalogEntryResponse[] = [
+  {
+    name: 'revenue',
+    label: 'Revenue',
+    valueKind: 'Currency',
+    aggregation: 'Sum',
+    isHigherBetter: true,
+    refreshHint: 'Dynamic',
+    currencyCode: 'EUR',
+  },
+  {
+    name: 'active-users',
+    label: 'Active users',
+    valueKind: 'Count',
+    aggregation: 'Count',
+    isHigherBetter: true,
+    refreshHint: 'Realtime',
+    currencyCode: null,
+  },
+  {
+    name: 'conversion-rate',
+    label: 'Conversion rate',
+    valueKind: 'Percentage',
+    aggregation: 'Avg',
+    isHigherBetter: true,
+    refreshHint: 'Static',
+    currencyCode: null,
+  },
+];
 
 /** Mock metric envelopes keyed by metric name, served by `POST /metrics/{name}`. */
 export const mockMetricResponses: Readonly<Record<string, MetricResponse>> = {

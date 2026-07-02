@@ -917,6 +917,7 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'MetricRequest',
       'MetricPreviousPayload',
       'MetricSnapshotPayload',
+      'MetricCatalogEntryResponse',
       'MapCenter',
     ],
   },
