@@ -8770,6 +8770,27 @@
           "kind": "interface",
           "signature": "interface PendingLifecycle",
           "members": []
+        },
+        {
+          "name": "DashboardMarkdown",
+          "kind": "function",
+          "signature": "function DashboardMarkdown("
+        },
+        {
+          "name": "DashboardMarkdownProps",
+          "kind": "interface",
+          "signature": "interface DashboardMarkdownProps",
+          "members": []
+        },
+        {
+          "name": "RichMarkdownWidget",
+          "kind": "function",
+          "signature": "function RichMarkdownWidget("
+        },
+        {
+          "name": "RichMarkdownSnapshotWidget",
+          "kind": "function",
+          "signature": "function RichMarkdownSnapshotWidget("
         }
       ]
     },

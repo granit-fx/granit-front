@@ -62,9 +62,14 @@ export function createPartyColumns({
       id: 'primaryEmail',
       accessorKey: 'primaryEmail',
       header: t('Parties.Columns.PrimaryEmail'),
-      cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground">{row.original.primaryEmail ?? '—'}</span>
-      ),
+      cell: ({ row }) => {
+        // The live grid serializes the raw Party aggregate, so `primaryEmail`
+        // arrives as a `PartyEmail` object; mock/denormalized sources flatten it
+        // to the address string. Normalize both to the address for display.
+        const primaryEmail = row.original.primaryEmail;
+        const address = typeof primaryEmail === 'string' ? primaryEmail : primaryEmail?.address;
+        return <span className="text-sm text-muted-foreground">{address ?? '—'}</span>;
+      },
     },
     {
       id: 'actions',

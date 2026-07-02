@@ -154,8 +154,13 @@ export interface PartyListItemResponse {
   readonly roles: string;
   readonly status: PartyStatus;
   readonly defaultCurrency: string;
-  /** Flattened from the projection's `primaryEmail.address` (denormalized). */
-  readonly primaryEmail: string | null;
+  /**
+   * The primary email. Mock/denormalized sources flatten this to the display
+   * string (`primaryEmail.address`); the live `MapGranitQuery<Party>` endpoint
+   * serializes the full `Party` aggregate, so the wire carries the `PartyEmail`
+   * object. `party-columns.tsx` normalizes both to the address for display.
+   */
+  readonly primaryEmail: string | PartyEmailResponse | null;
   /** Flattened from the projection's `primaryPhone.number` (denormalized). */
   readonly primaryPhone: string | null;
 }
