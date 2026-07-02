@@ -61,6 +61,27 @@ function parseSseLine(line: string): ParsedFrame {
 }
 
 /**
+ * Maps a backend stream frame to the client-facing {@link AIChatCompletionEvent},
+ * or `null` when the frame carries nothing to yield (e.g. an empty delta). Throws
+ * on an `error` frame — a provider failure surfaced after streaming started.
+ */
+function frameToEvent(frame: AIChatStreamEvent): AIChatCompletionEvent | null {
+  if (frame.type === 'delta') {
+    return frame.content == null ? null : { type: 'chunk', content: frame.content };
+  }
+  if (frame.type === 'usage') {
+    return {
+      type: 'usage',
+      usage: { inputTokens: frame.inputTokens ?? 0, outputTokens: frame.outputTokens ?? 0 },
+    };
+  }
+  if (frame.type === 'error') {
+    throw new Error(frame.error ?? 'AI chat stream failed');
+  }
+  return null;
+}
+
+/**
  * Opens an SSE stream for chat completion via Axios.
  *
  * Uses `adapter: 'fetch'` with `responseType: 'stream'` so the request goes
@@ -124,17 +145,8 @@ export async function* chatStream(
         const result = parseSseLine(line);
         if (result.kind !== 'event') continue;
 
-        const frame = result.event;
-        if (frame.type === 'delta') {
-          if (frame.content != null) yield { type: 'chunk', content: frame.content };
-        } else if (frame.type === 'usage') {
-          yield {
-            type: 'usage',
-            usage: { inputTokens: frame.inputTokens ?? 0, outputTokens: frame.outputTokens ?? 0 },
-          };
-        } else if (frame.type === 'error') {
-          throw new Error(frame.error ?? 'AI chat stream failed');
-        }
+        const event = frameToEvent(result.event);
+        if (event) yield event;
       }
     }
   } finally {

@@ -134,7 +134,7 @@ export function ImageUploadField({
   }, [disabled, busy, reset, onChange]);
 
   const error = validationError ?? (state.phase === 'error' ? state.error?.message : null);
-  const maxSizeMb = maxSizeBytes !== undefined ? (maxSizeBytes / (1024 * 1024)).toFixed(0) : null;
+  const maxSizeMb = maxSizeBytes === undefined ? null : (maxSizeBytes / (1024 * 1024)).toFixed(0);
 
   return (
     <div data-slot="image-upload-field" className={cn('flex items-center gap-3', className)}>

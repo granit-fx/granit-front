@@ -189,12 +189,14 @@ export function widgetInstanceToDefinition(
   // `diffDashboardWidgets` marks it `updated` (recomputed `configJson` differs).
   // This only persists on an explicit save and heals the stored record — not a
   // bug. KPI is unchanged: its query lives inside the serialized `datasource`.
-  const fields =
-    instance.widgetType === 'Kpi'
-      ? { datasource: parsed }
-      : instance.queryName !== null
-        ? { ...parsed, queryName: instance.queryName }
-        : parsed;
+  let fields: Readonly<Record<string, unknown>>;
+  if (instance.widgetType === 'Kpi') {
+    fields = { datasource: parsed };
+  } else if (instance.queryName === null) {
+    fields = parsed;
+  } else {
+    fields = { ...parsed, queryName: instance.queryName };
+  }
   const widget: WidgetDefinitionBase & Readonly<Record<string, unknown>> = {
     ...fields,
     slug,

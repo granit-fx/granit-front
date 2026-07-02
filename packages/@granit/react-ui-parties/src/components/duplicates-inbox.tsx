@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import type { DuplicateMatchTier, PartyDuplicateCandidateResponse } from '@granit/parties';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { CellContext, ColumnDef } from '@tanstack/react-table';
 
 const PARTIES_NAMESPACE = 'parties';
 
@@ -77,7 +77,6 @@ function DuplicatesInboxBody({
   partyDetailBasePath,
 }: Readonly<DuplicatesInboxProps>) {
   const { t } = useTranslation(PARTIES_NAMESPACE);
-  const dismissMutation = useDismissPartyDuplicateMutation();
 
   const queryEndpoint = useQueryEndpoint<PartyDuplicateCandidateResponse>({
     initialParams: { page: 1, pageSize: pageSize ?? 20 },
@@ -85,74 +84,30 @@ function DuplicatesInboxBody({
 
   const columns = useMemo<ColumnDef<PartyDuplicateCandidateResponse, unknown>[]>(
     () => [
-      {
-        id: 'score',
-        header: t('Duplicates.Columns.Score'),
-        cell: ({ row }) => <span className="font-mono">{row.original.score.toFixed(2)}</span>,
-      },
-      {
-        id: 'tier',
-        header: t('Duplicates.Columns.Tier'),
-        cell: ({ row }) => (
-          <Badge
-            data-slot="tier-badge"
-            data-tier={row.original.tier}
-            variant={TIER_VARIANTS[row.original.tier]}
-          >
-            {t(`Duplicates.Tier.${row.original.tier}`)}
-          </Badge>
-        ),
-      },
+      { id: 'score', header: t('Duplicates.Columns.Score'), cell: ScoreCell },
+      { id: 'tier', header: t('Duplicates.Columns.Tier'), cell: TierCell },
       {
         id: 'partyA',
         header: t('Duplicates.Columns.PartyA'),
-        cell: ({ row }) => <PartyRef id={row.original.partyId} basePath={partyDetailBasePath} />,
+        cell: PartyACell,
+        meta: { partyDetailBasePath },
       },
       {
         id: 'partyB',
         header: t('Duplicates.Columns.PartyB'),
-        cell: ({ row }) => (
-          <PartyRef id={row.original.candidateId} basePath={partyDetailBasePath} />
-        ),
+        cell: PartyBCell,
+        meta: { partyDetailBasePath },
       },
-      {
-        id: 'detected',
-        header: t('Duplicates.Columns.Detected'),
-        cell: ({ row }) => (
-          <span className="text-muted-foreground">{formatDate(row.original.createdAt)}</span>
-        ),
-      },
-      {
-        id: 'refreshed',
-        header: t('Duplicates.Columns.Refreshed'),
-        cell: ({ row }) => (
-          <span className="text-muted-foreground">{formatDate(row.original.updatedAt)}</span>
-        ),
-      },
+      { id: 'detected', header: t('Duplicates.Columns.Detected'), cell: DetectedCell },
+      { id: 'refreshed', header: t('Duplicates.Columns.Refreshed'), cell: RefreshedCell },
       {
         id: 'actions',
         header: t('Duplicates.Columns.Actions'),
-        cell: ({ row }) => (
-          <div className="flex justify-end gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => dismissMutation.mutate({ id: row.original.id })}
-              disabled={dismissMutation.isPending}
-            >
-              {t('Duplicates.Actions.Dismiss')}
-            </Button>
-            {onMerge && (
-              <Button type="button" size="sm" onClick={() => onMerge(row.original)}>
-                {t('Duplicates.Actions.Merge')}
-              </Button>
-            )}
-          </div>
-        ),
+        cell: ActionsCell,
+        meta: { onMerge },
       },
     ],
-    [t, partyDetailBasePath, dismissMutation, onMerge]
+    [t, partyDetailBasePath, onMerge]
   );
 
   return (
@@ -168,6 +123,75 @@ function DuplicatesInboxBody({
         </p>
       ) : (
         <QueryEndpointDataTable queryEndpoint={queryEndpoint} columns={columns} />
+      )}
+    </div>
+  );
+}
+
+/** Per-column extras threaded to the module-level cell renderers via `columnDef.meta`. */
+interface DuplicatesColumnMeta {
+  readonly partyDetailBasePath?: string;
+  readonly onMerge?: (candidate: PartyDuplicateCandidateResponse) => void;
+}
+
+type DuplicateCell = CellContext<PartyDuplicateCandidateResponse, unknown>;
+
+function cellMeta(info: DuplicateCell): DuplicatesColumnMeta {
+  return (info.column.columnDef.meta ?? {}) as DuplicatesColumnMeta;
+}
+
+function ScoreCell({ row }: DuplicateCell) {
+  return <span className="font-mono">{row.original.score.toFixed(2)}</span>;
+}
+
+function TierCell({ row }: DuplicateCell) {
+  const { t } = useTranslation(PARTIES_NAMESPACE);
+  const { tier } = row.original;
+  return (
+    <Badge data-slot="tier-badge" data-tier={tier} variant={TIER_VARIANTS[tier]}>
+      {t(`Duplicates.Tier.${tier}`)}
+    </Badge>
+  );
+}
+
+function PartyACell(info: DuplicateCell) {
+  return <PartyRef id={info.row.original.partyId} basePath={cellMeta(info).partyDetailBasePath} />;
+}
+
+function PartyBCell(info: DuplicateCell) {
+  return (
+    <PartyRef id={info.row.original.candidateId} basePath={cellMeta(info).partyDetailBasePath} />
+  );
+}
+
+function DetectedCell({ row }: DuplicateCell) {
+  return <span className="text-muted-foreground">{formatDate(row.original.createdAt)}</span>;
+}
+
+function RefreshedCell({ row }: DuplicateCell) {
+  return <span className="text-muted-foreground">{formatDate(row.original.updatedAt)}</span>;
+}
+
+function ActionsCell(info: DuplicateCell) {
+  const { t } = useTranslation(PARTIES_NAMESPACE);
+  const dismissMutation = useDismissPartyDuplicateMutation();
+  const candidate = info.row.original;
+  const { onMerge } = cellMeta(info);
+  return (
+    <div className="flex justify-end gap-2">
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={() => dismissMutation.mutate({ id: candidate.id })}
+        disabled={dismissMutation.isPending}
+      >
+        {t('Duplicates.Actions.Dismiss')}
+      </Button>
+      {onMerge && (
+        <Button type="button" size="sm" onClick={() => onMerge(candidate)}>
+          {t('Duplicates.Actions.Merge')}
+        </Button>
       )}
     </div>
   );

@@ -116,7 +116,7 @@ export function useUpdateEntity(
       queryClient.setQueriesData({ queryKey: listKey }, (data: unknown) => {
         if (!data || typeof data !== 'object' || !('items' in data)) return data;
         const page = data as { items: readonly EntityRow[] };
-        return { ...page, items: page.items.map(patchRow) };
+        return { ...page, items: page.items.map((row) => patchRow(row)) };
       });
       return { snapshot };
     },

@@ -61,7 +61,7 @@ export function FileUploadField({
   // Show the file row when an upload is in flight or a value is committed.
   const showFileRow = value !== null || busy;
   const displayName =
-    fileName ?? (value !== null ? t('BlobStorage.Upload.FileSelected', 'File selected') : null);
+    fileName ?? (value === null ? null : t('BlobStorage.Upload.FileSelected', 'File selected'));
 
   const handlePick = useCallback(() => {
     if (disabled || busy) return;

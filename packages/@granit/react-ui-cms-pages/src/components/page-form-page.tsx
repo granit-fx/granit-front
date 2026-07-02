@@ -148,9 +148,9 @@ export function PageFormPage() {
     const slugSegment = values.slugSegment.trim();
     if (isEdit) {
       submitEdit(slugSegment);
-    } else {
-      submitCreate(values, slugSegment);
+      return;
     }
+    submitCreate(values, slugSegment);
   }
 
   if (isEdit && isLoading) {

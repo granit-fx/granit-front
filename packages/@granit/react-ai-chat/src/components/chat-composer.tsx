@@ -289,7 +289,7 @@ export function ChatComposer({
     const editor = editorRef.current;
     const selection = globalThis.getSelection?.() ?? null;
     const node = selection?.anchorNode ?? null;
-    if (!editor || !selection?.isCollapsed || !node || node.nodeType !== 3) {
+    if (!editor || !selection?.isCollapsed || node?.nodeType !== 3) {
       triggerLocRef.current = null;
       setTrigger(null);
       return;

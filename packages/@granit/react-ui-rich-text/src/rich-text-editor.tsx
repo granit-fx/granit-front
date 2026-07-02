@@ -158,7 +158,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
         className={cn('rounded-md border bg-background', className)}
       >
         <RichTextToolbar editor={editor} readOnly={readOnly} toolbarExtras={toolbarExtras} />
-        {!readOnly ? (
+        {readOnly ? null : (
           <BubbleMenu
             editor={editor}
             data-slot="rich-text-bubble-menu"
@@ -193,7 +193,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
               <Strikethrough className="h-4 w-4" />
             </BubbleButton>
           </BubbleMenu>
-        ) : null}
+        )}
         <EditorContent
           editor={editor}
           className={cn(

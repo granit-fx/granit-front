@@ -1,5 +1,4 @@
-import { composeDeviceLabel } from '@granit/identity';
-import { isHandheldUserAgent, parseUserAgent } from '@granit/identity';
+import { composeDeviceLabel, isHandheldUserAgent, parseUserAgent } from '@granit/identity';
 import { useDateFormatter } from '@granit/react-localization';
 import { Badge, Card, CardContent, CardHeader, CardTitle, Skeleton } from '@granit/react-ui';
 import { cn } from '@granit/utils';

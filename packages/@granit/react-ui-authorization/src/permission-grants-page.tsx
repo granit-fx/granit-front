@@ -1,8 +1,7 @@
 import { usePermissionGrantMeta, usePermissionGrants } from '@granit/react-authorization';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Input, Spinner } from '@granit/react-ui';
-import { QueryDataTable } from '@granit/react-ui-kit';
-import { useDebouncedValue } from '@granit/react-ui-kit';
+import { QueryDataTable, useDebouncedValue } from '@granit/react-ui-kit';
 import { Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 

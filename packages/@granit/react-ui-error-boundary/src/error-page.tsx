@@ -16,9 +16,12 @@ export interface ErrorPageProps {
 function resolveErrorDetail(error: unknown): string {
   if (error instanceof Error) return error.message;
   if (isRouteErrorResponse(error)) return error.statusText;
-  if (error === null || error === undefined) return '';
-  if (typeof error === 'object') return JSON.stringify(error);
-  return String(error);
+  if (typeof error === 'string') return error;
+  if (typeof error === 'number' || typeof error === 'boolean' || typeof error === 'bigint') {
+    return String(error);
+  }
+  if (typeof error === 'object' && error !== null) return JSON.stringify(error);
+  return '';
 }
 
 /**

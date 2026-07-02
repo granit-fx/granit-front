@@ -60,7 +60,7 @@ export function humanizeQueryName(name: string): string {
   const last = name.split('.').pop() ?? name;
   return last
     .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
-    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+    .replace(/([A-Z])(?=[A-Z][a-z])/g, '$1 ')
     .trim();
 }
 

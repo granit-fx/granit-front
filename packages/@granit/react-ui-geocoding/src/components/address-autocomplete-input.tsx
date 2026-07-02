@@ -168,7 +168,7 @@ export function AddressAutocompleteInput(props: AddressAutocompleteInputProps): 
         onFocus={() => setOpen(true)}
         onBlur={() => {
           // Defer so a pointer-down on an option still registers as a pick.
-          window.setTimeout(() => setOpen(false), 120);
+          globalThis.setTimeout(() => setOpen(false), 120);
         }}
         onKeyDown={onKeyDown}
       />

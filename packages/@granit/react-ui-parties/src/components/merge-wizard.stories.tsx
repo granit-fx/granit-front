@@ -13,7 +13,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 // owned by @granit/react-parties), so it needs an i18n instance with the dot
 // key-separator enabled — distinct from the flat Storybook root instance.
 const partiesI18n = i18next.createInstance();
-void partiesI18n.use(initReactI18next).init({
+await partiesI18n.use(initReactI18next).init({
   lng: 'en',
   fallbackLng: 'en',
   ns: ['parties'],

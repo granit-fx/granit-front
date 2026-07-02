@@ -1,4 +1,4 @@
-import { getEntity, toPascalCaseKeys, type EntityRow } from '@granit/entities';
+import { getEntity, toPascalCaseKeys } from '@granit/entities';
 import { useGranitClient } from '@granit/react-api-client';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
@@ -53,4 +53,4 @@ export function useEntity(
   });
 }
 
-export type { EntityRow };
+export type { EntityRow } from '@granit/entities';

@@ -115,20 +115,22 @@ export const Disabled: Story = {
   },
 };
 
+function ControlledStory(args: React.ComponentProps<typeof FileUploadField>) {
+  const [blobId, setBlobId] = useState<string | null>(null);
+  return (
+    <div className="flex flex-col gap-4">
+      <FileUploadField {...args} value={blobId} onChange={setBlobId} />
+      {blobId && (
+        <p className="text-xs text-muted-foreground">
+          Blob ID: <code>{blobId}</code>
+        </p>
+      )}
+    </div>
+  );
+}
+
 /** Controlled — blobId is surfaced above the field after upload. */
 export const Controlled: Story = {
-  render: (args) => {
-    const [blobId, setBlobId] = useState<string | null>(null);
-    return (
-      <div className="flex flex-col gap-4">
-        <FileUploadField {...args} value={blobId} onChange={setBlobId} />
-        {blobId && (
-          <p className="text-xs text-muted-foreground">
-            Blob ID: <code>{blobId}</code>
-          </p>
-        )}
-      </div>
-    );
-  },
+  render: (args) => <ControlledStory {...args} />,
   args: { value: null },
 };

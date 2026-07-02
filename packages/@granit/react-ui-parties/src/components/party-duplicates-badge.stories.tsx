@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 // `parties` namespace with the dot key-separator (nested `Duplicates.Badge.*`).
 const partiesI18n = i18next.createInstance();
-void partiesI18n.use(initReactI18next).init({
+await partiesI18n.use(initReactI18next).init({
   lng: 'en',
   fallbackLng: 'en',
   ns: ['parties'],

@@ -24,7 +24,7 @@ export const ImageUploadFormComponent: EntityFormComponent = ({
       disabled={readOnly}
       containerName={config.containerName ?? 'images'}
       aspectRatio={config.aspectRatio}
-      maxSizeBytes={config.maxSizeMb !== undefined ? config.maxSizeMb * 1024 * 1024 : undefined}
+      maxSizeBytes={config.maxSizeMb === undefined ? undefined : config.maxSizeMb * 1024 * 1024}
     />
   );
 };

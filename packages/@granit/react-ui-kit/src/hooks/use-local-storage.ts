@@ -15,7 +15,7 @@ export function useLocalStorage<T>(
     if (globalThis.localStorage === undefined) return defaultValue;
     try {
       const raw = globalThis.localStorage.getItem(key);
-      return raw !== null ? (JSON.parse(raw) as T) : defaultValue;
+      return raw === null ? defaultValue : (JSON.parse(raw) as T);
     } catch {
       return defaultValue;
     }

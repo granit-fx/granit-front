@@ -16,19 +16,16 @@ interface Occupiable {
 }
 
 /**
- * First-fit dense packer: walks `widgets` in the given order and drops each at
- * the first free `(x, y)` cell on a `columns`-wide grid, scanning row by row.
- * Mirrors the backend's coordinate backfill so a dashboard whose definition
- * predates the `x` / `y` fields packs identically on both sides.
- *
- * Widths wider than the grid are clamped to `columns`. Returns one coordinate
- * per input widget, index-aligned.
+ * A `columns`-wide occupancy grid exposing the shared placement primitives:
+ * `occupy` reserves a `w × h` box, and `place` first-fit-scans row by row for
+ * the first free cell that fits a `w × h` box, reserves it, and returns it.
+ * Both {@link packWidgetCoordinates} and {@link resolveWidgetCoordinates} drive
+ * this so their packing stays identical.
  */
-export function packWidgetCoordinates(
-  widgets: readonly Occupiable[],
-  columns: number
-): readonly GridCoordinate[] {
-  const cols = Math.max(1, columns);
+function createOccupancyGrid(cols: number): {
+  occupy: (x: number, y: number, w: number, h: number) => void;
+  place: (w: number, h: number) => GridCoordinate;
+} {
   const occupied = new Set<string>();
   const occupy = (x: number, y: number, w: number, h: number): void => {
     for (let dy = 0; dy < h; dy++) {
@@ -44,9 +41,7 @@ export function packWidgetCoordinates(
     }
     return true;
   };
-  return widgets.map(({ size }) => {
-    const w = Math.min(Math.max(1, size.width), cols);
-    const h = Math.max(1, size.height);
+  const place = (w: number, h: number): GridCoordinate => {
     for (let y = 0; ; y++) {
       for (let x = 0; x + w <= cols; x++) {
         if (fits(x, y, w, h)) {
@@ -55,7 +50,28 @@ export function packWidgetCoordinates(
         }
       }
     }
-  });
+  };
+  return { occupy, place };
+}
+
+/**
+ * First-fit dense packer: walks `widgets` in the given order and drops each at
+ * the first free `(x, y)` cell on a `columns`-wide grid, scanning row by row.
+ * Mirrors the backend's coordinate backfill so a dashboard whose definition
+ * predates the `x` / `y` fields packs identically on both sides.
+ *
+ * Widths wider than the grid are clamped to `columns`. Returns one coordinate
+ * per input widget, index-aligned.
+ */
+export function packWidgetCoordinates(
+  widgets: readonly Occupiable[],
+  columns: number
+): readonly GridCoordinate[] {
+  const cols = Math.max(1, columns);
+  const grid = createOccupancyGrid(cols);
+  return widgets.map(({ size }) =>
+    grid.place(Math.min(Math.max(1, size.width), cols), Math.max(1, size.height))
+  );
 }
 
 /**
@@ -72,27 +88,13 @@ export function resolveWidgetCoordinates(
   columns: number
 ): readonly GridCoordinate[] {
   const cols = Math.max(1, columns);
-  const occupied = new Set<string>();
-  const occupy = (x: number, y: number, w: number, h: number): void => {
-    for (let dy = 0; dy < h; dy++) {
-      for (let dx = 0; dx < w; dx++) occupied.add(`${x + dx},${y + dy}`);
-    }
-  };
-  const fits = (x: number, y: number, w: number, h: number): boolean => {
-    if (x + w > cols) return false;
-    for (let dy = 0; dy < h; dy++) {
-      for (let dx = 0; dx < w; dx++) {
-        if (occupied.has(`${x + dx},${y + dy}`)) return false;
-      }
-    }
-    return true;
-  };
+  const grid = createOccupancyGrid(cols);
 
   // Pass 1 — reserve the cells of every explicitly-placed widget.
   for (const widget of widgets) {
     if (widget.x !== undefined && widget.y !== undefined) {
       const w = Math.min(Math.max(1, widget.size.width), cols);
-      occupy(widget.x, widget.y, w, Math.max(1, widget.size.height));
+      grid.occupy(widget.x, widget.y, w, Math.max(1, widget.size.height));
     }
   }
 
@@ -101,15 +103,9 @@ export function resolveWidgetCoordinates(
     if (widget.x !== undefined && widget.y !== undefined) {
       return { x: widget.x, y: widget.y };
     }
-    const w = Math.min(Math.max(1, widget.size.width), cols);
-    const h = Math.max(1, widget.size.height);
-    for (let y = 0; ; y++) {
-      for (let x = 0; x + w <= cols; x++) {
-        if (fits(x, y, w, h)) {
-          occupy(x, y, w, h);
-          return { x, y };
-        }
-      }
-    }
+    return grid.place(
+      Math.min(Math.max(1, widget.size.width), cols),
+      Math.max(1, widget.size.height)
+    );
   });
 }

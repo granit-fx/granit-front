@@ -53,7 +53,7 @@ const uploadHandlers = [
         atob(
           'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
         ),
-        (c) => c.charCodeAt(0)
+        (c) => c.codePointAt(0)!
       ).buffer,
       { headers: { 'Content-Type': 'image/png' } }
     )
@@ -138,20 +138,22 @@ export const Disabled: Story = {
   },
 };
 
+function ControlledStory(args: React.ComponentProps<typeof ImageUploadField>) {
+  const [blobId, setBlobId] = useState<string | null>(null);
+  return (
+    <div className="flex flex-col gap-4">
+      <ImageUploadField {...args} value={blobId} onChange={setBlobId} />
+      {blobId && (
+        <p className="text-xs text-muted-foreground">
+          Blob ID: <code>{blobId}</code>
+        </p>
+      )}
+    </div>
+  );
+}
+
 /** Controlled — blob ID appears below the field after upload. */
 export const Controlled: Story = {
-  render: (args) => {
-    const [blobId, setBlobId] = useState<string | null>(null);
-    return (
-      <div className="flex flex-col gap-4">
-        <ImageUploadField {...args} value={blobId} onChange={setBlobId} />
-        {blobId && (
-          <p className="text-xs text-muted-foreground">
-            Blob ID: <code>{blobId}</code>
-          </p>
-        )}
-      </div>
-    );
-  },
+  render: (args) => <ControlledStory {...args} />,
   args: { value: null },
 };
