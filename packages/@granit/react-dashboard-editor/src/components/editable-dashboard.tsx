@@ -9,6 +9,7 @@ import {
   useDashboardTimeWindowState,
   WidgetRenderer,
 } from '@granit/react-dashboards';
+import { useFirstDayOfWeek, useTimezone } from '@granit/react-localization';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { GridLayout } from 'react-grid-layout';
 
@@ -101,6 +102,10 @@ export function EditableDashboard({
     definition.defaultTimeWindow ?? DASHBOARD_TIME_WINDOW.Last30Days
   );
   const [refreshInterval, setRefreshInterval] = useDashboardRefreshIntervalState('auto');
+  // Same first-day / timezone the read-mode view uses, so calendar tokens
+  // (`wtd`/`pw`) and the shift/zoom/tooltip bounds align between edit and view.
+  const weekStartsOn = useFirstDayOfWeek();
+  const timeZone = useTimezone();
 
   const { layout, widgets: orderedWidgets } = useMemo(
     () => resolveEffectiveLayout(definition.layout, definition.widgets, breakpoint),
@@ -147,6 +152,8 @@ export function EditableDashboard({
         setTimeWindow,
         refreshInterval,
         setRefreshInterval,
+        weekStartsOn,
+        timeZone,
       }}
     >
       <div

@@ -16,6 +16,7 @@
   "peerDependencies": {
     "@granit/dashboards": "workspace:*",
     "@granit/react-dashboards": "workspace:*",
+    "@granit/react-localization": "workspace:*",
     "react": "^19.0.0",
     "react-grid-layout": "^2.2.3",
     "react-i18next": "^17.0.0"
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@granit/dashboards": "workspace:*",
     "@granit/react-dashboards": "workspace:*",
+    "@granit/react-localization": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
     "react-grid-layout": "^2.2.3"
