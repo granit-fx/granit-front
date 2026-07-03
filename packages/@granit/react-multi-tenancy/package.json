@@ -22,7 +22,7 @@
     "@granit/react-query-engine": "workspace:*",
     "@granit/types": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
-    "msw": "^2.12.0",
+    "msw": "^2.14.6",
     "react": "^19.0.0"
   },
   "peerDependenciesMeta": {

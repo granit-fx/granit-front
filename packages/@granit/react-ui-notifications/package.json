@@ -21,7 +21,7 @@
     "@granit/react-notifications-web-push": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/utils": "workspace:*",
-    "lucide-react": "^1.21.0",
+    "lucide-react": "^1.23.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.18.0"

@@ -22,7 +22,7 @@
     "@granit/react-bff": "workspace:*",
     "@granit/react-localization": "workspace:*",
     "@granit/react-ui": "workspace:*",
-    "lucide-react": "^1.21.0",
+    "lucide-react": "^1.23.0",
     "react": "^19.0.0"
   },
   "publishConfig": {

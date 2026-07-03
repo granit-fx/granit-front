@@ -18,7 +18,7 @@
     "@granit/idempotency": "workspace:*",
     "@tanstack/query-core": "^5.0.0",
     "axios": "^1.6.0",
-    "zustand": "^5.0.0"
+    "zustand": "^5.0.14"
   },
   "publishConfig": {
     "exports": {
@@ -32,8 +32,8 @@
   "devDependencies": {
     "@granit/api-client": "workspace:*",
     "@granit/idempotency": "workspace:*",
-    "@tanstack/query-core": "^5.0.0",
-    "axios": "^1.6.0",
+    "@tanstack/query-core": "^5.101.2",
+    "axios": "^1.18.1",
     "zustand": "^5.0.14"
   }
 }

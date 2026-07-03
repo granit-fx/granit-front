@@ -24,7 +24,7 @@
     "@granit/types": "workspace:*",
     "@granit/utils": "workspace:*",
     "class-variance-authority": "^0.7.1",
-    "lucide-react": "^1.21.0",
+    "lucide-react": "^1.23.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.80.0",

@@ -14,7 +14,7 @@
     "build": "tsup"
   },
   "devDependencies": {
-    "@date-fns/tz": "^1.0.0",
+    "@date-fns/tz": "^1.5.0",
     "@granit/api-client": "workspace:*",
     "@granit/logger": "workspace:*",
     "@granit/testing": "workspace:*",

@@ -23,7 +23,7 @@
     }
   },
   "devDependencies": {
-    "@date-fns/tz": "^1.0.0",
+    "@date-fns/tz": "^1.5.0",
     "@granit/testing": "workspace:*",
     "@granit/types": "workspace:*"
   },
