@@ -53,10 +53,11 @@ function mockCatalogClient() {
       return Promise.resolve({
         data: {
           columns: [
-            { name: 'Name', label: 'Name', type: 'String' },
-            { name: 'Amount', label: 'Amount', type: 'Decimal' },
+            { name: 'Name', label: 'Name', type: 'String', isSortable: true },
+            { name: 'Amount', label: 'Amount', type: 'Decimal', isSortable: true },
           ],
           groupByFields: [],
+          sortableFields: [{ name: 'Name' }, { name: 'Amount' }],
         },
       });
     }
@@ -114,5 +115,31 @@ describe('TableConfigForm', () => {
     expect(await screen.findByRole('option', { name: 'Name' })).toBeInTheDocument();
     await user.click(await screen.findByRole('option', { name: 'Amount' }));
     expect(onChange.mock.calls.at(-1)?.[0]?.visibleColumns).toEqual(['Amount']);
+  });
+
+  it('renders the sort-field control but hides the direction control with no sort field', () => {
+    const { container } = wrap(<TableConfigForm widget={baseTable} onChange={vi.fn()} />);
+    expect(container.querySelector('[data-slot="table-sort-field"]')).not.toBeNull();
+    expect(container.querySelector('[data-slot="table-sort-direction"]')).toBeNull();
+  });
+
+  it('reveals the direction control once a sort field is set', () => {
+    const { container } = wrap(
+      <TableConfigForm widget={{ ...baseTable, sortField: 'Amount' }} onChange={vi.fn()} />
+    );
+    expect(container.querySelector('[data-slot="table-sort-direction"]')).not.toBeNull();
+  });
+
+  it('emits a sortable field selected from the metadata combobox', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const { container } = wrap(
+      <TableConfigForm widget={baseTable} onChange={onChange} />,
+      mockCatalogClient()
+    );
+
+    await user.click(container.querySelector('[data-slot="table-sort-field"]')!);
+    await user.click(await screen.findByRole('option', { name: 'Amount' }));
+    expect(onChange.mock.calls.at(-1)?.[0]?.sortField).toBe('Amount');
   });
 });

@@ -1366,6 +1366,13 @@
             "type": "integer",
             "format": "int32"
           },
+          "sortField": {
+            "type": ["null", "string"]
+          },
+          "sortDirection": {
+            "type": ["null", "string"],
+            "default": "asc"
+          },
           "slug": {
             "type": "string"
           },

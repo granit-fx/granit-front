@@ -52,6 +52,13 @@ export interface QueryFieldMetadata {
   readonly fieldOptions: readonly FieldOption[];
   /** All columns of the selected query (e.g. the table visible-columns picker). */
   readonly columnOptions: readonly FieldOption[];
+  /**
+   * Sortable field options for the selected query: the columns flagged
+   * `isSortable` (they carry display labels), falling back to the query's
+   * declared `sortableFields` when no column advertises sortability. Empty until
+   * metadata resolves.
+   */
+  readonly sortableFieldOptions: readonly FieldOption[];
 }
 
 /**
@@ -74,6 +81,8 @@ export function useQueryFieldMetadata(queryName: string): QueryFieldMetadata {
   const numericColumns = (meta?.columns ?? [])
     .filter((column) => NUMERIC_CLR_TYPES.has(column.type))
     .map(toOption);
+  const sortableColumns = (meta?.columns ?? []).filter((column) => column.isSortable).map(toOption);
+  const sortableDeclared = (meta?.sortableFields ?? []).map(toOption);
 
   return {
     catalogEntries: catalog,
@@ -81,5 +90,6 @@ export function useQueryFieldMetadata(queryName: string): QueryFieldMetadata {
     groupByOptions: groupByDeclared.length > 0 ? groupByDeclared : columnOptions,
     fieldOptions: numericColumns.length > 0 ? numericColumns : columnOptions,
     columnOptions,
+    sortableFieldOptions: sortableColumns.length > 0 ? sortableColumns : sortableDeclared,
   };
 }

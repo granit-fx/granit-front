@@ -76,6 +76,9 @@ export const analyticsWidgetCatalog: readonly WidgetCatalogEntry[] = Object.free
       queryName: '',
       visibleColumns: null,
       pageSize: 10,
+      // No explicit sort: the backend falls back to the query's default sort.
+      sortField: null,
+      sortDirection: 'asc',
     }),
   },
   {
