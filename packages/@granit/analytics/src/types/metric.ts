@@ -116,4 +116,12 @@ export interface MetricCatalogEntryResponse {
   readonly refreshHint: RefreshHint;
   /** ISO 4217 currency code when `valueKind === 'Currency'`, else `null`. */
   readonly currencyCode: string | null;
+  /**
+   * Whether the metric declares a `PeriodSelector` — `true` when it accepts a
+   * period filter and comparison window, `false` for a time-invariant snapshot
+   * metric (e.g. a live count). Drives whether the editor offers a comparison
+   * option and whether the KPI tile may send a `compareTo` (the endpoint rejects
+   * a comparison on a period-less metric with a 422).
+   */
+  readonly supportsPeriod: boolean;
 }

@@ -1095,7 +1095,8 @@
           "aggregation",
           "isHigherBetter",
           "refreshHint",
-          "currencyCode"
+          "currencyCode",
+          "supportsPeriod"
         ],
         "type": "object",
         "properties": {
@@ -1119,6 +1120,9 @@
           },
           "currencyCode": {
             "type": ["null", "string"]
+          },
+          "supportsPeriod": {
+            "type": "boolean"
           }
         }
       },

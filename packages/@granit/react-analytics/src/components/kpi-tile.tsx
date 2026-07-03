@@ -1,32 +1,32 @@
 import { isMetricDatasource } from '@granit/dashboards';
-import { useWidgetTriggerHandler } from '@granit/react-dashboards';
+import { useEffectiveTimeWindow, useWidgetTriggerHandler } from '@granit/react-dashboards';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useMetric } from '../hooks/use-metric';
+import { useMetricCatalog } from '../hooks/use-metric-catalog';
+import { metricRequestFromTimeWindow } from '../lib/metric-request-from-time-window';
 
 import { KpiTileView } from './kpi-tile-view';
 
-import type { KpiWidgetDefinition, MetricRequest } from '@granit/analytics';
-
-const DEFAULT_PERIOD: MetricRequest = {
-  period: { token: 'last_30d' },
-  compareTo: { token: 'previous_period' },
-};
+import type { KpiWidgetDefinition } from '@granit/analytics';
 
 /**
  * Smart KPI tile — registered as the renderer for `KpiWidgetDefinition`
- * (`type: 'kpi'`) in the analytics widget registry. Reads dashboard context
- * for breadcrumb data, fetches the metric snapshot via {@link useMetric},
- * delegates rendering to {@link KpiTileView}.
+ * (`type: 'kpi'`) in the analytics widget registry. Resolves the active time
+ * window from dashboard context, fetches the metric snapshot via
+ * {@link useMetric}, delegates rendering to {@link KpiTileView}.
  *
  * v1 only handles {@link MetricDatasource}. Other datasource kinds
  * ({@link QueryAggregateDatasource}, {@link TelemetryDatasource}) await the
  * query-engine evaluator (B5) and the SSE telemetry transport (B7-2)
  * respectively, and currently render an "unsupported" KpiTileView.
  *
- * v1 also uses a hardcoded `last_30d / previous_period` request shape — the
- * runtime `DashboardTimeWindow` (proposals doc P1.3) will replace this once
- * the dashboard context propagates it.
+ * The period comes from {@link useEffectiveTimeWindow} (override → dashboard
+ * context → framework default), so a dashboard-level time-window control
+ * propagates without touching the tile. A comparison window is only requested
+ * for a metric whose catalogue entry reports `supportsPeriod` — a period-less
+ * snapshot metric would otherwise be rejected with a 422.
  */
 export interface KpiTileProps {
   readonly widget: KpiWidgetDefinition;
@@ -42,7 +42,21 @@ export function KpiTile({ widget }: KpiTileProps) {
   // crashing on `datasource.kind`.
   const metricName = datasource && isMetricDatasource(datasource) ? datasource.metricName : '';
 
-  const query = useMetric(metricName, DEFAULT_PERIOD, { enabled: metricName !== '' });
+  const timeWindow = useEffectiveTimeWindow();
+
+  // Catalogue is shared (single React Query key) across every KPI tile, so this
+  // is one fetch regardless of tile count. Until it resolves, `supportsPeriod`
+  // defaults to `false` — the tile requests the period-only shape (never a 422)
+  // and upgrades to a comparison once the entry confirms the metric supports it.
+  const { data: catalog } = useMetricCatalog();
+  const supportsPeriod = catalog?.find((entry) => entry.name === metricName)?.supportsPeriod ?? false;
+
+  const request = useMemo(
+    () => metricRequestFromTimeWindow(timeWindow, supportsPeriod),
+    [timeWindow, supportsPeriod]
+  );
+
+  const query = useMetric(metricName, request, { enabled: metricName !== '' });
 
   // `Click` actions on the widget definition. Hook lives at the top
   // of the component (before any conditional return) so the rules-of-

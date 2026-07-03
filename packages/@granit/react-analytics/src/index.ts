@@ -41,3 +41,5 @@ export { defaultAnalyticsSnapshotWidgetRegistry } from './registry/default-analy
 // Formatters (re-exported for convenience — also available standalone)
 export { formatDeltaRatio, formatMetricValue } from './lib/format-metric-value';
 export type { FormatMetricValueArgs } from './lib/format-metric-value';
+
+export { metricRequestFromTimeWindow } from './lib/metric-request-from-time-window';

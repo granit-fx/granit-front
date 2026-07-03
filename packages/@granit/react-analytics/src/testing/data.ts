@@ -17,6 +17,7 @@ export const mockMetricCatalog: readonly MetricCatalogEntryResponse[] = [
     isHigherBetter: true,
     refreshHint: 'Dynamic',
     currencyCode: 'EUR',
+    supportsPeriod: true,
   },
   {
     name: 'active-users',
@@ -26,6 +27,8 @@ export const mockMetricCatalog: readonly MetricCatalogEntryResponse[] = [
     isHigherBetter: true,
     refreshHint: 'Realtime',
     currencyCode: null,
+    // Live snapshot count — no PeriodSelector, so comparison windows are rejected.
+    supportsPeriod: false,
   },
   {
     name: 'conversion-rate',
@@ -35,6 +38,7 @@ export const mockMetricCatalog: readonly MetricCatalogEntryResponse[] = [
     isHigherBetter: true,
     refreshHint: 'Static',
     currencyCode: null,
+    supportsPeriod: true,
   },
 ];
 
