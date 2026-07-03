@@ -1,3 +1,5 @@
+import { createTestQueryClient } from '@granit/react-testing';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
@@ -52,7 +54,9 @@ export function renderDashboards(ui: ReactElement) {
     ...render(ui, {
       wrapper: ({ children }: { readonly children: ReactNode }) => (
         <I18nextProvider i18n={testI18n}>
-          <MemoryRouter>{children}</MemoryRouter>
+          <QueryClientProvider client={createTestQueryClient()}>
+            <MemoryRouter>{children}</MemoryRouter>
+          </QueryClientProvider>
         </I18nextProvider>
       ),
     }),

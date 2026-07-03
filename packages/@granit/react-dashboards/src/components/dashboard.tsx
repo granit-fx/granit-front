@@ -4,7 +4,12 @@ import { useDashboardBreakpoint } from '../hooks/use-dashboard-breakpoint';
 import { resolveActiveView } from '../lib/resolve-active-view';
 import { resolveEffectiveLayout } from '../lib/resolve-effective-layout';
 
-import { DashboardContextProvider, useDashboardTimeWindowState } from './dashboard-context';
+import {
+  DashboardContextProvider,
+  useDashboardRefreshIntervalState,
+  useDashboardTimeWindowState,
+} from './dashboard-context';
+import { DashboardRefreshToolbar } from './dashboard-refresh-toolbar';
 import { DashboardTimeWindowToolbar } from './dashboard-time-window-toolbar';
 import { DashboardViewProvider } from './dashboard-view-context';
 import { WidgetRenderer } from './widget-renderer';
@@ -85,6 +90,7 @@ export function Dashboard({
   const [timeWindow, setTimeWindow] = useDashboardTimeWindowState(
     definition.defaultTimeWindow ?? undefined
   );
+  const [refreshInterval, setRefreshInterval] = useDashboardRefreshIntervalState('auto');
 
   const breakpoint = useDashboardBreakpoint();
 
@@ -117,9 +123,25 @@ export function Dashboard({
   };
 
   return (
-    <DashboardContextProvider value={{ dashboardName: definition.name, timeWindow, setTimeWindow }}>
+    <DashboardContextProvider
+      value={{
+        dashboardName: definition.name,
+        timeWindow,
+        setTimeWindow,
+        refreshInterval,
+        setRefreshInterval,
+      }}
+    >
       <DashboardViewProvider value={{ currentView: resolvedView, setCurrentView: setView }}>
-        {timeWindow && <DashboardTimeWindowToolbar />}
+        {timeWindow && (
+          <div
+            data-slot="dashboard-controls"
+            className="mb-3 flex flex-wrap items-end justify-end gap-3"
+          >
+            <DashboardTimeWindowToolbar />
+            <DashboardRefreshToolbar />
+          </div>
+        )}
         <div
           data-slot="dashboard"
           data-dashboard-name={definition.name}

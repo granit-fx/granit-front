@@ -1,9 +1,15 @@
-import { DASHBOARD_TIME_WINDOW, resolveTimeWindowToRenderRequest } from '@granit/dashboards';
+import {
+  DASHBOARD_TIME_WINDOW,
+  resolveTimeWindowToRenderRequest,
+  toRefetchInterval,
+} from '@granit/dashboards';
 import {
   DashboardContextProvider,
+  DashboardRefreshToolbar,
   DashboardTimeWindowToolbar,
   RenderedDashboard,
   useDashboardDetail,
+  useDashboardRefreshIntervalState,
   useDashboardTimeWindowState,
 } from '@granit/react-dashboards';
 import { useTranslation } from '@granit/react-localization';
@@ -50,6 +56,13 @@ export function DashboardViewPage() {
     [timeWindow]
   );
 
+  // Auto-refresh cadence, bridged to the bundle query's refetch interval.
+  const [refreshInterval, setRefreshInterval] = useDashboardRefreshIntervalState('auto');
+  const renderOptions = useMemo(
+    () => ({ refetchInterval: toRefetchInterval(refreshInterval ?? 'auto') }),
+    [refreshInterval]
+  );
+
   if (isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -87,7 +100,7 @@ export function DashboardViewPage() {
 
   return (
     <DashboardContextProvider
-      value={{ dashboardName: detail.name, timeWindow, setTimeWindow }}
+      value={{ dashboardName: detail.name, timeWindow, setTimeWindow, refreshInterval, setRefreshInterval }}
     >
       <div
         data-slot="dashboard-view-page"
@@ -111,6 +124,7 @@ export function DashboardViewPage() {
           </div>
           <div className="flex items-end gap-3">
             <DashboardTimeWindowToolbar />
+            <DashboardRefreshToolbar />
             <Button
               data-slot="dashboard-view-edit-toggle"
               variant="outline"
@@ -126,6 +140,7 @@ export function DashboardViewPage() {
         <RenderedDashboard
           dashboardId={dashboardId}
           request={renderRequest}
+          options={renderOptions}
           columns={detail.layoutColumns}
           rowHeight={detail.layoutRowHeight}
         />

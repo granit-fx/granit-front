@@ -4,6 +4,8 @@ export type { ResolvedPeriod } from './resolved-period';
 export type { DataKeyFormat } from './data-key-format';
 export type { DashboardCategory } from './dashboard-category';
 export { DASHBOARD_TIME_WINDOW } from './dashboard-time-window';
+export { DASHBOARD_REFRESH_INTERVAL, toRefetchInterval } from './dashboard-refresh-interval';
+export type { DashboardRefreshInterval } from './dashboard-refresh-interval';
 export {
   Datasource,
   isMetricDatasource,

@@ -1,9 +1,11 @@
 import { DASHBOARD_TIME_WINDOW } from '@granit/dashboards';
 import {
   DashboardContextProvider,
+  DashboardRefreshToolbar,
   DashboardTimeWindowToolbar,
   resolveEffectiveLayout,
   useDashboardBreakpoint,
+  useDashboardRefreshIntervalState,
   useDashboardTimeWindowState,
   WidgetRenderer,
 } from '@granit/react-dashboards';
@@ -90,6 +92,7 @@ export function EditableDashboard({
   const [timeWindow, setTimeWindow] = useDashboardTimeWindowState(
     definition.defaultTimeWindow ?? DASHBOARD_TIME_WINDOW.Last30Days
   );
+  const [refreshInterval, setRefreshInterval] = useDashboardRefreshIntervalState('auto');
 
   const { layout, widgets: orderedWidgets } = useMemo(
     () => resolveEffectiveLayout(definition.layout, definition.widgets, breakpoint),
@@ -130,7 +133,13 @@ export function EditableDashboard({
 
   return (
     <DashboardContextProvider
-      value={{ dashboardName: definition.name, timeWindow, setTimeWindow }}
+      value={{
+        dashboardName: definition.name,
+        timeWindow,
+        setTimeWindow,
+        refreshInterval,
+        setRefreshInterval,
+      }}
     >
       <div
         ref={wrapperRef}
@@ -140,7 +149,13 @@ export function EditableDashboard({
         className={className}
       >
         <GridStyles />
-        <DashboardTimeWindowToolbar className="mb-3" />
+        <div
+          data-slot="dashboard-controls"
+          className="mb-3 flex flex-wrap items-end justify-end gap-3"
+        >
+          <DashboardTimeWindowToolbar />
+          <DashboardRefreshToolbar />
+        </div>
         <GridLayout
           width={width || FALLBACK_WIDTH_PX}
           layout={gridLayout}

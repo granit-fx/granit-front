@@ -72,6 +72,7 @@ export type { DashboardProps } from './components/dashboard';
 export {
   DashboardContextProvider,
   useDashboardContext,
+  useDashboardRefreshIntervalState,
   useDashboardTimeWindowState,
 } from './components/dashboard-context';
 export type {
@@ -100,6 +101,8 @@ export { DashboardFilterToolbar } from './components/dashboard-filter-toolbar';
 export type { DashboardFilterToolbarProps } from './components/dashboard-filter-toolbar';
 export { DashboardTimeWindowToolbar } from './components/dashboard-time-window-toolbar';
 export type { DashboardTimeWindowToolbarProps } from './components/dashboard-time-window-toolbar';
+export { DashboardRefreshToolbar } from './components/dashboard-refresh-toolbar';
+export type { DashboardRefreshToolbarProps } from './components/dashboard-refresh-toolbar';
 export { mergeFilterValuesIntoRequest } from './lib/merge-filter-values';
 
 // Entity alias runtime (P2.3) — resolution context, provider, helpers
@@ -139,6 +142,7 @@ export type {
   WidgetActionHandlerRegistry,
 } from './lib/widget-action-handler';
 export { useEffectiveTimeWindow } from './hooks/use-effective-time-window';
+export { useEffectiveRefreshInterval } from './hooks/use-effective-refresh-interval';
 export { useWidgetTriggerHandler } from './hooks/use-widget-trigger-handler';
 export {
   DASHBOARD_BREAKPOINT_MIN_WIDTH,

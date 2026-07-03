@@ -4868,6 +4868,17 @@
           "members": []
         },
         {
+          "name": "DashboardRefreshToolbar",
+          "kind": "function",
+          "signature": "function DashboardRefreshToolbar("
+        },
+        {
+          "name": "DashboardRefreshToolbarProps",
+          "kind": "interface",
+          "signature": "interface DashboardRefreshToolbarProps",
+          "members": []
+        },
+        {
           "name": "mergeFilterValuesIntoRequest",
           "kind": "function",
           "signature": "function mergeFilterValuesIntoRequest( request: DashboardRenderRequest, values: DashboardFilterValues | null | undefined ): DashboardRenderRequest"
@@ -4912,6 +4923,11 @@
           "name": "useEffectiveTimeWindow",
           "kind": "function",
           "signature": "function useEffectiveTimeWindow(override?: DashboardTimeWindow): DashboardTimeWindow"
+        },
+        {
+          "name": "useEffectiveRefreshInterval",
+          "kind": "function",
+          "signature": "function useEffectiveRefreshInterval( override?: DashboardRefreshInterval ): DashboardRefreshInterval"
         },
         {
           "name": "useWidgetTriggerHandler",

@@ -50,11 +50,13 @@ vi.mock('@granit/react-dashboards', () => ({
       data-period-token={request?.periodToken}
     />
   ),
-  // Context + selector are covered by their own suites; here they only need to
+  // Context + selectors are covered by their own suites; here they only need to
   // mount so the view page's wiring renders.
   DashboardContextProvider: ({ children }: { readonly children: React.ReactNode }) => children,
   DashboardTimeWindowToolbar: () => <div data-slot="dashboard-time-window-toolbar" />,
+  DashboardRefreshToolbar: () => <div data-slot="dashboard-refresh-toolbar" />,
   useDashboardTimeWindowState: <T,>(initial: T) => [initial, vi.fn()] as const,
+  useDashboardRefreshIntervalState: <T,>(initial: T) => [initial, vi.fn()] as const,
 }));
 
 describe('DashboardViewPage', () => {
@@ -73,6 +75,9 @@ describe('DashboardViewPage', () => {
 
     expect(
       document.querySelector('[data-slot="dashboard-time-window-toolbar"]')
+    ).toBeInTheDocument();
+    expect(
+      document.querySelector('[data-slot="dashboard-refresh-toolbar"]')
     ).toBeInTheDocument();
     // Seeded to Last 30 days → the render request echoes that token.
     expect(

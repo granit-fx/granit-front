@@ -1,5 +1,9 @@
-import { isMetricDatasource } from '@granit/dashboards';
-import { useEffectiveTimeWindow, useWidgetTriggerHandler } from '@granit/react-dashboards';
+import { isMetricDatasource, toRefetchInterval } from '@granit/dashboards';
+import {
+  useEffectiveRefreshInterval,
+  useEffectiveTimeWindow,
+  useWidgetTriggerHandler,
+} from '@granit/react-dashboards';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -56,7 +60,15 @@ export function KpiTile({ widget }: KpiTileProps) {
     [timeWindow, supportsPeriod]
   );
 
-  const query = useMetric(metricName, request, { enabled: metricName !== '' });
+  // Dashboard-level refresh cadence. `'auto'` maps to `undefined`, letting
+  // useMetric keep its `refreshHint`-derived polling; `'off'`/a fixed interval
+  // overrides it.
+  const refetchInterval = toRefetchInterval(useEffectiveRefreshInterval());
+
+  const query = useMetric(metricName, request, {
+    enabled: metricName !== '',
+    refetchInterval,
+  });
 
   // `Click` actions on the widget definition. Hook lives at the top
   // of the component (before any conditional return) so the rules-of-

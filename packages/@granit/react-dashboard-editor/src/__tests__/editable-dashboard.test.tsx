@@ -1,4 +1,6 @@
 import { defaultWidgetRegistry, WidgetRegistryProvider } from '@granit/react-dashboards';
+import { createTestQueryClient } from '@granit/react-testing';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render } from '@testing-library/react';
 import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
@@ -24,7 +26,9 @@ void testI18n.use(initReactI18next).init({
 function wrap(node: ReactNode) {
   return render(
     <I18nextProvider i18n={testI18n}>
-      <WidgetRegistryProvider registries={[defaultWidgetRegistry]}>{node}</WidgetRegistryProvider>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <WidgetRegistryProvider registries={[defaultWidgetRegistry]}>{node}</WidgetRegistryProvider>
+      </QueryClientProvider>
     </I18nextProvider>
   );
 }
@@ -85,6 +89,10 @@ describe('EditableDashboard — initial render', () => {
     expect(toolbar).toBeInTheDocument();
     // Seeded to Last 30 days (no default declared on the fixture).
     expect((toolbar?.querySelector('select') as HTMLSelectElement).value).toBe('last_30d');
+    // The refresh control mounts alongside the period selector.
+    expect(
+      container.querySelector('[data-slot="dashboard-refresh-toolbar"]')
+    ).toBeInTheDocument();
   });
 
   it('drives cell height from the row height (1-row widget = rowHeight px)', () => {

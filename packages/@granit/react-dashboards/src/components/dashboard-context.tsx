@@ -8,7 +8,7 @@ import {
   type SetStateAction,
 } from 'react';
 
-import type { DashboardTimeWindow } from '@granit/dashboards';
+import type { DashboardRefreshInterval, DashboardTimeWindow } from '@granit/dashboards';
 
 /**
  * Read-only ambient context for a rendered dashboard. Surfaces the dashboard
@@ -32,6 +32,16 @@ export interface DashboardContextValue {
    * embedded / preview / printable dashboards.
    */
   readonly setTimeWindow?: Dispatch<SetStateAction<DashboardTimeWindow | undefined>>;
+  /**
+   * Active auto-refresh cadence. When omitted, data sources keep their own
+   * default cadence (equivalent to `'auto'`).
+   */
+  readonly refreshInterval?: DashboardRefreshInterval;
+  /**
+   * Setter the refresh control binds to. When omitted the cadence is read-only
+   * (no refresh control shown).
+   */
+  readonly setRefreshInterval?: Dispatch<SetStateAction<DashboardRefreshInterval | undefined>>;
 }
 
 const DashboardContext = createContext<DashboardContextValue | null>(null);
@@ -46,7 +56,13 @@ export function DashboardContextProvider({ value, children }: DashboardContextPr
     () => value,
     // Identity-stable on the primitive fields; the setter is assumed stable
     // (typically returned from useState).
-    [value.dashboardName, value.timeWindow, value.setTimeWindow]
+    [
+      value.dashboardName,
+      value.timeWindow,
+      value.setTimeWindow,
+      value.refreshInterval,
+      value.setRefreshInterval,
+    ]
   );
   return <DashboardContext.Provider value={memoised}>{children}</DashboardContext.Provider>;
 }
@@ -81,4 +97,13 @@ export function useDashboardContext(): DashboardContextValue | null {
  */
 export function useDashboardTimeWindowState(initial?: DashboardTimeWindow) {
   return useState<DashboardTimeWindow | undefined>(initial);
+}
+
+/**
+ * State hook for the dashboard's auto-refresh cadence — mirrors
+ * {@link useDashboardTimeWindowState}. Exposes a `[refreshInterval,
+ * setRefreshInterval]` pair the refresh control binds to.
+ */
+export function useDashboardRefreshIntervalState(initial?: DashboardRefreshInterval) {
+  return useState<DashboardRefreshInterval | undefined>(initial);
 }

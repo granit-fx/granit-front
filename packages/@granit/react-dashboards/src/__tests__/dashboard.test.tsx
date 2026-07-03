@@ -1,3 +1,5 @@
+import { createTestQueryClient } from '@granit/react-testing';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import i18n from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
@@ -37,9 +39,11 @@ void testI18n.use(initReactI18next).init({
 function renderDashboard(definition: DashboardDefinition) {
   return render(
     <I18nextProvider i18n={testI18n}>
-      <WidgetRegistryProvider registries={[defaultWidgetRegistry]}>
-        <Dashboard definition={definition} />
-      </WidgetRegistryProvider>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <WidgetRegistryProvider registries={[defaultWidgetRegistry]}>
+          <Dashboard definition={definition} />
+        </WidgetRegistryProvider>
+      </QueryClientProvider>
     </I18nextProvider>
   );
 }

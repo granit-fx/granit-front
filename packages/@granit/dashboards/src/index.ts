@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------------------
 
 export {
+  DASHBOARD_REFRESH_INTERVAL,
   DASHBOARD_TIME_WINDOW,
   Datasource,
   DEFAULT_DASHBOARD_LAYOUT,
@@ -18,6 +19,7 @@ export {
   packWidgetCoordinates,
   parseDurationToMs,
   resolveWidgetCoordinates,
+  toRefetchInterval,
   WIDGET_SIZE,
 } from './types/index';
 export type {
@@ -34,6 +36,7 @@ export type {
   DashboardLayout,
   DashboardLayoutOverride,
   DashboardPeriod,
+  DashboardRefreshInterval,
   DashboardTimeWindow,
   DashboardView,
   DataKeyFormat,
