@@ -144,9 +144,9 @@ describe('widgetInstanceToDefinition', () => {
       height: 3,
       titleLocalizationKey: `Widget:${DASHBOARD_NAME}.Cancellations`,
       metricName: null,
-      queryName: 'Granit.Subscriptions.SubscriptionsQuery',
+      queryName: 'Granit.Subscriptions.SubscriptionQuery',
       configJson: JSON.stringify({
-        queryName: 'Granit.Subscriptions.SubscriptionsQuery',
+        queryName: 'Granit.Subscriptions.SubscriptionQuery',
         groupBy: 'Week',
         aggregation: 'Count',
         field: null,
@@ -155,7 +155,7 @@ describe('widgetInstanceToDefinition', () => {
       requiredPermission: null,
     };
     const widget = widgetInstanceToDefinition(instance, DASHBOARD_NAME) as ChartWidgetStub;
-    expect(widget.queryName).toBe('Granit.Subscriptions.SubscriptionsQuery');
+    expect(widget.queryName).toBe('Granit.Subscriptions.SubscriptionQuery');
   });
 
   it('falls back to the denormalized queryName column when configJson omits it (legacy dashboard)', () => {
@@ -169,7 +169,7 @@ describe('widgetInstanceToDefinition', () => {
       titleLocalizationKey: `Widget:${DASHBOARD_NAME}.Cancellations`,
       metricName: null,
       // The denormalized column carries the query; the legacy configJson does not.
-      queryName: 'Granit.Subscriptions.SubscriptionsQuery',
+      queryName: 'Granit.Subscriptions.SubscriptionQuery',
       configJson: JSON.stringify({
         groupBy: 'Week',
         aggregation: 'Count',
@@ -179,7 +179,7 @@ describe('widgetInstanceToDefinition', () => {
       requiredPermission: null,
     };
     const widget = widgetInstanceToDefinition(instance, DASHBOARD_NAME) as ChartWidgetStub;
-    expect(widget.queryName).toBe('Granit.Subscriptions.SubscriptionsQuery');
+    expect(widget.queryName).toBe('Granit.Subscriptions.SubscriptionQuery');
   });
 });
 
