@@ -140,6 +140,38 @@ describe('EntityForm', () => {
     expect(missing?.getAttribute('data-component')).toBe('unknown-component');
   });
 
+  it('upgrades a CLR-default component to the valueKind input when registered', () => {
+    const moneyWidget: EntityFormComponent = ({ field: f }) => (
+      <input data-testid={`money-${f.propertyName}`} />
+    );
+    const richCatalog: EntityComponentCatalog = { form: { text: textWidget, money: moneyWidget } };
+    const variant = manifest(
+      section('main', 0, [field('Price', 0, { component: 'decimal', valueKind: 'Currency' })])
+    );
+    const { container } = render(
+      withProvider(
+        <EntityForm variant={variant} values={{}} onChange={() => undefined} />,
+        richCatalog
+      )
+    );
+    expect(container.querySelector('[data-property="Price"]')?.getAttribute('data-component')).toBe(
+      'money'
+    );
+  });
+
+  it('keeps the CLR-default component when the valueKind input is not registered', () => {
+    const variant = manifest(
+      section('main', 0, [field('Price', 0, { component: 'decimal', valueKind: 'Currency' })])
+    );
+    // Default catalog registers only `text`, so the `money` upgrade is skipped.
+    const { container } = render(
+      withProvider(<EntityForm variant={variant} values={{}} onChange={() => undefined} />)
+    );
+    expect(container.querySelector('[data-property="Price"]')?.getAttribute('data-component')).toBe(
+      'decimal'
+    );
+  });
+
   it('forwards readOnly to widgets (form prop OR field flag)', () => {
     const variant = manifest(
       section('main', 0, [field('Editable', 0), field('LockedByField', 1, { readOnly: true })])

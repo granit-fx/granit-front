@@ -67,6 +67,16 @@ export interface EntityFormFieldManifest {
    * base-layer fields without a tracked origin.
    */
   readonly provenance: EntityProvenance | null;
+  /**
+   * Optional semantic display-type (`Currency`, `Url`, `Email`, …) — the same
+   * vocabulary a query column carries (`ColumnDefinition.valueKind`). Lets the
+   * renderer upgrade the default edit input when {@link component} was left at
+   * its CLR-type default; an explicit component always wins. Wire values are
+   * the .NET `ValueKind` enum member names verbatim (PascalCase). `null` when
+   * no hint is declared. Mirrors `FieldDescriptor.ValueKind`. Optional key so
+   * the addition stays non-breaking for manifest consumers.
+   */
+  readonly valueKind?: string | null;
 }
 
 /**

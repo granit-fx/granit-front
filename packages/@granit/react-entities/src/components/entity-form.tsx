@@ -1,6 +1,7 @@
 import { evaluateVisibility } from '@granit/entities';
 import { useCallback, useMemo, type ReactNode } from 'react';
 
+import { resolveFormComponentId } from '../field-components/resolve-form-component';
 import { useEntityRenderer } from '../providers/entity-renderer-provider';
 
 import { MissingComponent } from './missing-component';
@@ -144,11 +145,10 @@ function EntityFormField({
     return null;
   }
 
-  // A declared lookup wins over the type-derived component: the backend's
-  // FieldBuilder.Lookup(...) keeps Component as the CLR-default (e.g. "text"),
-  // so presence of `field.lookup` is what routes a foreign-key field to the
-  // server-backed picker. Apps override the picker via `components.form.lookup`.
-  const componentId = field.lookup ? 'lookup' : field.component;
+  // Resolve the component id: a declared lookup wins, else a `valueKind` hint
+  // may upgrade a CLR-default component to a richer input (money / url / …)
+  // when that input is registered, else the manifest `component` is used as-is.
+  const componentId = resolveFormComponentId(field, components.form);
   const Component = components.form[componentId];
 
   // Always render a label: fields whose entity definition never called
