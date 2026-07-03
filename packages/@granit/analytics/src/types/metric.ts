@@ -38,15 +38,40 @@ import type { ISODateString } from '@granit/types';
  * type bump.
  */
 export type PeriodToken =
-  | 'today'
-  | 'yesterday'
+  // Rolling — minutes / hours (end = now).
   | 'last_60s'
   | 'last_5m'
+  | 'last_15m'
+  | 'last_30m'
+  | 'last_1h'
+  | 'last_3h'
+  | 'last_6h'
+  | 'last_12h'
+  | 'last_24h'
+  // Rolling — days / months / years (day-aligned).
+  | 'last_2d'
   | 'last_7d'
   | 'last_30d'
+  | 'last_3mo'
+  | 'last_6mo'
+  | 'last_1y'
+  | 'last_2y'
+  | 'last_5y'
+  // Relative single days.
+  | 'today'
+  | 'yesterday'
+  | 'day_before_yesterday'
+  | 'this_day_last_week'
+  // To-date ("so far").
+  | 'wtd'
   | 'mtd'
   | 'qtd'
   | 'ytd'
+  // Previous complete periods.
+  | 'pw'
+  | 'pm'
+  | 'pq'
+  | 'py'
   | (string & {});
 
 export type CompareToken = 'previous_period' | (string & {});

@@ -143,6 +143,8 @@ export type {
   DashboardRenderRequest,
   DashboardRenderResponse,
   ResolvedRenderPeriod,
+  ResolveTimeWindowOptions,
+  Weekday,
   ImageSnapshotEnvelope,
   ImageWidgetSnapshot,
   MarkdownSnapshotEnvelope,

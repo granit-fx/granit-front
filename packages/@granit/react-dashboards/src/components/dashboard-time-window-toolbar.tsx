@@ -6,10 +6,10 @@ import { useDashboardContext } from './dashboard-context';
 import type { DashboardTimeWindow } from '@granit/dashboards';
 
 /**
- * Preset windows the selector offers, in display order. Each carries the token
- * that identifies it in {@link DashboardTimeWindow.period} plus a localization
- * key (with an English fallback, mirroring {@link DashboardFilterToolbar} — the
- * package ships no locale files, host translations override via the key).
+ * One quick-range option. Carries the token that identifies it in
+ * {@link DashboardTimeWindow.period} plus a localization key (with an English
+ * fallback, mirroring {@link DashboardFilterToolbar} — the package ships no
+ * locale files, host translations override via the key).
  */
 interface TimeWindowPreset {
   readonly token: string;
@@ -18,44 +18,92 @@ interface TimeWindowPreset {
   readonly defaultLabel: string;
 }
 
-const PRESETS: readonly TimeWindowPreset[] = [
+interface TimeWindowGroup {
+  readonly labelKey: string;
+  readonly defaultLabel: string;
+  readonly presets: readonly TimeWindowPreset[];
+}
+
+const W = DASHBOARD_TIME_WINDOW;
+
+function preset(window: DashboardTimeWindow, labelKey: string, defaultLabel: string): TimeWindowPreset {
+  const token = 'token' in window.period ? window.period.token : '';
+  return { token, window, labelKey, defaultLabel };
+}
+
+/** Grafana-style quick ranges, grouped for a scannable dropdown. */
+const GROUPS: readonly TimeWindowGroup[] = [
   {
-    token: 'last_24h',
-    window: DASHBOARD_TIME_WINDOW.Last24Hours,
-    labelKey: 'Dashboard:TimeWindow.Last24Hours',
-    defaultLabel: 'Last 24 hours',
+    labelKey: 'Dashboard:TimeWindow.Group.MinutesHours',
+    defaultLabel: 'Minutes & hours',
+    presets: [
+      preset(W.Last5Minutes, 'Dashboard:TimeWindow.Last5Minutes', 'Last 5 minutes'),
+      preset(W.Last15Minutes, 'Dashboard:TimeWindow.Last15Minutes', 'Last 15 minutes'),
+      preset(W.Last30Minutes, 'Dashboard:TimeWindow.Last30Minutes', 'Last 30 minutes'),
+      preset(W.Last1Hour, 'Dashboard:TimeWindow.Last1Hour', 'Last 1 hour'),
+      preset(W.Last3Hours, 'Dashboard:TimeWindow.Last3Hours', 'Last 3 hours'),
+      preset(W.Last6Hours, 'Dashboard:TimeWindow.Last6Hours', 'Last 6 hours'),
+      preset(W.Last12Hours, 'Dashboard:TimeWindow.Last12Hours', 'Last 12 hours'),
+      preset(W.Last24Hours, 'Dashboard:TimeWindow.Last24Hours', 'Last 24 hours'),
+    ],
   },
   {
-    token: 'last_7d',
-    window: DASHBOARD_TIME_WINDOW.Last7Days,
-    labelKey: 'Dashboard:TimeWindow.Last7Days',
-    defaultLabel: 'Last 7 days',
+    labelKey: 'Dashboard:TimeWindow.Group.Days',
+    defaultLabel: 'Days',
+    presets: [
+      preset(W.Last2Days, 'Dashboard:TimeWindow.Last2Days', 'Last 2 days'),
+      preset(W.Last7Days, 'Dashboard:TimeWindow.Last7Days', 'Last 7 days'),
+      preset(W.Last30Days, 'Dashboard:TimeWindow.Last30Days', 'Last 30 days'),
+    ],
   },
   {
-    token: 'last_30d',
-    window: DASHBOARD_TIME_WINDOW.Last30Days,
-    labelKey: 'Dashboard:TimeWindow.Last30Days',
-    defaultLabel: 'Last 30 days',
+    labelKey: 'Dashboard:TimeWindow.Group.MonthsYears',
+    defaultLabel: 'Months & years',
+    presets: [
+      preset(W.Last3Months, 'Dashboard:TimeWindow.Last3Months', 'Last 3 months'),
+      preset(W.Last6Months, 'Dashboard:TimeWindow.Last6Months', 'Last 6 months'),
+      preset(W.Last1Year, 'Dashboard:TimeWindow.Last1Year', 'Last 1 year'),
+      preset(W.Last2Years, 'Dashboard:TimeWindow.Last2Years', 'Last 2 years'),
+      preset(W.Last5Years, 'Dashboard:TimeWindow.Last5Years', 'Last 5 years'),
+    ],
   },
   {
-    token: 'mtd',
-    window: DASHBOARD_TIME_WINDOW.Mtd,
-    labelKey: 'Dashboard:TimeWindow.Mtd',
-    defaultLabel: 'Month to date',
+    labelKey: 'Dashboard:TimeWindow.Group.RelativeDays',
+    defaultLabel: 'Relative days',
+    presets: [
+      preset(W.Today, 'Dashboard:TimeWindow.Today', 'Today'),
+      preset(W.Yesterday, 'Dashboard:TimeWindow.Yesterday', 'Yesterday'),
+      preset(
+        W.DayBeforeYesterday,
+        'Dashboard:TimeWindow.DayBeforeYesterday',
+        'Day before yesterday'
+      ),
+      preset(W.ThisDayLastWeek, 'Dashboard:TimeWindow.ThisDayLastWeek', 'This day last week'),
+    ],
   },
   {
-    token: 'ytd',
-    window: DASHBOARD_TIME_WINDOW.Ytd,
-    labelKey: 'Dashboard:TimeWindow.Ytd',
-    defaultLabel: 'Year to date',
+    labelKey: 'Dashboard:TimeWindow.Group.ToDate',
+    defaultLabel: 'To date',
+    presets: [
+      preset(W.Wtd, 'Dashboard:TimeWindow.Wtd', 'This week (WTD)'),
+      preset(W.Mtd, 'Dashboard:TimeWindow.Mtd', 'This month (MTD)'),
+      preset(W.Qtd, 'Dashboard:TimeWindow.Qtd', 'This quarter (QTD)'),
+      preset(W.Ytd, 'Dashboard:TimeWindow.Ytd', 'This year (YTD)'),
+    ],
   },
   {
-    token: 'last_5m',
-    window: DASHBOARD_TIME_WINDOW.RealtimeLast5Minutes,
-    labelKey: 'Dashboard:TimeWindow.RealtimeLast5Minutes',
-    defaultLabel: 'Realtime (last 5 min)',
+    labelKey: 'Dashboard:TimeWindow.Group.Previous',
+    defaultLabel: 'Previous',
+    presets: [
+      preset(W.Pw, 'Dashboard:TimeWindow.Pw', 'Previous week (PW)'),
+      preset(W.Pm, 'Dashboard:TimeWindow.Pm', 'Previous month (PM)'),
+      preset(W.Pq, 'Dashboard:TimeWindow.Pq', 'Previous quarter (PQ)'),
+      preset(W.Py, 'Dashboard:TimeWindow.Py', 'Previous year (PY)'),
+    ],
   },
 ];
+
+const ALL_PRESETS: readonly TimeWindowPreset[] = GROUPS.flatMap((group) => group.presets);
 
 export interface DashboardTimeWindowToolbarProps {
   readonly className?: string;
@@ -73,10 +121,11 @@ export interface DashboardTimeWindowToolbarProps {
  * (`context.setTimeWindow` absent — embedded / preview / printable
  * dashboards), so apps can mount it unconditionally.
  *
- * v1 offers the framework's {@link DASHBOARD_TIME_WINDOW} presets. A window
- * carrying an absolute range or a token outside the preset set stays selected
- * as a disabled "Custom range" entry; a richer picker (absolute ranges, custom
- * comparison) is a follow-up an app composes on the same context.
+ * Offers the framework's {@link DASHBOARD_TIME_WINDOW} quick ranges, grouped
+ * (minutes/hours, days, months/years, relative days, to-date, previous). A
+ * window carrying an absolute range or a token outside the preset set stays
+ * selected as a disabled "Custom range" entry; a richer picker (absolute
+ * ranges) is a follow-up an app composes on the same context.
  */
 export function DashboardTimeWindowToolbar({ className }: DashboardTimeWindowToolbarProps) {
   const { t } = useTranslation();
@@ -86,7 +135,7 @@ export function DashboardTimeWindowToolbar({ className }: DashboardTimeWindowToo
 
   const { timeWindow, setTimeWindow } = ctx;
   const currentToken = 'token' in timeWindow.period ? timeWindow.period.token : '';
-  const matched = PRESETS.some((preset) => preset.token === currentToken);
+  const matched = ALL_PRESETS.some((p) => p.token === currentToken);
 
   return (
     <div
@@ -103,11 +152,11 @@ export function DashboardTimeWindowToolbar({ className }: DashboardTimeWindowToo
           data-slot="dashboard-time-window-select"
           value={matched ? currentToken : ''}
           onChange={(event) => {
-            const preset = PRESETS.find((p) => p.token === event.target.value);
+            const next = ALL_PRESETS.find((p) => p.token === event.target.value);
             // Spread over the current window so an app-set `compareTo` /
             // `aggregation` survives a period change; the preset owns `period`
-            // and `kind` (History vs Realtime).
-            if (preset) setTimeWindow({ ...timeWindow, ...preset.window });
+            // and `kind`.
+            if (next) setTimeWindow({ ...timeWindow, ...next.window });
           }}
           className="rounded-md border bg-background px-2.5 py-1.5 text-sm"
         >
@@ -116,10 +165,14 @@ export function DashboardTimeWindowToolbar({ className }: DashboardTimeWindowToo
               {t('Dashboard:TimeWindow.Custom', { defaultValue: 'Custom range' })}
             </option>
           )}
-          {PRESETS.map((preset) => (
-            <option key={preset.token} value={preset.token}>
-              {t(preset.labelKey, { defaultValue: preset.defaultLabel })}
-            </option>
+          {GROUPS.map((group) => (
+            <optgroup key={group.labelKey} label={t(group.labelKey, { defaultValue: group.defaultLabel })}>
+              {group.presets.map((p) => (
+                <option key={p.token} value={p.token}>
+                  {t(p.labelKey, { defaultValue: p.defaultLabel })}
+                </option>
+              ))}
+            </optgroup>
           ))}
         </select>
       </label>
