@@ -47,6 +47,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { logger } from '../logger';
 
+import { DashboardRefreshControl } from './dashboard-refresh-control';
+import { DashboardTimeRangeControl } from './dashboard-time-range-control';
+
 type PendingEditAction = 'delete-widget' | 'discard';
 
 /**
@@ -334,6 +337,12 @@ export function DashboardComposer({
             setSelectedSlug(slug);
             setPendingAction('delete-widget');
           }}
+          controlsSlot={
+            <>
+              <DashboardTimeRangeControl />
+              <DashboardRefreshControl />
+            </>
+          }
         />
       </div>
 

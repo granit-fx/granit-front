@@ -4930,6 +4930,28 @@
           "signature": "function useEffectiveRefreshInterval( override?: DashboardRefreshInterval ): DashboardRefreshInterval"
         },
         {
+          "name": "TIME_WINDOW_GROUPS",
+          "kind": "const",
+          "signature": "const TIME_WINDOW_GROUPS: readonly TimeWindowGroup[]"
+        },
+        {
+          "name": "TIME_WINDOW_PRESETS",
+          "kind": "const",
+          "signature": "const TIME_WINDOW_PRESETS: readonly TimeWindowPreset[]"
+        },
+        {
+          "name": "TimeWindowGroup",
+          "kind": "interface",
+          "signature": "interface TimeWindowGroup",
+          "members": []
+        },
+        {
+          "name": "TimeWindowPreset",
+          "kind": "interface",
+          "signature": "interface TimeWindowPreset",
+          "members": []
+        },
+        {
           "name": "useWidgetTriggerHandler",
           "kind": "function",
           "signature": "function useWidgetTriggerHandler( trigger: WidgetActionTrigger, actions: readonly WidgetAction[] | null | undefined ): ((data?: Readonly<Record<string, unknown>>) => void) | null"
@@ -8791,6 +8813,28 @@
           "name": "DashboardComposerProps",
           "kind": "interface",
           "signature": "interface DashboardComposerProps",
+          "members": []
+        },
+        {
+          "name": "DashboardTimeRangeControl",
+          "kind": "function",
+          "signature": "function DashboardTimeRangeControl("
+        },
+        {
+          "name": "DashboardTimeRangeControlProps",
+          "kind": "interface",
+          "signature": "interface DashboardTimeRangeControlProps",
+          "members": []
+        },
+        {
+          "name": "DashboardRefreshControl",
+          "kind": "function",
+          "signature": "function DashboardRefreshControl("
+        },
+        {
+          "name": "DashboardRefreshControlProps",
+          "kind": "interface",
+          "signature": "interface DashboardRefreshControlProps",
           "members": []
         },
         {

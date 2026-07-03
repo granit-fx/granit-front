@@ -54,10 +54,16 @@ vi.mock('@granit/react-dashboards', () => ({
   // Context + selectors are covered by their own suites; here they only need to
   // mount so the view page's wiring renders.
   DashboardContextProvider: ({ children }: { readonly children: React.ReactNode }) => children,
-  DashboardTimeWindowToolbar: () => <div data-slot="dashboard-time-window-toolbar" />,
-  DashboardRefreshToolbar: () => <div data-slot="dashboard-refresh-toolbar" />,
   useDashboardTimeWindowState: <T,>(initial: T) => [initial, vi.fn()] as const,
   useDashboardRefreshIntervalState: <T,>(initial: T) => [initial, vi.fn()] as const,
+}));
+
+// The styled controls have their own suites; here they only need to mount.
+vi.mock('../components/dashboard-time-range-control', () => ({
+  DashboardTimeRangeControl: () => <div data-slot="dashboard-time-range-control" />,
+}));
+vi.mock('../components/dashboard-refresh-control', () => ({
+  DashboardRefreshControl: () => <div data-slot="dashboard-refresh-control" />,
 }));
 
 describe('DashboardViewPage', () => {
@@ -75,10 +81,10 @@ describe('DashboardViewPage', () => {
     renderDashboards(<DashboardViewPage />);
 
     expect(
-      document.querySelector('[data-slot="dashboard-time-window-toolbar"]')
+      document.querySelector('[data-slot="dashboard-time-range-control"]')
     ).toBeInTheDocument();
     expect(
-      document.querySelector('[data-slot="dashboard-refresh-toolbar"]')
+      document.querySelector('[data-slot="dashboard-refresh-control"]')
     ).toBeInTheDocument();
     // No declared default → falls back to Last 30 days.
     expect(

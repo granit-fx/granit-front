@@ -70,6 +70,13 @@ export interface EditableDashboardProps {
   readonly onEditWidget?: (slug: string) => void;
   readonly onDuplicateWidget?: (slug: string) => void;
   readonly onDeleteWidget?: (slug: string) => void;
+  /**
+   * Time-range / refresh controls rendered above the canvas, inside the
+   * dashboard context. Defaults to the headless `DashboardTimeWindowToolbar` +
+   * `DashboardRefreshToolbar`; a UI-tier parent can pass the styled controls
+   * (they read the same context).
+   */
+  readonly controlsSlot?: ReactNode;
 }
 
 export function EditableDashboard({
@@ -81,6 +88,7 @@ export function EditableDashboard({
   onEditWidget,
   onDuplicateWidget,
   onDeleteWidget,
+  controlsSlot,
 }: EditableDashboardProps) {
   const breakpoint = useDashboardBreakpoint();
 
@@ -153,8 +161,12 @@ export function EditableDashboard({
           data-slot="dashboard-controls"
           className="mb-3 flex flex-wrap items-end justify-end gap-3"
         >
-          <DashboardTimeWindowToolbar />
-          <DashboardRefreshToolbar />
+          {controlsSlot ?? (
+            <>
+              <DashboardTimeWindowToolbar />
+              <DashboardRefreshToolbar />
+            </>
+          )}
         </div>
         <GridLayout
           width={width || FALLBACK_WIDTH_PX}

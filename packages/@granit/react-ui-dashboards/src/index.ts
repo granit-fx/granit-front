@@ -9,6 +9,10 @@ export { DashboardEditPage } from './components/dashboard-edit-page';
 export { DashboardViewPage } from './components/dashboard-view-page';
 export { DashboardComposer } from './components/dashboard-composer';
 export type { DashboardComposerProps } from './components/dashboard-composer';
+export { DashboardTimeRangeControl } from './components/dashboard-time-range-control';
+export type { DashboardTimeRangeControlProps } from './components/dashboard-time-range-control';
+export { DashboardRefreshControl } from './components/dashboard-refresh-control';
+export type { DashboardRefreshControlProps } from './components/dashboard-refresh-control';
 
 // Public components
 export { StatusBadge } from './components/dashboard-status-badge';

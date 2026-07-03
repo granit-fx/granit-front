@@ -5,8 +5,6 @@ import {
 } from '@granit/dashboards';
 import {
   DashboardContextProvider,
-  DashboardRefreshToolbar,
-  DashboardTimeWindowToolbar,
   RenderedDashboard,
   useDashboardDetail,
   useDashboardRefreshIntervalState,
@@ -20,7 +18,9 @@ import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { DashboardComposer } from './dashboard-composer';
+import { DashboardRefreshControl } from './dashboard-refresh-control';
 import { StatusBadge } from './dashboard-status-badge';
+import { DashboardTimeRangeControl } from './dashboard-time-range-control';
 
 import type { DashboardDetailResponse } from '@granit/dashboards';
 
@@ -164,8 +164,8 @@ function DashboardViewContent({ detail, dashboardId, onEdit }: DashboardViewCont
             </div>
           </div>
           <div className="flex items-end gap-3">
-            <DashboardTimeWindowToolbar />
-            <DashboardRefreshToolbar />
+            <DashboardTimeRangeControl />
+            <DashboardRefreshControl />
             <Button
               data-slot="dashboard-view-edit-toggle"
               variant="outline"

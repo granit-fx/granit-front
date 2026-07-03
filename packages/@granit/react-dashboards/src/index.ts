@@ -143,6 +143,8 @@ export type {
 } from './lib/widget-action-handler';
 export { useEffectiveTimeWindow } from './hooks/use-effective-time-window';
 export { useEffectiveRefreshInterval } from './hooks/use-effective-refresh-interval';
+export { TIME_WINDOW_GROUPS, TIME_WINDOW_PRESETS } from './lib/time-window-presets';
+export type { TimeWindowGroup, TimeWindowPreset } from './lib/time-window-presets';
 export { useWidgetTriggerHandler } from './hooks/use-widget-trigger-handler';
 export {
   DASHBOARD_BREAKPOINT_MIN_WIDTH,
