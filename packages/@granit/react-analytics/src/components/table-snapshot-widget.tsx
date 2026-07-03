@@ -1,19 +1,23 @@
 import { isTableSnapshotEnvelope } from '@granit/analytics';
+import { createDefaultCellDateFormatters, formatCell } from '@granit/react-query-engine';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { TableWidgetColumn, TableWidgetSnapshot } from '@granit/analytics';
 import type { DashboardRenderedWidget } from '@granit/dashboards';
+import type { ColumnDefinition } from '@granit/query-engine';
 
 /**
  * Snapshot-driven renderer for the `'Table'` widget kind. Reads the rows
  * inline from `widget.snapshot.rows` (no per-row fetching — the bundle
  * carried them already), with localized headers via `useTranslation()`.
  *
- * Per-column currency formatting (B3-8b): when a column declares
- * `currencyCode`, numeric cell values format via
- * `Intl.NumberFormat({ style: 'currency', currency })` using the active
- * locale. Mixing currencies across columns is supported by design (a
- * table with `AmountEur` + `AmountUsd` shows both symbols side by side).
+ * Cells render through the shared query-engine `formatCell`, so a dashboard
+ * table formats values exactly like the query grids: `valueKind` drives the
+ * renderer (`Currency` symbol + locale, `Percentage` as `%`, `Url`/`Email`/
+ * `Phone` as links, dates via locale formatters, …), with per-column and
+ * per-row currency codes honoured. `valueKind` absent → locale number / text
+ * fallback.
  *
  * The renderer stays narrow on purpose — sorting / pagination /
  * client-side filtering belong to the host (apps that need them override
@@ -27,6 +31,8 @@ export function TableSnapshotWidget({ widget }: { readonly widget: DashboardRend
 function TableBody({ snapshot }: { readonly snapshot: TableWidgetSnapshot }) {
   const { t, i18n } = useTranslation();
   const { columns, rows, totalRowCount } = snapshot;
+  const locale = i18n.language || 'en-US';
+  const dateFormatters = useMemo(() => createDefaultCellDateFormatters(locale), [locale]);
 
   return (
     <div data-slot="table-snapshot-widget" className="flex h-full flex-col gap-2">
@@ -78,7 +84,13 @@ function TableBody({ snapshot }: { readonly snapshot: TableWidgetSnapshot }) {
                       data-column-name={col.name}
                       className="py-1 pr-3 tabular-nums"
                     >
-                      {formatCell(row[col.name], col, i18n.language)}
+                      {formatCell({
+                        row,
+                        column: toColumnDefinition(col),
+                        locale,
+                        formatDate: dateFormatters.formatDate,
+                        formatDateTime: dateFormatters.formatDateTime,
+                      })}
                     </td>
                   ))}
                 </tr>
@@ -92,24 +104,23 @@ function TableBody({ snapshot }: { readonly snapshot: TableWidgetSnapshot }) {
 }
 
 /**
- * Per-column cell formatter. Honors `currencyCode` (B3-8b) for numeric
- * values; otherwise falls back to locale-aware number formatting; falls
- * through to `String()` for non-number primitives.
+ * Adapts a dashboard `TableWidgetColumn` to the `ColumnDefinition` shape the
+ * shared `formatCell` consumes. The snapshot carries no CLR `type`, so the
+ * formatter relies on `valueKind` (+ ISO-date detection for string cells).
  */
-function formatCell(value: unknown, column: TableWidgetColumn, locale: string): string {
-  if (value === null || value === undefined) return '—';
-  if (typeof value === 'number') {
-    if (column.currencyCode) {
-      return new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency: column.currencyCode,
-      }).format(value);
-    }
-    return value.toLocaleString(locale);
-  }
-  if (typeof value === 'string') return value;
-  if (typeof value === 'boolean' || typeof value === 'bigint') return value.toString();
-  return JSON.stringify(value);
+function toColumnDefinition(col: TableWidgetColumn): ColumnDefinition {
+  return {
+    name: col.name,
+    label: col.labelLocalizationKey ?? col.name,
+    type: '',
+    order: 0,
+    isSortable: false,
+    isFilterable: false,
+    isVisible: true,
+    valueKind: col.valueKind ?? undefined,
+    currencyCode: col.currencyCode ?? undefined,
+    currencyCodeField: col.currencyCodeField ?? undefined,
+  };
 }
 
 /**

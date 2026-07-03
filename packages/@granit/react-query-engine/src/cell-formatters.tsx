@@ -52,11 +52,19 @@ function tryFormatDateCell(
   return null;
 }
 
-// Monetary amounts arrive in minor units (cents); scale to the major unit.
-// When no ISO code resolves, fall back to a plain locale number (no symbol).
-function formatMoney(value: number, currency: string | undefined, locale: string): string {
+// Formats a monetary amount. Query-engine `valueKind: 'Currency'` columns
+// carry the actual decimal amount (major units), so no scaling by default;
+// the legacy entity `money` form-component stores Int64 minor units (cents),
+// so that path opts into `minorUnits`. When no ISO code resolves, falls back
+// to a plain locale number (no symbol).
+function formatMoney(
+  value: number,
+  currency: string | undefined,
+  locale: string,
+  minorUnits = false
+): string {
   const options: Intl.NumberFormatOptions = currency ? { style: 'currency', currency } : {};
-  return new Intl.NumberFormat(locale, options).format(value / 100);
+  return new Intl.NumberFormat(locale, options).format(minorUnits ? value / 100 : value);
 }
 
 // Currency ISO code precedence for a `Currency` column:
@@ -212,7 +220,15 @@ export function formatCell(ctx: CellFormatterContext): ReactNode {
   }
 
   if (component === 'money' && currencyResolver && typeof value === 'number') {
-    return formatMoney(value, currencyResolver(row), locale);
+    // Legacy entity `money` widget: Int64 minor units (cents) on the wire.
+    return formatMoney(value, currencyResolver(row), locale, true);
+  }
+
+  // A column declaring a currency code (fixed or per-row) formats as money even
+  // when no `valueKind` is present — preserves the currency-code-only contract
+  // (major units, like `valueKind: 'Currency'`).
+  if ((column.currencyCode || column.currencyCodeField) && typeof value === 'number') {
+    return formatMoney(value, resolveColumnCurrency(column, row), locale);
   }
 
   const formattedDate = tryFormatDateCell(
@@ -225,6 +241,7 @@ export function formatCell(ctx: CellFormatterContext): ReactNode {
   if (formattedDate !== null) return formattedDate;
 
   if (typeof value === 'boolean') return renderBoolean(value);
+  if (typeof value === 'number') return new Intl.NumberFormat(locale).format(value);
   if (typeof value === 'object') return JSON.stringify(value);
   return String(value); // NOSONAR: remaining types (symbol, function) stringify safely
 }

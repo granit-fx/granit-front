@@ -63,6 +63,11 @@ describe('formatCell — empty & fallback', () => {
     const col = makeColumn({ valueKind: 'Currency' });
     expect(textOf(makeCtx(col, { value: 'N/A' }))).toBe('N/A');
   });
+
+  it('locale-formats a plain number with no valueKind', () => {
+    const col = makeColumn();
+    expect(textOf(makeCtx(col, { value: 1234567 }))).toBe('1,234,567');
+  });
 });
 
 describe('formatCell — resolution priority', () => {
@@ -81,18 +86,21 @@ describe('formatCell — resolution priority', () => {
 });
 
 describe('formatCell — Currency valueKind', () => {
-  it('formats with a fixed currencyCode (design-time constant)', () => {
+  // Query-engine Currency values are the actual decimal amount (major units),
+  // not minor units — the formatter must NOT divide by 100.
+  it('formats with a fixed currencyCode (design-time constant), no /100', () => {
     const col = makeColumn({ valueKind: 'Currency', currencyCode: 'GBP' });
-    const text = textOf(makeCtx(col, { value: 12345 }));
-    expect(text).toContain('123.45');
+    const text = textOf(makeCtx(col, { value: 1234.56 }));
+    expect(text).toContain('1,234.56');
     expect(text).toContain('£');
   });
 
   it('reads the per-row code from currencyCodeField (multi-currency)', () => {
     const col = makeColumn({ valueKind: 'Currency', currencyCodeField: 'currency' });
-    const usd = textOf(makeCtx(col, { value: 12345, currency: 'USD' }));
-    const eur = textOf(makeCtx(col, { value: 12345, currency: 'EUR' }));
+    const usd = textOf(makeCtx(col, { value: 1234.56, currency: 'USD' }));
+    const eur = textOf(makeCtx(col, { value: 1234.56, currency: 'EUR' }));
     expect(usd).toContain('$');
+    expect(usd).toContain('1,234.56');
     expect(eur).toContain('€');
     expect(usd).not.toBe(eur);
   });
@@ -103,21 +111,21 @@ describe('formatCell — Currency valueKind', () => {
       currencyCode: 'GBP',
       currencyCodeField: 'currency',
     });
-    const text = textOf(makeCtx(col, { value: 12345, currency: 'USD' }));
+    const text = textOf(makeCtx(col, { value: 1234.56, currency: 'USD' }));
     expect(text).toContain('£');
     expect(text).not.toContain('$');
   });
 
   it('falls back to a plain locale number when no code resolves', () => {
     const col = makeColumn({ valueKind: 'Currency' });
-    const text = textOf(makeCtx(col, { value: 12345 }));
-    expect(text).toBe('123.45');
+    const text = textOf(makeCtx(col, { value: 1234.56 }));
+    expect(text).toBe('1,234.56');
   });
 
   it('falls back to a plain number when the referenced field is missing', () => {
     const col = makeColumn({ valueKind: 'Currency', currencyCodeField: 'currency' });
-    const text = textOf(makeCtx(col, { value: 12345 }));
-    expect(text).toBe('123.45');
+    const text = textOf(makeCtx(col, { value: 1234.56 }));
+    expect(text).toBe('1,234.56');
   });
 });
 

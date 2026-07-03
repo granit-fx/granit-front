@@ -240,7 +240,7 @@ describe('EntityList', () => {
       http.get(`http://localhost${BASE_PATH}/meta`, () => HttpResponse.json(valueKindMeta)),
       http.get(`http://localhost${BASE_PATH}`, () =>
         HttpResponse.json({
-          items: [{ id: '1', website: 'https://acme.test', balance: 12345 }],
+          items: [{ id: '1', website: 'https://acme.test', balance: 1234.56 }],
           totalCount: 1,
           page: 1,
           pageSize: 20,
@@ -260,7 +260,7 @@ describe('EntityList', () => {
     const link = container.querySelector('td[data-column="website"] a');
     expect(link?.getAttribute('href')).toBe('https://acme.test');
     const balance = container.querySelector('td[data-column="balance"]')?.textContent ?? '';
-    expect(balance).toContain('123.45');
+    expect(balance).toContain('1,234.56');
     expect(balance).toContain('€');
   });
 

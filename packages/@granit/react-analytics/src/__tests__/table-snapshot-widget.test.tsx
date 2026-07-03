@@ -98,6 +98,49 @@ describe('TableSnapshotWidget — rendering', () => {
     expect(cells[1]?.textContent).toBe('1,234');
   });
 
+  it('renders cells from column valueKind (Url link, Percentage, no /100 currency)', () => {
+    const snapshot: TableWidgetSnapshot = {
+      columns: [
+        { name: 'site', labelLocalizationKey: null, valueKind: 'Url' },
+        { name: 'rate', labelLocalizationKey: null, valueKind: 'Percentage' },
+        { name: 'total', labelLocalizationKey: null, valueKind: 'Currency', currencyCode: 'EUR' },
+      ],
+      rows: [{ site: 'https://acme.test', rate: 42.5, total: 1234.56 }],
+      totalRowCount: 1,
+    };
+    const { container } = wrap(<TableSnapshotWidget widget={tableEnvelope(snapshot)} />);
+    const link = container.querySelector('[data-column-name="site"] a');
+    expect(link?.getAttribute('href')).toBe('https://acme.test');
+    const rate = container.querySelectorAll('[data-column-name="rate"]')[1];
+    expect(rate?.textContent).toBe('42.5%');
+    const total = container.querySelectorAll('[data-column-name="total"]')[1];
+    expect(normalizeSpaces(total?.textContent ?? '')).toBe('€1,234.56');
+  });
+
+  it('formats per-row currency from currencyCodeField (multi-currency)', () => {
+    const snapshot: TableWidgetSnapshot = {
+      columns: [
+        {
+          name: 'amount',
+          labelLocalizationKey: null,
+          valueKind: 'Currency',
+          currencyCodeField: 'code',
+        },
+        { name: 'code', labelLocalizationKey: null },
+      ],
+      rows: [
+        { amount: 100, code: 'USD' },
+        { amount: 100, code: 'EUR' },
+      ],
+      totalRowCount: 2,
+    };
+    const { container } = wrap(<TableSnapshotWidget widget={tableEnvelope(snapshot)} />);
+    const amounts = container.querySelectorAll('[data-column-name="amount"]');
+    // amounts[0] is the header <th>; rows follow.
+    expect(normalizeSpaces(amounts[1]?.textContent ?? '')).toContain('$');
+    expect(normalizeSpaces(amounts[2]?.textContent ?? '')).toContain('€');
+  });
+
   it('renders an empty-state row when no data', () => {
     const snapshot: TableWidgetSnapshot = {
       columns: [{ name: 'id', labelLocalizationKey: null }],

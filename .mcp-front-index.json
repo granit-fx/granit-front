@@ -3451,6 +3451,11 @@
           "kind": "interface",
           "signature": "interface FormatMetricValueArgs",
           "members": []
+        },
+        {
+          "name": "metricRequestFromTimeWindow",
+          "kind": "function",
+          "signature": "function metricRequestFromTimeWindow( timeWindow: DashboardTimeWindow, supportsPeriod: boolean ): MetricRequest"
         }
       ]
     },

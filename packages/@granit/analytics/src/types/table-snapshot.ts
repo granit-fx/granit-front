@@ -22,6 +22,21 @@ export interface TableWidgetColumn {
    * so a table mixing AmountEur and AmountUsd surfaces both independently.
    */
   readonly currencyCode?: string | null;
+  /**
+   * Semantic display-type of the source query column (`Currency`, `Percentage`,
+   * `Url`, `Date`, …), or `null`. Drives the shared cell formatter so a
+   * dashboard table renders values the same way the query grids do. Wire
+   * values are the .NET `ValueKind` enum member names verbatim. Mirrors
+   * `ColumnDescriptor.ValueKind`.
+   */
+  readonly valueKind?: string | null;
+  /**
+   * Name (camelCase) of the sibling column carrying the per-row ISO 4217 code
+   * for a multi-currency table, or `null`. Consulted only when
+   * {@link currencyCode} is absent; the code is read from
+   * `row[currencyCodeField]` on each row.
+   */
+  readonly currencyCodeField?: string | null;
 }
 
 /**
