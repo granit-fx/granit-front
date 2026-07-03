@@ -1,8 +1,18 @@
 import { DASHBOARD_TIME_WINDOW, shiftTimeWindow, zoomOutTimeWindow } from '@granit/dashboards';
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useDashboardContext } from './dashboard-context';
+import {
+  ChevronDownIcon,
+  ChevronsLeftIcon,
+  ChevronsRightIcon,
+  ClockIcon,
+  joinClasses,
+  PILL_CLASS,
+  SEGMENT_BUTTON_CLASS,
+  ZoomOutIcon,
+} from './pill-controls';
 
 import type { DashboardTimeWindow } from '@granit/dashboards';
 
@@ -175,11 +185,7 @@ export function DashboardTimeWindowToolbar({ className }: DashboardTimeWindowToo
     >
       {/* Grafana-style segmented pill: shift back « · clock + range picker ▾ ·
           shift forward » · zoom out ⊖. */}
-      <div
-        role="toolbar"
-        aria-label="Dashboard time window"
-        className="inline-flex h-9 items-stretch overflow-hidden rounded-md border bg-background text-sm shadow-sm"
-      >
+      <div role="toolbar" aria-label="Dashboard time window" className={PILL_CLASS}>
         <button
           type="button"
           data-slot="dashboard-time-window-back"
@@ -301,87 +307,10 @@ export function DashboardTimeWindowToolbar({ className }: DashboardTimeWindowToo
   );
 }
 
-/** Shared styling for the flanking icon buttons of the segmented pill. */
-const SEGMENT_BUTTON_CLASS =
-  'flex items-center px-2.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground';
-
-/** Line-icon wrapper (lucide-style geometry) — keeps the package icon-lib-free. */
-function Icon({
-  children,
-  className,
-}: {
-  readonly children: ReactNode;
-  readonly className?: string;
-}) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      className={className ?? 'h-4 w-4'}
-    >
-      {children}
-    </svg>
-  );
-}
-
-function ClockIcon({ className }: { readonly className?: string }) {
-  return (
-    <Icon className={className}>
-      <circle cx="12" cy="12" r="10" />
-      <polyline points="12 6 12 12 16 14" />
-    </Icon>
-  );
-}
-
-function ChevronDownIcon({ className }: { readonly className?: string }) {
-  return (
-    <Icon className={className}>
-      <path d="m6 9 6 6 6-6" />
-    </Icon>
-  );
-}
-
-function ChevronsLeftIcon() {
-  return (
-    <Icon>
-      <path d="m11 17-5-5 5-5" />
-      <path d="m18 17-5-5 5-5" />
-    </Icon>
-  );
-}
-
-function ChevronsRightIcon() {
-  return (
-    <Icon>
-      <path d="m6 17 5-5-5-5" />
-      <path d="m13 17 5-5-5-5" />
-    </Icon>
-  );
-}
-
-function ZoomOutIcon() {
-  return (
-    <Icon>
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-      <path d="M8 11h6" />
-    </Icon>
-  );
-}
-
 /** ISO 8601 UTC → `datetime-local` value (`YYYY-MM-DDTHH:mm`) in the browser's local zone. */
 function toLocalInput(iso: string): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return '';
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
-}
-
-function joinClasses(...parts: ReadonlyArray<string | undefined>): string {
-  return parts.filter(Boolean).join(' ');
 }

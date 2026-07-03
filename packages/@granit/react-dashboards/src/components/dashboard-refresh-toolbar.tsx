@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
 import { useDashboardContext } from './dashboard-context';
+import { ChevronDownIcon, joinClasses, PILL_CLASS, RefreshIcon, SEGMENT_BUTTON_CLASS } from './pill-controls';
 
 import type { DashboardRefreshInterval } from '@granit/dashboards';
 
@@ -71,29 +72,31 @@ export function DashboardRefreshToolbar({ className, onRefresh }: DashboardRefre
       data-slot="dashboard-refresh-toolbar"
       role="toolbar"
       aria-label="Dashboard refresh"
-      className={joinClasses('flex items-end gap-2', className)}
+      className={joinClasses(PILL_CLASS, className)}
     >
+      {/* Manual "refresh now" + the cadence picker, one segmented pill matching
+          the time-window toolbar. */}
       <button
         type="button"
         data-slot="dashboard-refresh-now"
         aria-label={t('Dashboard:Refresh.Now', { defaultValue: 'Refresh now' })}
         onClick={refreshNow}
-        className="rounded-md border bg-background px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+        className={SEGMENT_BUTTON_CLASS}
       >
-        <span aria-hidden>↻</span>
+        <RefreshIcon />
+        <span>{t('Dashboard:Refresh.Label', { defaultValue: 'Refresh' })}</span>
       </button>
-      <label className="flex flex-col gap-1 text-xs">
-        <span data-slot="dashboard-refresh-label" className="text-muted-foreground">
-          {t('Dashboard:Refresh.Label', { defaultValue: 'Refresh' })}
-        </span>
+
+      <div className="relative flex items-center border-l">
         <select
           data-slot="dashboard-refresh-select"
+          aria-label={t('Dashboard:Refresh.Cadence', { defaultValue: 'Refresh cadence' })}
           value={String(refreshInterval)}
           onChange={(event) => {
             const option = OPTIONS.find((o) => String(o.value) === event.target.value);
             if (option) setRefreshInterval(option.value);
           }}
-          className="rounded-md border bg-background px-2.5 py-1.5 text-sm"
+          className="h-full cursor-pointer appearance-none bg-transparent py-1.5 pl-3 pr-8 font-medium text-foreground focus:outline-none focus-visible:bg-accent"
         >
           {OPTIONS.map((option) => (
             <option key={String(option.value)} value={String(option.value)}>
@@ -101,11 +104,8 @@ export function DashboardRefreshToolbar({ className, onRefresh }: DashboardRefre
             </option>
           ))}
         </select>
-      </label>
+        <ChevronDownIcon className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      </div>
     </div>
   );
-}
-
-function joinClasses(...parts: ReadonlyArray<string | undefined>): string {
-  return parts.filter(Boolean).join(' ');
 }
