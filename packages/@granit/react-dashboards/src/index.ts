@@ -98,6 +98,8 @@ export type {
 } from './components/dashboard-filter-context';
 export { DashboardFilterToolbar } from './components/dashboard-filter-toolbar';
 export type { DashboardFilterToolbarProps } from './components/dashboard-filter-toolbar';
+export { DashboardTimeWindowToolbar } from './components/dashboard-time-window-toolbar';
+export type { DashboardTimeWindowToolbarProps } from './components/dashboard-time-window-toolbar';
 export { mergeFilterValuesIntoRequest } from './lib/merge-filter-values';
 
 // Entity alias runtime (P2.3) — resolution context, provider, helpers

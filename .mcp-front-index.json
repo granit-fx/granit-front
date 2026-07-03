@@ -4857,6 +4857,17 @@
           "members": []
         },
         {
+          "name": "DashboardTimeWindowToolbar",
+          "kind": "function",
+          "signature": "function DashboardTimeWindowToolbar("
+        },
+        {
+          "name": "DashboardTimeWindowToolbarProps",
+          "kind": "interface",
+          "signature": "interface DashboardTimeWindowToolbarProps",
+          "members": []
+        },
+        {
           "name": "mergeFilterValuesIntoRequest",
           "kind": "function",
           "signature": "function mergeFilterValuesIntoRequest( request: DashboardRenderRequest, values: DashboardFilterValues | null | undefined ): DashboardRenderRequest"

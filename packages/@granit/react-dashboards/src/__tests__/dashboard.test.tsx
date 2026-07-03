@@ -118,6 +118,33 @@ describe('Dashboard', () => {
     expect(screen.getByText(/analytics-kpi/)).toBeInTheDocument();
   });
 
+  it('renders the time-window toolbar when the dashboard declares a default window', () => {
+    const { container } = renderDashboard({
+      name: 'Windowed',
+      category: 'General',
+      isSystem: false,
+      version: '1.0.0',
+      layout: { columns: 12, rowHeight: 80 },
+      defaultTimeWindow: { period: { token: 'last_7d' }, kind: 'History' },
+      widgets: [],
+    });
+    const toolbar = container.querySelector('[data-slot="dashboard-time-window-toolbar"]');
+    expect(toolbar).toBeInTheDocument();
+    expect((toolbar?.querySelector('select') as HTMLSelectElement).value).toBe('last_7d');
+  });
+
+  it('omits the time-window toolbar when no default window is declared', () => {
+    const { container } = renderDashboard({
+      name: 'Windowless',
+      category: 'General',
+      isSystem: false,
+      version: '1.0.0',
+      layout: { columns: 12, rowHeight: 80 },
+      widgets: [],
+    });
+    expect(container.querySelector('[data-slot="dashboard-time-window-toolbar"]')).toBeNull();
+  });
+
   it('renders the TextWidget with style-aware HTML element', () => {
     const { container } = renderDashboard({
       name: 'Test',

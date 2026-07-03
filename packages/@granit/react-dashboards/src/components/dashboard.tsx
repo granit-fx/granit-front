@@ -4,7 +4,8 @@ import { useDashboardBreakpoint } from '../hooks/use-dashboard-breakpoint';
 import { resolveActiveView } from '../lib/resolve-active-view';
 import { resolveEffectiveLayout } from '../lib/resolve-effective-layout';
 
-import { DashboardContextProvider } from './dashboard-context';
+import { DashboardContextProvider, useDashboardTimeWindowState } from './dashboard-context';
+import { DashboardTimeWindowToolbar } from './dashboard-time-window-toolbar';
 import { DashboardViewProvider } from './dashboard-view-context';
 import { WidgetRenderer } from './widget-renderer';
 
@@ -77,6 +78,14 @@ export function Dashboard({
     [currentView, onViewChange]
   );
 
+  // Time window in effect for every data-bound widget. Seeded from the
+  // dashboard's declared default; a `null`/absent default leaves it undefined,
+  // so widgets keep their `useEffectiveTimeWindow` fallback and no selector is
+  // shown — filter-less dashboards render exactly as before.
+  const [timeWindow, setTimeWindow] = useDashboardTimeWindowState(
+    definition.defaultTimeWindow ?? undefined
+  );
+
   const breakpoint = useDashboardBreakpoint();
 
   const {
@@ -108,8 +117,9 @@ export function Dashboard({
   };
 
   return (
-    <DashboardContextProvider value={{ dashboardName: definition.name }}>
+    <DashboardContextProvider value={{ dashboardName: definition.name, timeWindow, setTimeWindow }}>
       <DashboardViewProvider value={{ currentView: resolvedView, setCurrentView: setView }}>
+        {timeWindow && <DashboardTimeWindowToolbar />}
         <div
           data-slot="dashboard"
           data-dashboard-name={definition.name}
