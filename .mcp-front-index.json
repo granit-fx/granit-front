@@ -6191,7 +6191,7 @@
         {
           "name": "useTimezone",
           "kind": "function",
-          "signature": "function useTimezone(): string"
+          "signature": "function useTimezone(): TimeZoneId"
         },
         {
           "name": "FirstDayOfWeekProvider",
@@ -6202,11 +6202,6 @@
           "name": "useFirstDayOfWeek",
           "kind": "function",
           "signature": "function useFirstDayOfWeek(): Weekday"
-        },
-        {
-          "name": "Weekday",
-          "kind": "type",
-          "signature": "type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6"
         },
         {
           "name": "useTranslation",
@@ -11986,6 +11981,34 @@
           "name": "toggleReaction",
           "kind": "function",
           "signature": "async function toggleReaction( client: AxiosInstance, basePath: string, entryId: TimelineEntryId, emoji: ReactionEmoji ): Promise<ReactionToggleResponse>"
+        }
+      ]
+    },
+    {
+      "name": "@granit/timing",
+      "description": "Framework-agnostic time vocabulary and calendar-token resolution (mirrors Granit.Timing)",
+      "exports": [
+        {
+          "name": "Weekday",
+          "kind": "type",
+          "signature": "type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6"
+        },
+        {
+          "name": "resolvePeriodToken",
+          "kind": "function",
+          "signature": "function resolvePeriodToken( token: string, options: ResolvePeriodTokenOptions ="
+        },
+        {
+          "name": "PeriodBounds",
+          "kind": "interface",
+          "signature": "interface PeriodBounds",
+          "members": []
+        },
+        {
+          "name": "ResolvePeriodTokenOptions",
+          "kind": "interface",
+          "signature": "interface ResolvePeriodTokenOptions",
+          "members": []
         }
       ]
     },

@@ -9,6 +9,7 @@ import {
 } from 'react';
 
 import type { DashboardRefreshInterval, DashboardTimeWindow } from '@granit/dashboards';
+import type { TimeZoneId, Weekday } from '@granit/timing';
 
 /**
  * Read-only ambient context for a rendered dashboard. Surfaces the dashboard
@@ -42,6 +43,20 @@ export interface DashboardContextValue {
    * (no refresh control shown).
    */
   readonly setRefreshInterval?: Dispatch<SetStateAction<DashboardRefreshInterval | undefined>>;
+  /**
+   * First day of week (`wtd` / `pw`) for client-side resolution of the shift /
+   * zoom controls. Fed from the app's `Granit.Timing.PreferredFirstDayOfWeek`
+   * setting (via `useFirstDayOfWeek`); defaults to Monday when omitted. Must
+   * match the backend `Granit.Timing` resolver so a shifted token window lines
+   * up with what the server would render.
+   */
+  readonly weekStartsOn?: Weekday;
+  /**
+   * IANA timezone the shift / zoom controls day-align calendar tokens in. Fed
+   * from the app's `Granit.Timing.PreferredTimezone` setting (via
+   * `useTimezone`); UTC when omitted.
+   */
+  readonly timeZone?: TimeZoneId;
 }
 
 const DashboardContext = createContext<DashboardContextValue | null>(null);
@@ -62,6 +77,8 @@ export function DashboardContextProvider({ value, children }: DashboardContextPr
       value.setTimeWindow,
       value.refreshInterval,
       value.setRefreshInterval,
+      value.weekStartsOn,
+      value.timeZone,
     ]
   );
   return <DashboardContext.Provider value={memoised}>{children}</DashboardContext.Provider>;

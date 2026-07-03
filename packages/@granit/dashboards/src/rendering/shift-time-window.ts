@@ -1,6 +1,6 @@
-import { resolveTimeWindowToRenderRequest } from './resolve-time-window-request';
+import { resolveTimeWindowBounds } from './resolve-time-window-bounds';
 
-import type { ResolveTimeWindowOptions } from './resolve-time-window-request';
+import type { ResolveTimeWindowBoundsOptions } from './resolve-time-window-bounds';
 import type { DashboardTimeWindow } from '../types/dashboard-time-window';
 
 /** Direction for {@link shiftTimeWindow}: earlier or later by one window length. */
@@ -18,7 +18,7 @@ export type ShiftDirection = 'back' | 'forward';
 export function shiftTimeWindow(
   timeWindow: DashboardTimeWindow,
   direction: ShiftDirection,
-  options?: ResolveTimeWindowOptions
+  options?: ResolveTimeWindowBoundsOptions
 ): DashboardTimeWindow {
   const bounds = resolveBounds(timeWindow, options);
   if (bounds === null) return timeWindow;
@@ -36,7 +36,7 @@ export function shiftTimeWindow(
  */
 export function zoomOutTimeWindow(
   timeWindow: DashboardTimeWindow,
-  options?: ResolveTimeWindowOptions
+  options?: ResolveTimeWindowBoundsOptions
 ): DashboardTimeWindow {
   const bounds = resolveBounds(timeWindow, options);
   if (bounds === null) return timeWindow;
@@ -49,11 +49,11 @@ export function zoomOutTimeWindow(
 /** Resolves a window to `[fromMs, toMs)`, or `null` when it has no absolute bounds. */
 function resolveBounds(
   timeWindow: DashboardTimeWindow,
-  options?: ResolveTimeWindowOptions
+  options?: ResolveTimeWindowBoundsOptions
 ): readonly [number, number] | null {
-  const { periodFrom, periodTo } = resolveTimeWindowToRenderRequest(timeWindow, options ?? {});
-  if (periodFrom === undefined || periodTo === undefined) return null;
-  return [new Date(periodFrom).getTime(), new Date(periodTo).getTime()];
+  const bounds = resolveTimeWindowBounds(timeWindow, options ?? {});
+  if (bounds === null) return null;
+  return [bounds.from.getTime(), bounds.to.getTime()];
 }
 
 function withAbsolutePeriod(

@@ -655,6 +655,9 @@ importers:
 
   packages/@granit/dashboards:
     devDependencies:
+      '@date-fns/tz':
+        specifier: ^1.0.0
+        version: 1.5.0
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
@@ -664,6 +667,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/timing':
+        specifier: workspace:*
+        version: link:../timing
 
   packages/@granit/data-exchange:
     devDependencies:
@@ -2173,6 +2179,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/timing':
+        specifier: workspace:*
+        version: link:../timing
       '@granit/utils':
         specifier: workspace:*
         version: link:../utils
@@ -2700,6 +2709,9 @@ importers:
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing
+      '@granit/timing':
+        specifier: workspace:*
+        version: link:../timing
       '@granit/types':
         specifier: workspace:*
         version: link:../types
@@ -7620,6 +7632,18 @@ importers:
       '@granit/query-engine':
         specifier: workspace:*
         version: link:../query-engine
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@granit/types':
+        specifier: workspace:*
+        version: link:../types
+
+  packages/@granit/timing:
+    devDependencies:
+      '@date-fns/tz':
+        specifier: ^1.0.0
+        version: 1.5.0
       '@granit/testing':
         specifier: workspace:*
         version: link:../testing

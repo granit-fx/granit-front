@@ -14,13 +14,22 @@
     "build": "tsup"
   },
   "devDependencies": {
+    "@date-fns/tz": "^1.0.0",
     "@granit/api-client": "workspace:*",
     "@granit/logger": "workspace:*",
-    "@granit/testing": "workspace:*"
+    "@granit/testing": "workspace:*",
+    "@granit/timing": "workspace:*"
   },
   "peerDependencies": {
+    "@date-fns/tz": "^1.0.0",
     "@granit/api-client": "workspace:*",
-    "@granit/logger": "workspace:*"
+    "@granit/logger": "workspace:*",
+    "@granit/timing": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@date-fns/tz": {
+      "optional": true
+    }
   },
   "publishConfig": {
     "exports": {

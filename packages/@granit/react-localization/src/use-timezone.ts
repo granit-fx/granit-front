@@ -1,6 +1,9 @@
+import { toTimeZoneId } from '@granit/timing';
 import { createContext, useContext } from 'react';
 
-const BROWSER_TIMEZONE = Intl.DateTimeFormat().resolvedOptions().timeZone;
+import type { TimeZoneId } from '@granit/timing';
+
+const BROWSER_TIMEZONE = toTimeZoneId(Intl.DateTimeFormat().resolvedOptions().timeZone);
 
 const TimezoneContext = createContext<string | null>(null);
 
@@ -23,12 +26,14 @@ const TimezoneContext = createContext<string | null>(null);
 export const TimezoneProvider = TimezoneContext.Provider;
 
 /**
- * Returns the user's preferred timezone (IANA identifier).
+ * Returns the user's preferred timezone as a branded {@link TimeZoneId}
+ * (IANA identifier).
  *
  * Resolution order:
  * 1. Value from the nearest {@link TimezoneProvider} (user setting)
  * 2. Browser timezone via `Intl.DateTimeFormat`
  */
-export function useTimezone(): string {
-  return useContext(TimezoneContext) ?? BROWSER_TIMEZONE;
+export function useTimezone(): TimeZoneId {
+  const value = useContext(TimezoneContext);
+  return value ? toTimeZoneId(value) : BROWSER_TIMEZONE;
 }

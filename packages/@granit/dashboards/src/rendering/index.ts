@@ -9,13 +9,11 @@
 export type { DashboardDriftStatus } from './dashboard-drift-status';
 export type { DashboardRenderRequest } from './dashboard-render-request';
 export { resolveTimeWindowToRenderRequest } from './resolve-time-window-request';
+export type { ResolvedRenderPeriod } from './resolve-time-window-request';
+export { resolveTimeWindowBounds } from './resolve-time-window-bounds';
+export type { ResolveTimeWindowBoundsOptions } from './resolve-time-window-bounds';
 export { shiftTimeWindow, zoomOutTimeWindow } from './shift-time-window';
 export type { ShiftDirection } from './shift-time-window';
-export type {
-  ResolvedRenderPeriod,
-  ResolveTimeWindowOptions,
-  Weekday,
-} from './resolve-time-window-request';
 export type {
   DashboardRenderedWidget,
   DashboardRenderPeriod,

@@ -1,7 +1,6 @@
 import { createContext, useContext } from 'react';
 
-/** First day of week: `0` = Sunday … `6` = Saturday (matches `Date.getUTCDay`). */
-export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+import type { Weekday } from '@granit/timing';
 
 const DAY_NAME_TO_WEEKDAY: Readonly<Record<string, Weekday>> = {
   sunday: 0,
@@ -43,7 +42,7 @@ const FirstDayOfWeekContext = createContext<string | null>(null);
  * (`wtd` / `pw`) in the subtree.
  *
  * The consuming app feeds the value — typically from the backend setting
- * `Localization:FirstDayOfWeek` via `useSetting`, mirroring
+ * `Granit.Timing.PreferredFirstDayOfWeek` via `useSetting`, mirroring
  * {@link TimezoneProvider}. The value is a `System.DayOfWeek` name (`"Monday"`,
  * `"Sunday"`, …) or `null` to defer to the browser locale.
  *
@@ -66,7 +65,7 @@ export const FirstDayOfWeekProvider = FirstDayOfWeekContext.Provider;
  * 2. Browser locale via `Intl.Locale` week info.
  * 3. Monday.
  *
- * This must match `Granit.Analytics` `PeriodResolver` server-side so `wtd` / `pw`
+ * This must match `Granit.Timing` `PeriodResolver` server-side so `wtd` / `pw`
  * resolve to the same window on the definition and bundle paths.
  */
 export function useFirstDayOfWeek(): Weekday {

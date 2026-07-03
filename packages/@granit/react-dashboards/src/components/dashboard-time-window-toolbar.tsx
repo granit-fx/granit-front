@@ -30,7 +30,11 @@ interface TimeWindowGroup {
 
 const W = DASHBOARD_TIME_WINDOW;
 
-function preset(window: DashboardTimeWindow, labelKey: string, defaultLabel: string): TimeWindowPreset {
+function preset(
+  window: DashboardTimeWindow,
+  labelKey: string,
+  defaultLabel: string
+): TimeWindowPreset {
   const token = 'token' in window.period ? window.period.token : '';
   return { token, window, labelKey, defaultLabel };
 }
@@ -148,6 +152,9 @@ export function DashboardTimeWindowToolbar({ className }: DashboardTimeWindowToo
   if (!ctx?.timeWindow || !ctx.setTimeWindow) return null;
 
   const { timeWindow, setTimeWindow } = ctx;
+  // Shift / zoom resolve token windows to absolute bounds client-side, so they
+  // need the same timezone / first-day the backend resolver uses to stay aligned.
+  const shiftOptions = { weekStartsOn: ctx.weekStartsOn, timeZone: ctx.timeZone };
   const currentToken = 'token' in timeWindow.period ? timeWindow.period.token : '';
   const matched = ALL_PRESETS.some((p) => p.token === currentToken);
   const selectValue = customOpen ? CUSTOM_VALUE : matched ? currentToken : '';
@@ -201,7 +208,10 @@ export function DashboardTimeWindowToolbar({ className }: DashboardTimeWindowToo
             {t('Dashboard:TimeWindow.Custom', { defaultValue: 'Custom range' })}
           </option>
           {GROUPS.map((group) => (
-            <optgroup key={group.labelKey} label={t(group.labelKey, { defaultValue: group.defaultLabel })}>
+            <optgroup
+              key={group.labelKey}
+              label={t(group.labelKey, { defaultValue: group.defaultLabel })}
+            >
               {group.presets.map((p) => (
                 <option key={p.token} value={p.token}>
                   {t(p.labelKey, { defaultValue: p.defaultLabel })}
@@ -222,7 +232,7 @@ export function DashboardTimeWindowToolbar({ className }: DashboardTimeWindowToo
           type="button"
           data-slot="dashboard-time-window-back"
           aria-label={t('Dashboard:TimeWindow.ShiftBack', { defaultValue: 'Shift earlier' })}
-          onClick={() => setTimeWindow(shiftTimeWindow(timeWindow, 'back'))}
+          onClick={() => setTimeWindow(shiftTimeWindow(timeWindow, 'back', shiftOptions))}
           className="rounded-md border bg-background px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
         >
           <span aria-hidden>‹</span>
@@ -231,7 +241,7 @@ export function DashboardTimeWindowToolbar({ className }: DashboardTimeWindowToo
           type="button"
           data-slot="dashboard-time-window-zoom-out"
           aria-label={t('Dashboard:TimeWindow.ZoomOut', { defaultValue: 'Zoom out' })}
-          onClick={() => setTimeWindow(zoomOutTimeWindow(timeWindow))}
+          onClick={() => setTimeWindow(zoomOutTimeWindow(timeWindow, shiftOptions))}
           className="rounded-md border bg-background px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
         >
           <span aria-hidden>⊟</span>
@@ -240,7 +250,7 @@ export function DashboardTimeWindowToolbar({ className }: DashboardTimeWindowToo
           type="button"
           data-slot="dashboard-time-window-forward"
           aria-label={t('Dashboard:TimeWindow.ShiftForward', { defaultValue: 'Shift later' })}
-          onClick={() => setTimeWindow(shiftTimeWindow(timeWindow, 'forward'))}
+          onClick={() => setTimeWindow(shiftTimeWindow(timeWindow, 'forward', shiftOptions))}
           className="rounded-md border bg-background px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
         >
           <span aria-hidden>›</span>

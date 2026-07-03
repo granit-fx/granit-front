@@ -19,6 +19,7 @@
     "@granit/dashboards": "workspace:*",
     "@granit/logger": "workspace:*",
     "@granit/react-api-client": "workspace:*",
+    "@granit/timing": "workspace:*",
     "@granit/utils": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "i18next": "^26.0.0",
@@ -51,6 +52,7 @@
     "@granit/react-api-client": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
+    "@granit/timing": "workspace:*",
     "@granit/utils": "workspace:*",
     "msw": "^2.14.6"
   }

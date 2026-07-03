@@ -1,0 +1,39 @@
+{
+  "name": "@granit/timing",
+  "description": "Framework-agnostic time vocabulary and calendar-token resolution (mirrors Granit.Timing)",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@date-fns/tz": "^1.0.0",
+    "@granit/types": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@date-fns/tz": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@date-fns/tz": "^1.0.0",
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}

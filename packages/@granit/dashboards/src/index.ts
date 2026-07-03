@@ -138,10 +138,15 @@ export type {
 } from './types/index';
 
 export {
+  resolveTimeWindowBounds,
   resolveTimeWindowToRenderRequest,
   shiftTimeWindow,
   zoomOutTimeWindow,
 } from './rendering/index';
+
+// `Weekday` is owned by @granit/timing; re-exported so existing
+// `import { Weekday } from '@granit/dashboards'` sites keep resolving.
+export type { Weekday } from '@granit/timing';
 
 export type {
   ShiftDirection,
@@ -151,8 +156,7 @@ export type {
   DashboardRenderRequest,
   DashboardRenderResponse,
   ResolvedRenderPeriod,
-  ResolveTimeWindowOptions,
-  Weekday,
+  ResolveTimeWindowBoundsOptions,
   ImageSnapshotEnvelope,
   ImageWidgetSnapshot,
   MarkdownSnapshotEnvelope,

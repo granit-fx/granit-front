@@ -1,3 +1,4 @@
+import { toTimeZoneId } from '@granit/timing';
 import { describe, expect, it } from 'vitest';
 
 import { shiftTimeWindow, zoomOutTimeWindow } from '../rendering/shift-time-window';
@@ -31,6 +32,20 @@ describe('shiftTimeWindow', () => {
     expect(shifted.period).toEqual({
       from: '2026-06-18T00:00:00.000Z',
       to: '2026-06-26T00:00:00.000Z',
+    });
+  });
+
+  it('resolves a token window in the supplied timezone before shifting', () => {
+    const now = new Date('2026-07-03T14:30:00.000Z');
+    // last_7d in Los Angeles (UTC-7): [2026-06-26T07:00Z, 2026-07-04T07:00Z),
+    // an 8-day span. Back by 8 days.
+    const shifted = shiftTimeWindow({ period: { token: 'last_7d' } }, 'back', {
+      now,
+      timeZone: toTimeZoneId('America/Los_Angeles'),
+    });
+    expect(shifted.period).toEqual({
+      from: '2026-06-18T07:00:00.000Z',
+      to: '2026-06-26T07:00:00.000Z',
     });
   });
 

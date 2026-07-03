@@ -12,7 +12,7 @@ import {
   useDashboardRefreshIntervalState,
   useDashboardTimeWindowState,
 } from '@granit/react-dashboards';
-import { useFirstDayOfWeek, useTranslation } from '@granit/react-localization';
+import { useFirstDayOfWeek, useTimezone, useTranslation } from '@granit/react-localization';
 import { Button, Spinner } from '@granit/react-ui';
 import { EmptyState } from '@granit/react-ui-kit';
 import { ArrowLeft, LayoutDashboard, Pencil } from 'lucide-react';
@@ -87,7 +87,11 @@ export function DashboardViewPage() {
   // refresh state can seed from the dashboard's persisted default on first
   // render (a `useState` initialiser cannot pick it up during the loading pass).
   return (
-    <DashboardViewContent detail={detail} dashboardId={dashboardId} onEdit={() => setEditing(true)} />
+    <DashboardViewContent
+      detail={detail}
+      dashboardId={dashboardId}
+      onEdit={() => setEditing(true)}
+    />
   );
 }
 
@@ -102,20 +106,23 @@ function DashboardViewContent({ detail, dashboardId, onEdit }: DashboardViewCont
   const navigate = useNavigate();
 
   // Active render window. Seeded from the dashboard's persisted default,
-  // falling back to Last 30 days. The bundle path needs absolute bounds, so the
-  // window is resolved to `periodFrom` / `periodTo` and fed to the render
-  // request — changing it re-fetches the bundle.
+  // falling back to Last 30 days. A token window is sent to the server as
+  // `{ periodToken }` alone — the bundle endpoint resolves it authoritatively
+  // (timezone- / first-day-aware), so changing the window re-fetches the bundle.
   const [timeWindow, setTimeWindow] = useDashboardTimeWindowState(
     detail.defaultTimeWindow ?? DASHBOARD_TIME_WINDOW.Last30Days
   );
-  // Calendar-token resolution (`wtd` / `pw`) must use the same first day of week
-  // as the backend `PeriodResolver` for the two paths to agree — the app feeds
-  // the `Localization:FirstDayOfWeek` setting into the FirstDayOfWeekProvider.
-  const weekStartsOn = useFirstDayOfWeek();
   const renderRequest = useMemo(
-    () => (timeWindow ? resolveTimeWindowToRenderRequest(timeWindow, { weekStartsOn }) : undefined),
-    [timeWindow, weekStartsOn]
+    () => (timeWindow ? resolveTimeWindowToRenderRequest(timeWindow) : undefined),
+    [timeWindow]
   );
+  // The shift / zoom controls resolve token windows to absolute bounds on the
+  // client, so they need the same first day of week / timezone the backend
+  // `Granit.Timing` resolver uses. The app feeds the
+  // `Granit.Timing.PreferredFirstDayOfWeek` / `Granit.Timing.PreferredTimezone`
+  // settings into the providers these hooks read.
+  const weekStartsOn = useFirstDayOfWeek();
+  const timeZone = useTimezone();
 
   // Auto-refresh cadence, bridged to the bundle query's refetch interval.
   const [refreshInterval, setRefreshInterval] = useDashboardRefreshIntervalState('auto');
@@ -126,7 +133,15 @@ function DashboardViewContent({ detail, dashboardId, onEdit }: DashboardViewCont
 
   return (
     <DashboardContextProvider
-      value={{ dashboardName: detail.name, timeWindow, setTimeWindow, refreshInterval, setRefreshInterval }}
+      value={{
+        dashboardName: detail.name,
+        timeWindow,
+        setTimeWindow,
+        refreshInterval,
+        setRefreshInterval,
+        weekStartsOn,
+        timeZone,
+      }}
     >
       <div
         data-slot="dashboard-view-page"
