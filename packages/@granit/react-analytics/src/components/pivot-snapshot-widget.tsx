@@ -1,19 +1,23 @@
 import { isPivotSnapshotEnvelope } from '@granit/analytics';
+import { createDefaultCellDateFormatters, formatCell } from '@granit/react-query-engine';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { PivotWidgetSnapshot } from '@granit/analytics';
 import type { DashboardRenderedWidget } from '@granit/dashboards';
+import type { ColumnDefinition } from '@granit/query-engine';
+import type { ReactNode } from 'react';
 
 /**
  * Snapshot-driven renderer for the `'Pivot'` widget kind. Pivots the flat
  * `(rowKeys × columnKeys × value)` cell list emitted by the backend into a
  * row-major matrix client-side — see `PivotWidgetSnapshot` (B3-6).
  *
- * Currency-aware (B3-8b): when `snapshot.currency` is set, every cell value
- * formats via `Intl.NumberFormat({ style: 'currency', currency })` with the
- * active locale. All cells share the same currency since they aggregate
- * the same value field.
+ * Cells render through the shared query-engine `formatCell`: every cell shares
+ * the snapshot's `valueKind` (`Count`, `Currency`, `Percentage`, `Bytes`, …)
+ * and `currency`, so a pivot formats its aggregate the same way the query grids
+ * format that measure — currency symbol, `%`, humanized bytes, or a locale
+ * number fallback.
  *
  * The renderer stays narrow on purpose — drilling into a cell or
  * repositioning row/column dimensions belongs to a richer admin variant
@@ -26,7 +30,8 @@ export function PivotSnapshotWidget({ widget }: { readonly widget: DashboardRend
 
 function PivotBody({ snapshot }: { readonly snapshot: PivotWidgetSnapshot }) {
   const { t, i18n } = useTranslation();
-  const { rowFields, columnFields, valueField, aggregation, cells, currency } = snapshot;
+  const { rowFields, columnFields, valueField, aggregation, cells, currency, valueKind } = snapshot;
+  const locale = i18n.language || 'en-US';
 
   // Pivot the flat cell list into a row-major matrix. Memoised so a parent
   // re-render that doesn't change the snapshot identity skips the work.
@@ -54,13 +59,31 @@ function PivotBody({ snapshot }: { readonly snapshot: PivotWidgetSnapshot }) {
 
   const aggregationLabel = valueField ? `${aggregation}(${valueField})` : aggregation;
 
-  const formatValue = (value: number) =>
-    currency
-      ? new Intl.NumberFormat(i18n.language, {
-          style: 'currency',
-          currency,
-        }).format(value)
-      : value.toLocaleString(i18n.language);
+  // Every cell shares the measure's valueKind + currency, so build one
+  // synthetic column and format each value through the shared query formatter.
+  const dateFormatters = useMemo(() => createDefaultCellDateFormatters(locale), [locale]);
+  const cellColumn = useMemo<ColumnDefinition>(
+    () => ({
+      name: 'value',
+      label: aggregationLabel,
+      type: '',
+      order: 0,
+      isSortable: false,
+      isFilterable: false,
+      isVisible: true,
+      valueKind: valueKind ?? undefined,
+      currencyCode: currency ?? undefined,
+    }),
+    [aggregationLabel, valueKind, currency]
+  );
+  const formatValue = (value: number): ReactNode =>
+    formatCell({
+      row: { value },
+      column: cellColumn,
+      locale,
+      formatDate: dateFormatters.formatDate,
+      formatDateTime: dateFormatters.formatDateTime,
+    });
 
   return (
     <div data-slot="pivot-snapshot-widget" className="flex h-full flex-col gap-2">

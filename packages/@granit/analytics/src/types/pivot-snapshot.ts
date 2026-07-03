@@ -61,6 +61,14 @@ export interface PivotWidgetSnapshot {
    * aggregate the same value field. B3-8b.
    */
   readonly currency?: string | null;
+  /**
+   * Semantic display-type shared by every cell: `'Count'` for a count, else
+   * the value field's declared kind (`'Currency'`, `'Percentage'`, `'Bytes'`,
+   * …), or `null`. Drives the shared cell formatter so pivot cells render like
+   * the query grids. Wire values are the .NET `ValueKind` enum member names
+   * verbatim. Mirrors `PivotWidgetSnapshot.ValueKind`.
+   */
+  readonly valueKind?: string | null;
 }
 
 /** Narrowed `WidgetSnapshotEnvelope` for the `'Pivot'` widget kind. */

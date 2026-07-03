@@ -83,6 +83,29 @@ describe('PivotSnapshotWidget — matrix layout', () => {
     expect(normalizeSpaces(cells[1]?.textContent ?? '')).toBe('€12,300.00');
   });
 
+  it('formats cells from the snapshot valueKind (Percentage measure)', () => {
+    const snapshot: PivotWidgetSnapshot = {
+      ...SAMPLE_SNAPSHOT,
+      currency: null,
+      valueKind: 'Percentage',
+      cells: [{ rowKeys: ['EU'], columnKeys: ['Open'], value: 42.5 }],
+    };
+    const { container } = wrap(<PivotSnapshotWidget widget={pivotEnvelope(snapshot)} />);
+    const cell = container.querySelector('[data-row-tuple="EU"] td[data-column-tuple]');
+    expect(cell?.textContent).toBe('42.5%');
+  });
+
+  it('keeps currency major units under a Currency valueKind (no /100)', () => {
+    const snapshot: PivotWidgetSnapshot = {
+      ...SAMPLE_SNAPSHOT,
+      valueKind: 'Currency',
+      cells: [{ rowKeys: ['EU'], columnKeys: ['Open'], value: 1234.56 }],
+    };
+    const { container } = wrap(<PivotSnapshotWidget widget={pivotEnvelope(snapshot)} />);
+    const cell = container.querySelector('[data-row-tuple="EU"] td[data-column-tuple]');
+    expect(normalizeSpaces(cell?.textContent ?? '')).toBe('€1,234.56');
+  });
+
   it('renders an em dash for null cell values (empty Avg/Min/Max groups)', () => {
     const { container } = wrap(<PivotSnapshotWidget widget={pivotEnvelope(SAMPLE_SNAPSHOT)} />);
     const naRow = container.querySelector('[data-row-tuple="NA"]');
