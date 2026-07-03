@@ -1,5 +1,5 @@
 import { DASHBOARD_TIME_WINDOW, shiftTimeWindow, zoomOutTimeWindow } from '@granit/dashboards';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useDashboardContext } from './dashboard-context';
@@ -171,94 +171,97 @@ export function DashboardTimeWindowToolbar({ className }: DashboardTimeWindowToo
   return (
     <div
       data-slot="dashboard-time-window-toolbar"
-      role="toolbar"
-      aria-label="Dashboard time window"
-      className={joinClasses('flex flex-wrap items-end gap-3', className)}
+      className={joinClasses('relative inline-block', className)}
     >
-      <label className="flex flex-col gap-1 text-xs">
-        <span data-slot="dashboard-time-window-label" className="text-muted-foreground">
-          {t('Dashboard:TimeWindow.Label', { defaultValue: 'Period' })}
-        </span>
-        <select
-          data-slot="dashboard-time-window-select"
-          value={selectValue}
-          onChange={(event) => {
-            const value = event.target.value;
-            if (value === CUSTOM_VALUE) {
-              setCustomOpen(true);
-              return;
-            }
-            const next = ALL_PRESETS.find((p) => p.token === value);
-            // Spread over the current window so an app-set `compareTo` /
-            // `aggregation` survives a period change; the preset owns `period`
-            // and `kind`.
-            if (next) {
-              setCustomOpen(false);
-              setTimeWindow({ ...timeWindow, ...next.window });
-            }
-          }}
-          className="rounded-md border bg-background px-2.5 py-1.5 text-sm"
-        >
-          {!matched && !customOpen && (
-            <option value="" disabled>
-              {t('Dashboard:TimeWindow.Placeholder', { defaultValue: 'Select…' })}
-            </option>
-          )}
-          <option value={CUSTOM_VALUE}>
-            {t('Dashboard:TimeWindow.Custom', { defaultValue: 'Custom range' })}
-          </option>
-          {GROUPS.map((group) => (
-            <optgroup
-              key={group.labelKey}
-              label={t(group.labelKey, { defaultValue: group.defaultLabel })}
-            >
-              {group.presets.map((p) => (
-                <option key={p.token} value={p.token}>
-                  {t(p.labelKey, { defaultValue: p.defaultLabel })}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
-      </label>
-
+      {/* Grafana-style segmented pill: shift back « · clock + range picker ▾ ·
+          shift forward » · zoom out ⊖. */}
       <div
-        data-slot="dashboard-time-window-shift"
-        role="group"
-        aria-label="Shift time range"
-        className="flex items-end gap-1"
+        role="toolbar"
+        aria-label="Dashboard time window"
+        className="inline-flex h-9 items-stretch overflow-hidden rounded-md border bg-background text-sm shadow-sm"
       >
         <button
           type="button"
           data-slot="dashboard-time-window-back"
           aria-label={t('Dashboard:TimeWindow.ShiftBack', { defaultValue: 'Shift earlier' })}
           onClick={() => setTimeWindow(shiftTimeWindow(timeWindow, 'back', shiftOptions))}
-          className="rounded-md border bg-background px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+          className={SEGMENT_BUTTON_CLASS}
         >
-          <span aria-hidden>‹</span>
+          <ChevronsLeftIcon />
+        </button>
+
+        <div className="relative flex items-center border-l">
+          <ClockIcon className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <select
+            data-slot="dashboard-time-window-select"
+            aria-label={t('Dashboard:TimeWindow.Label', { defaultValue: 'Period' })}
+            value={selectValue}
+            onChange={(event) => {
+              const value = event.target.value;
+              if (value === CUSTOM_VALUE) {
+                setCustomOpen(true);
+                return;
+              }
+              const next = ALL_PRESETS.find((p) => p.token === value);
+              // Spread over the current window so an app-set `compareTo` /
+              // `aggregation` survives a period change; the preset owns `period`
+              // and `kind`.
+              if (next) {
+                setCustomOpen(false);
+                setTimeWindow({ ...timeWindow, ...next.window });
+              }
+            }}
+            className="h-full cursor-pointer appearance-none bg-transparent py-1.5 pl-9 pr-8 font-medium text-foreground focus:outline-none focus-visible:bg-accent"
+          >
+            {!matched && !customOpen && (
+              <option value="" disabled>
+                {t('Dashboard:TimeWindow.Placeholder', { defaultValue: 'Select…' })}
+              </option>
+            )}
+            <option value={CUSTOM_VALUE}>
+              {t('Dashboard:TimeWindow.Custom', { defaultValue: 'Custom range' })}
+            </option>
+            {GROUPS.map((group) => (
+              <optgroup
+                key={group.labelKey}
+                label={t(group.labelKey, { defaultValue: group.defaultLabel })}
+              >
+                {group.presets.map((p) => (
+                  <option key={p.token} value={p.token}>
+                    {t(p.labelKey, { defaultValue: p.defaultLabel })}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+          <ChevronDownIcon className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        </div>
+
+        <button
+          type="button"
+          data-slot="dashboard-time-window-forward"
+          aria-label={t('Dashboard:TimeWindow.ShiftForward', { defaultValue: 'Shift later' })}
+          onClick={() => setTimeWindow(shiftTimeWindow(timeWindow, 'forward', shiftOptions))}
+          className={joinClasses('border-l', SEGMENT_BUTTON_CLASS)}
+        >
+          <ChevronsRightIcon />
         </button>
         <button
           type="button"
           data-slot="dashboard-time-window-zoom-out"
           aria-label={t('Dashboard:TimeWindow.ZoomOut', { defaultValue: 'Zoom out' })}
           onClick={() => setTimeWindow(zoomOutTimeWindow(timeWindow, shiftOptions))}
-          className="rounded-md border bg-background px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+          className={joinClasses('border-l', SEGMENT_BUTTON_CLASS)}
         >
-          <span aria-hidden>⊟</span>
-        </button>
-        <button
-          type="button"
-          data-slot="dashboard-time-window-forward"
-          aria-label={t('Dashboard:TimeWindow.ShiftForward', { defaultValue: 'Shift later' })}
-          onClick={() => setTimeWindow(shiftTimeWindow(timeWindow, 'forward', shiftOptions))}
-          className="rounded-md border bg-background px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
-        >
-          <span aria-hidden>›</span>
+          <ZoomOutIcon />
         </button>
       </div>
 
       {customOpen && (
-        <div data-slot="dashboard-time-window-custom" className="flex items-end gap-2">
+        <div
+          data-slot="dashboard-time-window-custom"
+          className="absolute left-0 top-full z-10 mt-1 flex items-end gap-2 rounded-md border bg-background p-3 shadow-md"
+        >
           <label className="flex flex-col gap-1 text-xs">
             <span className="text-muted-foreground">
               {t('Dashboard:TimeWindow.From', { defaultValue: 'From' })}
@@ -295,6 +298,79 @@ export function DashboardTimeWindowToolbar({ className }: DashboardTimeWindowToo
         </div>
       )}
     </div>
+  );
+}
+
+/** Shared styling for the flanking icon buttons of the segmented pill. */
+const SEGMENT_BUTTON_CLASS =
+  'flex items-center px-2.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground';
+
+/** Line-icon wrapper (lucide-style geometry) — keeps the package icon-lib-free. */
+function Icon({
+  children,
+  className,
+}: {
+  readonly children: ReactNode;
+  readonly className?: string;
+}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      className={className ?? 'h-4 w-4'}
+    >
+      {children}
+    </svg>
+  );
+}
+
+function ClockIcon({ className }: { readonly className?: string }) {
+  return (
+    <Icon className={className}>
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </Icon>
+  );
+}
+
+function ChevronDownIcon({ className }: { readonly className?: string }) {
+  return (
+    <Icon className={className}>
+      <path d="m6 9 6 6 6-6" />
+    </Icon>
+  );
+}
+
+function ChevronsLeftIcon() {
+  return (
+    <Icon>
+      <path d="m11 17-5-5 5-5" />
+      <path d="m18 17-5-5 5-5" />
+    </Icon>
+  );
+}
+
+function ChevronsRightIcon() {
+  return (
+    <Icon>
+      <path d="m6 17 5-5-5-5" />
+      <path d="m13 17 5-5-5-5" />
+    </Icon>
+  );
+}
+
+function ZoomOutIcon() {
+  return (
+    <Icon>
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+      <path d="M8 11h6" />
+    </Icon>
   );
 }
 
