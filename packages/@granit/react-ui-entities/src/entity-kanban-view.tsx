@@ -5,7 +5,7 @@ import {
   type EntityActionHandlers,
 } from '@granit/react-entities';
 import { resolveLabel, useDateFormatter, useTranslation } from '@granit/react-localization';
-import { useQueryConfig } from '@granit/react-query-engine';
+import { formatCell, useQueryConfig } from '@granit/react-query-engine';
 import { Button, toast } from '@granit/react-ui';
 import { cn } from '@granit/utils';
 import {
@@ -32,10 +32,7 @@ import type {
   KanbanColor,
   KanbanColumnState,
 } from '@granit/entities';
-
-const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
-
-type DateFormatter = (date: string | Date) => string;
+import type { ColumnDefinition } from '@granit/query-engine';
 
 // KanbanColor → token-only class set. Raw Tailwind colours stay
 // forbidden outside `src/components/ui/`, so we collapse the framework
@@ -469,9 +466,15 @@ interface KanbanCardFieldProps {
 
 function KanbanCardField({ field, row, locale }: KanbanCardFieldProps) {
   const { formatDate, formatDateTime } = useDateFormatter();
-  const jsonKey = camelize(field.propertyName);
-  const value = row[jsonKey];
-  const formatted = formatFieldValue(value, field, row, locale, formatDate, formatDateTime);
+  const formatted = formatCell({
+    row,
+    column: fieldToColumnDefinition(field),
+    component: field.component,
+    currencyResolver: makeCurrencyResolver(field),
+    locale,
+    formatDate,
+    formatDateTime,
+  });
   return (
     <>
       <dt className="text-muted-foreground">{resolveLabel(field.labelKey, field.propertyName)}</dt>
@@ -480,72 +483,36 @@ function KanbanCardField({ field, row, locale }: KanbanCardFieldProps) {
   );
 }
 
-function formatMoneyField(
-  value: number,
-  field: EntityFormFieldManifest,
-  row: Readonly<Record<string, unknown>>,
-  locale: string
-): string {
+// Adapts a form-field manifest to the ColumnDefinition shape the shared
+// `formatCell` consumes, so kanban cards format field values exactly like the
+// query grids (Url/Email/Phone links, Percentage, dates, …). A `money` field
+// carries its amount in Int64 minor units (cents), formatted through the
+// `component: 'money'` path below — so its `valueKind` (major-units Currency)
+// is suppressed to avoid a ×100 mismatch.
+export function fieldToColumnDefinition(field: EntityFormFieldManifest): ColumnDefinition {
+  return {
+    name: camelize(field.propertyName),
+    label: field.labelKey ?? field.propertyName,
+    type: field.clrTypeName,
+    order: field.order,
+    isSortable: false,
+    isFilterable: false,
+    isVisible: true,
+    valueKind: field.component === 'money' ? undefined : (field.valueKind ?? undefined),
+  };
+}
+
+// Currency resolver for the legacy `money` component: prefers the field's
+// configured `currencyProperty`, then a row-level `currency`, then EUR.
+export function makeCurrencyResolver(
+  field: EntityFormFieldManifest
+): (row: Readonly<Record<string, unknown>>) => string {
   const config = (field.config ?? {}) as { readonly currencyProperty?: string };
   const currencyProperty = config.currencyProperty ? camelize(config.currencyProperty) : undefined;
-  const currency =
+  return (row) =>
     (currencyProperty ? (row[currencyProperty] as string | undefined) : undefined) ??
     (row.currency as string | undefined) ??
     'EUR';
-  return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(value / 100);
-}
-
-function formatDateString(
-  value: string,
-  formatDate: DateFormatter,
-  formatDateTime: DateFormatter,
-  withTime: boolean
-): string | null {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return null;
-  // Timezone-aware (user PreferredTimezone) via useDateFormatter, not raw Intl.
-  return withTime ? formatDateTime(value) : formatDate(value);
-}
-
-function tryFormatDateField(
-  value: unknown,
-  field: EntityFormFieldManifest,
-  formatDate: DateFormatter,
-  formatDateTime: DateFormatter
-): string | null {
-  if (typeof value !== 'string') return null;
-
-  if (field.component === 'date' || field.component === 'datetime') {
-    return formatDateString(value, formatDate, formatDateTime, field.component === 'datetime');
-  }
-  if (field.clrTypeName === 'DateTime' || field.clrTypeName === 'DateTimeOffset') {
-    return formatDateString(value, formatDate, formatDateTime, false);
-  }
-  if (ISO_DATE_RE.test(value)) {
-    return formatDateString(value, formatDate, formatDateTime, false);
-  }
-  return null;
-}
-
-function formatFieldValue(
-  value: unknown,
-  field: EntityFormFieldManifest,
-  row: Readonly<Record<string, unknown>>,
-  locale: string,
-  formatDate: DateFormatter,
-  formatDateTime: DateFormatter
-): string {
-  if (value === null || value === undefined) return '—';
-
-  if (field.component === 'money' && typeof value === 'number') {
-    return formatMoneyField(value, field, row, locale);
-  }
-
-  const formattedDate = tryFormatDateField(value, field, formatDate, formatDateTime);
-  if (formattedDate !== null) return formattedDate;
-
-  if (typeof value === 'object') return JSON.stringify(value);
-  return String(value); // NOSONAR: remaining types (symbol, function) stringify safely
 }
 
 interface KanbanCardActionButtonProps {
