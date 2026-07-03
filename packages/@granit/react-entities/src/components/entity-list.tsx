@@ -1,5 +1,11 @@
-import { useQueryEndpoint, useQueryMeta } from '@granit/react-query-engine';
+import {
+  createDefaultCellDateFormatters,
+  formatCell,
+  useQueryEndpoint,
+  useQueryMeta,
+} from '@granit/react-query-engine';
 import { useMemo, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useEntityRenderer } from '../providers/entity-renderer-provider';
 
@@ -64,8 +70,12 @@ interface EntityListBodyProps {
 
 function EntityListBody({ onRowClick }: EntityListBodyProps): ReactNode {
   const { resolveLabel } = useEntityRenderer();
+  const { i18n } = useTranslation(undefined, { useSuspense: false });
+  const locale = i18n.language || 'en-US';
   const meta = useQueryMeta();
   const { query, params, setPage } = useQueryEndpoint<Readonly<Record<string, unknown>>>();
+
+  const dateFormatters = useMemo(() => createDefaultCellDateFormatters(locale), [locale]);
 
   const visibleColumns = useMemo<readonly ColumnDefinition[]>(
     () =>
@@ -119,7 +129,13 @@ function EntityListBody({ onRowClick }: EntityListBodyProps): ReactNode {
               >
                 {visibleColumns.map((column) => (
                   <td key={column.name} data-column={column.name}>
-                    {formatCell(row[column.name])}
+                    {formatCell({
+                      row,
+                      column,
+                      locale,
+                      formatDate: dateFormatters.formatDate,
+                      formatDateTime: dateFormatters.formatDateTime,
+                    })}
                   </td>
                 ))}
               </tr>
@@ -156,13 +172,4 @@ function readRowKey(row: Readonly<Record<string, unknown>>, fallbackIndex: numbe
   const id = row['id'] ?? row['Id'];
   if (typeof id === 'string' || typeof id === 'number') return String(id);
   return String(fallbackIndex);
-}
-
-function formatCell(value: unknown): string {
-  if (value === null || value === undefined) return '—';
-  if (typeof value === 'boolean') return value ? '✓' : '✗';
-  if (typeof value === 'object') return JSON.stringify(value);
-  if (typeof value === 'string') return value;
-  if (typeof value === 'number' || typeof value === 'bigint') return String(value);
-  return '—';
 }

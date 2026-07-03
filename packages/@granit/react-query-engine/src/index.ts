@@ -47,3 +47,11 @@ export type { UseSmartFilterOptions, UseSmartFilterReturn } from './hooks/use-sm
 
 // SmartFilter ↔ data-lookup wiring helpers
 export { deriveLookupScope } from './utils/derive-lookup-scope';
+
+// Data-table cell rendering (valueKind → formatter, shared across grids)
+export {
+  createDefaultCellDateFormatters,
+  formatCell,
+  VALUE_KIND_FORMATTERS,
+} from './cell-formatters';
+export type { CellFormatterContext, DateFormatter } from './cell-formatters';

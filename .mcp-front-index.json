@@ -7003,6 +7003,17 @@
           "name": "deriveLookupScope",
           "kind": "function",
           "signature": "function deriveLookupScope( scopeKeys: readonly string[] | undefined, filters: readonly FilterEntry[] ): Readonly<Record<string, string | undefined>>"
+        },
+        {
+          "name": "CellFormatterContext",
+          "kind": "interface",
+          "signature": "interface CellFormatterContext",
+          "members": []
+        },
+        {
+          "name": "DateFormatter",
+          "kind": "type",
+          "signature": "type DateFormatter = (date: string | Date) => string"
         }
       ]
     },

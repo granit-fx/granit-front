@@ -218,6 +218,52 @@ describe('EntityList', () => {
     );
   });
 
+  it('renders cells from column valueKind (Url anchor + fixed-code Currency)', async () => {
+    const valueKindMeta: QueryMetadata = {
+      ...META,
+      columns: [
+        { ...META.columns[0], name: 'website', label: 'Website', valueKind: 'Url' },
+        {
+          name: 'balance',
+          label: 'Balance',
+          type: 'Decimal',
+          order: 1,
+          isSortable: false,
+          isFilterable: false,
+          isVisible: true,
+          valueKind: 'Currency',
+          currencyCode: 'EUR',
+        },
+      ],
+    };
+    server.use(
+      http.get(`http://localhost${BASE_PATH}/meta`, () => HttpResponse.json(valueKindMeta)),
+      http.get(`http://localhost${BASE_PATH}`, () =>
+        HttpResponse.json({
+          items: [{ id: '1', website: 'https://acme.test', balance: 12345 }],
+          totalCount: 1,
+          page: 1,
+          pageSize: 20,
+        })
+      )
+    );
+    const { wrapper } = makeWrapper();
+    const Wrapped = wrapper;
+    const { container } = render(
+      <Wrapped>
+        <EntityList manifest={manifest(true)} />
+      </Wrapped>
+    );
+    await waitFor(() =>
+      expect(container.querySelector('[data-granit-entity-list-table]')).not.toBeNull()
+    );
+    const link = container.querySelector('td[data-column="website"] a');
+    expect(link?.getAttribute('href')).toBe('https://acme.test');
+    const balance = container.querySelector('td[data-column="balance"]')?.textContent ?? '';
+    expect(balance).toContain('123.45');
+    expect(balance).toContain('€');
+  });
+
   it('shows a single empty-row when the page returns zero items', async () => {
     server.use(
       http.get(`http://localhost${BASE_PATH}`, () =>

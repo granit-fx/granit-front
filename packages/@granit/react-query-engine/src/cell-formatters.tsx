@@ -1,13 +1,17 @@
-// Data-table cell rendering for the generic workspace entity list.
+// Data-table cell rendering shared across query-metadata consumers.
 //
 // A column picks its renderer from three signals, in descending priority:
 //   1. `column.valueKind` — semantic cell kind emitted by the backend query
 //      metadata (Granit.QueryEngine.Meta.ColumnDefinition.ValueKind).
-//   2. manifest `component` — the form-widget hint joined by column name.
-//   3. CLR `column.type` — ISO-date detection, then a plain text fallback.
+//   2. manifest `component` — the form-widget hint joined by column name
+//      (only richer consumers pass it; a plain grid leaves it undefined).
+//   3. CLR `column.type` — ISO-date detection, then a boolean / text fallback.
 //
 // Every signal is optional and purely additive: a column with no `valueKind`
-// and no matching component degrades to the legacy CLR/text behaviour.
+// and no matching component degrades to the legacy CLR/text behaviour. Lives
+// in `@granit/react-query-engine` so both the styled workspace grid
+// (`@granit/react-ui-entities`) and the minimal `<EntityList>`
+// (`@granit/react-entities`) render cells from a single source of truth.
 
 import type { ColumnDefinition } from '@granit/query-engine';
 import type { ReactNode } from 'react';
@@ -116,6 +120,10 @@ function formatLinkCell(value: unknown, kind: LinkKind): ReactNode {
   );
 }
 
+function renderBoolean(value: boolean): ReactNode {
+  return <span data-granit-cell-boolean={String(value)}>{value ? '✓' : '✗'}</span>;
+}
+
 /**
  * Cell-level rendering context threaded to every valueKind formatter. A `null`
  * return from a formatter means "cannot render this value" — {@link formatCell}
@@ -124,8 +132,19 @@ function formatLinkCell(value: unknown, kind: LinkKind): ReactNode {
 export interface CellFormatterContext {
   readonly row: Readonly<Record<string, unknown>>;
   readonly column: ColumnDefinition;
-  readonly component: string | undefined;
-  readonly currencyResolver: (row: Readonly<Record<string, unknown>>) => string;
+  /**
+   * Manifest form-widget id joined by column name. Only richer grids supply
+   * it; when absent, the CLR/text path takes over. Currently used to keep the
+   * legacy `money` widget working when no `valueKind` is present.
+   */
+  readonly component?: string | undefined;
+  /**
+   * Legacy currency resolver for the `money` manifest component. Consulted
+   * only on that path (never for `valueKind: 'Currency'`, which resolves its
+   * code from the column). Optional — a plain grid without money widgets omits
+   * it.
+   */
+  readonly currencyResolver?: ((row: Readonly<Record<string, unknown>>) => string) | undefined;
   readonly locale: string;
   readonly formatDate: DateFormatter;
   readonly formatDateTime: DateFormatter;
@@ -169,10 +188,7 @@ export const VALUE_KIND_FORMATTERS: Readonly<Record<string, CellFormatter>> = Ob
   DateTime: (value, ctx) => formatDateKind(value, ctx, true),
   Time: (value, ctx) => formatDateKind(value, ctx, true),
   RelativeTime: (value, ctx) => formatDateKind(value, ctx, true),
-  Boolean: (value) =>
-    typeof value === 'boolean' ? (
-      <span data-granit-cell-boolean={String(value)}>{value ? '✓' : '✗'}</span>
-    ) : null,
+  Boolean: (value) => (typeof value === 'boolean' ? renderBoolean(value) : null),
   Identifier: (value) => (
     <code className="font-mono text-xs">{typeof value === 'object' ? '—' : String(value)}</code>
   ),
@@ -195,7 +211,7 @@ export function formatCell(ctx: CellFormatterContext): ReactNode {
     }
   }
 
-  if (component === 'money' && typeof value === 'number') {
+  if (component === 'money' && currencyResolver && typeof value === 'number') {
     return formatMoney(value, currencyResolver(row), locale);
   }
 
@@ -208,6 +224,25 @@ export function formatCell(ctx: CellFormatterContext): ReactNode {
   );
   if (formattedDate !== null) return formattedDate;
 
+  if (typeof value === 'boolean') return renderBoolean(value);
   if (typeof value === 'object') return JSON.stringify(value);
   return String(value); // NOSONAR: remaining types (symbol, function) stringify safely
+}
+
+/**
+ * Locale-aware `Intl` date formatters, a sensible default for consumers that
+ * lack a timezone-aware formatter of their own (e.g. the minimal
+ * `<EntityList>`). Richer grids should keep passing the host's
+ * `useDateFormatter` (user-preferred timezone) instead.
+ */
+export function createDefaultCellDateFormatters(locale: string): {
+  readonly formatDate: DateFormatter;
+  readonly formatDateTime: DateFormatter;
+} {
+  const date = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });
+  const dateTime = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' });
+  return {
+    formatDate: (value) => date.format(new Date(value)),
+    formatDateTime: (value) => dateTime.format(new Date(value)),
+  };
 }
