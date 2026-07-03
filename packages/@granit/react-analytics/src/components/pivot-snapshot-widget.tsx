@@ -98,7 +98,7 @@ function PivotBody({ snapshot }: { readonly snapshot: PivotWidgetSnapshot }) {
           fields: columnFields.join(', ') || '—',
         })}
       </p>
-      <div className="flex-1 overflow-auto">
+      <div className="scrollbar-overlay flex-1 overflow-auto">
         <table className="w-full text-xs">
           <thead>
             <tr className="border-b">
