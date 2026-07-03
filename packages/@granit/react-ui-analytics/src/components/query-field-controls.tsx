@@ -18,6 +18,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SortableList,
   type ComboboxOption,
 } from '@granit/react-ui';
 import { useTranslation } from 'react-i18next';
@@ -268,5 +269,55 @@ export function EnumSelect({
         })}
       </SelectContent>
     </Select>
+  );
+}
+
+/**
+ * Ordered multi-field picker: a combobox to add a column plus a drag-and-drop
+ * (and keyboard-reorderable) list of the chosen columns. The emitted array's
+ * order is meaningful — table widgets render columns in exactly this order — so
+ * unlike {@link MetaMultiFieldInput} it lets the author control the sequence and
+ * remove individual entries. Falls back to free-text add when no metadata is
+ * loaded (`allowCustomValue`).
+ */
+export function ColumnOrderInput({
+  slot,
+  values,
+  options,
+  onChange,
+  placeholder,
+}: {
+  readonly slot: string;
+  readonly values: readonly string[];
+  readonly options: readonly FieldOption[];
+  readonly onChange: (values: string[]) => void;
+  readonly placeholder?: string;
+}) {
+  const labelFor = (name: string): string =>
+    options.find((option) => option.name === name)?.label ?? name;
+  const available = options.filter((option) => !values.includes(option.name));
+
+  return (
+    <div className="space-y-2">
+      <Combobox
+        slot={slot}
+        value=""
+        onValueChange={(value) => {
+          if (value.length > 0 && !values.includes(value)) {
+            onChange([...values, value]);
+          }
+        }}
+        options={toComboboxOptions(available)}
+        allowCustomValue
+        allowEmpty
+        placeholder={placeholder ?? 'Add a column…'}
+        searchPlaceholder="Search or type a column…"
+      />
+      <SortableList
+        items={values.map((name) => ({ id: name, label: labelFor(name) }))}
+        onReorder={onChange}
+        onRemove={(id) => onChange(values.filter((value) => value !== id))}
+      />
+    </div>
   );
 }

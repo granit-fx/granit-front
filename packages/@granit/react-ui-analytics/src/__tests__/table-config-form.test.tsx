@@ -103,7 +103,7 @@ describe('TableConfigForm', () => {
     expect(onChange.mock.calls.at(-1)?.[0]?.pageSize).toBe(50);
   });
 
-  it('toggles a visible column from the metadata multi-select', async () => {
+  it('adds a visible column from the metadata combobox', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     const { container } = wrap(
@@ -115,6 +115,24 @@ describe('TableConfigForm', () => {
     expect(await screen.findByRole('option', { name: 'Name' })).toBeInTheDocument();
     await user.click(await screen.findByRole('option', { name: 'Amount' }));
     expect(onChange.mock.calls.at(-1)?.[0]?.visibleColumns).toEqual(['Amount']);
+  });
+
+  it('lists the chosen columns in order and removes one, preserving order', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const { container } = wrap(
+      <TableConfigForm
+        widget={{ ...baseTable, visibleColumns: ['Amount', 'Name'] }}
+        onChange={onChange}
+      />
+    );
+
+    const rows = container.querySelectorAll('[data-slot="sortable-item"]');
+    expect([...rows].map((row) => row.textContent)).toEqual(['Amount', 'Name']);
+
+    const removeButtons = container.querySelectorAll('[data-slot="sortable-remove"]');
+    await user.click(removeButtons[0]!);
+    expect(onChange.mock.calls.at(-1)?.[0]?.visibleColumns).toEqual(['Name']);
   });
 
   it('renders the sort-field control but hides the direction control with no sort field', () => {

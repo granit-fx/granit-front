@@ -10,9 +10,9 @@ import type { WidgetCatalogEntry } from '../lib/widget-catalog';
  *
  * Drag-from-palette (drop a button into the grid to insert at a specific
  * position) is deferred — keeps the v1 surface tight and avoids a second
- * round of dnd-kit choreography. Apps wanting drag-to-add wrap their own
- * `<DndContext>` around `<EditableDashboard>` + `<WidgetPalette>` and
- * register palette items as additional sortable sources.
+ * drag-and-drop layer on top of the grid. Apps wanting drag-to-add wrap
+ * `<EditableDashboard>` + `<WidgetPalette>` in their own drag-and-drop
+ * context and register palette items as additional drag sources.
  *
  * Labels resolve through `useTranslation()` — when the localization key
  * is missing from the bundle, i18next falls back to the key itself, so

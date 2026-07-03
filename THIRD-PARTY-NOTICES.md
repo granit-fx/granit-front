@@ -12,7 +12,7 @@ Last updated: 2026-06-30
 
 | License    | Package count |
 | ---------- | ------------- |
-| MIT        | 50            |
+| MIT        | 53            |
 | Apache-2.0 | 15            |
 
 ---
@@ -32,6 +32,9 @@ Last updated: 2026-06-30
 | @commitlint/cli                 | 21.1.0  | commitlint Contributors                    |
 | @commitlint/config-conventional | 21.1.0  | commitlint Contributors                    |
 | @date-fns/tz                    | 1.5.0   | Copyright (c) Sasha Koss                   |
+| @dnd-kit/core                   | 6.3.1   | Copyright (c) Claudéric Demers             |
+| @dnd-kit/sortable               | 10.0.0  | Copyright (c) Claudéric Demers             |
+| @dnd-kit/utilities              | 3.2.2   | Copyright (c) Claudéric Demers             |
 | @eslint/js                      | 10.0.1  | OpenJS Foundation                          |
 | @puckeditor/core                | 0.21.3  | Copyright (c) Measured Corp                |
 | @microsoft/fetch-event-source   | 2.0.1   | Copyright (c) Microsoft Corporation        |

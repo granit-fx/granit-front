@@ -3,9 +3,9 @@ import { Input } from '@granit/react-ui';
 import { useTranslation } from 'react-i18next';
 
 import {
+  ColumnOrderInput,
   EnumSelect,
   MetaFieldInput,
-  MetaMultiFieldInput,
   QueryNameCombobox,
   RequiredMark,
 } from './query-field-controls';
@@ -24,7 +24,8 @@ import type { WidgetConfigFormProps } from '@granit/react-dashboard-editor';
  *
  * Under a `<QueryCatalogProvider>` the query field is a catalogue-backed
  * combobox and the column / sort pickers are sourced from the query's metadata;
- * otherwise they degrade to free-text (comma-separated for columns). Apps
+ * otherwise they degrade to free-text (type a column name to add). The visible
+ * columns render in the order chosen — drag or keyboard-reorder them. Apps
  * wanting a richer column-picker dialog register their own form via
  * `composeWidgetConfigFormRegistries`.
  */
@@ -56,11 +57,11 @@ export function TableConfigForm({
         <span className="mb-1 block text-muted-foreground">
           {t('Dashboard:Widget.Table.VisibleColumns.Label')}
         </span>
-        <MetaMultiFieldInput
+        <ColumnOrderInput
           slot="table-visible-columns"
           values={widget.visibleColumns ?? []}
           options={columnOptions}
-          placeholder="leave empty for all columns"
+          placeholder="add a column (empty = all, drag to reorder)"
           onChange={(values) =>
             onChange({ ...widget, visibleColumns: values.length > 0 ? values : null })
           }

@@ -25,6 +25,7 @@ export * from './sheet.js';
 export * from './sidebar.js';
 export * from './skeleton.js';
 export * from './sonner.js';
+export * from './sortable-list.js';
 export * from './spinner.js';
 export * from './status-badge.js';
 export * from './switch.js';
