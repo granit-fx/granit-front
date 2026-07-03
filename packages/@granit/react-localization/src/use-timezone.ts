@@ -1,11 +1,14 @@
-import { toTimeZoneId } from '@granit/timing';
+import { toTimeZoneId } from '@granit/types';
 import { createContext, useContext } from 'react';
 
-import type { TimeZoneId } from '@granit/timing';
-
-const BROWSER_TIMEZONE = toTimeZoneId(Intl.DateTimeFormat().resolvedOptions().timeZone);
+import type { TimeZoneId } from '@granit/types';
 
 const TimezoneContext = createContext<string | null>(null);
+
+// Resolved lazily on first use rather than at module load: branding the browser
+// timezone at import time would call `toTimeZoneId` before the module graph has
+// settled, which can observe an unbound re-export under some load orders.
+let browserTimezone: TimeZoneId | undefined;
 
 /**
  * Provider that sets the user's preferred timezone for all date formatting
@@ -35,5 +38,7 @@ export const TimezoneProvider = TimezoneContext.Provider;
  */
 export function useTimezone(): TimeZoneId {
   const value = useContext(TimezoneContext);
-  return value ? toTimeZoneId(value) : BROWSER_TIMEZONE;
+  if (value) return toTimeZoneId(value);
+  browserTimezone ??= toTimeZoneId(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  return browserTimezone;
 }

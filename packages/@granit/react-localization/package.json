@@ -23,6 +23,7 @@
     "@granit/react-query-engine": "workspace:*",
     "@granit/storage": "workspace:*",
     "@granit/timing": "workspace:*",
+    "@granit/types": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "date-fns": "^4.0.0",
     "i18next": "^26.0.0",
