@@ -8,6 +8,8 @@
 
 export type { DashboardDriftStatus } from './dashboard-drift-status';
 export type { DashboardRenderRequest } from './dashboard-render-request';
+export { resolveTimeWindowToRenderRequest } from './resolve-time-window-request';
+export type { ResolvedRenderPeriod } from './resolve-time-window-request';
 export type {
   DashboardRenderedWidget,
   DashboardRenderPeriod,

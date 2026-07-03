@@ -1,7 +1,10 @@
+import { DASHBOARD_TIME_WINDOW } from '@granit/dashboards';
 import {
   DashboardContextProvider,
+  DashboardTimeWindowToolbar,
   resolveEffectiveLayout,
   useDashboardBreakpoint,
+  useDashboardTimeWindowState,
   WidgetRenderer,
 } from '@granit/react-dashboards';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -79,6 +82,15 @@ export function EditableDashboard({
 }: EditableDashboardProps) {
   const breakpoint = useDashboardBreakpoint();
 
+  // Preview time window for the editor canvas. Widgets render through the same
+  // context path as read mode (`WidgetRenderer` → `useEffectiveTimeWindow`), so
+  // the toolbar re-fetches every tile without editing the persisted definition.
+  // Seeded from the dashboard's declared default, falling back to Last 30 days
+  // so the selector always shows.
+  const [timeWindow, setTimeWindow] = useDashboardTimeWindowState(
+    definition.defaultTimeWindow ?? DASHBOARD_TIME_WINDOW.Last30Days
+  );
+
   const { layout, widgets: orderedWidgets } = useMemo(
     () => resolveEffectiveLayout(definition.layout, definition.widgets, breakpoint),
     [definition.layout, definition.widgets, breakpoint]
@@ -117,7 +129,9 @@ export function EditableDashboard({
   };
 
   return (
-    <DashboardContextProvider value={{ dashboardName: definition.name }}>
+    <DashboardContextProvider
+      value={{ dashboardName: definition.name, timeWindow, setTimeWindow }}
+    >
       <div
         ref={wrapperRef}
         data-slot="editable-dashboard"
@@ -126,6 +140,7 @@ export function EditableDashboard({
         className={className}
       >
         <GridStyles />
+        <DashboardTimeWindowToolbar className="mb-3" />
         <GridLayout
           width={width || FALLBACK_WIDTH_PX}
           layout={gridLayout}

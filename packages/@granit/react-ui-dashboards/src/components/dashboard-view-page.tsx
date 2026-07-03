@@ -1,9 +1,16 @@
-import { RenderedDashboard, useDashboardDetail } from '@granit/react-dashboards';
+import { DASHBOARD_TIME_WINDOW, resolveTimeWindowToRenderRequest } from '@granit/dashboards';
+import {
+  DashboardContextProvider,
+  DashboardTimeWindowToolbar,
+  RenderedDashboard,
+  useDashboardDetail,
+  useDashboardTimeWindowState,
+} from '@granit/react-dashboards';
 import { useTranslation } from '@granit/react-localization';
 import { Button, Spinner } from '@granit/react-ui';
 import { EmptyState } from '@granit/react-ui-kit';
 import { ArrowLeft, LayoutDashboard, Pencil } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { DashboardComposer } from './dashboard-composer';
@@ -32,6 +39,16 @@ export function DashboardViewPage() {
 
   const dashboardId = decodeURIComponent(id);
   const { data: detail, isLoading } = useDashboardDetail(dashboardId);
+
+  // Active render window. The bundle path needs absolute bounds, so the chosen
+  // window is resolved to `periodFrom` / `periodTo` and fed to the render
+  // request — changing it re-fetches the bundle. Seeded to Last 30 days until
+  // the backend surfaces the dashboard's declared default on the detail payload.
+  const [timeWindow, setTimeWindow] = useDashboardTimeWindowState(DASHBOARD_TIME_WINDOW.Last30Days);
+  const renderRequest = useMemo(
+    () => (timeWindow ? resolveTimeWindowToRenderRequest(timeWindow) : undefined),
+    [timeWindow]
+  );
 
   if (isLoading) {
     return (
@@ -69,42 +86,50 @@ export function DashboardViewPage() {
   }
 
   return (
-    <div
-      data-slot="dashboard-view-page"
-      data-mode="view"
-      data-dashboard-id={detail.id}
-      data-dashboard-status={detail.status}
-      className="space-y-4"
+    <DashboardContextProvider
+      value={{ dashboardName: detail.name, timeWindow, setTimeWindow }}
     >
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/dashboards/manage')}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('Common.Back', { defaultValue: 'Back' })}
-          </Button>
-          <div>
-            <h2 className="text-2xl font-semibold text-foreground">{detail.name}</h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              <StatusBadge status={detail.status} /> · {detail.category}
-            </p>
+      <div
+        data-slot="dashboard-view-page"
+        data-mode="view"
+        data-dashboard-id={detail.id}
+        data-dashboard-status={detail.status}
+        className="space-y-4"
+      >
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" onClick={() => navigate('/dashboards/manage')}>
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              {t('Common.Back', { defaultValue: 'Back' })}
+            </Button>
+            <div>
+              <h2 className="text-2xl font-semibold text-foreground">{detail.name}</h2>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                <StatusBadge status={detail.status} /> · {detail.category}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-end gap-3">
+            <DashboardTimeWindowToolbar />
+            <Button
+              data-slot="dashboard-view-edit-toggle"
+              variant="outline"
+              size="sm"
+              onClick={() => setEditing(true)}
+            >
+              <Pencil className="mr-2 h-4 w-4" />
+              {t('Common.Edit', { defaultValue: 'Edit' })}
+            </Button>
           </div>
         </div>
-        <Button
-          data-slot="dashboard-view-edit-toggle"
-          variant="outline"
-          size="sm"
-          onClick={() => setEditing(true)}
-        >
-          <Pencil className="mr-2 h-4 w-4" />
-          {t('Common.Edit', { defaultValue: 'Edit' })}
-        </Button>
-      </div>
 
-      <RenderedDashboard
-        dashboardId={dashboardId}
-        columns={detail.layoutColumns}
-        rowHeight={detail.layoutRowHeight}
-      />
-    </div>
+        <RenderedDashboard
+          dashboardId={dashboardId}
+          request={renderRequest}
+          columns={detail.layoutColumns}
+          rowHeight={detail.layoutRowHeight}
+        />
+      </div>
+    </DashboardContextProvider>
   );
 }

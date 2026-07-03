@@ -37,9 +37,24 @@ const useDashboardDetail = vi.fn();
 
 vi.mock('@granit/react-dashboards', () => ({
   useDashboardDetail: (id: string) => useDashboardDetail(id),
-  RenderedDashboard: ({ dashboardId }: { readonly dashboardId: string }) => (
-    <div data-slot="rendered-dashboard" data-dashboard-id={dashboardId} />
+  RenderedDashboard: ({
+    dashboardId,
+    request,
+  }: {
+    readonly dashboardId: string;
+    readonly request?: { readonly periodToken?: string };
+  }) => (
+    <div
+      data-slot="rendered-dashboard"
+      data-dashboard-id={dashboardId}
+      data-period-token={request?.periodToken}
+    />
   ),
+  // Context + selector are covered by their own suites; here they only need to
+  // mount so the view page's wiring renders.
+  DashboardContextProvider: ({ children }: { readonly children: React.ReactNode }) => children,
+  DashboardTimeWindowToolbar: () => <div data-slot="dashboard-time-window-toolbar" />,
+  useDashboardTimeWindowState: <T,>(initial: T) => [initial, vi.fn()] as const,
 }));
 
 describe('DashboardViewPage', () => {
@@ -50,6 +65,19 @@ describe('DashboardViewPage', () => {
     expect(document.querySelector('[data-slot="dashboard-view-page"]')).toBeInTheDocument();
     expect(screen.getByText('Invoicing overview')).toBeInTheDocument();
     expect(document.querySelector('[data-slot="rendered-dashboard"]')).toBeInTheDocument();
+  });
+
+  it('mounts the time-window selector and feeds the resolved period to the render request', () => {
+    useDashboardDetail.mockReturnValue({ data: detail, isLoading: false });
+    renderDashboards(<DashboardViewPage />);
+
+    expect(
+      document.querySelector('[data-slot="dashboard-time-window-toolbar"]')
+    ).toBeInTheDocument();
+    // Seeded to Last 30 days → the render request echoes that token.
+    expect(
+      document.querySelector('[data-slot="rendered-dashboard"]')?.getAttribute('data-period-token')
+    ).toBe('last_30d');
   });
 
   it('shows the status badge for the persisted dashboard', () => {

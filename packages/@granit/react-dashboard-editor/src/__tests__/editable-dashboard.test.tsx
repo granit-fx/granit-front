@@ -79,6 +79,14 @@ describe('EditableDashboard — initial render', () => {
     expect(root?.querySelector('.react-grid-layout')).not.toBeNull();
   });
 
+  it('mounts the time-window selector so the editor previews at a chosen period', () => {
+    const { container } = wrap(<EditableDashboard definition={definition} onChange={vi.fn()} />);
+    const toolbar = container.querySelector('[data-slot="dashboard-time-window-toolbar"]');
+    expect(toolbar).toBeInTheDocument();
+    // Seeded to Last 30 days (no default declared on the fixture).
+    expect((toolbar?.querySelector('select') as HTMLSelectElement).value).toBe('last_30d');
+  });
+
   it('drives cell height from the row height (1-row widget = rowHeight px)', () => {
     const { container } = wrap(
       <EditableDashboard definition={definition} onChange={vi.fn()} rowHeight={120} />

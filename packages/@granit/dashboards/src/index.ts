@@ -134,12 +134,15 @@ export type {
   WidgetRenderKind,
 } from './types/index';
 
+export { resolveTimeWindowToRenderRequest } from './rendering/index';
+
 export type {
   DashboardDriftStatus,
   DashboardRenderedWidget,
   DashboardRenderPeriod,
   DashboardRenderRequest,
   DashboardRenderResponse,
+  ResolvedRenderPeriod,
   ImageSnapshotEnvelope,
   ImageWidgetSnapshot,
   MarkdownSnapshotEnvelope,
