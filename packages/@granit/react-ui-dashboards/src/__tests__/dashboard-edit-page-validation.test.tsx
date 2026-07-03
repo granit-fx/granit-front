@@ -35,6 +35,7 @@ vi.mock('@granit/react-dashboards', async (importOriginal) => {
         sourceDefinitionVersion: '1.0.0',
         layoutColumns: 12,
         layoutRowHeight: 80,
+        defaultTimeWindow: null,
         widgets: [
           {
             id: '8c6b1e10-0000-0000-0000-000000000020',

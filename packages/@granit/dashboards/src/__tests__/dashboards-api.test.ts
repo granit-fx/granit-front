@@ -48,6 +48,7 @@ const DETAIL: DashboardDetailResponse = {
   ...SUMMARY,
   layoutColumns: 12,
   layoutRowHeight: 80,
+  defaultTimeWindow: null,
   widgets: [],
 };
 

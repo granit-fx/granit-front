@@ -22,6 +22,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { DashboardComposer } from './dashboard-composer';
 import { StatusBadge } from './dashboard-status-badge';
 
+import type { DashboardDetailResponse } from '@granit/dashboards';
+
 /**
  * Single-dashboard page with an **inline edit toggle** (Grafana/luzmo style).
  *
@@ -45,23 +47,6 @@ export function DashboardViewPage() {
 
   const dashboardId = decodeURIComponent(id);
   const { data: detail, isLoading } = useDashboardDetail(dashboardId);
-
-  // Active render window. The bundle path needs absolute bounds, so the chosen
-  // window is resolved to `periodFrom` / `periodTo` and fed to the render
-  // request — changing it re-fetches the bundle. Seeded to Last 30 days until
-  // the backend surfaces the dashboard's declared default on the detail payload.
-  const [timeWindow, setTimeWindow] = useDashboardTimeWindowState(DASHBOARD_TIME_WINDOW.Last30Days);
-  const renderRequest = useMemo(
-    () => (timeWindow ? resolveTimeWindowToRenderRequest(timeWindow) : undefined),
-    [timeWindow]
-  );
-
-  // Auto-refresh cadence, bridged to the bundle query's refetch interval.
-  const [refreshInterval, setRefreshInterval] = useDashboardRefreshIntervalState('auto');
-  const renderOptions = useMemo(
-    () => ({ refetchInterval: toRefetchInterval(refreshInterval ?? 'auto') }),
-    [refreshInterval]
-  );
 
   if (isLoading) {
     return (
@@ -98,6 +83,43 @@ export function DashboardViewPage() {
     );
   }
 
+  // Content is mounted only once `detail` has loaded, so its time-window /
+  // refresh state can seed from the dashboard's persisted default on first
+  // render (a `useState` initialiser cannot pick it up during the loading pass).
+  return (
+    <DashboardViewContent detail={detail} dashboardId={dashboardId} onEdit={() => setEditing(true)} />
+  );
+}
+
+interface DashboardViewContentProps {
+  readonly detail: DashboardDetailResponse;
+  readonly dashboardId: string;
+  readonly onEdit: () => void;
+}
+
+function DashboardViewContent({ detail, dashboardId, onEdit }: DashboardViewContentProps) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  // Active render window. Seeded from the dashboard's persisted default,
+  // falling back to Last 30 days. The bundle path needs absolute bounds, so the
+  // window is resolved to `periodFrom` / `periodTo` and fed to the render
+  // request — changing it re-fetches the bundle.
+  const [timeWindow, setTimeWindow] = useDashboardTimeWindowState(
+    detail.defaultTimeWindow ?? DASHBOARD_TIME_WINDOW.Last30Days
+  );
+  const renderRequest = useMemo(
+    () => (timeWindow ? resolveTimeWindowToRenderRequest(timeWindow) : undefined),
+    [timeWindow]
+  );
+
+  // Auto-refresh cadence, bridged to the bundle query's refetch interval.
+  const [refreshInterval, setRefreshInterval] = useDashboardRefreshIntervalState('auto');
+  const renderOptions = useMemo(
+    () => ({ refetchInterval: toRefetchInterval(refreshInterval ?? 'auto') }),
+    [refreshInterval]
+  );
+
   return (
     <DashboardContextProvider
       value={{ dashboardName: detail.name, timeWindow, setTimeWindow, refreshInterval, setRefreshInterval }}
@@ -129,7 +151,7 @@ export function DashboardViewPage() {
               data-slot="dashboard-view-edit-toggle"
               variant="outline"
               size="sm"
-              onClick={() => setEditing(true)}
+              onClick={onEdit}
             >
               <Pencil className="mr-2 h-4 w-4" />
               {t('Common.Edit', { defaultValue: 'Edit' })}

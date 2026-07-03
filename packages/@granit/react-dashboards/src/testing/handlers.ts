@@ -339,6 +339,7 @@ export function createDashboardsHandlers(baseUrl = DEFAULT_BASE_PATH) {
         sourceDefinitionVersion: entry.version,
         layoutColumns: 12,
         layoutRowHeight: 80,
+        defaultTimeWindow: null,
         widgets: [],
       };
       store.set(id, stored);

@@ -489,6 +489,7 @@ function seedStoredDashboard(
     sourceDefinitionVersion: definition.version,
     layoutColumns: definition.layout.columns,
     layoutRowHeight: definition.layout.rowHeight,
+    defaultTimeWindow: definition.defaultTimeWindow ?? null,
     widgets: definition.widgets.map((widget, index) => {
       // Derive the persisted shape through the write-direction bridge so the
       // mock's `configJson` / `metricName` / `queryName` are byte-compatible

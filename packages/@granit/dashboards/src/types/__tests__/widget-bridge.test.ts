@@ -195,6 +195,7 @@ describe('dashboardDetailToDefinition', () => {
       sourceDefinitionVersion: '1.2.3',
       layoutColumns: 12,
       layoutRowHeight: 80,
+      defaultTimeWindow: { period: { token: 'last_7d' }, kind: 'History' },
       widgets: [
         {
           id: WIDGET_ID,
@@ -215,6 +216,7 @@ describe('dashboardDetailToDefinition', () => {
     expect(definition.name).toBe(DASHBOARD_NAME);
     expect(definition.version).toBe('1.2.3');
     expect(definition.layout).toEqual({ columns: 12, rowHeight: 80 });
+    expect(definition.defaultTimeWindow).toEqual({ period: { token: 'last_7d' }, kind: 'History' });
     expect(definition.widgets).toHaveLength(1);
     expect(definition.widgets[0]?.slug).toBe('Banner');
   });
@@ -230,6 +232,7 @@ describe('dashboardDetailToDefinition', () => {
       sourceDefinitionVersion: null,
       layoutColumns: 12,
       layoutRowHeight: 80,
+      defaultTimeWindow: null,
       widgets: [],
     };
     expect(dashboardDetailToDefinition(detail).version).toBe('1.0.0');

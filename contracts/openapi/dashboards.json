@@ -1198,6 +1198,7 @@
           "sourceDefinitionVersion",
           "layoutColumns",
           "layoutRowHeight",
+          "defaultTimeWindow",
           "widgets"
         ],
         "type": "object",
@@ -1231,6 +1232,16 @@
           "layoutRowHeight": {
             "type": "integer",
             "format": "int32"
+          },
+          "defaultTimeWindow": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/DashboardTimeWindow"
+              }
+            ]
           },
           "widgets": {
             "type": "array",
@@ -1297,6 +1308,16 @@
             "exclusiveMinimum": 0,
             "type": "integer",
             "format": "int32"
+          },
+          "defaultTimeWindow": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/DashboardTimeWindow"
+              }
+            ]
           }
         }
       },
@@ -1579,6 +1600,32 @@
           }
         }
       },
+      "DashboardTimeWindow": {
+        "required": ["period"],
+        "type": "object",
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/PeriodSpec"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/TimeWindowKind"
+          },
+          "compareTo": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/PeriodSpec"
+              }
+            ]
+          },
+          "aggregation": {
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": ["null", "string"]
+          }
+        }
+      },
       "HttpValidationProblemDetails": {
         "type": "object",
         "properties": {
@@ -1637,6 +1684,22 @@
           }
         }
       },
+      "PeriodSpec": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "to": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "token": {
+            "type": ["null", "string"]
+          }
+        }
+      },
       "ProblemDetails": {
         "type": "object",
         "properties": {
@@ -1664,6 +1727,10 @@
       },
       "RefreshHint": {
         "enum": ["Static", "Dynamic", "Realtime"]
+      },
+      "TimeWindowKind": {
+        "enum": ["History", "Realtime"],
+        "default": "History"
       },
       "UpdateWidgetRequest": {
         "required": ["x", "y", "width", "height", "titleLocalizationKey", "configJson"],
@@ -1710,6 +1777,7 @@
             "$ref": "#/components/schemas/WidgetActionKind"
           },
           "target": {
+            "maxLength": 256,
             "type": "string"
           },
           "params": {

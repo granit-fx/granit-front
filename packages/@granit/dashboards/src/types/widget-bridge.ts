@@ -234,6 +234,7 @@ export function dashboardDetailToDefinition(detail: DashboardDetailResponse): Da
     isSystem: detail.isSystem,
     version: detail.sourceDefinitionVersion ?? '1.0.0',
     layout: { columns: detail.layoutColumns, rowHeight: detail.layoutRowHeight },
+    defaultTimeWindow: detail.defaultTimeWindow,
     widgets: detail.widgets.map((w) => widgetInstanceToDefinition(w, detail.name)),
   };
 }

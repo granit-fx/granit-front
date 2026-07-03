@@ -30,6 +30,7 @@ const detail = {
   status: 'Published',
   layoutColumns: 12,
   layoutRowHeight: 80,
+  defaultTimeWindow: null,
   widgets: [],
 };
 
@@ -79,10 +80,22 @@ describe('DashboardViewPage', () => {
     expect(
       document.querySelector('[data-slot="dashboard-refresh-toolbar"]')
     ).toBeInTheDocument();
-    // Seeded to Last 30 days → the render request echoes that token.
+    // No declared default → falls back to Last 30 days.
     expect(
       document.querySelector('[data-slot="rendered-dashboard"]')?.getAttribute('data-period-token')
     ).toBe('last_30d');
+  });
+
+  it('seeds the time window from the dashboard\'s persisted default', () => {
+    useDashboardDetail.mockReturnValue({
+      data: { ...detail, defaultTimeWindow: { period: { token: 'last_7d' }, kind: 'History' } },
+      isLoading: false,
+    });
+    renderDashboards(<DashboardViewPage />);
+
+    expect(
+      document.querySelector('[data-slot="rendered-dashboard"]')?.getAttribute('data-period-token')
+    ).toBe('last_7d');
   });
 
   it('shows the status badge for the persisted dashboard', () => {
