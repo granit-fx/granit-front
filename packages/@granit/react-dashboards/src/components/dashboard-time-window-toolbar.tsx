@@ -1,4 +1,4 @@
-import { DASHBOARD_TIME_WINDOW } from '@granit/dashboards';
+import { DASHBOARD_TIME_WINDOW, shiftTimeWindow, zoomOutTimeWindow } from '@granit/dashboards';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -211,6 +211,41 @@ export function DashboardTimeWindowToolbar({ className }: DashboardTimeWindowToo
           ))}
         </select>
       </label>
+
+      <div
+        data-slot="dashboard-time-window-shift"
+        role="group"
+        aria-label="Shift time range"
+        className="flex items-end gap-1"
+      >
+        <button
+          type="button"
+          data-slot="dashboard-time-window-back"
+          aria-label={t('Dashboard:TimeWindow.ShiftBack', { defaultValue: 'Shift earlier' })}
+          onClick={() => setTimeWindow(shiftTimeWindow(timeWindow, 'back'))}
+          className="rounded-md border bg-background px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+        >
+          <span aria-hidden>‹</span>
+        </button>
+        <button
+          type="button"
+          data-slot="dashboard-time-window-zoom-out"
+          aria-label={t('Dashboard:TimeWindow.ZoomOut', { defaultValue: 'Zoom out' })}
+          onClick={() => setTimeWindow(zoomOutTimeWindow(timeWindow))}
+          className="rounded-md border bg-background px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+        >
+          <span aria-hidden>⊟</span>
+        </button>
+        <button
+          type="button"
+          data-slot="dashboard-time-window-forward"
+          aria-label={t('Dashboard:TimeWindow.ShiftForward', { defaultValue: 'Shift later' })}
+          onClick={() => setTimeWindow(shiftTimeWindow(timeWindow, 'forward'))}
+          className="rounded-md border bg-background px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+        >
+          <span aria-hidden>›</span>
+        </button>
+      </div>
 
       {customOpen && (
         <div data-slot="dashboard-time-window-custom" className="flex items-end gap-2">

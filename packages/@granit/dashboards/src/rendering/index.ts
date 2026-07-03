@@ -9,6 +9,8 @@
 export type { DashboardDriftStatus } from './dashboard-drift-status';
 export type { DashboardRenderRequest } from './dashboard-render-request';
 export { resolveTimeWindowToRenderRequest } from './resolve-time-window-request';
+export { shiftTimeWindow, zoomOutTimeWindow } from './shift-time-window';
+export type { ShiftDirection } from './shift-time-window';
 export type {
   ResolvedRenderPeriod,
   ResolveTimeWindowOptions,

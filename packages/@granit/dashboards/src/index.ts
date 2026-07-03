@@ -137,9 +137,14 @@ export type {
   WidgetRenderKind,
 } from './types/index';
 
-export { resolveTimeWindowToRenderRequest } from './rendering/index';
+export {
+  resolveTimeWindowToRenderRequest,
+  shiftTimeWindow,
+  zoomOutTimeWindow,
+} from './rendering/index';
 
 export type {
+  ShiftDirection,
   DashboardDriftStatus,
   DashboardRenderedWidget,
   DashboardRenderPeriod,

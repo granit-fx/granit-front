@@ -126,6 +126,34 @@ describe('DashboardTimeWindowToolbar', () => {
     );
   });
 
+  it('shifts the window to an absolute range via the ← / → controls', () => {
+    const onChange = vi.fn();
+    render(<Harness initial={DASHBOARD_TIME_WINDOW.Last7Days} setTimeWindow={onChange} />);
+
+    fireEvent.click(document.querySelector('[data-slot="dashboard-time-window-back"]')!);
+    const shifted = onChange.mock.calls.at(-1)?.[0];
+    expect(shifted.period).toHaveProperty('from');
+    expect(shifted.period).toHaveProperty('to');
+  });
+
+  it('zooms out to a wider absolute range', () => {
+    const onChange = vi.fn();
+    render(
+      <Harness
+        initial={{ period: { from: '2026-01-08T00:00:00Z', to: '2026-01-15T00:00:00Z' } }}
+        setTimeWindow={onChange}
+      />
+    );
+    fireEvent.click(document.querySelector('[data-slot="dashboard-time-window-zoom-out"]')!);
+    const zoomed = onChange.mock.calls.at(-1)?.[0];
+    expect(new Date(zoomed.period.from).getTime()).toBeLessThan(
+      new Date('2026-01-08T00:00:00Z').getTime()
+    );
+    expect(new Date(zoomed.period.to).getTime()).toBeGreaterThan(
+      new Date('2026-01-15T00:00:00Z').getTime()
+    );
+  });
+
   it('disables Apply for an inverted or incomplete range', () => {
     render(<Harness initial={DASHBOARD_TIME_WINDOW.Last30Days} />);
     fireEvent.change(screen.getByRole('combobox'), { target: { value: '__custom__' } });
