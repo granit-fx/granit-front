@@ -86,12 +86,58 @@ describe('DashboardTimeWindowToolbar', () => {
     );
   });
 
-  it('shows a disabled Custom entry for an absolute range not in the presets', () => {
+  it('opens the custom-range inputs, seeded, for an absolute-range window', () => {
     render(
       <Harness initial={{ period: { from: '2026-01-01T00:00:00Z', to: '2026-02-01T00:00:00Z' } }} />
     );
-    const select = screen.getByRole('combobox') as HTMLSelectElement;
-    expect(select.value).toBe('');
-    expect(screen.getByRole('option', { name: /custom range/i })).toBeDisabled();
+    expect((screen.getByRole('combobox') as HTMLSelectElement).value).toBe('__custom__');
+    expect(document.querySelector('[data-slot="dashboard-time-window-custom"]')).toBeInTheDocument();
+    // Seeded from the window (browser-local rendering of the UTC bounds).
+    expect(
+      (document.querySelector('[data-slot="dashboard-time-window-from"]') as HTMLInputElement).value
+    ).not.toBe('');
+  });
+
+  it('reveals the custom inputs when "Custom range" is selected', () => {
+    render(<Harness initial={DASHBOARD_TIME_WINDOW.Last30Days} />);
+    expect(document.querySelector('[data-slot="dashboard-time-window-custom"]')).toBeNull();
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: '__custom__' } });
+    expect(document.querySelector('[data-slot="dashboard-time-window-custom"]')).toBeInTheDocument();
+  });
+
+  it('applies a valid absolute range as an absolute-period window', () => {
+    const onChange = vi.fn();
+    render(<Harness initial={DASHBOARD_TIME_WINDOW.Last30Days} setTimeWindow={onChange} />);
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: '__custom__' } });
+
+    fireEvent.change(document.querySelector('[data-slot="dashboard-time-window-from"]')!, {
+      target: { value: '2026-01-01T00:00' },
+    });
+    fireEvent.change(document.querySelector('[data-slot="dashboard-time-window-to"]')!, {
+      target: { value: '2026-02-01T00:00' },
+    });
+    fireEvent.click(document.querySelector('[data-slot="dashboard-time-window-apply"]')!);
+
+    const applied = onChange.mock.calls.at(-1)?.[0];
+    expect(applied.period).toHaveProperty('from');
+    expect(applied.period).toHaveProperty('to');
+    expect(new Date(applied.period.from).getTime()).toBeLessThan(
+      new Date(applied.period.to).getTime()
+    );
+  });
+
+  it('disables Apply for an inverted or incomplete range', () => {
+    render(<Harness initial={DASHBOARD_TIME_WINDOW.Last30Days} />);
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: '__custom__' } });
+    // Both empty → disabled.
+    expect(document.querySelector('[data-slot="dashboard-time-window-apply"]')).toBeDisabled();
+    fireEvent.change(document.querySelector('[data-slot="dashboard-time-window-from"]')!, {
+      target: { value: '2026-02-01T00:00' },
+    });
+    fireEvent.change(document.querySelector('[data-slot="dashboard-time-window-to"]')!, {
+      target: { value: '2026-01-01T00:00' },
+    });
+    // from > to → still disabled.
+    expect(document.querySelector('[data-slot="dashboard-time-window-apply"]')).toBeDisabled();
   });
 });
