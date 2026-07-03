@@ -77,6 +77,15 @@ describe('DashboardTimeRangeControl', () => {
     fireEvent.click(document.querySelector('[data-slot="time-range-back"]')!);
     expect(onChange.mock.calls.at(-1)?.[0].period).toHaveProperty('from');
   });
+
+  it('shows the resolved absolute range + timezone on hover (focus opens the tooltip)', async () => {
+    wrap(<TimeHarness />);
+    fireEvent.focus(document.querySelector('[data-slot="time-range-trigger"]')!);
+    const tip = await screen.findByRole('tooltip');
+    // The Grafana-style summary: from / to / timezone label.
+    expect(tip).toHaveTextContent('to');
+    expect(tip.textContent).toMatch(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/);
+  });
 });
 
 function RefreshHarness({ onChange }: { readonly onChange?: (v: DashboardRefreshInterval | undefined) => void }) {

@@ -1,11 +1,19 @@
-import { shiftTimeWindow, zoomOutTimeWindow } from '@granit/dashboards';
+import { resolveTimeWindowBounds, shiftTimeWindow, zoomOutTimeWindow } from '@granit/dashboards';
 import {
   TIME_WINDOW_GROUPS,
   TIME_WINDOW_PRESETS,
   useDashboardContext,
 } from '@granit/react-dashboards';
 import { useTranslation } from '@granit/react-localization';
-import { Popover, PopoverContent, PopoverTrigger } from '@granit/react-ui';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@granit/react-ui';
 import { cn } from '@granit/utils';
 import { ChevronDown, ChevronsLeft, ChevronsRight, Clock, ZoomOut } from 'lucide-react';
 import { useState } from 'react';
@@ -51,6 +59,20 @@ export function DashboardTimeRangeControl({ className }: DashboardTimeRangeContr
     ? t(activePreset.labelKey, { defaultValue: activePreset.defaultLabel })
     : t('Dashboard:TimeWindow.Custom', { defaultValue: 'Custom range' });
 
+  // Hover summary (Grafana-style): the resolved absolute bounds + the timezone
+  // they are shown in. Resolved client-side the same way the shift/zoom controls
+  // are — timezone- and first-day-aware.
+  const bounds = resolveTimeWindowBounds(timeWindow, {
+    weekStartsOn: ctx.weekStartsOn,
+    timeZone: ctx.timeZone,
+  });
+  const browserZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const zone = ctx.timeZone ?? browserZone;
+  const zonePrimary = ctx.timeZone
+    ? String(ctx.timeZone)
+    : t('Dashboard:TimeWindow.LocalBrowserTime', { defaultValue: 'Local browser time' });
+  const zoneSecondary = describeZone(zone, bounds?.from ?? new Date());
+
   const pickPreset = (window: DashboardTimeWindow) => {
     setTimeWindow({ ...timeWindow, ...window });
     setOpen(false);
@@ -79,17 +101,38 @@ export function DashboardTimeRangeControl({ className }: DashboardTimeRangeContr
       </button>
 
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <button
-            type="button"
-            data-slot="time-range-trigger"
-            className={cn(SEG, 'border-l font-medium text-foreground')}
-          >
-            <Clock className="h-4 w-4 text-muted-foreground" aria-hidden />
-            <span>{label}</span>
-            <ChevronDown className="h-4 w-4 text-muted-foreground" aria-hidden />
-          </button>
-        </PopoverTrigger>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  data-slot="time-range-trigger"
+                  className={cn(SEG, 'border-l font-medium text-foreground')}
+                >
+                  <Clock className="h-4 w-4 text-muted-foreground" aria-hidden />
+                  <span>{label}</span>
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" aria-hidden />
+                </button>
+              </PopoverTrigger>
+            </TooltipTrigger>
+            {bounds && (
+              <TooltipContent side="bottom" align="start" data-slot="time-range-tooltip">
+                <div className="text-center">
+                  <div className="font-medium">{formatInZone(bounds.from, zone)}</div>
+                  <div className="text-muted-foreground">
+                    {t('Dashboard:TimeWindow.RangeTo', { defaultValue: 'to' })}
+                  </div>
+                  <div className="font-medium">{formatInZone(bounds.to, zone)}</div>
+                  <div className="mt-1">
+                    <span className="text-primary">{zonePrimary}</span>{' '}
+                    <span className="text-muted-foreground">{zoneSecondary}</span>
+                  </div>
+                </div>
+              </TooltipContent>
+            )}
+          </Tooltip>
+        </TooltipProvider>
         <PopoverContent align="start" className="flex w-[36rem] max-w-[calc(100vw-2rem)] gap-4 p-4">
           {/* Absolute range */}
           <div className="flex w-1/2 flex-col gap-2">
@@ -191,4 +234,27 @@ function toLocalInput(iso: string): string {
   if (Number.isNaN(date.getTime())) return '';
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+/** `YYYY-MM-DD HH:mm:ss` in the given IANA zone (sv-SE gives the ISO-like layout). */
+function formatInZone(date: Date, timeZone: string): string {
+  return new Intl.DateTimeFormat('sv-SE', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  }).format(date);
+}
+
+/** e.g. `"Brussels, CEST"` — the zone's city + its short name at `at`. */
+function describeZone(timeZone: string, at: Date): string {
+  const city = timeZone.split('/').pop()?.replace(/_/g, ' ') ?? timeZone;
+  const abbrev = new Intl.DateTimeFormat('en', { timeZone, timeZoneName: 'short' })
+    .formatToParts(at)
+    .find((part) => part.type === 'timeZoneName')?.value;
+  return abbrev ? `${city}, ${abbrev}` : city;
 }
