@@ -19,6 +19,8 @@ export interface LineChartProps extends ChartDimensions {
   readonly area?: boolean;
   /** Show the legend above the plot area. Defaults to `true` when >1 series. */
   readonly showLegend?: boolean;
+  /** Locale-aware formatter for the value axis + tooltip (defaults to raw). */
+  readonly valueFormatter?: (value: number) => string;
   readonly className?: string;
   readonly theme?: string | object;
 }
@@ -39,6 +41,7 @@ export function LineChart({
   smooth = false,
   area = false,
   showLegend,
+  valueFormatter,
   height,
   width,
   className,
@@ -47,7 +50,10 @@ export function LineChart({
   const options = useMemo<EChartsOption>(() => {
     const wantLegend = showLegend ?? series.length > 1;
     return {
-      tooltip: { trigger: 'axis' },
+      tooltip: {
+        trigger: 'axis',
+        valueFormatter: valueFormatter ? (v) => valueFormatter(Number(v)) : undefined,
+      },
       legend: wantLegend ? { data: series.map((s) => s.name), top: 0 } : undefined,
       grid: {
         left: 8,
@@ -65,12 +71,16 @@ export function LineChart({
         min: xAxis?.min,
         max: xAxis?.max,
       },
+      // Cast: a numeric `axisLabel.formatter` only type-checks against a value
+      // axis, but `type` is a runtime union here (defaults to 'value' in the
+      // snapshot path). The value axis is always numeric where a formatter is set.
       yAxis: {
         type: yAxis?.type ?? 'value',
         name: yAxis?.label,
         min: yAxis?.min,
         max: yAxis?.max,
-      },
+        axisLabel: valueFormatter ? { formatter: (v: number) => valueFormatter(v) } : undefined,
+      } as EChartsOption['yAxis'],
       series: series.map((s) => ({
         id: s.id,
         name: s.name,
@@ -83,7 +93,7 @@ export function LineChart({
         lineStyle: s.color ? { color: s.color } : undefined,
       })),
     };
-  }, [series, xAxis, yAxis, smooth, area, showLegend]);
+  }, [series, xAxis, yAxis, smooth, area, showLegend, valueFormatter]);
 
   return (
     <Chart options={options} height={height ?? width ?? 320} className={className} theme={theme} />

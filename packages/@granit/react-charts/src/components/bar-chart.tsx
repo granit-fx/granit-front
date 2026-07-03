@@ -14,6 +14,8 @@ export interface BarChartProps extends ChartDimensions {
   /** Render bars horizontally (swaps x and y axis roles). */
   readonly horizontal?: boolean;
   readonly showLegend?: boolean;
+  /** Locale-aware formatter for the value axis + tooltip (defaults to raw). */
+  readonly valueFormatter?: (value: number) => string;
   readonly className?: string;
   readonly theme?: string | object;
 }
@@ -30,6 +32,7 @@ export function BarChart({
   stacked = false,
   horizontal = false,
   showLegend,
+  valueFormatter,
   height,
   width,
   className,
@@ -46,9 +49,14 @@ export function BarChart({
       name: yAxis?.label,
       min: yAxis?.min,
       max: yAxis?.max,
+      axisLabel: valueFormatter ? { formatter: (v: number) => valueFormatter(v) } : undefined,
     };
     return {
-      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow' },
+        valueFormatter: valueFormatter ? (v) => valueFormatter(Number(v)) : undefined,
+      },
       legend: wantLegend ? { data: series.map((s) => s.name), top: 0 } : undefined,
       grid: {
         left: 8,
@@ -66,13 +74,17 @@ export function BarChart({
         id: s.id,
         name: s.name,
         type: 'bar',
-        // ECharts' option types want mutable arrays; spread to drop readonly.
-        data: s.data.map((p) => [...p]) as (number | string)[][],
+        // ECharts maps each tuple as `[xAxis, yAxis]`. Series data is authored
+        // `[category, value]`; when horizontal the value axis is x, so the pair
+        // must be swapped to `[value, category]` — otherwise the category lands
+        // on the numeric axis (NaN) and the value renders as the category label.
+        // Spread also drops the readonly for ECharts' mutable option types.
+        data: s.data.map((p) => (horizontal ? [p[1], p[0]] : [...p])) as (number | string)[][],
         stack: stacked ? 'total' : undefined,
         itemStyle: s.color ? { color: s.color } : undefined,
       })),
     };
-  }, [series, xAxis, yAxis, stacked, horizontal, showLegend]);
+  }, [series, xAxis, yAxis, stacked, horizontal, showLegend, valueFormatter]);
 
   return (
     <Chart options={options} height={height ?? width ?? 320} className={className} theme={theme} />

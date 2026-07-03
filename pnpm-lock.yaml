@@ -1895,6 +1895,9 @@ importers:
       '@granit/react-dashboards':
         specifier: workspace:*
         version: link:../react-dashboards
+      '@granit/react-localization':
+        specifier: workspace:*
+        version: link:../react-localization
       '@granit/react-testing':
         specifier: workspace:*
         version: link:../react-testing

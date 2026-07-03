@@ -48,6 +48,21 @@ describe('BarChart', () => {
     expect(opt.xAxis.type).toBe('value');
     expect(opt.yAxis.type).toBe('category');
   });
+
+  it('swaps each data pair to [value, category] when horizontal', () => {
+    const { getByTestId } = render(<BarChart series={SERIES} horizontal />);
+    const opt = optionOf(getByTestId);
+    // Authored as ['2026-01', 10]; horizontal must emit [10, '2026-01'] so the
+    // number lands on the value (x) axis and the label on the category (y) axis.
+    expect(opt.series[0].data[0]).toEqual([10, '2026-01']);
+    expect(opt.series[0].data[1]).toEqual([20, '2026-02']);
+  });
+
+  it('keeps data pairs as [category, value] when vertical', () => {
+    const { getByTestId } = render(<BarChart series={SERIES} />);
+    const opt = optionOf(getByTestId);
+    expect(opt.series[0].data[0]).toEqual(['2026-01', 10]);
+  });
 });
 
 describe('PieChart', () => {
@@ -77,11 +92,7 @@ describe('PieChart', () => {
 });
 
 describe('SparklineChart', () => {
-  const data = [
-    ['2026-01', 1] as const,
-    ['2026-02', 4] as const,
-    ['2026-03', 2] as const,
-  ];
+  const data = [['2026-01', 1] as const, ['2026-02', 4] as const, ['2026-03', 2] as const];
 
   it('renders an axis-less line', () => {
     const { getByTestId } = render(<SparklineChart data={data} />);

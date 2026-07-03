@@ -1,8 +1,12 @@
 import { isChartSnapshotEnvelope } from '@granit/analytics';
+import { useLocale } from '@granit/react-localization';
+import { useMemo } from 'react';
 
 import { BarChart } from '../components/bar-chart';
 import { LineChart } from '../components/line-chart';
 import { PieChart } from '../components/pie-chart';
+
+import { createChartValueFormatter } from './format-chart-value';
 
 import type { ChartWidgetSnapshot } from '@granit/analytics';
 import type { ChartSeries } from '@granit/charts';
@@ -27,6 +31,16 @@ export function ChartSnapshotWidget({ widget }: { readonly widget: DashboardRend
 
 function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
   const { chartType, groupBy, aggregation, field, buckets, currency } = snapshot;
+  const { locale } = useLocale();
+
+  // Locale-aware value formatting for every numeric axis / tooltip. Currency
+  // buckets (B3-8b) render with the ISO symbol; everything else uses the
+  // culture's grouping + decimals. Memoised so ECharts re-renders only when
+  // locale or currency actually changes.
+  const valueFormatter = useMemo(
+    () => createChartValueFormatter(locale, currency),
+    [locale, currency]
+  );
 
   const seriesName = field ? `${aggregation}(${field})` : aggregation;
 
@@ -41,7 +55,12 @@ function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
     }));
     return (
       <div data-slot="chart-snapshot-widget" data-chart-type={chartType} className="h-full w-full">
-        <PieChart data={pieData} innerRadiusRatio={chartType === 'Donut' ? 0.5 : 0} height="100%" />
+        <PieChart
+          data={pieData}
+          innerRadiusRatio={chartType === 'Donut' ? 0.5 : 0}
+          valueFormatter={valueFormatter}
+          height="100%"
+        />
       </div>
     );
   }
@@ -64,6 +83,7 @@ function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
           xAxis={{ label: groupBy }}
           yAxis={{ label: valueAxisLabel }}
           area={chartType === 'Area'}
+          valueFormatter={valueFormatter}
           height="100%"
         />
       </div>
@@ -79,6 +99,7 @@ function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
         xAxis={{ label: horizontal ? valueAxisLabel : groupBy }}
         yAxis={{ label: horizontal ? groupBy : valueAxisLabel }}
         horizontal={horizontal}
+        valueFormatter={valueFormatter}
         height="100%"
       />
     </div>

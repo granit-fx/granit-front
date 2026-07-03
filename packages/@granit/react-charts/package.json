@@ -18,6 +18,7 @@
     "@granit/charts": "workspace:*",
     "@granit/dashboards": "workspace:*",
     "@granit/react-dashboards": "workspace:*",
+    "@granit/react-localization": "workspace:*",
     "echarts": "^6.0.0",
     "echarts-for-react": "^3.0.6",
     "react": "^19.0.0"
@@ -36,6 +37,7 @@
     "@granit/charts": "workspace:*",
     "@granit/dashboards": "workspace:*",
     "@granit/react-dashboards": "workspace:*",
+    "@granit/react-localization": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*"
   }

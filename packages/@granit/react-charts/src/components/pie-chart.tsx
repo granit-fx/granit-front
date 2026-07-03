@@ -20,6 +20,8 @@ export interface PieChartProps extends ChartDimensions {
    */
   readonly innerRadiusRatio?: number;
   readonly showLegend?: boolean;
+  /** Locale-aware formatter for slice values in the tooltip (defaults to raw). */
+  readonly valueFormatter?: (value: number) => string;
   readonly className?: string;
   readonly theme?: string | object;
 }
@@ -32,6 +34,7 @@ export function PieChart({
   data,
   innerRadiusRatio = 0,
   showLegend = true,
+  valueFormatter,
   height,
   width,
   className,
@@ -41,7 +44,10 @@ export function PieChart({
     const outerRadius = '70%';
     const innerRadius = innerRadiusRatio > 0 ? `${Math.round(innerRadiusRatio * 70)}%` : '0%';
     return {
-      tooltip: { trigger: 'item' },
+      tooltip: {
+        trigger: 'item',
+        valueFormatter: valueFormatter ? (v) => valueFormatter(Number(v)) : undefined,
+      },
       legend: showLegend ? { orient: 'vertical', left: 'left' } : undefined,
       series: [
         {
@@ -59,7 +65,7 @@ export function PieChart({
         },
       ],
     };
-  }, [data, innerRadiusRatio, showLegend]);
+  }, [data, innerRadiusRatio, showLegend, valueFormatter]);
 
   return (
     <Chart options={options} height={height ?? width ?? 320} className={className} theme={theme} />
