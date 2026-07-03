@@ -24,6 +24,10 @@ export { useDateFormatter } from './use-date-formatter';
 // Hooks — Timezone
 export { TimezoneProvider, useTimezone } from './use-timezone';
 
+// Hooks — First day of week (calendar-token resolution parity)
+export { FirstDayOfWeekProvider, useFirstDayOfWeek } from './use-first-day-of-week';
+export type { Weekday } from './use-first-day-of-week';
+
 // Re-export from react-i18next so apps import everything from @granit/react-localization.
 export { I18nextProvider, Trans } from 'react-i18next';
 

@@ -12,7 +12,7 @@ import {
   useDashboardRefreshIntervalState,
   useDashboardTimeWindowState,
 } from '@granit/react-dashboards';
-import { useTranslation } from '@granit/react-localization';
+import { useFirstDayOfWeek, useTranslation } from '@granit/react-localization';
 import { Button, Spinner } from '@granit/react-ui';
 import { EmptyState } from '@granit/react-ui-kit';
 import { ArrowLeft, LayoutDashboard, Pencil } from 'lucide-react';
@@ -108,9 +108,13 @@ function DashboardViewContent({ detail, dashboardId, onEdit }: DashboardViewCont
   const [timeWindow, setTimeWindow] = useDashboardTimeWindowState(
     detail.defaultTimeWindow ?? DASHBOARD_TIME_WINDOW.Last30Days
   );
+  // Calendar-token resolution (`wtd` / `pw`) must use the same first day of week
+  // as the backend `PeriodResolver` for the two paths to agree — the app feeds
+  // the `Localization:FirstDayOfWeek` setting into the FirstDayOfWeekProvider.
+  const weekStartsOn = useFirstDayOfWeek();
   const renderRequest = useMemo(
-    () => (timeWindow ? resolveTimeWindowToRenderRequest(timeWindow) : undefined),
-    [timeWindow]
+    () => (timeWindow ? resolveTimeWindowToRenderRequest(timeWindow, { weekStartsOn }) : undefined),
+    [timeWindow, weekStartsOn]
   );
 
   // Auto-refresh cadence, bridged to the bundle query's refetch interval.

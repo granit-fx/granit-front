@@ -6194,6 +6194,21 @@
           "signature": "function useTimezone(): string"
         },
         {
+          "name": "FirstDayOfWeekProvider",
+          "kind": "const",
+          "signature": "const FirstDayOfWeekProvider"
+        },
+        {
+          "name": "useFirstDayOfWeek",
+          "kind": "function",
+          "signature": "function useFirstDayOfWeek(): Weekday"
+        },
+        {
+          "name": "Weekday",
+          "kind": "type",
+          "signature": "type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6"
+        },
+        {
           "name": "useTranslation",
           "kind": "function",
           "signature": "function useTranslation< Ns extends FlatNamespace | readonly [FlatNamespace?, ...FlatNamespace[]] = 'translation', KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined, >( ns?: Ns, options?: UseTranslationOptions<KPrefix> ): UseTranslationResponse<FallbackNs<Ns>, KPrefix>"
