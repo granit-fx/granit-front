@@ -34,6 +34,7 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { recapParentRefs } from './bulk-recap';
+import { formatCell } from './cell-formatters';
 import { useEntityActionScope } from './entity-action-scope';
 import { EntityCalendarView } from './entity-calendar-view';
 import { EntityGalleryView, type GalleryRenderImage } from './entity-gallery-view';
@@ -42,6 +43,7 @@ import { EntityPageLayout } from './entity-page-layout';
 import { EntityViewSwitcher } from './entity-view-switcher';
 import { asExtended } from './manifest-extensions';
 
+import type { DateFormatter } from './cell-formatters';
 import type { ExtendedEntityManifest } from './manifest-extensions';
 import type {
   EntityListLayoutKind,
@@ -49,12 +51,8 @@ import type {
   EntityManifestResponse,
   EntitySelectionActionManifest,
 } from '@granit/entities';
-import type { ColumnDefinition, QueryMetadata } from '@granit/query-engine';
+import type { QueryMetadata } from '@granit/query-engine';
 import type { ColumnDef } from '@tanstack/react-table';
-
-const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
-
-type DateFormatter = (date: string | Date) => string;
 
 // Builds TanStack table columns from the QueryMetadata + manifest field
 // widget hints. Cell rendering picks a formatter based on the widget id
@@ -119,15 +117,15 @@ function createGenericColumns({
         accessorKey: col.name,
         header: col.label,
         cell: ({ row }) =>
-          formatCell(
-            row.original,
-            col,
+          formatCell({
+            row: row.original,
+            column: col,
             component,
             currencyResolver,
             locale,
             formatDate,
-            formatDateTime
-          ),
+            formatDateTime,
+          }),
       };
     });
 
@@ -216,70 +214,6 @@ function createGenericColumns({
   };
 
   return [selectionColumn, ...dataColumns, actionsColumn];
-}
-
-function formatDateValue(
-  value: string,
-  formatDate: DateFormatter,
-  formatDateTime: DateFormatter,
-  withTime: boolean
-): string | null {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return null;
-  // Timezone-aware (user PreferredTimezone) via useDateFormatter, not raw Intl.
-  return withTime ? formatDateTime(value) : formatDate(value);
-}
-
-function tryFormatDateCell(
-  value: unknown,
-  component: string | undefined,
-  columnType: string,
-  formatDate: DateFormatter,
-  formatDateTime: DateFormatter
-): string | null {
-  if (typeof value !== 'string') return null;
-  if (component === 'date' || component === 'datetime') {
-    return formatDateValue(value, formatDate, formatDateTime, component === 'datetime');
-  }
-  if (columnType === 'DateTime' || columnType === 'DateTimeOffset') {
-    return formatDateValue(value, formatDate, formatDateTime, false);
-  }
-  if (ISO_DATE_RE.test(value)) {
-    return formatDateValue(value, formatDate, formatDateTime, false);
-  }
-  return null;
-}
-
-function formatCell(
-  row: Readonly<Record<string, unknown>>,
-  column: ColumnDefinition,
-  component: string | undefined,
-  currencyResolver: (row: Readonly<Record<string, unknown>>) => string,
-  locale: string,
-  formatDate: DateFormatter,
-  formatDateTime: DateFormatter
-): string {
-  const value = row[column.name];
-  if (value === null || value === undefined) return '—';
-
-  if (component === 'money' && typeof value === 'number') {
-    return new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: currencyResolver(row),
-    }).format(value / 100);
-  }
-
-  const formattedDate = tryFormatDateCell(
-    value,
-    component,
-    column.type,
-    formatDate,
-    formatDateTime
-  );
-  if (formattedDate !== null) return formattedDate;
-
-  if (typeof value === 'object') return JSON.stringify(value);
-  return String(value); // NOSONAR: remaining types (symbol, function) stringify safely
 }
 
 interface ContentProps {

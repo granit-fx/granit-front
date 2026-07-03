@@ -20,6 +20,28 @@ export interface ColumnDefinition {
   readonly isVisible: boolean;
   /** Display format (e.g. "dd/MM/yyyy"). */
   readonly format?: string;
+  /**
+   * Semantic cell kind, driving renderer selection ahead of the manifest
+   * `component` join and the CLR `type` fallback. Wire values are the .NET
+   * `ValueKind` enum member names verbatim (PascalCase, via
+   * `JsonStringEnumConverter`): `Count`, `Number`, `Currency`, `Percentage`,
+   * `Bytes`, `Duration`, `Date`, `DateTime`, `Time`, `RelativeTime`, `Url`,
+   * `Email`, `Phone`, `Boolean`, `Enum`, `Color`, `Image`, `Json`, `Markdown`,
+   * `Tags`, `Rating`, `Identifier`. Optional — absent columns keep the legacy
+   * CLR/component behaviour. Mirrors `Granit.QueryEngine.Meta.ColumnDefinition`.
+   */
+  readonly valueKind?: string;
+  /**
+   * ISO 4217 code for a `Currency` column, fixed at design time (e.g. `"EUR"`).
+   * Takes precedence over {@link currencyCodeField}.
+   */
+  readonly currencyCode?: string;
+  /**
+   * Name of a sibling column holding the ISO 4217 code per row (multi-currency
+   * entities). Consulted only when {@link currencyCode} is absent; the code is
+   * read from `row[currencyCodeField]` on each row.
+   */
+  readonly currencyCodeField?: string;
 }
 
 /** Filterable field with its allowed operators (inferred from type). */
@@ -85,13 +107,7 @@ export interface DateFilterMeta {
 
 /** Predefined date periods for DatePeriodPicker. */
 export type DatePeriod =
-  | 'Today'
-  | 'ThisWeek'
-  | 'ThisMonth'
-  | 'LastMonth'
-  | 'ThisQuarter'
-  | 'ThisYear'
-  | 'Custom';
+  'Today' | 'ThisWeek' | 'ThisMonth' | 'LastMonth' | 'ThisQuarter' | 'ThisYear' | 'Custom';
 
 /** Field available for group-by operations. */
 export interface GroupByField {
