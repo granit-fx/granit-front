@@ -14,6 +14,23 @@ import { useQueryCatalog, useQueryMetaAt } from '@granit/react-query-engine';
 
 import type { QueryCatalogEntryResponse } from '@granit/query-engine';
 
+/**
+ * NetTopologySuite geometry CLR type names — a query column bound to a PostGIS
+ * geometry/geography column reports one of these as its `type` (`ClrType.Name`),
+ * so a map's geography-column picker can offer only spatial columns.
+ */
+const GEOMETRY_CLR_TYPES = new Set([
+  'Geometry',
+  'Point',
+  'LineString',
+  'Polygon',
+  'MultiPoint',
+  'MultiLineString',
+  'MultiPolygon',
+  'GeometryCollection',
+  'LinearRing',
+]);
+
 /** CLR type names eligible for numeric aggregation (Sum/Avg/Min/Max). */
 const NUMERIC_CLR_TYPES = new Set([
   'Byte',
@@ -53,6 +70,13 @@ export interface QueryFieldMetadata {
   /** All columns of the selected query (e.g. the table visible-columns picker). */
   readonly columnOptions: readonly FieldOption[];
   /**
+   * Spatial columns only (NetTopologySuite geometry CLR types) — the map's
+   * PostGIS geography-column picker. Falls back to every column when none are
+   * detected (e.g. a nullable geometry the backend reports as `Nullable`1`), so
+   * the picker never goes empty on an unrecognised shape.
+   */
+  readonly geographyColumnOptions: readonly FieldOption[];
+  /**
    * Sortable field options for the selected query: the columns flagged
    * `isSortable` (they carry display labels), falling back to the query's
    * declared `sortableFields` when no column advertises sortability. Empty until
@@ -81,6 +105,9 @@ export function useQueryFieldMetadata(queryName: string): QueryFieldMetadata {
   const numericColumns = (meta?.columns ?? [])
     .filter((column) => NUMERIC_CLR_TYPES.has(column.type))
     .map(toOption);
+  const geometryColumns = (meta?.columns ?? [])
+    .filter((column) => GEOMETRY_CLR_TYPES.has(column.type))
+    .map(toOption);
   const sortableColumns = (meta?.columns ?? []).filter((column) => column.isSortable).map(toOption);
   const sortableDeclared = (meta?.sortableFields ?? []).map(toOption);
 
@@ -90,6 +117,7 @@ export function useQueryFieldMetadata(queryName: string): QueryFieldMetadata {
     groupByOptions: groupByDeclared.length > 0 ? groupByDeclared : columnOptions,
     fieldOptions: numericColumns.length > 0 ? numericColumns : columnOptions,
     columnOptions,
+    geographyColumnOptions: geometryColumns.length > 0 ? geometryColumns : columnOptions,
     sortableFieldOptions: sortableColumns.length > 0 ? sortableColumns : sortableDeclared,
   };
 }

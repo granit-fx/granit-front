@@ -41,7 +41,9 @@ type PointSourceKind = (typeof POINT_SOURCE_KINDS)[number]['value'];
 export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWidgetDefinition>) {
   const { t } = useTranslation();
   const { pointSource } = widget;
-  const { catalogEntries, columnOptions } = useQueryFieldMetadata(widget.queryName);
+  const { catalogEntries, columnOptions, geographyColumnOptions } = useQueryFieldMetadata(
+    widget.queryName
+  );
 
   const handlePointSourceKindChange = (kind: PointSourceKind) => {
     if (kind === 'lat-lng') {
@@ -139,7 +141,7 @@ export function MapConfigForm({ widget, onChange }: WidgetConfigFormProps<MapWid
           <MetaFieldInput
             slot="map-geography-column"
             value={pointSource.geographyColumn}
-            options={columnOptions}
+            options={geographyColumnOptions}
             required
             onChange={(value) =>
               onChange({ ...widget, pointSource: { ...pointSource, geographyColumn: value } })
