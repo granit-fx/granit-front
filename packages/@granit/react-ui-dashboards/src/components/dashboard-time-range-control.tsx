@@ -117,7 +117,16 @@ export function DashboardTimeRangeControl({ className }: DashboardTimeRangeContr
               </PopoverTrigger>
             </TooltipTrigger>
             {bounds && (
-              <TooltipContent side="bottom" align="start" data-slot="time-range-tooltip">
+              <TooltipContent
+                side="bottom"
+                align="start"
+                data-slot="time-range-tooltip"
+                // Use the standard popover surface (like the dropdowns) instead of
+                // the default inverted `bg-foreground` tooltip, so the muted /
+                // primary tokens read correctly and the whole thing flips with the
+                // light / dark theme. `[&_svg]` recolors the arrow to match.
+                className="border bg-popover text-sm text-popover-foreground [&_svg]:bg-popover [&_svg]:fill-popover"
+              >
                 <div className="text-center">
                   <div className="font-medium">{formatInZone(bounds.from, zone)}</div>
                   <div className="text-muted-foreground">
