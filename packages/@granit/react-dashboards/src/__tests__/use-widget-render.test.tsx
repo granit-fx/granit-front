@@ -6,6 +6,9 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
+import { DASHBOARD_TIME_WINDOW } from '@granit/dashboards';
+
+import { DashboardContextProvider } from '../components/dashboard-context';
 import { useWidgetRender, widgetRenderQueryKey } from '../hooks/use-widget-render';
 import { DashboardsProvider } from '../providers/dashboards-provider';
 
@@ -109,6 +112,26 @@ describe('useWidgetRender', () => {
       definition: { slug: 'Banner', type: 'markdown' },
       context: { periodToken: 'mtd' },
     });
+  });
+
+  it('injects the surrounding dashboard time window as the widget period', async () => {
+    const { wrapper: base } = makeWrapper();
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      base({
+        children: (
+          <DashboardContextProvider
+            value={{ dashboardName: 'Test', timeWindow: DASHBOARD_TIME_WINDOW.Last7Days }}
+          >
+            {children}
+          </DashboardContextProvider>
+        ),
+      });
+    const { result } = renderHook(
+      () => useWidgetRender('markdown' as unknown as 'chart', definition),
+      { wrapper }
+    );
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(lastBody).toMatchObject({ context: { periodToken: 'last_7d' } });
   });
 
   it('returns the DashboardRenderedWidget envelope verbatim', async () => {

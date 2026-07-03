@@ -1,5 +1,5 @@
 import { HttpError } from '@granit/api-client';
-import { renderWidget } from '@granit/dashboards';
+import { renderWidget, resolveTimeWindowToRenderRequest, toRefetchInterval } from '@granit/dashboards';
 import { useQuery, type Query, type UseQueryResult } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
@@ -8,6 +8,8 @@ import { mergeFilterValuesIntoRequest } from '../lib/merge-filter-values';
 import { useDashboardsConfig } from '../providers/dashboards-provider';
 
 import { buildDashboardsQueryKey } from './query-keys';
+import { useEffectiveRefreshInterval } from './use-effective-refresh-interval';
+import { useEffectiveTimeWindow } from './use-effective-time-window';
 
 import type {
   DashboardRenderedWidget,
@@ -116,10 +118,16 @@ export function useWidgetRender<TDefinition extends WidgetDefinitionBase>(
 ): UseQueryResult<DashboardRenderedWidget> {
   const { client } = useDashboardsConfig();
   const filters = useDashboardFilters();
+  const timeWindow = useEffectiveTimeWindow();
+  const refreshInterval = useEffectiveRefreshInterval();
 
   const effectiveContext = useMemo(() => {
-    return mergeFilterValuesIntoRequest(context, filters?.values) as WidgetRenderContext;
-  }, [context, filters?.values]);
+    // The dashboard time window drives the widget's period by default; an
+    // explicit `context` period (rare — ad-hoc previews) overrides it. Filter
+    // values from the surrounding provider merge in on top.
+    const withPeriod = { ...resolveTimeWindowToRenderRequest(timeWindow), ...context };
+    return mergeFilterValuesIntoRequest(withPeriod, filters?.values) as WidgetRenderContext;
+  }, [context, filters?.values, timeWindow]);
 
   const queryKey = useMemo(
     () => widgetRenderQueryKey(kind, definition, effectiveContext),
@@ -139,7 +147,10 @@ export function useWidgetRender<TDefinition extends WidgetDefinitionBase>(
     enabled: options.enabled ?? true,
     retry: shouldRetry,
     staleTime: 60_000,
-    refetchInterval: options.refetchInterval ?? refetchIntervalFromHint,
+    // Explicit option wins; else the dashboard cadence ('auto' → undefined →
+    // the response's refreshHint); 'off' → false.
+    refetchInterval:
+      options.refetchInterval ?? toRefetchInterval(refreshInterval) ?? refetchIntervalFromHint,
   });
 }
 
