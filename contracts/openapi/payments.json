@@ -2860,10 +2860,14 @@
         }
       },
       "PaymentChargeRequest": {
-        "required": ["invoiceId", "amount", "currency", "methodType"],
+        "required": ["invoiceId", "partyId", "amount", "currency", "methodType"],
         "type": "object",
         "properties": {
           "invoiceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "partyId": {
             "type": "string",
             "format": "uuid"
           },

@@ -26,6 +26,7 @@ import type { CurrencyCode } from '@granit/types';
 
 interface ChargeFormValues {
   invoiceId: string;
+  partyId: string;
   amount: number;
   currency: string;
   methodType: string;
@@ -57,6 +58,7 @@ export function ChargeDialog({ open, onOpenChange }: ChargeDialogProps) {
     resolver: formResolver,
     defaultValues: {
       invoiceId: '',
+      partyId: '',
       amount: 0,
       currency: 'EUR',
       methodType: '',
@@ -68,6 +70,7 @@ export function ChargeDialog({ open, onOpenChange }: ChargeDialogProps) {
     mutation.mutate(
       {
         invoiceId: toEntityId<'Invoice'>(values.invoiceId),
+        partyId: toEntityId<'Party'>(values.partyId),
         amount: values.amount,
         currency: values.currency as CurrencyCode,
         methodType: values.methodType,
@@ -100,6 +103,20 @@ export function ChargeDialog({ open, onOpenChange }: ChargeDialogProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('Payments.Fields.InvoiceId')}</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="partyId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('Payments.Fields.PartyId')}</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>

@@ -163,6 +163,7 @@ describe('payments-api', () => {
       const client = createMockClient();
       const request: PaymentChargeRequest = {
         invoiceId: 'inv-1',
+        partyId: 'party-1',
         amount: 5000,
         currency: 'EUR',
         methodType: 'card',

@@ -178,6 +178,7 @@ describe('use-payments', () => {
 
       result.current.mutate({
         invoiceId: 'inv-1',
+        partyId: 'party-1',
         amount: 5000,
         currency: 'EUR',
         methodType: 'card',
@@ -198,6 +199,7 @@ describe('use-payments', () => {
 
       result.current.mutate({
         invoiceId: 'inv-1',
+        partyId: 'party-1',
         amount: 5000,
         currency: 'EUR',
         methodType: 'card',

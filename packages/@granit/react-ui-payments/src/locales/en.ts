@@ -19,6 +19,7 @@ export const paymentsTranslationsEn = {
   'Payments.Fields.Amount': 'Amount',
   'Payments.Fields.Currency': 'Currency',
   'Payments.Fields.InvoiceId': 'Invoice ID',
+  'Payments.Fields.PartyId': 'Party ID',
   'Payments.Fields.MethodType': 'Method Type',
   'Payments.Fields.ProviderName': 'Provider',
   'Payments.Fields.Reason': 'Reason',

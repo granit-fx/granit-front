@@ -19,6 +19,7 @@ export const paymentsTranslationsFr: Record<keyof PaymentsTranslations, string> 
   'Payments.Fields.Amount': 'Montant',
   'Payments.Fields.Currency': 'Devise',
   'Payments.Fields.InvoiceId': 'ID de facture',
+  'Payments.Fields.PartyId': 'ID de tiers',
   'Payments.Fields.MethodType': 'Type de méthode',
   'Payments.Fields.ProviderName': 'Fournisseur',
   'Payments.Fields.Reason': 'Motif',

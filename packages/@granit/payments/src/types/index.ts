@@ -1,12 +1,7 @@
 import type { ISODateString } from '@granit/types';
 
 export type PaymentStatus =
-  | 'Created'
-  | 'RequiresAction'
-  | 'Processing'
-  | 'Succeeded'
-  | 'Failed'
-  | 'Canceled';
+  'Created' | 'RequiresAction' | 'Processing' | 'Succeeded' | 'Failed' | 'Canceled';
 
 export type RefundStatus = 'Pending' | 'Succeeded' | 'Failed';
 
@@ -24,6 +19,7 @@ export type PaymentMethodCategory =
 
 export interface PaymentChargeRequest {
   readonly invoiceId: string;
+  readonly partyId: string;
   readonly amount: number;
   readonly currency: string;
   readonly methodType: string;

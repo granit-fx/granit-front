@@ -26,6 +26,10 @@ export const paymentsConstraints = {
       "required": true,
       "format": "uuid"
     },
+    "partyId": {
+      "required": true,
+      "format": "uuid"
+    },
     "amount": {
       "required": true,
       "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
