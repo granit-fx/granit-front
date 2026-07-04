@@ -12,6 +12,7 @@ import {
   BarChart,
   FunnelChart,
   GaugeChart,
+  HeatmapChart,
   LineChart,
   PieChart,
   RadarChart,
@@ -24,6 +25,7 @@ import {
   RadarComponent,
   TitleComponent,
   TooltipComponent,
+  VisualMapComponent,
 } from 'echarts/components';
 import * as echarts from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -37,6 +39,7 @@ echarts.use([
   RadarChart,
   FunnelChart,
   TreemapChart,
+  HeatmapChart,
   // Components
   GridComponent,
   TooltipComponent,
@@ -44,6 +47,7 @@ echarts.use([
   LegendComponent,
   DataZoomComponent,
   RadarComponent,
+  VisualMapComponent,
   // Renderer
   CanvasRenderer,
 ]);

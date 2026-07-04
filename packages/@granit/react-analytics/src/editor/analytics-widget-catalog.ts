@@ -61,6 +61,8 @@ export const analyticsWidgetCatalog: readonly WidgetCatalogEntry[] = Object.free
       aggregation: 'Sum',
       field: null,
       chartType: 'Bar',
+      seriesBy: null,
+      stacked: false,
     }),
   },
   {

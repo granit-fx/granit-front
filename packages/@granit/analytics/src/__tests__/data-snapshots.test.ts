@@ -162,7 +162,7 @@ describe('Type guards — analytics envelope dispatch', () => {
 });
 
 describe('ChartType — exhaustive enum surface (PascalCase, backend-ordered)', () => {
-  it('locks the nine backend types in declaration order', () => {
+  it('locks the ten backend types in declaration order', () => {
     const types: readonly ChartType[] = [
       'Bar',
       'HorizontalBar',
@@ -173,7 +173,8 @@ describe('ChartType — exhaustive enum surface (PascalCase, backend-ordered)', 
       'Radar',
       'Funnel',
       'Treemap',
+      'Heatmap',
     ];
-    expect(types).toHaveLength(9);
+    expect(types).toHaveLength(10);
   });
 });

@@ -17,6 +17,12 @@ export interface LineChartProps extends ChartDimensions {
    * pipeline.
    */
   readonly area?: boolean;
+  /**
+   * Stack the series on a shared baseline. Defaults to `false`. Combined with
+   * {@link area}, produces a stacked-area chart from the multi-series render
+   * pipeline.
+   */
+  readonly stacked?: boolean;
   /** Show the legend above the plot area. Defaults to `true` when >1 series. */
   readonly showLegend?: boolean;
   /** Locale-aware formatter for the value axis + tooltip (defaults to raw). */
@@ -40,6 +46,7 @@ export function LineChart({
   yAxis,
   smooth = false,
   area = false,
+  stacked = false,
   showLegend,
   valueFormatter,
   height,
@@ -88,12 +95,13 @@ export function LineChart({
         // ECharts' option types want mutable arrays; spread to drop readonly.
         data: s.data.map((p) => [...p]) as (number | string)[][],
         smooth,
+        stack: stacked ? 'total' : undefined,
         areaStyle: area ? {} : undefined,
         itemStyle: s.color ? { color: s.color } : undefined,
         lineStyle: s.color ? { color: s.color } : undefined,
       })),
     };
-  }, [series, xAxis, yAxis, smooth, area, showLegend, valueFormatter]);
+  }, [series, xAxis, yAxis, smooth, area, stacked, showLegend, valueFormatter]);
 
   return (
     <Chart options={options} height={height ?? width ?? 320} className={className} theme={theme} />

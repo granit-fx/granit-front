@@ -515,7 +515,8 @@
           "Donut",
           "Radar",
           "Funnel",
-          "Treemap"
+          "Treemap",
+          "Heatmap"
         ]
       },
       "ChartWidgetDefinition": {
@@ -536,6 +537,13 @@
           },
           "chartType": {
             "$ref": "#/components/schemas/ChartType"
+          },
+          "seriesBy": {
+            "type": ["null", "string"]
+          },
+          "stacked": {
+            "type": "boolean",
+            "default": false
           },
           "slug": {
             "type": "string"

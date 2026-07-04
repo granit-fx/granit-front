@@ -19,6 +19,12 @@ export interface ChartBucket {
    * carry a non-null value (zero for empty groups).
    */
   readonly value: number | null;
+  /**
+   * Series (series-by) key for a multi-series chart — one bucket per
+   * (category × series) pair. `null`/absent for a single-series chart. Null
+   * series values surface as `'(null)'`.
+   */
+  readonly series?: string | null;
 }
 
 /**
@@ -52,6 +58,25 @@ export interface ChartWidgetSnapshot {
    * formats every bucket value with the matching currency symbol + locale.
    */
   readonly currency?: string | null;
+  /**
+   * Second categorical dimension echoed from the definition. When set, the
+   * chart is multi-series — each {@link ChartBucket.series} is a value of this
+   * dimension. `null`/absent for a single-series chart.
+   */
+  readonly seriesBy?: string | null;
+  /**
+   * Whether a multi-series chart stacks its series (vs grouping them). Only
+   * ever `true` for `Bar` / `HorizontalBar` / `Line` / `Area` with a
+   * `seriesBy` — the backend zeroes it out for every other chart type.
+   */
+  readonly stacked?: boolean;
+  /**
+   * Semantic display-type shared by every bucket (`'Count'`, `'Currency'`,
+   * `'Percentage'`, `'Bytes'`, …), or `null`. Drives the shared cell formatter
+   * so chart values format like the query grids and pivot. Wire values are the
+   * .NET `ValueKind` enum member names verbatim.
+   */
+  readonly valueKind?: string | null;
 }
 
 /** Narrowed `WidgetSnapshotEnvelope` for the `'Chart'` widget kind. */

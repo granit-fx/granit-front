@@ -3,6 +3,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { BarChart } from '../components/bar-chart';
 import { FunnelChart } from '../components/funnel-chart';
+import { HeatmapChart } from '../components/heatmap-chart';
+import { LineChart } from '../components/line-chart';
 import { PieChart } from '../components/pie-chart';
 import { RadarChart } from '../components/radar-chart';
 import { SparklineChart } from '../components/sparkline-chart';
@@ -164,6 +166,56 @@ describe('FunnelChart', () => {
     const opt = optionOf(getByTestId);
     expect(opt.series[0].data[0]).toMatchObject({ name: 'Visited', value: 100 });
     expect(opt.series[0].data[2].itemStyle).toEqual({ color: '#0af' });
+  });
+});
+
+describe('LineChart', () => {
+  it('stacks the series on a shared baseline when stacked', () => {
+    const { getByTestId } = render(<LineChart series={SERIES} stacked />);
+    const opt = optionOf(getByTestId);
+    expect(opt.series[0].stack).toBe('total');
+    expect(opt.series[1].stack).toBe('total');
+  });
+
+  it('keeps each series independent by default', () => {
+    const { getByTestId } = render(<LineChart series={SERIES} />);
+    const opt = optionOf(getByTestId);
+    expect(opt.series[0].stack).toBeUndefined();
+  });
+});
+
+describe('HeatmapChart', () => {
+  const data = [
+    { x: 'Mon', y: 'AM', value: 3 },
+    { x: 'Mon', y: 'PM', value: 8 },
+    { x: 'Tue', y: 'AM', value: 5 },
+  ];
+
+  it('renders a heatmap series over two category axes with a visualMap', () => {
+    const { getByTestId } = render(<HeatmapChart data={data} />);
+    const opt = optionOf(getByTestId);
+    expect(opt.series[0].type).toBe('heatmap');
+    expect(opt.xAxis.type).toBe('category');
+    expect(opt.yAxis.type).toBe('category');
+    expect(opt.xAxis.data).toEqual(['Mon', 'Tue']);
+    expect(opt.yAxis.data).toEqual(['AM', 'PM']);
+  });
+
+  it('maps each datum to an [xIndex, yIndex, value] triple', () => {
+    const { getByTestId } = render(<HeatmapChart data={data} />);
+    const opt = optionOf(getByTestId);
+    expect(opt.series[0].data).toEqual([
+      [0, 0, 3],
+      [0, 1, 8],
+      [1, 0, 5],
+    ]);
+  });
+
+  it('spans the visualMap over the value range', () => {
+    const { getByTestId } = render(<HeatmapChart data={data} />);
+    const opt = optionOf(getByTestId);
+    expect(opt.visualMap.min).toBe(3);
+    expect(opt.visualMap.max).toBe(8);
   });
 });
 

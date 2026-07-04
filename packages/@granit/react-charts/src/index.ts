@@ -21,6 +21,8 @@ export { FunnelChart } from './components/funnel-chart';
 export type { FunnelChartProps, FunnelDatum } from './components/funnel-chart';
 export { TreemapChart } from './components/treemap-chart';
 export type { TreemapChartProps, TreemapDatum } from './components/treemap-chart';
+export { HeatmapChart } from './components/heatmap-chart';
+export type { HeatmapChartProps, HeatmapDatum } from './components/heatmap-chart';
 
 // Theming
 export { useEChartsTheme } from './hooks/use-echarts-theme';

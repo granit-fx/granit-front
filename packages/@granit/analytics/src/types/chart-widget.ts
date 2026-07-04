@@ -8,7 +8,16 @@ import type { WidgetDefinitionBase } from '@granit/dashboards';
  * with no naming policy. Order matches the backend numeric declaration.
  */
 export type ChartType =
-  'Bar' | 'HorizontalBar' | 'Line' | 'Area' | 'Pie' | 'Donut' | 'Radar' | 'Funnel' | 'Treemap';
+  | 'Bar'
+  | 'HorizontalBar'
+  | 'Line'
+  | 'Area'
+  | 'Pie'
+  | 'Donut'
+  | 'Radar'
+  | 'Funnel'
+  | 'Treemap'
+  | 'Heatmap';
 
 /**
  * Aggregated chart bound to a `QueryDefinition`. Mirrors
@@ -27,4 +36,18 @@ export interface ChartWidgetDefinition extends WidgetDefinitionBase {
   /** Field aggregated. Null when `aggregation === 'Count'`. */
   readonly field: string | null;
   readonly chartType: ChartType;
+  /**
+   * Optional second categorical dimension. When set, the chart becomes
+   * multi-series — one series per distinct `seriesBy` value (grouped/stacked
+   * bars, multi-line, stacked area, heatmap). Absent/`null` for a single-series
+   * chart. `Heatmap` requires it; the pie family / radar / funnel / treemap
+   * ignore it.
+   */
+  readonly seriesBy?: string | null;
+  /**
+   * Stack the series instead of grouping them side-by-side. Only meaningful for
+   * `Bar` / `HorizontalBar` / `Line` / `Area` with a `seriesBy` set; the backend
+   * zeroes it out for every other chart type.
+   */
+  readonly stacked?: boolean;
 }

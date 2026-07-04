@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 
 import { BarChart } from '../components/bar-chart';
 import { FunnelChart } from '../components/funnel-chart';
+import { HeatmapChart } from '../components/heatmap-chart';
 import { LineChart } from '../components/line-chart';
 import { PieChart } from '../components/pie-chart';
 import { RadarChart } from '../components/radar-chart';
@@ -11,9 +12,52 @@ import { TreemapChart } from '../components/treemap-chart';
 
 import { createChartValueFormatter } from './format-chart-value';
 
-import type { ChartWidgetSnapshot } from '@granit/analytics';
+import type { ChartBucket, ChartWidgetSnapshot } from '@granit/analytics';
 import type { ChartSeries } from '@granit/charts';
 import type { DashboardRenderedWidget } from '@granit/dashboards';
+
+/**
+ * Reshape the flat bucket list into one {@link ChartSeries} per distinct
+ * `series` key — the multi-series transform mirrors the pivot renderer's
+ * `(category × series)` pivot. When no bucket carries a `series` key the chart
+ * is single-series and collapses to one series named `singleName`.
+ *
+ * Categories and series keys keep first-seen order (the order the backend
+ * streamed them). Sparse `(category × series)` combinations the backend never
+ * emitted fill with `0` so grouped/stacked bars keep aligned categories.
+ */
+function buildChartSeries(
+  buckets: readonly ChartBucket[],
+  singleName: string
+): readonly ChartSeries[] {
+  if (!buckets.some((b) => b.series != null)) {
+    return [{ id: 'series', name: singleName, data: buckets.map((b) => [b.label, b.value ?? 0]) }];
+  }
+
+  const categories: string[] = [];
+  const seenCategory = new Set<string>();
+  const seriesKeys: string[] = [];
+  const seenSeries = new Set<string>();
+  const byKey = new Map<string, number>();
+  for (const b of buckets) {
+    const seriesKey = b.series ?? '(null)';
+    if (!seenCategory.has(b.label)) {
+      seenCategory.add(b.label);
+      categories.push(b.label);
+    }
+    if (!seenSeries.has(seriesKey)) {
+      seenSeries.add(seriesKey);
+      seriesKeys.push(seriesKey);
+    }
+    byKey.set(`${b.label}\u0000${seriesKey}`, b.value ?? 0);
+  }
+
+  return seriesKeys.map((seriesKey) => ({
+    id: seriesKey,
+    name: seriesKey,
+    data: categories.map((category) => [category, byKey.get(`${category}\u0000${seriesKey}`) ?? 0]),
+  }));
+}
 
 /**
  * Snapshot-driven renderer for the `'Chart'` widget kind. Mirrors the
@@ -33,7 +77,7 @@ export function ChartSnapshotWidget({ widget }: { readonly widget: DashboardRend
 }
 
 function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
-  const { chartType, groupBy, aggregation, field, buckets, currency } = snapshot;
+  const { chartType, groupBy, aggregation, field, buckets, currency, seriesBy, stacked } = snapshot;
   const { locale } = useLocale();
 
   // Locale-aware value formatting for every numeric axis / tooltip. Currency
@@ -92,14 +136,31 @@ function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
     );
   }
 
-  const series: readonly ChartSeries[] = [
-    {
-      id: 'series',
-      name: seriesName,
-      data: buckets.map((b) => [b.label, b.value ?? 0]),
-    },
-  ];
+  // Heatmap needs both axes categorical: category (group-by) × series (series-by)
+  // coloured by value. Single-series buckets carry no `series`, so the y-axis
+  // collapses to one row named after the aggregation.
+  if (chartType === 'Heatmap') {
+    const heatmapData = buckets.map((b) => ({
+      x: b.label,
+      y: b.series ?? seriesName,
+      value: b.value ?? 0,
+    }));
+    return (
+      <div data-slot="chart-snapshot-widget" data-chart-type={chartType} className="h-full w-full">
+        <HeatmapChart
+          data={heatmapData}
+          xAxis={{ label: groupBy }}
+          yAxis={{ label: seriesBy ?? '' }}
+          valueFormatter={valueFormatter}
+          height="100%"
+        />
+      </div>
+    );
+  }
 
+  // Bar / HorizontalBar / Line / Area — single-series when no bucket carries a
+  // `series` key, else one series per distinct series-by value (grouped/stacked).
+  const series: readonly ChartSeries[] = buildChartSeries(buckets, seriesName);
   const valueAxisLabel = currency ? `${seriesName} (${currency})` : seriesName;
 
   if (chartType === 'Line' || chartType === 'Area') {
@@ -110,6 +171,7 @@ function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
           xAxis={{ label: groupBy }}
           yAxis={{ label: valueAxisLabel }}
           area={chartType === 'Area'}
+          stacked={stacked ?? false}
           valueFormatter={valueFormatter}
           height="100%"
         />
@@ -126,6 +188,7 @@ function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
         xAxis={{ label: horizontal ? valueAxisLabel : groupBy }}
         yAxis={{ label: horizontal ? groupBy : valueAxisLabel }}
         horizontal={horizontal}
+        stacked={stacked ?? false}
         valueFormatter={valueFormatter}
         height="100%"
       />

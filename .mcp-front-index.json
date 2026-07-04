@@ -4216,6 +4216,23 @@
           "members": []
         },
         {
+          "name": "HeatmapChart",
+          "kind": "function",
+          "signature": "function HeatmapChart("
+        },
+        {
+          "name": "HeatmapChartProps",
+          "kind": "interface",
+          "signature": "interface HeatmapChartProps extends ChartDimensions",
+          "members": []
+        },
+        {
+          "name": "HeatmapDatum",
+          "kind": "interface",
+          "signature": "interface HeatmapDatum",
+          "members": []
+        },
+        {
           "name": "useEChartsTheme",
           "kind": "function",
           "signature": "function useEChartsTheme(options: UseEChartsThemeOptions): string"

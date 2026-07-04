@@ -1,4 +1,5 @@
 import { useQueryFieldMetadata } from '@granit/react-analytics';
+import { Checkbox } from '@granit/react-ui';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -22,8 +23,20 @@ const CHART_TYPES: readonly ChartType[] = [
   'Radar',
   'Funnel',
   'Treemap',
+  'Heatmap',
 ];
 const AGGREGATIONS: readonly AggregateFunction[] = ['Count', 'Sum', 'Avg', 'Min', 'Max'];
+
+/** Chart types that accept a second `seriesBy` dimension (multi-series). */
+const SERIES_CAPABLE: ReadonlySet<ChartType> = new Set([
+  'Bar',
+  'HorizontalBar',
+  'Line',
+  'Area',
+  'Heatmap',
+]);
+/** Chart types where `stacked` (vs grouped) is meaningful. */
+const STACK_CAPABLE: ReadonlySet<ChartType> = new Set(['Bar', 'HorizontalBar', 'Line', 'Area']);
 
 /**
  * Built-in config form for {@link ChartWidgetDefinition}. Edits the
@@ -45,6 +58,10 @@ export function ChartConfigForm({
   const { catalogEntries, groupByOptions, fieldOptions } = useQueryFieldMetadata(widget.queryName);
 
   const isCount = widget.aggregation === 'Count';
+  const supportsSeries = SERIES_CAPABLE.has(widget.chartType);
+  const supportsStacking = STACK_CAPABLE.has(widget.chartType);
+  const seriesRequired = widget.chartType === 'Heatmap';
+  const hasSeriesBy = widget.seriesBy != null && widget.seriesBy !== '';
 
   return (
     <div data-slot="chart-config-form" className="space-y-3">
@@ -109,9 +126,47 @@ export function ChartConfigForm({
           slot="chart-type"
           value={widget.chartType}
           options={CHART_TYPES}
-          onChange={(value) => onChange({ ...widget, chartType: value as ChartType })}
+          onChange={(value) => {
+            // Sanitise the second-dimension fields when the new type can't use
+            // them, so a switched-away config never persists a stale seriesBy /
+            // stacked (the backend also zeroes stacked, but keep the DTO clean).
+            const chartType = value as ChartType;
+            onChange({
+              ...widget,
+              chartType,
+              seriesBy: SERIES_CAPABLE.has(chartType) ? widget.seriesBy : null,
+              stacked: STACK_CAPABLE.has(chartType) ? widget.stacked : false,
+            });
+          }}
         />
       </label>
+      {/* Optional second dimension — grouped/stacked/multi-line/heatmap. Required for Heatmap. */}
+      {supportsSeries && (
+        <label className="block text-sm">
+          <span className="mb-1 block text-muted-foreground">
+            {t('Dashboard:Widget.Chart.SeriesBy.Label')}
+            {seriesRequired && <RequiredMark />}
+          </span>
+          <MetaFieldInput
+            slot="chart-series-by"
+            value={widget.seriesBy ?? ''}
+            options={groupByOptions}
+            allowEmpty
+            required={seriesRequired}
+            onChange={(value) => onChange({ ...widget, seriesBy: value === '' ? null : value })}
+          />
+        </label>
+      )}
+      {/* Stacking is only meaningful once a series dimension is chosen, and only for bar/line/area. */}
+      {supportsStacking && hasSeriesBy && (
+        <label className="flex items-center gap-2 text-sm" data-slot="chart-stacked">
+          <Checkbox
+            checked={widget.stacked ?? false}
+            onCheckedChange={(checked) => onChange({ ...widget, stacked: checked === true })}
+          />
+          <span className="text-muted-foreground">{t('Dashboard:Widget.Chart.Stacked.Label')}</span>
+        </label>
+      )}
     </div>
   );
 }

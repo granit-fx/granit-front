@@ -23,13 +23,27 @@ const ENVELOPE_BASE = {
   reasonLocalizationKey: null,
 };
 
+type TestChartType =
+  | 'Bar'
+  | 'HorizontalBar'
+  | 'Line'
+  | 'Area'
+  | 'Pie'
+  | 'Donut'
+  | 'Radar'
+  | 'Funnel'
+  | 'Treemap'
+  | 'Heatmap';
+
 function chartEnvelope(
-  chartType:
-    'Bar' | 'HorizontalBar' | 'Line' | 'Area' | 'Pie' | 'Donut' | 'Radar' | 'Funnel' | 'Treemap',
+  chartType: TestChartType,
   overrides: Partial<{
     field: string | null;
     currency: string | null;
     aggregation: string;
+    seriesBy: string | null;
+    stacked: boolean;
+    buckets: readonly { label: string; value: number | null; series?: string | null }[];
   }> = {}
 ): DashboardRenderedWidget {
   return {
@@ -40,15 +54,25 @@ function chartEnvelope(
       groupBy: 'IssuedAtMonth',
       aggregation: overrides.aggregation ?? 'Sum',
       field: 'field' in overrides ? overrides.field! : 'Total',
-      buckets: [
+      buckets: overrides.buckets ?? [
         { label: '2026-02', value: 12500 },
         { label: '2026-03', value: 18200 },
         { label: '2026-04', value: 21450 },
       ],
       currency: overrides.currency ?? null,
+      seriesBy: overrides.seriesBy ?? null,
+      stacked: overrides.stacked ?? false,
     },
   };
 }
+
+// Two categories × two series — the shape a multi-series (grouped/stacked) or
+// heatmap chart ships. Sparse: ('2026-03', 'EUR') is intentionally omitted.
+const MULTI_SERIES_BUCKETS = [
+  { label: '2026-02', value: 100, series: 'EUR' },
+  { label: '2026-02', value: 40, series: 'USD' },
+  { label: '2026-03', value: 55, series: 'USD' },
+] as const;
 
 describe('ChartSnapshotWidget — dispatch by chartType', () => {
   it('routes Bar to BarChart with vertical axes', () => {
@@ -125,6 +149,54 @@ describe('ChartSnapshotWidget — dispatch by chartType', () => {
     const opt = JSON.parse(getByTestId('echarts-mock').dataset.option ?? '{}');
     expect(opt.series[0].type).toBe('treemap');
     expect(opt.series[0].data).toHaveLength(3);
+  });
+
+  it('builds one series per distinct series-by value for a grouped bar', () => {
+    const { getByTestId } = render(
+      <ChartSnapshotWidget
+        widget={chartEnvelope('Bar', { seriesBy: 'Currency', buckets: MULTI_SERIES_BUCKETS })}
+      />
+    );
+    const opt = JSON.parse(getByTestId('echarts-mock').dataset.option ?? '{}');
+    // Two series (EUR, USD), grouped (no stack), aligned on both categories —
+    // the missing ('2026-03','EUR') cell fills with 0.
+    expect(opt.series).toHaveLength(2);
+    expect(opt.series.map((s: { name: string }) => s.name)).toEqual(['EUR', 'USD']);
+    expect(opt.series[0].stack).toBeUndefined();
+    expect(opt.series[0].data).toEqual([
+      ['2026-02', 100],
+      ['2026-03', 0],
+    ]);
+  });
+
+  it('stacks the series when stacked is set', () => {
+    const { getByTestId } = render(
+      <ChartSnapshotWidget
+        widget={chartEnvelope('Bar', {
+          seriesBy: 'Currency',
+          stacked: true,
+          buckets: MULTI_SERIES_BUCKETS,
+        })}
+      />
+    );
+    const opt = JSON.parse(getByTestId('echarts-mock').dataset.option ?? '{}');
+    expect(opt.series[0].stack).toBe('total');
+    expect(opt.series[1].stack).toBe('total');
+  });
+
+  it('routes Heatmap to a heatmap series with a visualMap and category axes', () => {
+    const { getByTestId } = render(
+      <ChartSnapshotWidget
+        widget={chartEnvelope('Heatmap', { seriesBy: 'Currency', buckets: MULTI_SERIES_BUCKETS })}
+      />
+    );
+    const opt = JSON.parse(getByTestId('echarts-mock').dataset.option ?? '{}');
+    expect(opt.series[0].type).toBe('heatmap');
+    expect(opt.visualMap).toBeDefined();
+    expect(opt.xAxis.type).toBe('category');
+    expect(opt.yAxis.type).toBe('category');
+    // [xIndex, yIndex, value] triples over the distinct category/series axes.
+    expect(opt.series[0].data[0]).toEqual([0, 0, 100]);
   });
 
   it('appends the currency code to the value-axis label when set (B3-8b)', () => {
