@@ -13,8 +13,10 @@ export { SecurityReviewPage } from './security/security-review-page';
 // Components
 export { MySessionsCard } from './components/my-sessions-card';
 export { MyDevicesCard } from './components/my-devices-card';
-export { ExternalLoginButtons } from './security/external-login-buttons';
-export { ExternalProviderIcon } from './security/external-provider-icon';
+// External-login UI is owned by @granit/react-ui-authentication-local (the sign-in
+// flow is its primary consumer); re-exported here to keep this package's public API
+// stable for the account "link provider" screen.
+export { ExternalLoginButtons, ExternalProviderIcon } from '@granit/react-ui-authentication-local';
 
 // Hooks / utilities
 export {

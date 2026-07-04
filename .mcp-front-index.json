@@ -7928,16 +7928,6 @@
           "signature": "function MyDevicesCard("
         },
         {
-          "name": "ExternalLoginButtons",
-          "kind": "function",
-          "signature": "function ExternalLoginButtons("
-        },
-        {
-          "name": "ExternalProviderIcon",
-          "kind": "function",
-          "signature": "function ExternalProviderIcon("
-        },
-        {
           "name": "getDefaultPasskeyName",
           "kind": "function",
           "signature": "function getDefaultPasskeyName(): string"

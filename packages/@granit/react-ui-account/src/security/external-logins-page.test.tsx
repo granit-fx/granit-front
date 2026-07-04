@@ -30,13 +30,14 @@ vi.mock('./use-available-external-providers', () => ({
   useAvailableExternalProviders: mockUseAvailableProviders,
 }));
 
-vi.mock('./external-login-buttons', () => ({
-  ExternalLoginButtons: () => <div data-testid="external-login-buttons" />,
-}));
-
-vi.mock('./external-provider-icon', () => ({
-  ExternalProviderIcon: () => <svg data-testid="provider-icon" />,
-}));
+vi.mock('@granit/react-ui-authentication-local', async (importOriginal) => {
+  const actual = await importOriginal<Record<string, unknown>>();
+  return {
+    ...actual,
+    ExternalLoginButtons: () => <div data-testid="external-login-buttons" />,
+    ExternalProviderIcon: () => <svg data-testid="provider-icon" />,
+  };
+});
 
 const googleLogin: AccountExternalLoginInfo = {
   loginProvider: 'Google',

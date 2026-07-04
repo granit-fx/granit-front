@@ -10,13 +10,12 @@ import {
   Spinner,
   toast,
 } from '@granit/react-ui';
+import { ExternalLoginButtons, ExternalProviderIcon } from '@granit/react-ui-authentication-local';
 import { EmptyState } from '@granit/react-ui-kit';
 import { Link2Off } from 'lucide-react';
 
 import { logger } from '../logger';
 
-import { ExternalLoginButtons } from './external-login-buttons';
-import { ExternalProviderIcon } from './external-provider-icon';
 import { useAvailableExternalProviders } from './use-available-external-providers';
 
 export function ExternalLoginsPage() {
