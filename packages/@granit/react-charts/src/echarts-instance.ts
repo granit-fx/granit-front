@@ -8,11 +8,20 @@
  * is paid once, in a single shared module — primitive components import from
  * here, never directly from `echarts/charts` or `echarts/components`.
  */
-import { BarChart, GaugeChart, LineChart, PieChart } from 'echarts/charts';
+import {
+  BarChart,
+  FunnelChart,
+  GaugeChart,
+  LineChart,
+  PieChart,
+  RadarChart,
+  TreemapChart,
+} from 'echarts/charts';
 import {
   DataZoomComponent,
   GridComponent,
   LegendComponent,
+  RadarComponent,
   TitleComponent,
   TooltipComponent,
 } from 'echarts/components';
@@ -25,12 +34,16 @@ echarts.use([
   BarChart,
   PieChart,
   GaugeChart,
+  RadarChart,
+  FunnelChart,
+  TreemapChart,
   // Components
   GridComponent,
   TooltipComponent,
   TitleComponent,
   LegendComponent,
   DataZoomComponent,
+  RadarComponent,
   // Renderer
   CanvasRenderer,
 ]);

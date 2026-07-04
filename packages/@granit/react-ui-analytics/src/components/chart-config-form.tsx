@@ -12,7 +12,17 @@ import type { ChartType, ChartWidgetDefinition } from '@granit/analytics';
 import type { AggregateFunction } from '@granit/dashboards';
 import type { WidgetConfigFormProps } from '@granit/react-dashboard-editor';
 
-const CHART_TYPES: readonly ChartType[] = ['Bar', 'HorizontalBar', 'Line', 'Area', 'Pie', 'Donut'];
+const CHART_TYPES: readonly ChartType[] = [
+  'Bar',
+  'HorizontalBar',
+  'Line',
+  'Area',
+  'Pie',
+  'Donut',
+  'Radar',
+  'Funnel',
+  'Treemap',
+];
 const AGGREGATIONS: readonly AggregateFunction[] = ['Count', 'Sum', 'Avg', 'Min', 'Max'];
 
 /**

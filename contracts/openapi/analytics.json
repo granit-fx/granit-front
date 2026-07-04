@@ -506,7 +506,17 @@
         "enum": ["Count", "Sum", "Avg", "Min", "Max"]
       },
       "ChartType": {
-        "enum": ["Bar", "HorizontalBar", "Line", "Area", "Pie", "Donut"]
+        "enum": [
+          "Bar",
+          "HorizontalBar",
+          "Line",
+          "Area",
+          "Pie",
+          "Donut",
+          "Radar",
+          "Funnel",
+          "Treemap"
+        ]
       },
       "ChartWidgetDefinition": {
         "required": ["queryName", "groupBy", "aggregation", "field", "chartType", "slug"],
@@ -1201,7 +1211,7 @@
             "format": "double"
           },
           "valueKind": {
-            "$ref": "#/components/schemas/MetricValueKind"
+            "$ref": "#/components/schemas/ValueKind"
           },
           "currency": {
             "type": ["null", "string"]
@@ -1223,9 +1233,6 @@
             ]
           }
         }
-      },
-      "MetricValueKind": {
-        "enum": ["Count", "Number", "Currency", "Percentage", "Duration", "Date"]
       },
       "PeriodSpec": {
         "type": "object",
@@ -1427,6 +1434,32 @@
         "enum": ["History", "Realtime"],
         "default": "History"
       },
+      "ValueKind": {
+        "enum": [
+          "Count",
+          "Number",
+          "Currency",
+          "Percentage",
+          "Duration",
+          "Date",
+          "Url",
+          "Email",
+          "Phone",
+          "Bytes",
+          "DateTime",
+          "Boolean",
+          "Enum",
+          "RelativeTime",
+          "Time",
+          "Color",
+          "Image",
+          "Json",
+          "Markdown",
+          "Tags",
+          "Rating",
+          "Identifier"
+        ]
+      },
       "WidgetAction": {
         "required": ["trigger", "kind", "target"],
         "type": "object",
@@ -1438,6 +1471,7 @@
             "$ref": "#/components/schemas/WidgetActionKind"
           },
           "target": {
+            "maxLength": 256,
             "type": "string"
           },
           "params": {

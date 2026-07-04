@@ -2,8 +2,11 @@ import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { BarChart } from '../components/bar-chart';
+import { FunnelChart } from '../components/funnel-chart';
 import { PieChart } from '../components/pie-chart';
+import { RadarChart } from '../components/radar-chart';
 import { SparklineChart } from '../components/sparkline-chart';
+import { TreemapChart } from '../components/treemap-chart';
 
 import type { ChartSeries } from '@granit/charts';
 
@@ -107,5 +110,82 @@ describe('SparklineChart', () => {
     const opt = optionOf(getByTestId);
     expect(opt.series[0].areaStyle).toEqual({ color: '#123456', opacity: 0.2 });
     expect(opt.series[0].lineStyle).toEqual({ color: '#123456', width: 2 });
+  });
+});
+
+describe('RadarChart', () => {
+  const data = [
+    { label: 'Speed', value: 4 },
+    { label: 'Range', value: 10 },
+    { label: 'Cost', value: 7 },
+  ];
+
+  it('maps each datum to one indicator axis', () => {
+    const { getByTestId } = render(<RadarChart data={data} name="EV" />);
+    const opt = optionOf(getByTestId);
+    expect(opt.series[0].type).toBe('radar');
+    expect(opt.radar.indicator.map((i: { name: string }) => i.name)).toEqual([
+      'Speed',
+      'Range',
+      'Cost',
+    ]);
+  });
+
+  it('shares one scale across every indicator so the axes stay comparable', () => {
+    const { getByTestId } = render(<RadarChart data={data} name="EV" />);
+    const opt = optionOf(getByTestId);
+    // max = Math.max(4, 10, 7) applied to all axes, not a per-axis auto-max.
+    expect(opt.radar.indicator.every((i: { max: number }) => i.max === 10)).toBe(true);
+  });
+
+  it('traces the values as a single series', () => {
+    const { getByTestId } = render(<RadarChart data={data} name="EV" />);
+    const opt = optionOf(getByTestId);
+    expect(opt.series[0].data).toEqual([{ name: 'EV', value: [4, 10, 7] }]);
+  });
+});
+
+describe('FunnelChart', () => {
+  const data = [
+    { label: 'Visited', value: 100 },
+    { label: 'Signed up', value: 40 },
+    { label: 'Paid', value: 12, color: '#0af' },
+  ];
+
+  it('renders a descending-sorted funnel', () => {
+    const { getByTestId } = render(<FunnelChart data={data} />);
+    const opt = optionOf(getByTestId);
+    expect(opt.series[0].type).toBe('funnel');
+    expect(opt.series[0].sort).toBe('descending');
+  });
+
+  it('maps labels to segment names and honours a per-datum color', () => {
+    const { getByTestId } = render(<FunnelChart data={data} />);
+    const opt = optionOf(getByTestId);
+    expect(opt.series[0].data[0]).toMatchObject({ name: 'Visited', value: 100 });
+    expect(opt.series[0].data[2].itemStyle).toEqual({ color: '#0af' });
+  });
+});
+
+describe('TreemapChart', () => {
+  const data = [
+    { label: 'Docs', value: 30 },
+    { label: 'Media', value: 55, color: '#f80' },
+  ];
+
+  it('renders flat, non-interactive leaves', () => {
+    const { getByTestId } = render(<TreemapChart data={data} />);
+    const opt = optionOf(getByTestId);
+    expect(opt.series[0].type).toBe('treemap');
+    expect(opt.series[0].roam).toBe(false);
+    expect(opt.series[0].nodeClick).toBe(false);
+    expect(opt.series[0].breadcrumb.show).toBe(false);
+  });
+
+  it('maps labels to tile names and honours a per-datum color', () => {
+    const { getByTestId } = render(<TreemapChart data={data} />);
+    const opt = optionOf(getByTestId);
+    expect(opt.series[0].data[0]).toMatchObject({ name: 'Docs', value: 30 });
+    expect(opt.series[0].data[1].itemStyle).toEqual({ color: '#f80' });
   });
 });

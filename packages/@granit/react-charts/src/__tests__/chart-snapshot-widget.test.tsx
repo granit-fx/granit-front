@@ -24,7 +24,8 @@ const ENVELOPE_BASE = {
 };
 
 function chartEnvelope(
-  chartType: 'Bar' | 'HorizontalBar' | 'Line' | 'Area' | 'Pie' | 'Donut',
+  chartType:
+    'Bar' | 'HorizontalBar' | 'Line' | 'Area' | 'Pie' | 'Donut' | 'Radar' | 'Funnel' | 'Treemap',
   overrides: Partial<{
     field: string | null;
     currency: string | null;
@@ -95,6 +96,35 @@ describe('ChartSnapshotWidget — dispatch by chartType', () => {
     const opt = JSON.parse(getByTestId('echarts-mock').dataset.option ?? '{}');
     expect(opt.series[0].type).toBe('pie');
     expect(opt.series[0].radius).toEqual(['35%', '70%']);
+  });
+
+  it('routes Radar to RadarChart, one indicator per bucket', () => {
+    const { container, getByTestId } = render(
+      <ChartSnapshotWidget widget={chartEnvelope('Radar')} />
+    );
+    expect(
+      container
+        .querySelector('[data-slot="chart-snapshot-widget"]')
+        ?.getAttribute('data-chart-type')
+    ).toBe('Radar');
+    const opt = JSON.parse(getByTestId('echarts-mock').dataset.option ?? '{}');
+    expect(opt.series[0].type).toBe('radar');
+    expect(opt.radar.indicator).toHaveLength(3);
+    expect(opt.series[0].data[0].value).toEqual([12500, 18200, 21450]);
+  });
+
+  it('routes Funnel to FunnelChart, descending', () => {
+    const { getByTestId } = render(<ChartSnapshotWidget widget={chartEnvelope('Funnel')} />);
+    const opt = JSON.parse(getByTestId('echarts-mock').dataset.option ?? '{}');
+    expect(opt.series[0].type).toBe('funnel');
+    expect(opt.series[0].sort).toBe('descending');
+  });
+
+  it('routes Treemap to TreemapChart, one leaf per bucket', () => {
+    const { getByTestId } = render(<ChartSnapshotWidget widget={chartEnvelope('Treemap')} />);
+    const opt = JSON.parse(getByTestId('echarts-mock').dataset.option ?? '{}');
+    expect(opt.series[0].type).toBe('treemap');
+    expect(opt.series[0].data).toHaveLength(3);
   });
 
   it('appends the currency code to the value-axis label when set (B3-8b)', () => {

@@ -3,8 +3,11 @@ import { useLocale } from '@granit/react-localization';
 import { useMemo } from 'react';
 
 import { BarChart } from '../components/bar-chart';
+import { FunnelChart } from '../components/funnel-chart';
 import { LineChart } from '../components/line-chart';
 import { PieChart } from '../components/pie-chart';
+import { RadarChart } from '../components/radar-chart';
+import { TreemapChart } from '../components/treemap-chart';
 
 import { createChartValueFormatter } from './format-chart-value';
 
@@ -61,6 +64,30 @@ function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
           valueFormatter={valueFormatter}
           height="100%"
         />
+      </div>
+    );
+  }
+
+  // Radar / Funnel / Treemap all consume the same flat label-value list as the
+  // pie family — no axis or multi-series shaping — so they share one branch.
+  if (chartType === 'Radar' || chartType === 'Funnel' || chartType === 'Treemap') {
+    const categoryData = buckets.map((b) => ({ label: b.label, value: b.value ?? 0 }));
+    return (
+      <div data-slot="chart-snapshot-widget" data-chart-type={chartType} className="h-full w-full">
+        {chartType === 'Radar' && (
+          <RadarChart
+            data={categoryData}
+            name={seriesName}
+            valueFormatter={valueFormatter}
+            height="100%"
+          />
+        )}
+        {chartType === 'Funnel' && (
+          <FunnelChart data={categoryData} valueFormatter={valueFormatter} height="100%" />
+        )}
+        {chartType === 'Treemap' && (
+          <TreemapChart data={categoryData} valueFormatter={valueFormatter} height="100%" />
+        )}
       </div>
     );
   }

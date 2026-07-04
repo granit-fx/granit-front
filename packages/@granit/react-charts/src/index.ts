@@ -15,6 +15,12 @@ export { PieChart } from './components/pie-chart';
 export type { PieChartProps, PieDatum } from './components/pie-chart';
 export { SparklineChart } from './components/sparkline-chart';
 export type { SparklineChartProps } from './components/sparkline-chart';
+export { RadarChart } from './components/radar-chart';
+export type { RadarChartProps, RadarDatum } from './components/radar-chart';
+export { FunnelChart } from './components/funnel-chart';
+export type { FunnelChartProps, FunnelDatum } from './components/funnel-chart';
+export { TreemapChart } from './components/treemap-chart';
+export type { TreemapChartProps, TreemapDatum } from './components/treemap-chart';
 
 // Theming
 export { useEChartsTheme } from './hooks/use-echarts-theme';

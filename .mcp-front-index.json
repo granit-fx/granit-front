@@ -4165,6 +4165,57 @@
           "members": []
         },
         {
+          "name": "RadarChart",
+          "kind": "function",
+          "signature": "function RadarChart("
+        },
+        {
+          "name": "RadarChartProps",
+          "kind": "interface",
+          "signature": "interface RadarChartProps extends ChartDimensions",
+          "members": []
+        },
+        {
+          "name": "RadarDatum",
+          "kind": "interface",
+          "signature": "interface RadarDatum",
+          "members": []
+        },
+        {
+          "name": "FunnelChart",
+          "kind": "function",
+          "signature": "function FunnelChart("
+        },
+        {
+          "name": "FunnelChartProps",
+          "kind": "interface",
+          "signature": "interface FunnelChartProps extends ChartDimensions",
+          "members": []
+        },
+        {
+          "name": "FunnelDatum",
+          "kind": "interface",
+          "signature": "interface FunnelDatum",
+          "members": []
+        },
+        {
+          "name": "TreemapChart",
+          "kind": "function",
+          "signature": "function TreemapChart("
+        },
+        {
+          "name": "TreemapChartProps",
+          "kind": "interface",
+          "signature": "interface TreemapChartProps extends ChartDimensions",
+          "members": []
+        },
+        {
+          "name": "TreemapDatum",
+          "kind": "interface",
+          "signature": "interface TreemapDatum",
+          "members": []
+        },
+        {
           "name": "useEChartsTheme",
           "kind": "function",
           "signature": "function useEChartsTheme(options: UseEChartsThemeOptions): string"

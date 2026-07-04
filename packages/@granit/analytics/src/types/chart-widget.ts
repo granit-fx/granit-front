@@ -7,7 +7,8 @@ import type { WidgetDefinitionBase } from '@granit/dashboards';
  * values — the framework's host registers a `JsonStringEnumConverter()`
  * with no naming policy. Order matches the backend numeric declaration.
  */
-export type ChartType = 'Bar' | 'HorizontalBar' | 'Line' | 'Area' | 'Pie' | 'Donut';
+export type ChartType =
+  'Bar' | 'HorizontalBar' | 'Line' | 'Area' | 'Pie' | 'Donut' | 'Radar' | 'Funnel' | 'Treemap';
 
 /**
  * Aggregated chart bound to a `QueryDefinition`. Mirrors
