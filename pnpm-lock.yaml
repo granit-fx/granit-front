@@ -5285,6 +5285,9 @@ importers:
       '@granit/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@granit/blob-storage':
+        specifier: workspace:*
+        version: link:../blob-storage
       '@granit/entities':
         specifier: workspace:*
         version: link:../entities
@@ -5297,6 +5300,9 @@ importers:
       '@granit/react-api-client':
         specifier: workspace:*
         version: link:../react-api-client
+      '@granit/react-blob-storage':
+        specifier: workspace:*
+        version: link:../react-blob-storage
       '@granit/react-entities':
         specifier: workspace:*
         version: link:../react-entities
@@ -5321,6 +5327,9 @@ importers:
       '@granit/react-workspaces':
         specifier: workspace:*
         version: link:../react-workspaces
+      '@granit/testing':
+        specifier: workspace:*
+        version: link:../testing
       '@granit/types':
         specifier: workspace:*
         version: link:../types
