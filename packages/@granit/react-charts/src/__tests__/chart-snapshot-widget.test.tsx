@@ -151,6 +151,38 @@ describe('ChartSnapshotWidget — dispatch by chartType', () => {
     expect(opt.series[0].data).toHaveLength(3);
   });
 
+  it('routes Scatter to scatter series built from points, grouped by series key', () => {
+    const widget: DashboardRenderedWidget = {
+      ...ENVELOPE_BASE,
+      widgetType: 'Chart',
+      snapshot: {
+        chartType: 'Scatter',
+        groupBy: '',
+        aggregation: 'Sum',
+        field: null,
+        buckets: [],
+        xField: 'Amount',
+        yField: 'Score',
+        points: [
+          { x: 10, y: 1, series: 'EUR' },
+          { x: 20, y: 2, series: 'USD' },
+          { x: 30, y: 3, series: 'EUR' },
+        ],
+      },
+    };
+    const { getByTestId } = render(<ChartSnapshotWidget widget={widget} />);
+    const opt = JSON.parse(getByTestId('echarts-mock').dataset.option ?? '{}');
+    expect(opt.series[0].type).toBe('scatter');
+    expect(opt.series.map((s: { name: string }) => s.name)).toEqual(['EUR', 'USD']);
+    // EUR groups both its points as numeric [x, y] pairs.
+    expect(opt.series[0].data).toEqual([
+      [10, 1],
+      [30, 3],
+    ]);
+    expect(opt.xAxis.name).toBe('Amount');
+    expect(opt.yAxis.name).toBe('Score');
+  });
+
   it('builds one series per distinct series-by value for a grouped bar', () => {
     const { getByTestId } = render(
       <ChartSnapshotWidget

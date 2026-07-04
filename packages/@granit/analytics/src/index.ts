@@ -46,6 +46,7 @@ export type {
   PivotSnapshotEnvelope,
   PivotWidgetDefinition,
   PivotWidgetSnapshot,
+  ScatterPoint,
   TableSnapshotEnvelope,
   TableWidgetColumn,
   TableWidgetDefinition,

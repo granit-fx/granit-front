@@ -4233,6 +4233,17 @@
           "members": []
         },
         {
+          "name": "ScatterChart",
+          "kind": "function",
+          "signature": "function ScatterChart("
+        },
+        {
+          "name": "ScatterChartProps",
+          "kind": "interface",
+          "signature": "interface ScatterChartProps extends ChartDimensions",
+          "members": []
+        },
+        {
           "name": "useEChartsTheme",
           "kind": "function",
           "signature": "function useEChartsTheme(options: UseEChartsThemeOptions): string"

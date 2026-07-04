@@ -8,11 +8,12 @@ import { HeatmapChart } from '../components/heatmap-chart';
 import { LineChart } from '../components/line-chart';
 import { PieChart } from '../components/pie-chart';
 import { RadarChart } from '../components/radar-chart';
+import { ScatterChart } from '../components/scatter-chart';
 import { TreemapChart } from '../components/treemap-chart';
 
 import { createChartValueFormatter } from './format-chart-value';
 
-import type { ChartBucket, ChartWidgetSnapshot } from '@granit/analytics';
+import type { ChartBucket, ChartWidgetSnapshot, ScatterPoint } from '@granit/analytics';
 import type { ChartSeries } from '@granit/charts';
 import type { DashboardRenderedWidget } from '@granit/dashboards';
 
@@ -60,6 +61,39 @@ function buildChartSeries(
 }
 
 /**
+ * Group scatter points into one numeric `[x, y]` series per distinct `series`
+ * key. When no point carries a `series` key the plot is a single cloud named
+ * `singleName`.
+ */
+function buildScatterSeries(
+  points: readonly ScatterPoint[],
+  singleName: string
+): readonly ChartSeries<number, number>[] {
+  if (!points.some((p) => p.series != null)) {
+    return [{ id: 'series', name: singleName, data: points.map((p) => [p.x, p.y]) }];
+  }
+
+  const seriesKeys: string[] = [];
+  const byKey = new Map<string, [number, number][]>();
+  for (const p of points) {
+    const seriesKey = p.series ?? '(null)';
+    let group = byKey.get(seriesKey);
+    if (group === undefined) {
+      group = [];
+      byKey.set(seriesKey, group);
+      seriesKeys.push(seriesKey);
+    }
+    group.push([p.x, p.y]);
+  }
+
+  return seriesKeys.map((seriesKey) => ({
+    id: seriesKey,
+    name: seriesKey,
+    data: byKey.get(seriesKey)!,
+  }));
+}
+
+/**
  * Snapshot-driven renderer for the `'Chart'` widget kind. Mirrors the
  * declarative `<Chart>` definition path: dispatches by `chartType` to the
  * right typed primitive (`<BarChart>` / `<LineChart>` / `<PieChart>`) with
@@ -78,6 +112,7 @@ export function ChartSnapshotWidget({ widget }: { readonly widget: DashboardRend
 
 function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
   const { chartType, groupBy, aggregation, field, buckets, currency, seriesBy, stacked } = snapshot;
+  const { xField, yField, points } = snapshot;
   const { locale } = useLocale();
 
   // Locale-aware value formatting for every numeric axis / tooltip. Currency
@@ -132,6 +167,24 @@ function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
         {chartType === 'Treemap' && (
           <TreemapChart data={categoryData} valueFormatter={valueFormatter} height="100%" />
         )}
+      </div>
+    );
+  }
+
+  // Scatter is the one non-aggregating type: it plots raw (x, y) points from
+  // `snapshot.points` (not `buckets`), one series per series-by colour group.
+  if (chartType === 'Scatter') {
+    const scatterName = xField && yField ? `${yField} / ${xField}` : seriesName;
+    const scatterSeries = buildScatterSeries(points ?? [], scatterName);
+    return (
+      <div data-slot="chart-snapshot-widget" data-chart-type={chartType} className="h-full w-full">
+        <ScatterChart
+          series={scatterSeries}
+          xAxis={{ label: xField ?? '' }}
+          yAxis={{ label: yField ?? '' }}
+          valueFormatter={valueFormatter}
+          height="100%"
+        />
       </div>
     );
   }

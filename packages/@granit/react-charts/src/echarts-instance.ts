@@ -16,6 +16,7 @@ import {
   LineChart,
   PieChart,
   RadarChart,
+  ScatterChart,
   TreemapChart,
 } from 'echarts/charts';
 import {
@@ -40,6 +41,7 @@ echarts.use([
   FunnelChart,
   TreemapChart,
   HeatmapChart,
+  ScatterChart,
   // Components
   GridComponent,
   TooltipComponent,

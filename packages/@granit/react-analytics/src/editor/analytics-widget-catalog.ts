@@ -63,6 +63,8 @@ export const analyticsWidgetCatalog: readonly WidgetCatalogEntry[] = Object.free
       chartType: 'Bar',
       seriesBy: null,
       stacked: false,
+      xField: null,
+      yField: null,
     }),
   },
   {

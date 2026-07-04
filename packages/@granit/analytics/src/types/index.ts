@@ -38,7 +38,12 @@ export type { PivotWidgetDefinition } from './pivot-widget';
 export type { TableWidgetDefinition } from './table-widget';
 
 // Widgets — snapshot envelopes consumed by @granit/dashboards
-export type { ChartBucket, ChartSnapshotEnvelope, ChartWidgetSnapshot } from './chart-snapshot';
+export type {
+  ChartBucket,
+  ChartSnapshotEnvelope,
+  ChartWidgetSnapshot,
+  ScatterPoint,
+} from './chart-snapshot';
 export type { KpiSnapshot, KpiSnapshotEnvelope } from './kpi-snapshot';
 export type {
   MapCenterPayload,

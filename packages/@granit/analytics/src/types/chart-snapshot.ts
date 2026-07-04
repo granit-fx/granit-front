@@ -28,6 +28,22 @@ export interface ChartBucket {
 }
 
 /**
+ * One point of a scatter plot. Mirrors
+ * `Granit.Analytics.Endpoints.Rendering.ScatterPoint`.
+ */
+export interface ScatterPoint {
+  /** X-axis value (the numeric x column). */
+  readonly x: number;
+  /** Y-axis value (the numeric y column). */
+  readonly y: number;
+  /**
+   * Series key colouring the point; `null`/absent when no series column was
+   * requested. Null series values surface as `'(null)'`.
+   */
+  readonly series?: string | null;
+}
+
+/**
  * Snapshot payload for the `'Chart'` widget kind. Mirrors
  * `Granit.Analytics.Endpoints.Rendering.ChartWidgetSnapshot` (B3-5, ADR-039).
  *
@@ -77,6 +93,16 @@ export interface ChartWidgetSnapshot {
    * .NET `ValueKind` enum member names verbatim.
    */
   readonly valueKind?: string | null;
+  /** Numeric x-axis field echoed for the scatter axis label; `null` unless `Scatter`. */
+  readonly xField?: string | null;
+  /** Numeric y-axis field echoed for the scatter axis label; `null` unless `Scatter`. */
+  readonly yField?: string | null;
+  /**
+   * Scatter point cloud — one point per entity. Populated only for `'Scatter'`;
+   * `null`/absent for every other chart type (which ship their series in
+   * {@link buckets} instead).
+   */
+  readonly points?: readonly ScatterPoint[] | null;
 }
 
 /** Narrowed `WidgetSnapshotEnvelope` for the `'Chart'` widget kind. */

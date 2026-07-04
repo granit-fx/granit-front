@@ -516,7 +516,8 @@
           "Radar",
           "Funnel",
           "Treemap",
-          "Heatmap"
+          "Heatmap",
+          "Scatter"
         ]
       },
       "ChartWidgetDefinition": {
@@ -544,6 +545,12 @@
           "stacked": {
             "type": "boolean",
             "default": false
+          },
+          "xField": {
+            "type": ["null", "string"]
+          },
+          "yField": {
+            "type": ["null", "string"]
           },
           "slug": {
             "type": "string"

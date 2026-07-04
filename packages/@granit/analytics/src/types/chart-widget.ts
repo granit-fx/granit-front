@@ -17,7 +17,8 @@ export type ChartType =
   | 'Radar'
   | 'Funnel'
   | 'Treemap'
-  | 'Heatmap';
+  | 'Heatmap'
+  | 'Scatter';
 
 /**
  * Aggregated chart bound to a `QueryDefinition`. Mirrors
@@ -50,4 +51,12 @@ export interface ChartWidgetDefinition extends WidgetDefinitionBase {
    * zeroes it out for every other chart type.
    */
   readonly stacked?: boolean;
+  /**
+   * Numeric x-axis field. Used only by `Scatter` (which ignores
+   * `groupBy`/`aggregation`/`field` and plots raw points); required for that
+   * type, `null` otherwise.
+   */
+  readonly xField?: string | null;
+  /** Numeric y-axis field for `Scatter`. Required for that type, `null` otherwise. */
+  readonly yField?: string | null;
 }

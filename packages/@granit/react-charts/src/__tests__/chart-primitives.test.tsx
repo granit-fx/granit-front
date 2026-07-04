@@ -7,6 +7,7 @@ import { HeatmapChart } from '../components/heatmap-chart';
 import { LineChart } from '../components/line-chart';
 import { PieChart } from '../components/pie-chart';
 import { RadarChart } from '../components/radar-chart';
+import { ScatterChart } from '../components/scatter-chart';
 import { SparklineChart } from '../components/sparkline-chart';
 import { TreemapChart } from '../components/treemap-chart';
 
@@ -181,6 +182,31 @@ describe('LineChart', () => {
     const { getByTestId } = render(<LineChart series={SERIES} />);
     const opt = optionOf(getByTestId);
     expect(opt.series[0].stack).toBeUndefined();
+  });
+});
+
+describe('ScatterChart', () => {
+  const series: readonly ChartSeries<number, number>[] = [
+    { id: 'a', name: 'A', data: [[1, 10] as const, [2, 20] as const] },
+    { id: 'b', name: 'B', data: [[3, 5] as const] },
+  ];
+
+  it('renders scatter series over two value axes', () => {
+    const { getByTestId } = render(<ScatterChart series={series} />);
+    const opt = optionOf(getByTestId);
+    expect(opt.series[0].type).toBe('scatter');
+    expect(opt.xAxis.type).toBe('value');
+    expect(opt.yAxis.type).toBe('value');
+    expect(opt.series).toHaveLength(2);
+  });
+
+  it('keeps each series numeric [x, y] pairs', () => {
+    const { getByTestId } = render(<ScatterChart series={series} />);
+    const opt = optionOf(getByTestId);
+    expect(opt.series[0].data).toEqual([
+      [1, 10],
+      [2, 20],
+    ]);
   });
 });
 
