@@ -1,5 +1,5 @@
 import type { AggregateFunction } from './aggregation';
-import type { ChartType } from './chart-widget';
+import type { ChartType, ComboRenderAs } from './chart-widget';
 import type { WidgetSnapshotEnvelopeOf } from '@granit/dashboards';
 
 /**
@@ -41,6 +41,23 @@ export interface ScatterPoint {
    * requested. Null series values surface as `'(null)'`.
    */
   readonly series?: string | null;
+}
+
+/**
+ * Descriptor of one combo-chart measure — pairs the measure's canonical name
+ * (matching its buckets' {@link ChartBucket.series}) with its visual hint and
+ * value facets. Mirrors
+ * `Granit.Analytics.Endpoints.Rendering.ChartComboSeriesSnapshot`.
+ */
+export interface ChartComboSeriesSnapshot {
+  /** Canonical series name matching this measure's buckets (`'Count'` or `'{Aggregation}({Field})'`). */
+  readonly name: string;
+  /** Whether the frontend draws this measure as a bar or a line. */
+  readonly renderAs: ComboRenderAs;
+  /** Semantic display-type of this measure's value; `null` when none is declared. */
+  readonly valueKind?: string | null;
+  /** ISO 4217 currency code for this measure; `null` when non-monetary or for `'Count'`. */
+  readonly currency?: string | null;
 }
 
 /**
@@ -103,6 +120,12 @@ export interface ChartWidgetSnapshot {
    * {@link buckets} instead).
    */
   readonly points?: readonly ScatterPoint[] | null;
+  /**
+   * Combo-chart measures — ordered, each pairing a measure name (matching its
+   * buckets' {@link ChartBucket.series}) with its `renderAs` hint and value
+   * facets. Populated only for `'Combo'`; `null`/absent otherwise.
+   */
+  readonly comboSeries?: readonly ChartComboSeriesSnapshot[] | null;
 }
 
 /** Narrowed `WidgetSnapshotEnvelope` for the `'Chart'` widget kind. */

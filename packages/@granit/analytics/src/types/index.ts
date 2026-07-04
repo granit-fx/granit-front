@@ -23,7 +23,12 @@ export type {
 // Widgets — catalog declarations
 export type { AggregateFunction } from './aggregation';
 export type { AnalyticsWidgetDefinition } from './analytics-widget';
-export type { ChartType, ChartWidgetDefinition } from './chart-widget';
+export type {
+  ChartComboSeries,
+  ChartType,
+  ChartWidgetDefinition,
+  ComboRenderAs,
+} from './chart-widget';
 export type { KpiWidgetDefinition } from './kpi-widget';
 export type {
   AddressMapPointSource,
@@ -40,6 +45,7 @@ export type { TableWidgetDefinition } from './table-widget';
 // Widgets — snapshot envelopes consumed by @granit/dashboards
 export type {
   ChartBucket,
+  ChartComboSeriesSnapshot,
   ChartSnapshotEnvelope,
   ChartWidgetSnapshot,
   ScatterPoint,

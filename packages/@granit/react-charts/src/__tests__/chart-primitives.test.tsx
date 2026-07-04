@@ -2,6 +2,7 @@ import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { BarChart } from '../components/bar-chart';
+import { ComboChart } from '../components/combo-chart';
 import { FunnelChart } from '../components/funnel-chart';
 import { HeatmapChart } from '../components/heatmap-chart';
 import { LineChart } from '../components/line-chart';
@@ -182,6 +183,24 @@ describe('LineChart', () => {
     const { getByTestId } = render(<LineChart series={SERIES} />);
     const opt = optionOf(getByTestId);
     expect(opt.series[0].stack).toBeUndefined();
+  });
+});
+
+describe('ComboChart', () => {
+  it('draws each measure with its own series type on shared axes', () => {
+    const { getByTestId } = render(
+      <ComboChart
+        series={[
+          { id: 'sum', name: 'Sum', renderAs: 'bar', data: [['Jan', 10] as const] },
+          { id: 'avg', name: 'Avg', renderAs: 'line', data: [['Jan', 3] as const] },
+        ]}
+      />
+    );
+    const opt = optionOf(getByTestId);
+    expect(opt.series[0].type).toBe('bar');
+    expect(opt.series[1].type).toBe('line');
+    expect(opt.xAxis.type).toBe('category');
+    expect(opt.yAxis.type).toBe('value');
   });
 });
 

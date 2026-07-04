@@ -4244,6 +4244,23 @@
           "members": []
         },
         {
+          "name": "ComboChart",
+          "kind": "function",
+          "signature": "function ComboChart("
+        },
+        {
+          "name": "ComboChartProps",
+          "kind": "interface",
+          "signature": "interface ComboChartProps extends ChartDimensions",
+          "members": []
+        },
+        {
+          "name": "ComboChartSeries",
+          "kind": "interface",
+          "signature": "interface ComboChartSeries extends ChartSeries",
+          "members": []
+        },
+        {
           "name": "useEChartsTheme",
           "kind": "function",
           "signature": "function useEChartsTheme(options: UseEChartsThemeOptions): string"

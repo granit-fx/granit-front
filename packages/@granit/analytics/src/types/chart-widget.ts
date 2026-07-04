@@ -18,7 +18,26 @@ export type ChartType =
   | 'Funnel'
   | 'Treemap'
   | 'Heatmap'
-  | 'Scatter';
+  | 'Scatter'
+  | 'Combo';
+
+/**
+ * How a combo-chart measure is drawn. Mirrors
+ * `Granit.Analytics.Dashboards.Widgets.ComboRenderAs`.
+ */
+export type ComboRenderAs = 'Bar' | 'Line';
+
+/**
+ * One measure of a combo chart — an aggregation drawn as a bar or a line on
+ * the shared category axis. Mirrors
+ * `Granit.Analytics.Dashboards.Widgets.ChartComboSeries`.
+ */
+export interface ChartComboSeries {
+  /** Field aggregated. `null` when `aggregation === 'Count'`. */
+  readonly field: string | null;
+  readonly aggregation: AggregateFunction;
+  readonly renderAs: ComboRenderAs;
+}
 
 /**
  * Aggregated chart bound to a `QueryDefinition`. Mirrors
@@ -59,4 +78,10 @@ export interface ChartWidgetDefinition extends WidgetDefinitionBase {
   readonly xField?: string | null;
   /** Numeric y-axis field for `Scatter`. Required for that type, `null` otherwise. */
   readonly yField?: string | null;
+  /**
+   * Measures of a `Combo` chart — each aggregation drawn as a bar or line over
+   * the shared `groupBy` category axis. Used only by `Combo` (which ignores
+   * `aggregation`/`field`); `null`/absent otherwise.
+   */
+  readonly comboSeries?: readonly ChartComboSeries[] | null;
 }

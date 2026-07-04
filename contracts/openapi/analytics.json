@@ -505,6 +505,21 @@
       "AggregateFunction": {
         "enum": ["Count", "Sum", "Avg", "Min", "Max"]
       },
+      "ChartComboSeries": {
+        "required": ["field", "aggregation", "renderAs"],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": ["null", "string"]
+          },
+          "aggregation": {
+            "$ref": "#/components/schemas/AggregateFunction"
+          },
+          "renderAs": {
+            "$ref": "#/components/schemas/ComboRenderAs"
+          }
+        }
+      },
       "ChartType": {
         "enum": [
           "Bar",
@@ -517,7 +532,8 @@
           "Funnel",
           "Treemap",
           "Heatmap",
-          "Scatter"
+          "Scatter",
+          "Combo"
         ]
       },
       "ChartWidgetDefinition": {
@@ -551,6 +567,12 @@
           },
           "yField": {
             "type": ["null", "string"]
+          },
+          "comboSeries": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/ChartComboSeries"
+            }
           },
           "slug": {
             "type": "string"
@@ -597,6 +619,9 @@
             ]
           }
         }
+      },
+      "ComboRenderAs": {
+        "enum": ["Bar", "Line"]
       },
       "DashboardRenderedWidgetResponse": {
         "required": [

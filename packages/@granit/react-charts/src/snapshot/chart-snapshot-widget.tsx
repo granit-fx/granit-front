@@ -3,6 +3,7 @@ import { useLocale } from '@granit/react-localization';
 import { useMemo } from 'react';
 
 import { BarChart } from '../components/bar-chart';
+import { ComboChart } from '../components/combo-chart';
 import { FunnelChart } from '../components/funnel-chart';
 import { HeatmapChart } from '../components/heatmap-chart';
 import { LineChart } from '../components/line-chart';
@@ -13,7 +14,13 @@ import { TreemapChart } from '../components/treemap-chart';
 
 import { createChartValueFormatter } from './format-chart-value';
 
-import type { ChartBucket, ChartWidgetSnapshot, ScatterPoint } from '@granit/analytics';
+import type { ComboChartSeries } from '../components/combo-chart';
+import type {
+  ChartBucket,
+  ChartComboSeriesSnapshot,
+  ChartWidgetSnapshot,
+  ScatterPoint,
+} from '@granit/analytics';
 import type { ChartSeries } from '@granit/charts';
 import type { DashboardRenderedWidget } from '@granit/dashboards';
 
@@ -90,6 +97,37 @@ function buildScatterSeries(
     id: seriesKey,
     name: seriesKey,
     data: byKey.get(seriesKey)!,
+  }));
+}
+
+/**
+ * Build one {@link ComboChartSeries} per combo measure, in the declared order,
+ * carrying its `renderAs`. Each measure's data points come from the buckets
+ * whose `series` matches the measure name, aligned on the shared categories.
+ */
+function buildComboSeries(
+  buckets: readonly ChartBucket[],
+  comboSeries: readonly ChartComboSeriesSnapshot[]
+): readonly ComboChartSeries[] {
+  const categories: string[] = [];
+  const seenCategory = new Set<string>();
+  const byKey = new Map<string, number>();
+  for (const b of buckets) {
+    if (!seenCategory.has(b.label)) {
+      seenCategory.add(b.label);
+      categories.push(b.label);
+    }
+    byKey.set(JSON.stringify([b.label, b.series ?? '']), b.value ?? 0);
+  }
+
+  return comboSeries.map((measure) => ({
+    id: measure.name,
+    name: measure.name,
+    renderAs: measure.renderAs === 'Line' ? 'line' : 'bar',
+    data: categories.map((category) => [
+      category,
+      byKey.get(JSON.stringify([category, measure.name])) ?? 0,
+    ]),
   }));
 }
 
@@ -182,6 +220,22 @@ function ChartBody({ snapshot }: { readonly snapshot: ChartWidgetSnapshot }) {
           series={scatterSeries}
           xAxis={{ label: xField ?? '' }}
           yAxis={{ label: yField ?? '' }}
+          valueFormatter={valueFormatter}
+          height="100%"
+        />
+      </div>
+    );
+  }
+
+  // Combo draws several measures on one shared category axis, each as a bar or
+  // line per its comboSeries `renderAs`. Buckets carry `series` = measure name.
+  if (chartType === 'Combo') {
+    const comboSeries = buildComboSeries(buckets, snapshot.comboSeries ?? []);
+    return (
+      <div data-slot="chart-snapshot-widget" data-chart-type={chartType} className="h-full w-full">
+        <ComboChart
+          series={comboSeries}
+          xAxis={{ label: groupBy }}
           valueFormatter={valueFormatter}
           height="100%"
         />

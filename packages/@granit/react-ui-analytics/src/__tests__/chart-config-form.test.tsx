@@ -126,6 +126,32 @@ describe('ChartConfigForm', () => {
     expect((field as HTMLButtonElement).disabled).toBe(true);
   });
 
+  it('offers every chart type — including Combo — in the type dropdown', async () => {
+    const user = userEvent.setup();
+    const { container } = wrap(<ChartConfigForm widget={baseChart} onChange={vi.fn()} />);
+    await user.click(container.querySelector('[data-slot="chart-type"]')!);
+    // Guards the picker list against drifting from the ChartType union — the
+    // newest types must be selectable, not just valid values.
+    for (const type of ['Heatmap', 'Scatter', 'Combo']) {
+      expect(await screen.findByRole('option', { name: type })).toBeDefined();
+    }
+  });
+
+  it('swaps to the combo measure repeater when chartType is Combo', () => {
+    const comboChart: ChartWidgetDefinition = {
+      ...baseChart,
+      chartType: 'Combo',
+      comboSeries: [{ field: 'Amount', aggregation: 'Sum', renderAs: 'Bar' }],
+    };
+    const { container } = wrap(<ChartConfigForm widget={comboChart} onChange={vi.fn()} />);
+    expect(container.querySelector('[data-slot="chart-combo-series"]')).not.toBeNull();
+    expect(container.querySelector('[data-slot="chart-combo-measure"]')).not.toBeNull();
+    // Combo hides the single aggregation/field controls (measures replace them)…
+    expect(container.querySelector('[data-slot="chart-aggregation"]')).toBeNull();
+    // …but keeps the shared category axis.
+    expect(container.querySelector('[data-slot="chart-group-by"]')).not.toBeNull();
+  });
+
   it('picks a query from the catalogue combobox', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();

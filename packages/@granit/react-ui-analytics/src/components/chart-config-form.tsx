@@ -1,5 +1,5 @@
 import { useQueryFieldMetadata } from '@granit/react-analytics';
-import { Checkbox } from '@granit/react-ui';
+import { Button, Checkbox } from '@granit/react-ui';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -9,7 +9,12 @@ import {
   RequiredMark,
 } from './query-field-controls';
 
-import type { ChartType, ChartWidgetDefinition } from '@granit/analytics';
+import type {
+  ChartComboSeries,
+  ChartType,
+  ChartWidgetDefinition,
+  ComboRenderAs,
+} from '@granit/analytics';
 import type { AggregateFunction } from '@granit/dashboards';
 import type { WidgetConfigFormProps } from '@granit/react-dashboard-editor';
 
@@ -25,8 +30,15 @@ const CHART_TYPES: readonly ChartType[] = [
   'Treemap',
   'Heatmap',
   'Scatter',
+  'Combo',
 ];
 const AGGREGATIONS: readonly AggregateFunction[] = ['Count', 'Sum', 'Avg', 'Min', 'Max'];
+const COMBO_RENDER_AS: readonly ComboRenderAs[] = ['Bar', 'Line'];
+const DEFAULT_COMBO_MEASURE: ChartComboSeries = {
+  field: null,
+  aggregation: 'Sum',
+  renderAs: 'Bar',
+};
 
 /** Chart types that accept a second `seriesBy` dimension (multi-series / point colour). */
 const SERIES_CAPABLE: ReadonlySet<ChartType> = new Set([
@@ -61,10 +73,17 @@ export function ChartConfigForm({
 
   const isCount = widget.aggregation === 'Count';
   const isScatter = widget.chartType === 'Scatter';
+  const isCombo = widget.chartType === 'Combo';
   const supportsSeries = SERIES_CAPABLE.has(widget.chartType);
   const supportsStacking = STACK_CAPABLE.has(widget.chartType);
   const seriesRequired = widget.chartType === 'Heatmap';
   const hasSeriesBy = widget.seriesBy != null && widget.seriesBy !== '';
+
+  const measures = widget.comboSeries ?? [];
+  const setMeasures = (next: readonly ChartComboSeries[]) =>
+    onChange({ ...widget, comboSeries: next });
+  const updateMeasure = (index: number, patch: Partial<ChartComboSeries>) =>
+    setMeasures(measures.map((m, i) => (i === index ? { ...m, ...patch } : m)));
 
   return (
     <div data-slot="chart-config-form" className="space-y-3">
@@ -81,22 +100,25 @@ export function ChartConfigForm({
           required
         />
       </label>
-      {/* Scatter ignores the aggregation-centric fields — it plots raw x/y points instead. */}
+      {/* Group-by is the (shared) category axis for every type except Scatter (which plots raw points). */}
       {!isScatter && (
+        <label className="block text-sm">
+          <span className="mb-1 block text-muted-foreground">
+            {t('Dashboard:Widget.Chart.GroupBy.Label')}
+            <RequiredMark />
+          </span>
+          <MetaFieldInput
+            slot="chart-group-by"
+            value={widget.groupBy}
+            options={groupByOptions}
+            onChange={(value) => onChange({ ...widget, groupBy: value })}
+            required
+          />
+        </label>
+      )}
+      {/* Combo replaces the single aggregation/field with a list of measures (below). */}
+      {!isScatter && !isCombo && (
         <>
-          <label className="block text-sm">
-            <span className="mb-1 block text-muted-foreground">
-              {t('Dashboard:Widget.Chart.GroupBy.Label')}
-              <RequiredMark />
-            </span>
-            <MetaFieldInput
-              slot="chart-group-by"
-              value={widget.groupBy}
-              options={groupByOptions}
-              onChange={(value) => onChange({ ...widget, groupBy: value })}
-              required
-            />
-          </label>
           <label className="block text-sm">
             <span className="mb-1 block text-muted-foreground">
               {t('Dashboard:Widget.Chart.Aggregation.Label')}
@@ -125,6 +147,68 @@ export function ChartConfigForm({
             />
           </label>
         </>
+      )}
+      {/* Combo measures — each an aggregation drawn as a bar or line on the shared category axis. */}
+      {isCombo && (
+        <div data-slot="chart-combo-series" className="space-y-2">
+          <span className="block text-sm text-muted-foreground">
+            {t('Dashboard:Widget.Chart.ComboSeries.Label')}
+            <RequiredMark />
+          </span>
+          {measures.map((measure, index) => {
+            const measureIsCount = measure.aggregation === 'Count';
+            return (
+              <div key={index} className="flex items-center gap-1" data-slot="chart-combo-measure">
+                <EnumSelect
+                  slot="combo-aggregation"
+                  value={measure.aggregation}
+                  options={AGGREGATIONS}
+                  onChange={(value) =>
+                    updateMeasure(index, {
+                      aggregation: value as AggregateFunction,
+                      field: value === 'Count' ? null : measure.field,
+                    })
+                  }
+                />
+                <MetaFieldInput
+                  slot="combo-field"
+                  value={measure.field ?? ''}
+                  options={fieldOptions}
+                  disabled={measureIsCount}
+                  allowEmpty
+                  required={!measureIsCount}
+                  onChange={(value) => updateMeasure(index, { field: value === '' ? null : value })}
+                />
+                <EnumSelect
+                  slot="combo-render-as"
+                  value={measure.renderAs}
+                  options={COMBO_RENDER_AS}
+                  onChange={(value) => updateMeasure(index, { renderAs: value as ComboRenderAs })}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-xs"
+                  aria-label={t('Dashboard:Widget.Chart.ComboSeries.Remove', {
+                    defaultValue: 'Remove measure',
+                  })}
+                  disabled={measures.length <= 1}
+                  onClick={() => setMeasures(measures.filter((_, i) => i !== index))}
+                >
+                  ×
+                </Button>
+              </div>
+            );
+          })}
+          <Button
+            type="button"
+            variant="outline"
+            size="xs"
+            onClick={() => setMeasures([...measures, DEFAULT_COMBO_MEASURE])}
+          >
+            {t('Dashboard:Widget.Chart.ComboSeries.Add', { defaultValue: 'Add measure' })}
+          </Button>
+        </div>
       )}
       {/* Scatter's two numeric axes — raw point coordinates, sourced from the numeric fields. */}
       {isScatter && (
@@ -173,6 +257,7 @@ export function ChartConfigForm({
             // stacked (the backend also zeroes stacked, but keep the DTO clean).
             const chartType = value as ChartType;
             const scatter = chartType === 'Scatter';
+            const combo = chartType === 'Combo';
             onChange({
               ...widget,
               chartType,
@@ -180,6 +265,8 @@ export function ChartConfigForm({
               stacked: STACK_CAPABLE.has(chartType) ? widget.stacked : false,
               xField: scatter ? widget.xField : null,
               yField: scatter ? widget.yField : null,
+              // Combo needs at least one measure to render — seed one when switching in.
+              comboSeries: combo ? (measures.length ? measures : [DEFAULT_COMBO_MEASURE]) : null,
             });
           }}
         />

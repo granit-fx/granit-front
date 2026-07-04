@@ -25,6 +25,8 @@ export { HeatmapChart } from './components/heatmap-chart';
 export type { HeatmapChartProps, HeatmapDatum } from './components/heatmap-chart';
 export { ScatterChart } from './components/scatter-chart';
 export type { ScatterChartProps } from './components/scatter-chart';
+export { ComboChart } from './components/combo-chart';
+export type { ComboChartProps, ComboChartSeries } from './components/combo-chart';
 
 // Theming
 export { useEChartsTheme } from './hooks/use-echarts-theme';

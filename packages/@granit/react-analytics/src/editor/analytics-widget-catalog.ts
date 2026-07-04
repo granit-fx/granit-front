@@ -65,6 +65,7 @@ export const analyticsWidgetCatalog: readonly WidgetCatalogEntry[] = Object.free
       stacked: false,
       xField: null,
       yField: null,
+      comboSeries: null,
     }),
   },
   {

@@ -231,6 +231,39 @@ describe('ChartSnapshotWidget — dispatch by chartType', () => {
     expect(opt.series[0].data[0]).toEqual([0, 0, 100]);
   });
 
+  it('routes Combo to mixed series, one per measure with its renderAs', () => {
+    const widget: DashboardRenderedWidget = {
+      ...ENVELOPE_BASE,
+      widgetType: 'Chart',
+      snapshot: {
+        chartType: 'Combo',
+        groupBy: 'Month',
+        aggregation: 'Sum',
+        field: null,
+        buckets: [
+          { label: 'Jan', value: 100, series: 'Sum(Total)' },
+          { label: 'Jan', value: 12, series: 'Count' },
+          { label: 'Feb', value: 140, series: 'Sum(Total)' },
+          { label: 'Feb', value: 15, series: 'Count' },
+        ],
+        comboSeries: [
+          { name: 'Sum(Total)', renderAs: 'Bar' },
+          { name: 'Count', renderAs: 'Line' },
+        ],
+      },
+    };
+    const { getByTestId } = render(<ChartSnapshotWidget widget={widget} />);
+    const opt = JSON.parse(getByTestId('echarts-mock').dataset.option ?? '{}');
+    expect(opt.series.map((s: { name: string }) => s.name)).toEqual(['Sum(Total)', 'Count']);
+    expect(opt.series[0].type).toBe('bar');
+    expect(opt.series[1].type).toBe('line');
+    // Bar measure aligned on both categories in declared order.
+    expect(opt.series[0].data).toEqual([
+      ['Jan', 100],
+      ['Feb', 140],
+    ]);
+  });
+
   it('appends the currency code to the value-axis label when set (B3-8b)', () => {
     const { getByTestId } = render(
       <ChartSnapshotWidget widget={chartEnvelope('Bar', { currency: 'EUR' })} />
