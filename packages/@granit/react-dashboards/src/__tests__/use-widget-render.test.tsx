@@ -1,3 +1,4 @@
+import { DASHBOARD_TIME_WINDOW } from '@granit/dashboards';
 import { GranitClientProvider } from '@granit/react-api-client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
@@ -5,8 +6,6 @@ import axios from 'axios';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
-
-import { DASHBOARD_TIME_WINDOW } from '@granit/dashboards';
 
 import { DashboardContextProvider } from '../components/dashboard-context';
 import { useWidgetRender, widgetRenderQueryKey } from '../hooks/use-widget-render';
