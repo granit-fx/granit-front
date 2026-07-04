@@ -258,6 +258,11 @@ export function ChartConfigForm({
             const chartType = value as ChartType;
             const scatter = chartType === 'Scatter';
             const combo = chartType === 'Combo';
+            // Combo needs at least one measure to render — seed one when switching in.
+            let comboSeries: readonly ChartComboSeries[] | null = null;
+            if (combo) {
+              comboSeries = measures.length ? measures : [DEFAULT_COMBO_MEASURE];
+            }
             onChange({
               ...widget,
               chartType,
@@ -265,8 +270,7 @@ export function ChartConfigForm({
               stacked: STACK_CAPABLE.has(chartType) ? widget.stacked : false,
               xField: scatter ? widget.xField : null,
               yField: scatter ? widget.yField : null,
-              // Combo needs at least one measure to render — seed one when switching in.
-              comboSeries: combo ? (measures.length ? measures : [DEFAULT_COMBO_MEASURE]) : null,
+              comboSeries,
             });
           }}
         />

@@ -3,7 +3,13 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
 import { useDashboardContext } from './dashboard-context';
-import { ChevronDownIcon, joinClasses, PILL_CLASS, RefreshIcon, SEGMENT_BUTTON_CLASS } from './pill-controls';
+import {
+  ChevronDownIcon,
+  joinClasses,
+  PILL_CLASS,
+  RefreshIcon,
+  SEGMENT_BUTTON_CLASS,
+} from './pill-controls';
 
 import type { DashboardRefreshInterval } from '@granit/dashboards';
 
@@ -60,7 +66,7 @@ export function DashboardRefreshToolbar({ className, onRefresh }: DashboardRefre
   const refreshNow =
     onRefresh ??
     (() => {
-      void queryClient.invalidateQueries();
+      queryClient.invalidateQueries();
     });
 
   if (!ctx?.setRefreshInterval) return null;

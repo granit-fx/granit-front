@@ -66,7 +66,12 @@ export function DashboardTimeWindowToolbar({ className }: DashboardTimeWindowToo
   const shiftOptions = { weekStartsOn: ctx.weekStartsOn, timeZone: ctx.timeZone };
   const currentToken = 'token' in timeWindow.period ? timeWindow.period.token : '';
   const matched = ALL_PRESETS.some((p) => p.token === currentToken);
-  const selectValue = customOpen ? CUSTOM_VALUE : matched ? currentToken : '';
+  let selectValue = '';
+  if (customOpen) {
+    selectValue = CUSTOM_VALUE;
+  } else if (matched) {
+    selectValue = currentToken;
+  }
 
   const applyCustom = () => {
     const from = new Date(draftFrom);

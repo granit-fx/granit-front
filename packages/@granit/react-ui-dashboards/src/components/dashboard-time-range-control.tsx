@@ -46,7 +46,9 @@ export function DashboardTimeRangeControl({ className }: DashboardTimeRangeContr
   const period = ctx?.timeWindow?.period;
   const initialAbsolute = period !== undefined && 'from' in period;
   const [open, setOpen] = useState(false);
-  const [draftFrom, setDraftFrom] = useState(() => (initialAbsolute ? toLocalInput(period.from) : ''));
+  const [draftFrom, setDraftFrom] = useState(() =>
+    initialAbsolute ? toLocalInput(period.from) : ''
+  );
   const [draftTo, setDraftTo] = useState(() => (initialAbsolute ? toLocalInput(period.to) : ''));
 
   if (!ctx?.timeWindow || !ctx.setTimeWindow) return null;
@@ -89,7 +91,12 @@ export function DashboardTimeRangeControl({ className }: DashboardTimeRangeContr
   const customValid = draftFrom !== '' && draftTo !== '' && new Date(draftFrom) < new Date(draftTo);
 
   return (
-    <div data-slot="dashboard-time-range-control" className={cn(PILL, className)} role="toolbar" aria-label="Dashboard time window">
+    <div
+      data-slot="dashboard-time-range-control"
+      className={cn(PILL, className)}
+      role="toolbar"
+      aria-label="Dashboard time window"
+    >
       <button
         type="button"
         data-slot="time-range-back"
@@ -261,7 +268,7 @@ function formatInZone(date: Date, timeZone: string): string {
 
 /** e.g. `"Brussels, CEST"` — the zone's city + its short name at `at`. */
 function describeZone(timeZone: string, at: Date): string {
-  const city = timeZone.split('/').pop()?.replace(/_/g, ' ') ?? timeZone;
+  const city = timeZone.split('/').pop()?.replaceAll('_', ' ') ?? timeZone;
   const abbrev = new Intl.DateTimeFormat('en', { timeZone, timeZoneName: 'short' })
     .formatToParts(at)
     .find((part) => part.type === 'timeZoneName')?.value;

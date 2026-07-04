@@ -114,7 +114,12 @@ type LinkKind = 'url' | 'email' | 'phone';
 
 function formatLinkCell(value: unknown, kind: LinkKind): ReactNode {
   if (typeof value !== 'string' || value.length === 0) return null;
-  const href = kind === 'email' ? `mailto:${value}` : kind === 'phone' ? `tel:${value}` : value;
+  let href = value;
+  if (kind === 'email') {
+    href = `mailto:${value}`;
+  } else if (kind === 'phone') {
+    href = `tel:${value}`;
+  }
   const external = kind === 'url';
   return (
     <a
@@ -132,6 +137,17 @@ function renderBoolean(value: boolean): ReactNode {
   return <span data-granit-cell-boolean={String(value)}>{value ? '✓' : '✗'}</span>;
 }
 
+// Identifiers are scalar (string/number ids); anything object-shaped has no
+// meaningful single-cell representation, so it degrades to an em dash rather
+// than the default `[object Object]`.
+function formatIdentifierValue(value: unknown): string {
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number' || typeof value === 'bigint' || typeof value === 'boolean') {
+    return String(value);
+  }
+  return '—';
+}
+
 /**
  * Cell-level rendering context threaded to every valueKind formatter. A `null`
  * return from a formatter means "cannot render this value" — {@link formatCell}
@@ -145,14 +161,14 @@ export interface CellFormatterContext {
    * it; when absent, the CLR/text path takes over. Currently used to keep the
    * legacy `money` widget working when no `valueKind` is present.
    */
-  readonly component?: string | undefined;
+  readonly component?: string;
   /**
    * Legacy currency resolver for the `money` manifest component. Consulted
    * only on that path (never for `valueKind: 'Currency'`, which resolves its
    * code from the column). Optional — a plain grid without money widgets omits
    * it.
    */
-  readonly currencyResolver?: ((row: Readonly<Record<string, unknown>>) => string) | undefined;
+  readonly currencyResolver?: (row: Readonly<Record<string, unknown>>) => string;
   readonly locale: string;
   readonly formatDate: DateFormatter;
   readonly formatDateTime: DateFormatter;
@@ -197,9 +213,7 @@ export const VALUE_KIND_FORMATTERS: Readonly<Record<string, CellFormatter>> = Ob
   Time: (value, ctx) => formatDateKind(value, ctx, true),
   RelativeTime: (value, ctx) => formatDateKind(value, ctx, true),
   Boolean: (value) => (typeof value === 'boolean' ? renderBoolean(value) : null),
-  Identifier: (value) => (
-    <code className="font-mono text-xs">{typeof value === 'object' ? '—' : String(value)}</code>
-  ),
+  Identifier: (value) => <code className="font-mono text-xs">{formatIdentifierValue(value)}</code>,
 });
 
 /**

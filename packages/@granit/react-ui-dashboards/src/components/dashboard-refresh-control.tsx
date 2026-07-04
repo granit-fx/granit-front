@@ -57,7 +57,7 @@ export function DashboardRefreshControl({ className, onRefresh }: DashboardRefre
   const refreshNow =
     onRefresh ??
     (() => {
-      void queryClient.invalidateQueries();
+      queryClient.invalidateQueries();
     });
 
   if (!ctx?.setRefreshInterval) return null;

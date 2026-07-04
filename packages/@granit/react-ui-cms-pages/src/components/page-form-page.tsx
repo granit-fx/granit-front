@@ -16,7 +16,7 @@ import {
 import { createConstraintsResolver } from '@granit/react-validation';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-import { Controller, useForm, type Resolver } from 'react-hook-form';
+import { Controller, useForm, type Resolver, type UseFormSetValue } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { buildPageEditorUrl } from '../renderer';
@@ -53,6 +53,27 @@ function buildFormResolver(t: ReturnType<typeof useTranslation>['t']): Resolver<
     }
     return result;
   }) as unknown as Resolver<PageFormValues>;
+}
+
+/**
+ * Pre-selects the site root as the default parent once the page tree loads
+ * (create mode only, and only once — a manual pick must not be overwritten).
+ */
+function useDefaultParentSelection(
+  enabled: boolean,
+  tree: ReturnType<typeof usePageTree>['data'],
+  setValue: UseFormSetValue<PageFormValues>
+): void {
+  const parentInitialized = useRef(false);
+  useEffect(() => {
+    if (!enabled || parentInitialized.current || !tree || tree.length === 0) {
+      return;
+    }
+    const root = tree.find((node) => node.isSiteRoot) ?? tree[0];
+    if (!root) return;
+    setValue('parentId', root.id);
+    parentInitialized.current = true;
+  }, [enabled, tree, setValue]);
 }
 
 /**
@@ -100,17 +121,7 @@ export function PageFormPage() {
     }
   }, [page, reset]);
 
-  // Pre-select the site root as the default parent once the tree loads (create mode only).
-  const parentInitialized = useRef(false);
-  useEffect(() => {
-    if (isEdit || parentInitialized.current || !tree || tree.length === 0) {
-      return;
-    }
-    const root = tree.find((node) => node.isSiteRoot) ?? tree[0];
-    if (!root) return;
-    setValue('parentId', root.id);
-    parentInitialized.current = true;
-  }, [isEdit, tree, setValue]);
+  useDefaultParentSelection(!isEdit, tree, setValue);
 
   function submitEdit(slugSegment: string) {
     if (!pageId || !page) return;

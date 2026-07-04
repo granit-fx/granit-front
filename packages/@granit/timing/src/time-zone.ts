@@ -46,6 +46,6 @@ export function civilToInstant(civil: Date, timeZone: TimeZoneId | undefined): D
   if (timeZone === undefined) return civil;
   // `TZDate(y, m, d, tz)` interprets the fields as a wall-clock time in `tz`.
   return new Date(
-    new TZDate(civil.getUTCFullYear(), civil.getUTCMonth(), civil.getUTCDate(), timeZone).getTime()
+    new TZDate(civil.getUTCFullYear(), civil.getUTCMonth(), civil.getUTCDate(), timeZone)
   );
 }
