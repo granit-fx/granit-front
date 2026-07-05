@@ -648,13 +648,37 @@ export const CONTRACTS: readonly ModuleContract[] = [
     ],
   },
   // ─── CMS bounded context (granit-website / Granit.Cms.*.Endpoints) ──────────
-  // Specs vendored from Granit.Cms.OpenApi.Generator. Object DTOs only — the
+  // Specs vendored from Granit.Website.OpenApi.Generator. Object DTOs only — the
   // oracle is a field-by-field checker, so standalone string-union enums
   // (ReleaseStatus, RedirectType, SuggestionStatus, …) are verified indirectly
   // via the fields that reference them, not listed here. Endpoint-route checks
   // are deferred (list/grid surfaces are served by the query-engine generic
   // helper and several routes are X-Granit-Site header-scoped, not a literal
   // api/ client call).
+  {
+    slug: 'blog',
+    package: 'blog',
+    types: [
+      'BlogPostResponse',
+      'BlogPostListItemResponse',
+      'BlogPostPublishedListItemResponse',
+      'BlogPostListResponse',
+      'BlogPostPublishedResponse',
+      'BlogPostAttachmentResponse',
+      'BlogPostCreateRequest',
+      'BlogPostUpdateRequest',
+      'BlogPostDraftContentRequest',
+      'BlogPostDraftContentResponse',
+      'BlogPostAttachmentAddRequest',
+      'BlogPostAttachmentDescribeRequest',
+      'BlogPostAttachmentReorderRequest',
+      'BlogPostScheduleRequest',
+      'BlogPostPublicationResponse',
+      'BlogAuthorProfileResponse',
+      'BlogAuthorProfileCreateRequest',
+      'BlogAuthorProfileUpdateRequest',
+    ],
+  },
   {
     slug: 'cms',
     package: 'cms',

@@ -1,0 +1,2992 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "blog",
+    "version": "1"
+  },
+  "paths": {
+    "/api/blog/sites/{siteId}/posts": {
+      "post": {
+        "tags": ["Blog - Posts"],
+        "summary": "Creates a blog post.",
+        "description": "Creates a post for the site with a slug and author. Returns 409 when the slug already exists on the site. Content is authored separately via the draft endpoint.",
+        "operationId": "CreateBlogPost",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlogPostCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPostResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/posts/{id}": {
+      "get": {
+        "tags": ["Blog - Posts"],
+        "summary": "Gets a blog post by id.",
+        "description": "Returns the post aggregate (routing metadata, cover, gallery, pending schedule) by its stable id. Returns 404 if it does not exist.",
+        "operationId": "GetBlogPost",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPostResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Blog - Posts"],
+        "summary": "Updates a post's slug, author and cover.",
+        "description": "Replaces the routing/ownership metadata. Optimistic concurrency via ConcurrencyStamp; returns 409 on a stale stamp or a slug already taken on the site.",
+        "operationId": "UpdateBlogPost",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlogPostUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPostResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Blog - Posts"],
+        "summary": "Soft-deletes a post.",
+        "description": "Tombstones the post so it disappears from admin and public surfaces. Returns 404 if it does not exist.",
+        "operationId": "DeleteBlogPost",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/posts/{id}/content": {
+      "put": {
+        "tags": ["Blog - Posts"],
+        "summary": "Upserts the per-culture draft content.",
+        "description": "Materialises a fresh draft after a publish, then upserts the culture's block-tree JSON, title and summary into it. Returns the stable draft version id. Returns 409 on a concurrent draft edit of the same culture.",
+        "operationId": "SaveBlogPostDraftContent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlogPostDraftContentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPostDraftContentResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/posts/{id}/attachments": {
+      "post": {
+        "tags": ["Blog - Posts"],
+        "summary": "Attaches a media document to the post gallery.",
+        "description": "Appends a media-library document to the gallery. Re-adding an already attached document updates its caption/alt text in place. Returns 404 if the post does not exist.",
+        "operationId": "AddBlogPostAttachment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlogPostAttachmentAddRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPostResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/posts/{id}/attachments/{documentId}": {
+      "patch": {
+        "tags": ["Blog - Posts"],
+        "summary": "Updates an attachment's caption / alt text.",
+        "description": "Sets the caption and alt text of an existing gallery attachment. Returns 404 if the post or attachment does not exist.",
+        "operationId": "DescribeBlogPostAttachment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "documentId",
+            "in": "path",
+            "description": "Unique identifier of the document.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlogPostAttachmentDescribeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPostResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Blog - Posts"],
+        "summary": "Removes an attachment from the gallery.",
+        "description": "Detaches a document and renumbers the gallery. Returns 404 if the post or attachment does not exist.",
+        "operationId": "RemoveBlogPostAttachment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "documentId",
+            "in": "path",
+            "description": "Unique identifier of the document.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPostResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/posts/{id}/attachments/order": {
+      "put": {
+        "tags": ["Blog - Posts"],
+        "summary": "Reorders the gallery.",
+        "description": "Reorders the gallery to the given exact set of attached document ids. Returns 422 when the set does not match the post's attachments, 404 if the post does not exist.",
+        "operationId": "ReorderBlogPostAttachments",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlogPostAttachmentReorderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPostResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/posts/{id}/publish": {
+      "post": {
+        "tags": ["Blog - Posts"],
+        "summary": "Publishes the post's current draft.",
+        "description": "Archives the prior published version, makes the current draft live and clears any pending schedule. Returns 422 when the post has no draft, 404 if it does not exist.",
+        "operationId": "PublishBlogPost",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPostPublicationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/posts/{id}/unpublish": {
+      "post": {
+        "tags": ["Blog - Posts"],
+        "summary": "Unpublishes the live version.",
+        "description": "Archives the currently published version, leaving history intact. Returns 422 when nothing is published, 404 if the post does not exist.",
+        "operationId": "UnpublishBlogPost",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPostPublicationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/posts/{id}/schedule": {
+      "post": {
+        "tags": ["Blog - Posts"],
+        "summary": "Schedules the current draft to auto-publish.",
+        "description": "Records a wall-clock publication time in an IANA zone and registers the scheduled transition. Re-scheduling replaces a prior schedule. Returns 422 on an invalid zone or no draft, 404 if the post does not exist.",
+        "operationId": "ScheduleBlogPost",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlogPostScheduleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Blog - Posts"],
+        "summary": "Cancels a pending publication schedule.",
+        "description": "Clears the pending schedule and its registered transition. Returns 404 if the post does not exist.",
+        "operationId": "CancelBlogPostSchedule",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/public/posts": {
+      "get": {
+        "tags": ["Blog - Posts"],
+        "summary": "Lists published posts (newest first).",
+        "description": "Returns a page of the current site's published posts for a culture, newest first, optionally filtered by author. Rich tag/category filtering is served by the search index. Anonymous.",
+        "operationId": "ListPublishedBlogPosts",
+        "parameters": [
+          {
+            "name": "culture",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "authorId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPostListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    },
+    "/api/blog/public/posts/{slug}": {
+      "get": {
+        "tags": ["Blog - Posts"],
+        "summary": "Gets a published post by slug.",
+        "description": "Resolves the current site's published post for the slug and culture, with its block-tree content and media references. Returns 404 when unpublished, missing, or absent in that culture. Anonymous.",
+        "operationId": "GetPublishedBlogPostBySlug",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "culture",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogPostPublishedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    },
+    "/api/blog/sites/{siteId}/authors": {
+      "get": {
+        "tags": ["Blog - Authors"],
+        "summary": "Lists a site's author profiles.",
+        "description": "Returns the site's author profiles in display-name order.",
+        "operationId": "ListBlogAuthorProfiles",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BlogAuthorProfileResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Blog - Authors"],
+        "summary": "Creates an author profile.",
+        "description": "Creates the public profile for a platform user on the site. Returns 409 when the user already has a profile there.",
+        "operationId": "CreateBlogAuthorProfile",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "description": "Unique identifier of the site.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlogAuthorProfileCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogAuthorProfileResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/authors/{id}": {
+      "get": {
+        "tags": ["Blog - Authors"],
+        "summary": "Gets an author profile by id.",
+        "description": "Returns the profile by its stable id. Returns 404 if it does not exist.",
+        "operationId": "GetBlogAuthorProfile",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogAuthorProfileResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Blog - Authors"],
+        "summary": "Updates an author profile's presentation.",
+        "description": "Replaces the display name, bio and avatar. Returns 404 if the profile does not exist.",
+        "operationId": "UpdateBlogAuthorProfile",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlogAuthorProfileUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlogAuthorProfileResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Blog - Authors"],
+        "summary": "Soft-deletes an author profile.",
+        "description": "Tombstones the profile. Returns 404 if it does not exist.",
+        "operationId": "DeleteBlogAuthorProfile",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Resource identifier (UUID).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/posts": {
+      "get": {
+        "tags": ["Blog - Posts"],
+        "summary": "Returns a paged, filterable list of BlogPostListItemResponse from BlogPost.",
+        "description": "Executes a dynamic query against BlogPost using the Granit query engine and projects each row to BlogPostListItemResponse. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult<BlogPostListItemResponse> by default. When the groupBy query parameter is specified, returns a GroupedResult<BlogPostListItemResponse> with the same projection applied to the items inside each group.",
+        "operationId": "QueryBlogPost",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "1-based page index. Ignored when cursor is supplied.",
+            "schema": {
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page (1-500). Server-side cap applies.",
+            "schema": {
+              "maximum": 500,
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Free-text search across searchable columns declared in the query definition.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "groupBy",
+            "in": "query",
+            "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "quickFilters",
+            "in": "query",
+            "description": "Comma-separated quick-filter names (declared in the query definition).",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "skipTotalCount",
+            "in": "query",
+            "description": "Skip the total row count for faster pagination when the client doesn't need it.",
+            "schema": {
+              "type": ["null", "boolean"]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Bracketed filter expressions: 'filter[field.op]=value'. Example: 'filter[name.contains]=alice&filter[age.gt]=18'.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "presets",
+            "in": "query",
+            "description": "Bracketed preset selectors: 'presets[group]=name'. Applies preset filter groups declared in the query definition.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/PagedResultOfBlogPostListItemResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GroupedResultOfBlogPostListItemResponse"
+                    }
+                  ],
+                  "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/posts/meta": {
+      "get": {
+        "tags": ["Blog - Posts"],
+        "summary": "Returns query metadata for BlogPost (columns, filters, sorts, presets).",
+        "description": "Returns the query definition metadata for BlogPost: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
+        "operationId": "GetBlogPostMeta",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryMetadata"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/feed.rss": {
+      "get": {
+        "tags": ["Blog - Feed"],
+        "summary": "Gets recent posts as an RSS 2.0 feed.",
+        "description": "Returns the current site's most recent published posts for a culture as an RSS 2.0 document. Anonymous.",
+        "operationId": "GetBlogRssFeed",
+        "parameters": [
+          {
+            "name": "culture",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/rss+xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [{}]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BlogAuthorProfileCreateRequest": {
+        "required": ["userId", "displayName"],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "maxLength": 200,
+            "type": "string"
+          },
+          "bio": {
+            "maxLength": 4000,
+            "type": ["null", "string"]
+          },
+          "avatarDocumentId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          }
+        },
+        "example": {
+          "userId": "c3e5a7f9-4b62-4d81-9a0c-5e7f1b3d6a92",
+          "displayName": "Mara Devlin",
+          "bio": "Backend engineer writing about Postgres, EF Core, and keeping p99 latency honest.",
+          "avatarDocumentId": "6d0f2a48-9c31-4e7b-b8a5-0c3e1f7d4b26"
+        }
+      },
+      "BlogAuthorProfileResponse": {
+        "required": [
+          "id",
+          "siteId",
+          "userId",
+          "displayName",
+          "bio",
+          "avatarDocumentId",
+          "createdAt",
+          "modifiedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "siteId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "bio": {
+            "type": ["null", "string"]
+          },
+          "avatarDocumentId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        },
+        "example": {
+          "id": "e8b2d4f6-1a39-4c57-8b0d-2e6f9a1c3d75",
+          "siteId": "b2d4f6a8-1c3e-4a5b-8d7c-6e9f0a1b2c3d",
+          "userId": "c3e5a7f9-4b62-4d81-9a0c-5e7f1b3d6a92",
+          "displayName": "Mara Devlin",
+          "bio": "Backend engineer writing about Postgres, EF Core, and keeping p99 latency honest.",
+          "avatarDocumentId": "6d0f2a48-9c31-4e7b-b8a5-0c3e1f7d4b26",
+          "createdAt": "2026-02-11T09:05:12+00:00",
+          "modifiedAt": "2026-03-01T16:20:44+00:00"
+        }
+      },
+      "BlogAuthorProfileUpdateRequest": {
+        "required": ["displayName"],
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "maxLength": 200,
+            "type": "string"
+          },
+          "bio": {
+            "maxLength": 4000,
+            "type": ["null", "string"]
+          },
+          "avatarDocumentId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          }
+        },
+        "example": {
+          "displayName": "Mara Devlin",
+          "bio": "Backend engineer writing about Postgres, EF Core, and keeping p99 latency honest.",
+          "avatarDocumentId": "6d0f2a48-9c31-4e7b-b8a5-0c3e1f7d4b26"
+        }
+      },
+      "BlogPostAttachmentAddRequest": {
+        "required": ["documentId"],
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "caption": {
+            "maxLength": 1000,
+            "type": ["null", "string"]
+          },
+          "altText": {
+            "maxLength": 1000,
+            "type": ["null", "string"]
+          }
+        },
+        "example": {
+          "documentId": "d5a1c3e7-2f9b-4c8d-a6e0-1b7f3d9c5a24",
+          "caption": "Benchmark chart: 120ms down to 4ms after the composite index",
+          "altText": "Bar chart comparing query latency before and after indexing"
+        }
+      },
+      "BlogPostAttachmentDescribeRequest": {
+        "required": ["caption", "altText"],
+        "type": "object",
+        "properties": {
+          "caption": {
+            "maxLength": 1000,
+            "type": ["null", "string"]
+          },
+          "altText": {
+            "maxLength": 1000,
+            "type": ["null", "string"]
+          }
+        },
+        "example": {
+          "caption": "Benchmark chart: 120ms down to 4ms after the composite index",
+          "altText": "Bar chart comparing query latency before and after indexing"
+        }
+      },
+      "BlogPostAttachmentReorderRequest": {
+        "required": ["documentIdsInOrder"],
+        "type": "object",
+        "properties": {
+          "documentIdsInOrder": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "example": {
+          "documentIdsInOrder": [
+            "d5a1c3e7-2f9b-4c8d-a6e0-1b7f3d9c5a24",
+            "f0b8e2d6-5a41-4c93-8e7b-2d1c6a9f4b30",
+            "1e7c9b34-8d2a-4f60-b5a9-3c0e7d2f8a15"
+          ]
+        }
+      },
+      "BlogPostAttachmentResponse": {
+        "required": ["documentId", "caption", "altText", "sortOrder"],
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "caption": {
+            "type": ["null", "string"]
+          },
+          "altText": {
+            "type": ["null", "string"]
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "example": {
+          "documentId": "d5a1c3e7-2f9b-4c8d-a6e0-1b7f3d9c5a24",
+          "caption": "EXPLAIN ANALYZE output before adding the index",
+          "altText": "Query plan showing a sequential scan on the orders table",
+          "sortOrder": 0
+        }
+      },
+      "BlogPostCreateRequest": {
+        "required": ["slug", "authorId"],
+        "type": "object",
+        "properties": {
+          "slug": {
+            "maxLength": 256,
+            "type": "string",
+            "x-granit-validator": "Validation:Format:Slug"
+          },
+          "authorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "coverImageDocumentId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          }
+        },
+        "example": {
+          "slug": "ten-postgres-indexing-mistakes",
+          "authorId": "a1b2c3d4-e5f6-4a90-abcd-ef1234567890",
+          "coverImageDocumentId": "3f9c1e77-8b21-4d6a-9c0e-2a7f5b1d4e88"
+        }
+      },
+      "BlogPostDraftContentRequest": {
+        "required": ["culture", "contentJson", "title"],
+        "type": "object",
+        "properties": {
+          "culture": {
+            "maxLength": 20,
+            "type": "string"
+          },
+          "contentJson": {
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 500,
+            "type": "string"
+          },
+          "summary": {
+            "maxLength": 2000,
+            "type": ["null", "string"]
+          },
+          "concurrencyStamp": {
+            "type": ["null", "string"]
+          }
+        },
+        "example": {
+          "culture": "en",
+          "contentJson": "{\"blocks\":[{\"type\":\"paragraph\",\"text\":\"Postgres will happily do a sequential scan on a million rows if you let it. Here is how to spot it.\"}]}",
+          "title": "Ten Postgres indexing mistakes (and how to fix them)",
+          "summary": "A field guide to the index anti-patterns that quietly wreck query latency in production.",
+          "concurrencyStamp": "8f4d2c1b-6e39-4b7a-a2d5-9c1e0f3b7a64"
+        }
+      },
+      "BlogPostDraftContentResponse": {
+        "required": ["versionId"],
+        "type": "object",
+        "properties": {
+          "versionId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "example": {
+          "versionId": "9a3f7c21-6b48-4d0e-8c5a-1f2e3d4b5a6c"
+        }
+      },
+      "BlogPostListItemResponse": {
+        "required": [
+          "id",
+          "siteId",
+          "slug",
+          "authorId",
+          "coverImageDocumentId",
+          "scheduledAtUtc",
+          "createdAt",
+          "modifiedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "siteId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "authorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "coverImageDocumentId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "scheduledAtUtc": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        },
+        "example": {
+          "id": "7c1e9a20-4d3b-4f8e-b6a1-0d5f2c8e1b73",
+          "siteId": "b2c3d4e5-f6a7-4b90-bcde-f12345678901",
+          "slug": "ten-postgres-indexing-mistakes",
+          "authorId": "a1b2c3d4-e5f6-4a90-abcd-ef1234567890",
+          "coverImageDocumentId": "3f9c1e77-8b21-4d6a-9c0e-2a7f5b1d4e88",
+          "scheduledAtUtc": null,
+          "createdAt": "2026-03-18T14:32:10+00:00",
+          "modifiedAt": "2026-03-20T08:00:00+00:00"
+        }
+      },
+      "BlogPostListResponse": {
+        "required": ["items", "total", "skip", "take"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BlogPostPublishedListItemResponse"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "skip": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "take": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "BlogPostPublicationResponse": {
+        "required": ["postId", "siteId"],
+        "type": "object",
+        "properties": {
+          "postId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "siteId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "example": {
+          "postId": "7c1e9a20-4d3b-4f8e-b6a1-0d5f2c8e1b73",
+          "siteId": "b2d4f6a8-1c3e-4a5b-8d7c-6e9f0a1b2c3d"
+        }
+      },
+      "BlogPostPublishedListItemResponse": {
+        "required": [
+          "id",
+          "slug",
+          "authorId",
+          "culture",
+          "title",
+          "summary",
+          "publishedAt",
+          "coverImageDocumentId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "authorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "culture": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": ["null", "string"]
+          },
+          "publishedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "coverImageDocumentId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          }
+        }
+      },
+      "BlogPostPublishedResponse": {
+        "required": [
+          "id",
+          "slug",
+          "authorId",
+          "culture",
+          "title",
+          "summary",
+          "contentJson",
+          "publishedAt",
+          "coverImageDocumentId",
+          "attachmentDocumentIds"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "authorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "culture": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": ["null", "string"]
+          },
+          "contentJson": {
+            "type": "string"
+          },
+          "publishedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "coverImageDocumentId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "attachmentDocumentIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "example": {
+          "id": "7c1e9a20-4d3b-4f8e-b6a1-0d5f2c8e1b73",
+          "slug": "ten-postgres-indexing-mistakes",
+          "authorId": "a1b2c3d4-e5f6-4a90-abcd-ef1234567890",
+          "culture": "en",
+          "title": "Ten Postgres indexing mistakes (and how to fix them)",
+          "summary": "A field guide to the index anti-patterns that quietly wreck query latency in production.",
+          "contentJson": "{\"blocks\":[{\"type\":\"paragraph\",\"text\":\"Postgres will happily do a sequential scan on a million rows if you let it. Here is how to spot it.\"}]}",
+          "publishedAt": "2026-03-20T08:00:00+00:00",
+          "coverImageDocumentId": "3f9c1e77-8b21-4d6a-9c0e-2a7f5b1d4e88",
+          "attachmentDocumentIds": [
+            "d5a1c3e7-2f9b-4c8d-a6e0-1b7f3d9c5a24",
+            "f0b8e2d6-5a41-4c93-8e7b-2d1c6a9f4b30"
+          ]
+        }
+      },
+      "BlogPostResponse": {
+        "required": [
+          "id",
+          "siteId",
+          "slug",
+          "authorId",
+          "coverImageDocumentId",
+          "scheduledAtUtc",
+          "attachments",
+          "concurrencyStamp",
+          "createdAt",
+          "modifiedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "siteId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "authorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "coverImageDocumentId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "scheduledAtUtc": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BlogPostAttachmentResponse"
+            }
+          },
+          "concurrencyStamp": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        },
+        "example": {
+          "id": "7c1e9a20-4d3b-4f8e-b6a1-0d5f2c8e1b73",
+          "siteId": "b2d4f6a8-1c3e-4a5b-8d7c-6e9f0a1b2c3d",
+          "slug": "ten-postgres-indexing-mistakes",
+          "authorId": "a1b2c3d4-e5f6-4a90-abcd-ef1234567890",
+          "coverImageDocumentId": "3f9c1e77-8b21-4d6a-9c0e-2a7f5b1d4e88",
+          "scheduledAtUtc": "2026-03-20T08:00:00+00:00",
+          "attachments": [
+            {
+              "documentId": "d5a1c3e7-2f9b-4c8d-a6e0-1b7f3d9c5a24",
+              "caption": "EXPLAIN ANALYZE output before adding the index",
+              "altText": "Query plan showing a sequential scan on the orders table",
+              "sortOrder": 0
+            }
+          ],
+          "concurrencyStamp": "8f4d2c1b-6e39-4b7a-a2d5-9c1e0f3b7a64",
+          "createdAt": "2026-03-17T10:15:30+00:00",
+          "modifiedAt": "2026-03-18T14:42:05+00:00"
+        }
+      },
+      "BlogPostScheduleRequest": {
+        "required": ["localDateTime", "timeZoneId"],
+        "type": "object",
+        "properties": {
+          "localDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timeZoneId": {
+            "maxLength": 64,
+            "type": "string"
+          }
+        },
+        "example": {
+          "localDateTime": "2026-03-20T09:00:00",
+          "timeZoneId": "Europe/Brussels"
+        }
+      },
+      "BlogPostUpdateRequest": {
+        "required": ["slug", "authorId", "coverImageDocumentId", "concurrencyStamp"],
+        "type": "object",
+        "properties": {
+          "slug": {
+            "maxLength": 256,
+            "type": "string",
+            "x-granit-validator": "Validation:Format:Slug"
+          },
+          "authorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "coverImageDocumentId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "concurrencyStamp": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "slug": "ten-postgres-indexing-mistakes-revised",
+          "authorId": "a1b2c3d4-e5f6-4a90-abcd-ef1234567890",
+          "coverImageDocumentId": "3f9c1e77-8b21-4d6a-9c0e-2a7f5b1d4e88",
+          "concurrencyStamp": "8f4d2c1b-6e39-4b7a-a2d5-9c1e0f3b7a64"
+        }
+      },
+      "ColumnDefinition": {
+        "required": [
+          "name",
+          "label",
+          "type",
+          "order",
+          "isSortable",
+          "isFilterable",
+          "isVisible",
+          "format"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isSortable": {
+            "type": "boolean"
+          },
+          "isFilterable": {
+            "type": "boolean"
+          },
+          "isVisible": {
+            "type": "boolean"
+          },
+          "format": {
+            "type": ["null", "string"]
+          },
+          "valueKind": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ValueKind"
+              }
+            ]
+          },
+          "currencyCode": {
+            "type": ["null", "string"]
+          },
+          "currencyCodeField": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "DateFilterMeta": {
+        "required": ["name", "defaultPeriod", "availablePeriods"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "defaultPeriod": {
+            "$ref": "#/components/schemas/DatePeriod"
+          },
+          "availablePeriods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatePeriod"
+            }
+          }
+        }
+      },
+      "DatePeriod": {
+        "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
+      },
+      "FilterableField": {
+        "required": ["name", "type", "operators"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "operators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterOperator"
+            }
+          },
+          "enumValues": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "lookup": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LookupDescriptor"
+              }
+            ]
+          }
+        }
+      },
+      "FilterGroupMeta": {
+        "required": ["name", "label", "presets"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "presets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PresetMeta"
+            }
+          }
+        }
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Contains",
+          "StartsWith",
+          "EndsWith",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "In",
+          "Between"
+        ]
+      },
+      "GroupByField": {
+        "required": ["name", "type"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "GroupedResultOfBlogPostListItemResponse": {
+        "required": ["groups", "totalCount"],
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupEntryOfBlogPostListItemResponse"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GroupEntryOfBlogPostListItemResponse": {
+        "required": ["field", "value", "label", "count"],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "value": {},
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "aggregates": {
+            "type": ["null", "object"]
+          },
+          "items": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/BlogPostListItemResponse"
+            }
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "LookupDescriptor": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": ["null", "string"]
+          },
+          "endpoint": {
+            "type": ["null", "string"]
+          },
+          "kind": {
+            "$ref": "#/components/schemas/LookupKind"
+          },
+          "requiredPermission": {
+            "type": ["null", "string"]
+          },
+          "searchParam": {
+            "type": ["null", "string"],
+            "default": "search"
+          },
+          "scopeKeys": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LookupKind": {
+        "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
+        "default": "QueryEngine"
+      },
+      "PagedResultOfBlogPostListItemResponse": {
+        "required": ["items", "totalCount", "hasMore"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id",
+                "siteId",
+                "slug",
+                "authorId",
+                "coverImageDocumentId",
+                "scheduledAtUtc",
+                "createdAt",
+                "modifiedAt"
+              ],
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "siteId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "authorId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "coverImageDocumentId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                },
+                "scheduledAtUtc": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "modifiedAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                }
+              },
+              "example": {
+                "id": "7c1e9a20-4d3b-4f8e-b6a1-0d5f2c8e1b73",
+                "siteId": "b2c3d4e5-f6a7-4b90-bcde-f12345678901",
+                "slug": "ten-postgres-indexing-mistakes",
+                "authorId": "a1b2c3d4-e5f6-4a90-abcd-ef1234567890",
+                "coverImageDocumentId": "3f9c1e77-8b21-4d6a-9c0e-2a7f5b1d4e88",
+                "scheduledAtUtc": null,
+                "createdAt": "2026-03-18T14:32:10+00:00",
+                "modifiedAt": "2026-03-20T08:00:00+00:00"
+              }
+            }
+          },
+          "totalCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "PaginationMeta": {
+        "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
+        "type": "object",
+        "properties": {
+          "defaultPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxStreamSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supportsCursor": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PresetMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A URI reference that identifies the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence."
+          },
+          "instance": {
+            "type": "string",
+            "description": "A URI reference that identifies the specific occurrence."
+          }
+        }
+      },
+      "QueryMetadata": {
+        "required": [
+          "columns",
+          "filterableFields",
+          "sortableFields",
+          "presetFilterGroups",
+          "quickFilters",
+          "dateFilters",
+          "groupByFields",
+          "pagination"
+        ],
+        "type": "object",
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ColumnDefinition"
+            }
+          },
+          "filterableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterableField"
+            }
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortableField"
+            }
+          },
+          "presetFilterGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterGroupMeta"
+            }
+          },
+          "quickFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuickFilterMeta"
+            }
+          },
+          "dateFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DateFilterMeta"
+            }
+          },
+          "groupByFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupByField"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "defaultSort": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "QuickFilterMeta": {
+        "required": ["name", "label", "isDefault"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SortableField": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ValueKind": {
+        "enum": [
+          "Count",
+          "Number",
+          "Currency",
+          "Percentage",
+          "Duration",
+          "Date",
+          "Url",
+          "Email",
+          "Phone",
+          "Bytes",
+          "DateTime",
+          "Boolean",
+          "Enum",
+          "RelativeTime",
+          "Time",
+          "Color",
+          "Image",
+          "Json",
+          "Markdown",
+          "Tags",
+          "Rating",
+          "Identifier",
+          null
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Blog - Authors"
+    },
+    {
+      "name": "Blog - Feed"
+    },
+    {
+      "name": "Blog - Posts"
+    }
+  ]
+}

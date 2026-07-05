@@ -9,7 +9,7 @@
 //
 // Four backend sources, one per generator:
 //   - granit-dotnet   → Granit.OpenApi.Generator          (framework modules)
-//   - granit-website  → Granit.Cms.OpenApi.Generator      (CMS bounded context)
+//   - granit-website  → Granit.Website.OpenApi.Generator  (CMS bounded context)
 //   - granit-iot      → Granit.IoT.OpenApi.Generator      (IoT bounded context)
 //   - granit-business → Granit.Business.OpenApi.Generator (business bounded context)
 //
@@ -52,8 +52,8 @@ const SOURCES = [
   },
   {
     label: 'granit-website',
-    dir: join(GRANIT_WEBSITE, 'src', 'Granit.Cms.OpenApi.Generator', 'generated'),
-    prefix: 'Granit.Cms.OpenApi.Generator_',
+    dir: join(GRANIT_WEBSITE, 'src', 'Granit.Website.OpenApi.Generator', 'generated'),
+    prefix: 'Granit.Website.OpenApi.Generator_',
   },
   {
     label: 'granit-iot',

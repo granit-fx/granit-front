@@ -90,7 +90,7 @@ Override each generator's source repo with its env var:
 | Generator                           | Repo            | Env var           |
 | ----------------------------------- | --------------- | ----------------- |
 | `Granit.OpenApi.Generator`          | granit-dotnet   | `GRANIT_DOTNET`   |
-| `Granit.Cms.OpenApi.Generator`      | granit-website  | `GRANIT_WEBSITE`  |
+| `Granit.Website.OpenApi.Generator`  | granit-website  | `GRANIT_WEBSITE`  |
 | `Granit.IoT.OpenApi.Generator`      | granit-iot      | `GRANIT_IOT`      |
 | `Granit.Business.OpenApi.Generator` | granit-business | `GRANIT_BUSINESS` |
 
@@ -117,7 +117,7 @@ following `import type` / `export … from` edges up to a bounded depth.
   DTOs; it only asserts they have not drifted. Fixes are made by hand on the
   failing front type — that is the deliberate tradeoff over Orval.
 - **Coarse, not exact.** The comparison is field presence + nullability + type
-  *family* (`string` / `number` / `boolean` / `array` / `object`). It does not
+  _family_ (`string` / `number` / `boolean` / `array` / `object`). It does not
   check string formats, numeric ranges, enum membership, or exact branded
   identity — those are representation concerns the normalization table
   intentionally absorbs. `unknown` / `any` fields tolerate any backend value.
