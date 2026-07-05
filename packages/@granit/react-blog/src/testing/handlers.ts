@@ -83,6 +83,25 @@ export function createBlogAdminHandlers(baseUrl = '/api/blog'): RequestHandler[]
   const find = (id: string | readonly string[] | undefined) => posts.find((post) => post.id === id);
 
   return [
+    http.get(`${baseUrl}/grid/meta`, () =>
+      HttpResponse.json({
+        columns: [],
+        filterableFields: [],
+        sortableFields: [],
+        presetFilterGroups: [],
+        quickFilters: [],
+        dateFilters: [],
+        groupByFields: [],
+        pagination: {
+          defaultPageSize: 20,
+          maxPageSize: 100,
+          maxStreamSize: 10000,
+          supportsCursor: false,
+        },
+        defaultSort: '-createdAt',
+      })
+    ),
+
     http.get(`${baseUrl}/grid`, ({ request }) => {
       const url = new URL(request.url);
       const page = Number(url.searchParams.get('page') ?? '1');
