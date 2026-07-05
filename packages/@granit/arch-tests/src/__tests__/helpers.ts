@@ -197,7 +197,6 @@ export const STORYBOOK_PAGE_BUDGET: Readonly<Record<string, number>> = {
   '@granit/react-ui-hostnames': 1,
   '@granit/react-ui-identity': 7,
   '@granit/react-ui-invoicing': 2,
-  '@granit/react-ui-iot': 4,
   '@granit/react-ui-localization': 2,
   '@granit/react-ui-metering': 3,
   '@granit/react-ui-multi-tenancy': 3,
