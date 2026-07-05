@@ -10,20 +10,17 @@ export type {
   ResolvedDashboardsConfig,
 } from './providers/dashboards-provider';
 
-// Query-key factory (family-standard `build{Module}QueryKey(config, ...segments)`).
-// The per-operation `*QueryKey` fns below are `@deprecated` byte-identical aliases.
-export { buildDashboardsQueryKey } from './hooks/query-keys';
+// Query-key factory: the low-level `buildDashboardsQueryKey(config, ...segments)`
+// builder plus `dashboardsKeys`, the canonical per-operation key factory every
+// hook composes its tuples through (mirrors `cmsRedirectsKeys`).
+export { buildDashboardsQueryKey, dashboardsKeys } from './hooks/query-keys';
 
 // Render hook (B4-render — POST /dashboards/{id}/render bundle + per-widget cache split)
-export {
-  dashboardRenderQueryKey,
-  dashboardWidgetQueryKey,
-  useDashboardRender,
-} from './hooks/use-dashboard-render';
+export { useDashboardRender } from './hooks/use-dashboard-render';
 export type { UseDashboardRenderOptions } from './hooks/use-dashboard-render';
 export { useDashboardWidget } from './hooks/use-dashboard-widget';
 export { resolveWidgetTitle } from './lib/resolve-widget-title';
-export { useWidgetRender, widgetRenderQueryKey } from './hooks/use-widget-render';
+export { useWidgetRender } from './hooks/use-widget-render';
 export type {
   UseWidgetRenderOptions,
   WidgetRenderContext,
@@ -46,10 +43,10 @@ export { usePushedDashboard } from './hooks/use-pushed-dashboard';
 // dashboards are addressed by Guid. Lifecycle is publish/archive/restore
 // (no DELETE), metadata edits are name+layout only, widget pool is
 // managed via dedicated endpoints.
-export { dashboardCatalogQueryKey, useDashboardCatalog } from './hooks/use-dashboard-catalog';
-export { dashboardListQueryKey, useDashboardList } from './hooks/use-dashboard-list';
+export { useDashboardCatalog } from './hooks/use-dashboard-catalog';
+export { useDashboardList } from './hooks/use-dashboard-list';
 export type { UseDashboardListParams } from './hooks/use-dashboard-list';
-export { dashboardDetailQueryKey, useDashboardDetail } from './hooks/use-dashboard-detail';
+export { useDashboardDetail } from './hooks/use-dashboard-detail';
 export { useImportDashboard } from './hooks/use-import-dashboard';
 export { useUpdateDashboardMetadata } from './hooks/use-update-dashboard-metadata';
 export type { UpdateDashboardMetadataVariables } from './hooks/use-update-dashboard-metadata';

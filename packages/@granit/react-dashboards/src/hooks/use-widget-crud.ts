@@ -4,7 +4,7 @@ import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/r
 import { logger } from '../logger';
 import { useDashboardsConfig } from '../providers/dashboards-provider';
 
-import { dashboardDetailQueryKey } from './use-dashboard-detail';
+import { dashboardsKeys } from './query-keys';
 
 import type {
   AddWidgetRequest,
@@ -58,7 +58,7 @@ export function useAddWidget(): UseMutationResult<
       createWidget(client, basePath, dashboardId, request),
     onSuccess: (widget, { dashboardId }) => {
       logger.debug('Widget added', { dashboardId, widgetId: widget.id });
-      return queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) });
+      return queryClient.invalidateQueries({ queryKey: dashboardsKeys.detail(dashboardId) });
     },
   });
 }
@@ -83,7 +83,7 @@ export function useUpdateWidget(): UseMutationResult<
       updateWidget(client, basePath, dashboardId, widgetId, request),
     onSuccess: (widget, { dashboardId }) => {
       logger.debug('Widget updated', { dashboardId, widgetId: widget.id });
-      return queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) });
+      return queryClient.invalidateQueries({ queryKey: dashboardsKeys.detail(dashboardId) });
     },
   });
 }
@@ -101,7 +101,7 @@ export function useRemoveWidget(): UseMutationResult<void, Error, RemoveWidgetVa
       deleteWidget(client, basePath, dashboardId, widgetId),
     onSuccess: (_void, { dashboardId, widgetId }) => {
       logger.debug('Widget removed', { dashboardId, widgetId });
-      return queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(dashboardId) });
+      return queryClient.invalidateQueries({ queryKey: dashboardsKeys.detail(dashboardId) });
     },
   });
 }

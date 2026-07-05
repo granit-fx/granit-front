@@ -8,7 +8,8 @@ import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { DashboardContextProvider } from '../components/dashboard-context';
-import { useWidgetRender, widgetRenderQueryKey } from '../hooks/use-widget-render';
+import { dashboardsKeys } from '../hooks/query-keys';
+import { useWidgetRender } from '../hooks/use-widget-render';
 import { DashboardsProvider } from '../providers/dashboards-provider';
 
 import type { DashboardRenderedWidget, WidgetDefinitionBase } from '@granit/dashboards';
@@ -81,9 +82,9 @@ function makeWrapper() {
   return { wrapper, queryClient };
 }
 
-describe('widgetRenderQueryKey', () => {
+describe('dashboardsKeys.widgetRender', () => {
   it('produces a kind-namespaced cache key keyed by definition + context', () => {
-    expect(widgetRenderQueryKey('chart', definition, {})).toEqual([
+    expect(dashboardsKeys.widgetRender('chart', definition, {})).toEqual([
       'widget',
       'chart',
       'render',

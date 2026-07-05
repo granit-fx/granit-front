@@ -1,5 +1,9 @@
 import { HttpError } from '@granit/api-client';
-import { renderWidget, resolveTimeWindowToRenderRequest, toRefetchInterval } from '@granit/dashboards';
+import {
+  renderWidget,
+  resolveTimeWindowToRenderRequest,
+  toRefetchInterval,
+} from '@granit/dashboards';
 import { useQuery, type Query, type UseQueryResult } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
@@ -7,7 +11,7 @@ import { useDashboardFilters } from '../components/dashboard-filter-context';
 import { mergeFilterValuesIntoRequest } from '../lib/merge-filter-values';
 import { useDashboardsConfig } from '../providers/dashboards-provider';
 
-import { buildDashboardsQueryKey } from './query-keys';
+import { dashboardsKeys } from './query-keys';
 import { useEffectiveRefreshInterval } from './use-effective-refresh-interval';
 import { useEffectiveTimeWindow } from './use-effective-time-window';
 
@@ -62,22 +66,6 @@ export interface WidgetRenderContext {
  */
 export type WidgetRenderKind = 'kpi' | 'chart' | 'table' | 'pivot' | 'map';
 
-/**
- * Cache key composer for `useWidgetRender`. Keyed by
- * `(kind, definition, context)` so semantically-identical inputs
- * collapse to the same cache entry / in-flight request — same
- * convention as the bundle path's `dashboardRenderQueryKey`.
- *
- * @deprecated Use {@link buildDashboardsQueryKey} with the segments
- * `'widget', kind, 'render', definition, context`. Kept as a byte-identical
- * alias.
- */
-export const widgetRenderQueryKey = <TDefinition extends WidgetDefinitionBase>(
-  kind: WidgetRenderKind,
-  definition: TDefinition,
-  context: WidgetRenderContext
-) => buildDashboardsQueryKey({}, 'widget', kind, 'render', definition, context);
-
 export interface UseWidgetRenderOptions {
   /** Disable the request — useful when the parent isn't ready (e.g. tenant pending). */
   readonly enabled?: boolean;
@@ -130,7 +118,7 @@ export function useWidgetRender<TDefinition extends WidgetDefinitionBase>(
   }, [context, filters?.values, timeWindow]);
 
   const queryKey = useMemo(
-    () => widgetRenderQueryKey(kind, definition, effectiveContext),
+    () => dashboardsKeys.widgetRender(kind, definition, effectiveContext),
     [kind, definition, effectiveContext]
   );
 

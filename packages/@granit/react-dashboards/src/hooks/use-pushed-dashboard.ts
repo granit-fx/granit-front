@@ -1,12 +1,8 @@
 import { useQueryClient, type UseQueryResult } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 
-import {
-  dashboardRenderQueryKey,
-  dashboardWidgetQueryKey,
-  useDashboardRender,
-  type UseDashboardRenderOptions,
-} from './use-dashboard-render';
+import { dashboardsKeys } from './query-keys';
+import { useDashboardRender, type UseDashboardRenderOptions } from './use-dashboard-render';
 import {
   applyStreamSnapshot,
   useDashboardStream,
@@ -29,7 +25,7 @@ import type {
  * 2. If any widget in the seed carries `transport === 'Push'`,
  *    subscribes to the stream via {@link useDashboardStream}.
  * 3. Each `event: snapshot` frame surgically updates the matching
- *    per-widget cache entry via `setQueryData(dashboardWidgetQueryKey)`.
+ *    per-widget cache entry via `setQueryData(dashboardsKeys.widget)`.
  *    Structural fields (slug, position, width, height, title, actions,
  *    requiredPermission, transport) survive the merge — the stream
  *    only carries the dynamic projection.
@@ -60,7 +56,7 @@ export function usePushedDashboard(
   const handleSnapshot = useCallback(
     (event: DashboardStreamSnapshot) => {
       queryClient.setQueryData<DashboardRenderedWidget>(
-        dashboardWidgetQueryKey(dashboardId, event.widgetId),
+        dashboardsKeys.widget(dashboardId, event.widgetId),
         (current) => applyStreamSnapshot(current, event)
       );
     },
@@ -69,7 +65,7 @@ export function usePushedDashboard(
 
   const handleResumeFailed = useCallback(async () => {
     await queryClient.invalidateQueries({
-      queryKey: dashboardRenderQueryKey(dashboardId, request),
+      queryKey: dashboardsKeys.render(dashboardId, request),
     });
   }, [queryClient, dashboardId, request]);
 

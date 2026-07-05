@@ -11,7 +11,7 @@ import {
   SAMPLE_FINANCE_DASHBOARD_ID,
 } from '@granit/react-dashboards/testing';
 
-import { dashboardRenderQueryKey, dashboardWidgetQueryKey } from '../hooks/use-dashboard-render';
+import { dashboardsKeys } from '../hooks/query-keys';
 import { applyStreamSnapshot, type DashboardStreamSnapshot } from '../hooks/use-dashboard-stream';
 import { usePushedDashboard } from '../hooks/use-pushed-dashboard';
 import { DashboardsProvider } from '../providers/dashboards-provider';
@@ -200,7 +200,7 @@ describe('usePushedDashboard', () => {
     });
 
     const cached = queryClient.getQueryData<DashboardRenderedWidget>(
-      dashboardWidgetQueryKey(DASHBOARD_ID, KPI_ID)
+      dashboardsKeys.widget(DASHBOARD_ID, KPI_ID)
     );
     expect(cached?.sequence).toBe(7);
     expect(cached?.snapshot).toEqual({ value: 42, valueKind: 'Count' });
@@ -220,9 +220,9 @@ describe('usePushedDashboard', () => {
       source.dispatch('resume-failed');
     });
 
-    expect(
-      queryClient.getQueryState(dashboardRenderQueryKey(DASHBOARD_ID, {}))?.isInvalidated
-    ).toBe(true);
+    expect(queryClient.getQueryState(dashboardsKeys.render(DASHBOARD_ID, {}))?.isInvalidated).toBe(
+      true
+    );
   });
 
   it('closes the stream on unmount', async () => {

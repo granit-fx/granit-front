@@ -4,7 +4,7 @@ import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/r
 import { logger } from '../logger';
 import { useDashboardsConfig } from '../providers/dashboards-provider';
 
-import { dashboardDetailQueryKey } from './use-dashboard-detail';
+import { dashboardsKeys } from './query-keys';
 
 import type { DashboardResyncResponse } from '@granit/dashboards';
 
@@ -47,7 +47,7 @@ export function useResyncDashboard(): UseMutationResult<DashboardResyncResponse,
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['dashboards', 'list'] }),
         queryClient.invalidateQueries({ queryKey: ['dashboards', 'catalog'] }),
-        queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(id) }),
+        queryClient.invalidateQueries({ queryKey: dashboardsKeys.detail(id) }),
         queryClient.invalidateQueries({ queryKey: ['dashboard', id, 'render'] }),
       ]);
     },

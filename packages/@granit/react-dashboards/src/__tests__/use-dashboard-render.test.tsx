@@ -15,9 +15,8 @@ import {
   SAMPLE_FINANCE_DASHBOARD_ID,
 } from '@granit/react-dashboards/testing';
 
+import { dashboardsKeys } from '../hooks/query-keys';
 import {
-  dashboardRenderQueryKey,
-  dashboardWidgetQueryKey,
   normalizeDashboardRenderRequest,
   strongestRefreshHint,
   useDashboardRender,
@@ -105,7 +104,7 @@ describe('strongestRefreshHint', () => {
 
 describe('dashboard render query keys', () => {
   it('renders the bundle key with the request payload', () => {
-    expect(dashboardRenderQueryKey(DASHBOARD_ID, { periodToken: 'mtd' })).toEqual([
+    expect(dashboardsKeys.render(DASHBOARD_ID, { periodToken: 'mtd' })).toEqual([
       'dashboard',
       DASHBOARD_ID,
       'render',
@@ -114,7 +113,7 @@ describe('dashboard render query keys', () => {
   });
 
   it('renders the per-widget key', () => {
-    expect(dashboardWidgetQueryKey(DASHBOARD_ID, KPI_ID)).toEqual([
+    expect(dashboardsKeys.widget(DASHBOARD_ID, KPI_ID)).toEqual([
       'dashboard',
       DASHBOARD_ID,
       'widget',
@@ -138,13 +137,13 @@ describe('useDashboardRender — bundle fetch + per-widget cache split (ADR-039 
     await waitFor(() =>
       expect(
         queryClient.getQueryData<DashboardRenderedWidget>(
-          dashboardWidgetQueryKey(DASHBOARD_ID, KPI_ID)
+          dashboardsKeys.widget(DASHBOARD_ID, KPI_ID)
         )
       ).toBeDefined()
     );
     expect(
       queryClient.getQueryData<DashboardRenderedWidget>(
-        dashboardWidgetQueryKey(DASHBOARD_ID, MARKDOWN_ID)
+        dashboardsKeys.widget(DASHBOARD_ID, MARKDOWN_ID)
       )?.widgetType
     ).toBe('Markdown');
   });
@@ -154,7 +153,7 @@ describe('useDashboardWidget — passive reader', () => {
   it('surfaces the per-widget cache entry without firing its own fetch', async () => {
     const { wrapper, queryClient } = makeWrapper();
     // Pre-populate as if useDashboardRender had already split the bundle.
-    queryClient.setQueryData(dashboardWidgetQueryKey(DASHBOARD_ID, KPI_ID), KPI_WIDGET);
+    queryClient.setQueryData(dashboardsKeys.widget(DASHBOARD_ID, KPI_ID), KPI_WIDGET);
 
     const { result } = renderHook(() => useDashboardWidget(DASHBOARD_ID, KPI_ID), {
       wrapper,

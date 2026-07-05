@@ -8,8 +8,9 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { CATALOG, SAMPLE_FINANCE_DASHBOARD_ID } from '@granit/react-dashboards/testing';
 
-import { dashboardCatalogQueryKey, useDashboardCatalog } from '../hooks/use-dashboard-catalog';
-import { dashboardDetailQueryKey, useDashboardDetail } from '../hooks/use-dashboard-detail';
+import { dashboardsKeys } from '../hooks/query-keys';
+import { useDashboardCatalog } from '../hooks/use-dashboard-catalog';
+import { useDashboardDetail } from '../hooks/use-dashboard-detail';
 import { useDashboardList } from '../hooks/use-dashboard-list';
 import {
   useArchiveDashboard,
@@ -180,11 +181,11 @@ function makeWrapper() {
 
 describe('cache keys', () => {
   it('catalog key namespaces under [dashboards, catalog] for prefix-based invalidation', () => {
-    expect(dashboardCatalogQueryKey()).toEqual(['dashboards', 'catalog']);
+    expect(dashboardsKeys.catalog()).toEqual(['dashboards', 'catalog']);
   });
 
   it('detail key carries the dashboard id', () => {
-    expect(dashboardDetailQueryKey(ID)).toEqual(['dashboards', 'detail', ID]);
+    expect(dashboardsKeys.detail(ID)).toEqual(['dashboards', 'detail', ID]);
   });
 });
 
@@ -248,24 +249,24 @@ describe('useImportDashboard', () => {
 describe('useUpdateDashboardMetadata', () => {
   it('PUTs the metadata payload and invalidates the per-id detail', async () => {
     const { wrapper, queryClient } = makeWrapper();
-    queryClient.setQueryData(dashboardDetailQueryKey(ID), DETAIL);
+    queryClient.setQueryData(dashboardsKeys.detail(ID), DETAIL);
     const { result } = renderHook(() => useUpdateDashboardMetadata(), { wrapper });
     await result.current.mutateAsync({
       id: ID,
       request: { name: 'New name', layoutColumns: 12, layoutRowHeight: 100 },
     });
     expect(lastBody).toMatchObject({ name: 'New name', layoutColumns: 12, layoutRowHeight: 100 });
-    expect(queryClient.getQueryState(dashboardDetailQueryKey(ID))?.isInvalidated).toBe(true);
+    expect(queryClient.getQueryState(dashboardsKeys.detail(ID))?.isInvalidated).toBe(true);
   });
 });
 
 describe('useArchiveDashboard / useRestoreDashboard / usePublishDashboard', () => {
   it('archive: POSTs to /archive and invalidates list + detail', async () => {
     const { wrapper, queryClient } = makeWrapper();
-    queryClient.setQueryData(dashboardDetailQueryKey(ID), DETAIL);
+    queryClient.setQueryData(dashboardsKeys.detail(ID), DETAIL);
     const { result } = renderHook(() => useArchiveDashboard(), { wrapper });
     await result.current.mutateAsync(ID);
-    expect(queryClient.getQueryState(dashboardDetailQueryKey(ID))?.isInvalidated).toBe(true);
+    expect(queryClient.getQueryState(dashboardsKeys.detail(ID))?.isInvalidated).toBe(true);
   });
 
   it('publish: POSTs to /publish and returns the updated summary', async () => {
@@ -288,7 +289,7 @@ describe('useArchiveDashboard / useRestoreDashboard / usePublishDashboard', () =
 describe('useResyncDashboard', () => {
   it('POSTs to /resync, returns the change summary, and invalidates list + detail + render', async () => {
     const { wrapper, queryClient } = makeWrapper();
-    queryClient.setQueryData(dashboardDetailQueryKey(ID), DETAIL);
+    queryClient.setQueryData(dashboardsKeys.detail(ID), DETAIL);
     const { result } = renderHook(() => useResyncDashboard(), { wrapper });
     const summary = await result.current.mutateAsync(ID);
     expect(summary).toMatchObject({
@@ -298,14 +299,14 @@ describe('useResyncDashboard', () => {
       widgetsRemoved: 0,
       overridesCarriedOver: 3,
     });
-    expect(queryClient.getQueryState(dashboardDetailQueryKey(ID))?.isInvalidated).toBe(true);
+    expect(queryClient.getQueryState(dashboardsKeys.detail(ID))?.isInvalidated).toBe(true);
   });
 });
 
 describe('useAddWidget / useUpdateWidget / useRemoveWidget', () => {
   it('add: POSTs the widget payload and invalidates the parent dashboard detail', async () => {
     const { wrapper, queryClient } = makeWrapper();
-    queryClient.setQueryData(dashboardDetailQueryKey(ID), DETAIL);
+    queryClient.setQueryData(dashboardsKeys.detail(ID), DETAIL);
     const { result } = renderHook(() => useAddWidget(), { wrapper });
     await result.current.mutateAsync({
       dashboardId: ID,
@@ -319,7 +320,7 @@ describe('useAddWidget / useUpdateWidget / useRemoveWidget', () => {
       },
     });
     expect(lastBody).toMatchObject({ widgetType: 'Markdown', position: 0 });
-    expect(queryClient.getQueryState(dashboardDetailQueryKey(ID))?.isInvalidated).toBe(true);
+    expect(queryClient.getQueryState(dashboardsKeys.detail(ID))?.isInvalidated).toBe(true);
   });
 
   it('update: PUTs the editable fields', async () => {
@@ -341,9 +342,9 @@ describe('useAddWidget / useUpdateWidget / useRemoveWidget', () => {
 
   it('remove: DELETEs and invalidates the parent dashboard detail', async () => {
     const { wrapper, queryClient } = makeWrapper();
-    queryClient.setQueryData(dashboardDetailQueryKey(ID), DETAIL);
+    queryClient.setQueryData(dashboardsKeys.detail(ID), DETAIL);
     const { result } = renderHook(() => useRemoveWidget(), { wrapper });
     await result.current.mutateAsync({ dashboardId: ID, widgetId: WIDGET_ID });
-    expect(queryClient.getQueryState(dashboardDetailQueryKey(ID))?.isInvalidated).toBe(true);
+    expect(queryClient.getQueryState(dashboardsKeys.detail(ID))?.isInvalidated).toBe(true);
   });
 });

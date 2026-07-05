@@ -1,6 +1,6 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
-import { dashboardWidgetQueryKey } from './use-dashboard-render';
+import { dashboardsKeys } from './query-keys';
 
 import type { DashboardRenderedWidget } from '@granit/dashboards';
 
@@ -25,7 +25,7 @@ export function useDashboardWidget(
   widgetId: string
 ): UseQueryResult<DashboardRenderedWidget> {
   return useQuery<DashboardRenderedWidget>({
-    queryKey: dashboardWidgetQueryKey(dashboardId, widgetId),
+    queryKey: dashboardsKeys.widget(dashboardId, widgetId),
     // No queryFn — the bundle fetch (`useDashboardRender`) is the sole
     // source of truth. Setting `enabled: false` keeps TanStack from
     // attempting a fetch and surfaces the cached entry verbatim.

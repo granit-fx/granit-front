@@ -4807,6 +4807,16 @@
           "signature": "function buildDashboardsQueryKey( config: Pick<DashboardsConfig, 'queryKeyPrefix'>, ...segments: readonly unknown[] ): readonly unknown[]"
         },
         {
+          "name": "dashboardsKeys",
+          "kind": "const",
+          "signature": "const dashboardsKeys"
+        },
+        {
+          "name": "useDashboardRender",
+          "kind": "function",
+          "signature": "function useDashboardRender( dashboardId: string, request: DashboardRenderRequest ="
+        },
+        {
           "name": "UseDashboardRenderOptions",
           "kind": "interface",
           "signature": "interface UseDashboardRenderOptions",
@@ -4828,11 +4838,6 @@
           "signature": "function useWidgetRender<TDefinition extends WidgetDefinitionBase>( kind: WidgetRenderKind, definition: TDefinition, context: WidgetRenderContext ="
         },
         {
-          "name": "widgetRenderQueryKey",
-          "kind": "const",
-          "signature": "const widgetRenderQueryKey"
-        },
-        {
           "name": "useDashboardStream",
           "kind": "function",
           "signature": "function useDashboardStream( dashboardId: string, options: UseDashboardStreamOptions ="
@@ -4843,19 +4848,9 @@
           "signature": "function usePushedDashboard( dashboardId: string, request: DashboardRenderRequest ="
         },
         {
-          "name": "dashboardCatalogQueryKey",
-          "kind": "const",
-          "signature": "const dashboardCatalogQueryKey"
-        },
-        {
           "name": "useDashboardCatalog",
           "kind": "function",
           "signature": "function useDashboardCatalog( options:"
-        },
-        {
-          "name": "dashboardListQueryKey",
-          "kind": "const",
-          "signature": "const dashboardListQueryKey"
         },
         {
           "name": "useDashboardList",
@@ -4867,11 +4862,6 @@
           "kind": "interface",
           "signature": "interface UseDashboardListParams",
           "members": []
-        },
-        {
-          "name": "dashboardDetailQueryKey",
-          "kind": "const",
-          "signature": "const dashboardDetailQueryKey"
         },
         {
           "name": "useDashboardDetail",

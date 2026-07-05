@@ -4,7 +4,7 @@ import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/r
 import { logger } from '../logger';
 import { useDashboardsConfig } from '../providers/dashboards-provider';
 
-import { dashboardDetailQueryKey } from './use-dashboard-detail';
+import { dashboardsKeys } from './query-keys';
 
 import type { DashboardSummaryResponse, PagedResponse } from '@granit/dashboards';
 
@@ -36,7 +36,7 @@ async function invalidateAfterTransition(
 ): Promise<void> {
   await Promise.all([
     queryClient.invalidateQueries({ queryKey: ['dashboards', 'list'] }),
-    queryClient.invalidateQueries({ queryKey: dashboardDetailQueryKey(id) }),
+    queryClient.invalidateQueries({ queryKey: dashboardsKeys.detail(id) }),
   ]);
 }
 
