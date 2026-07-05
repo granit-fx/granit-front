@@ -15,9 +15,9 @@ export const blogKeys = {
   },
   posts: {
     all: (prefix: readonly string[]) => [...prefix, 'posts'] as const,
-    grid: (prefix: readonly string[], params?: ListBlogPostsParams) =>
-      [...prefix, 'posts', 'grid', params ?? {}] as const,
-    gridMeta: (prefix: readonly string[]) => [...prefix, 'posts', 'grid', 'meta'] as const,
+    list: (prefix: readonly string[], params?: ListBlogPostsParams) =>
+      [...prefix, 'posts', 'list', params ?? {}] as const,
+    queryMeta: (prefix: readonly string[]) => [...prefix, 'posts', 'list', 'meta'] as const,
     detail: (prefix: readonly string[], id: string) => [...prefix, 'posts', id] as const,
   },
   authors: {

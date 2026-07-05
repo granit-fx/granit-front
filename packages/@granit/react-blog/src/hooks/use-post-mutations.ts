@@ -12,18 +12,19 @@ import {
 } from '@granit/blog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { logger } from '../logger';
 import { useBlogConfig } from '../providers/blog-provider';
 
 import { blogKeys } from './query-keys';
 
 import type {
-  BlogPostAddAttachmentRequest,
+  BlogPostAttachmentAddRequest,
   BlogPostCreateRequest,
   BlogPostDraftContentRequest,
   BlogPostDraftContentResponse,
-  BlogPostReorderAttachmentsRequest,
+  BlogPostAttachmentReorderRequest,
   BlogPostResponse,
-  BlogPostUpdateAttachmentRequest,
+  BlogPostAttachmentDescribeRequest,
   BlogPostUpdateRequest,
 } from '@granit/blog';
 import type { UseMutationResult } from '@tanstack/react-query';
@@ -38,6 +39,7 @@ export function useCreatePost(): UseMutationResult<
   return useMutation({
     mutationFn: ({ siteId, request }) => createPost(client, basePath, siteId, request),
     onSuccess: (data) => {
+      logger.info('post created', { id: data.id });
       qc.setQueryData(blogKeys.posts.detail(queryKeyPrefix, data.id), data);
       qc.invalidateQueries({ queryKey: blogKeys.posts.all(queryKeyPrefix) });
     },
@@ -54,8 +56,9 @@ export function useUpdatePost(): UseMutationResult<
   return useMutation({
     mutationFn: ({ id, request }) => updatePost(client, basePath, id, request),
     onSuccess: (data) => {
+      logger.info('post updated', { id: data.id });
       qc.setQueryData(blogKeys.posts.detail(queryKeyPrefix, data.id), data);
-      qc.invalidateQueries({ queryKey: blogKeys.posts.grid(queryKeyPrefix) });
+      qc.invalidateQueries({ queryKey: blogKeys.posts.list(queryKeyPrefix) });
     },
   });
 }
@@ -66,6 +69,7 @@ export function useDeletePost(): UseMutationResult<void, Error, { id: string }> 
   return useMutation({
     mutationFn: ({ id }) => deletePost(client, basePath, id),
     onSuccess: (_data, { id }) => {
+      logger.info('post deleted', { id });
       qc.removeQueries({ queryKey: blogKeys.posts.detail(queryKeyPrefix, id) });
       qc.invalidateQueries({ queryKey: blogKeys.posts.all(queryKeyPrefix) });
     },
@@ -94,7 +98,7 @@ export function useSaveDraftContent(): UseMutationResult<
 export function useAddPostAttachment(): UseMutationResult<
   BlogPostResponse,
   Error,
-  { id: string; request: BlogPostAddAttachmentRequest }
+  { id: string; request: BlogPostAttachmentAddRequest }
 > {
   const { client, basePath, queryKeyPrefix } = useBlogConfig();
   const qc = useQueryClient();
@@ -107,7 +111,7 @@ export function useAddPostAttachment(): UseMutationResult<
 export function useUpdatePostAttachment(): UseMutationResult<
   BlogPostResponse,
   Error,
-  { id: string; documentId: string; request: BlogPostUpdateAttachmentRequest }
+  { id: string; documentId: string; request: BlogPostAttachmentDescribeRequest }
 > {
   const { client, basePath, queryKeyPrefix } = useBlogConfig();
   const qc = useQueryClient();
@@ -134,7 +138,7 @@ export function useRemovePostAttachment(): UseMutationResult<
 export function useReorderPostAttachments(): UseMutationResult<
   BlogPostResponse,
   Error,
-  { id: string; request: BlogPostReorderAttachmentsRequest }
+  { id: string; request: BlogPostAttachmentReorderRequest }
 > {
   const { client, basePath, queryKeyPrefix } = useBlogConfig();
   const qc = useQueryClient();

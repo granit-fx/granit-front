@@ -1,11 +1,11 @@
 import type {
-  BlogPostAddAttachmentRequest,
+  BlogPostAttachmentAddRequest,
+  BlogPostAttachmentDescribeRequest,
+  BlogPostAttachmentReorderRequest,
   BlogPostCreateRequest,
   BlogPostDraftContentRequest,
   BlogPostDraftContentResponse,
-  BlogPostReorderAttachmentsRequest,
   BlogPostResponse,
-  BlogPostUpdateAttachmentRequest,
   BlogPostUpdateRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
@@ -89,7 +89,7 @@ export async function addPostAttachment(
   client: AxiosInstance,
   basePath: string,
   id: string,
-  request: BlogPostAddAttachmentRequest
+  request: BlogPostAttachmentAddRequest
 ): Promise<BlogPostResponse> {
   const res = await client.post<BlogPostResponse>(
     `${basePath}/posts/${encodeURIComponent(id)}/attachments`,
@@ -104,7 +104,7 @@ export async function updatePostAttachment(
   basePath: string,
   id: string,
   documentId: string,
-  request: BlogPostUpdateAttachmentRequest
+  request: BlogPostAttachmentDescribeRequest
 ): Promise<BlogPostResponse> {
   const res = await client.patch<BlogPostResponse>(
     `${basePath}/posts/${encodeURIComponent(id)}/attachments/${encodeURIComponent(documentId)}`,
@@ -135,7 +135,7 @@ export async function reorderPostAttachments(
   client: AxiosInstance,
   basePath: string,
   id: string,
-  request: BlogPostReorderAttachmentsRequest
+  request: BlogPostAttachmentReorderRequest
 ): Promise<BlogPostResponse> {
   const res = await client.put<BlogPostResponse>(
     `${basePath}/posts/${encodeURIComponent(id)}/attachments/order`,

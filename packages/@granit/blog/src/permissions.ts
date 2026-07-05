@@ -10,7 +10,7 @@
  */
 export const BlogPermissions = {
   Posts: {
-    /** Read access (grid, by-id, draft content). */
+    /** Read access (list, by-id, draft content). */
     Read: 'Blog.Posts.Read',
     /** Write access over all posts (create / update / delete / draft / gallery). */
     Manage: 'Blog.Posts.Manage',

@@ -1,11 +1,11 @@
-import { getPost, getPublicPostBySlug, getPublicPosts, listPostsGrid } from '@granit/blog';
+import { getPost, getPublicPostBySlug, getPublicPosts, listPosts } from '@granit/blog';
 import { createMockClient } from '@granit/testing';
 import { renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { mockPublicPostItems, mockPublishedPost } from '@granit/react-blog/testing';
 
-import { usePost, usePostsGrid } from '../hooks/use-posts';
+import { usePost, usePosts } from '../hooks/use-posts';
 import { usePublicPost, usePublicPosts } from '../hooks/use-public-posts';
 
 import { createWrapper } from './test-utils';
@@ -16,8 +16,8 @@ vi.mock('@granit/blog', () => ({
   getPublicPosts: vi.fn(),
   getPublicPostBySlug: vi.fn(),
   getPost: vi.fn(),
-  listPostsGrid: vi.fn(),
-  getPostsGridMeta: vi.fn(),
+  listPosts: vi.fn(),
+  getPostsQueryMeta: vi.fn(),
 }));
 
 afterEach(() => vi.clearAllMocks());
@@ -63,22 +63,22 @@ describe('usePublicPost', () => {
   });
 });
 
-describe('usePostsGrid', () => {
-  it('fetches the admin grid with a signal', async () => {
+describe('usePosts', () => {
+  it('fetches the admin posts list with a signal', async () => {
     const client = createMockClient();
-    vi.mocked(listPostsGrid).mockResolvedValue({
+    vi.mocked(listPosts).mockResolvedValue({
       items: [],
       totalCount: 0,
       hasMore: false,
       nextCursor: null,
     });
 
-    const { result } = renderHook(() => usePostsGrid({ page: 1, pageSize: 20 }), {
+    const { result } = renderHook(() => usePosts({ page: 1, pageSize: 20 }), {
       wrapper: createWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(listPostsGrid).toHaveBeenCalledWith(
+    expect(listPosts).toHaveBeenCalledWith(
       client,
       '/api/blog',
       { page: 1, pageSize: 20 },

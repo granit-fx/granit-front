@@ -2,7 +2,7 @@ export {
   BLOG_SITE_ID,
   mockAuthors,
   mockLatestPostsData,
-  mockPostGridRows,
+  mockPostListItems,
   mockPosts,
   mockPublicPostItems,
   mockPublishedPost,

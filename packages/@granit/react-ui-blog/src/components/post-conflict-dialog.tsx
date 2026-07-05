@@ -1,4 +1,3 @@
-import { BlogErrorCodes } from '@granit/blog';
 import { useTranslation } from '@granit/react-localization';
 import { ConfirmActionDialog } from '@granit/react-ui-kit';
 
@@ -11,20 +10,20 @@ export interface PostConflictDialogProps {
 }
 
 /**
- * Reload prompt shown when a metadata/draft save returns `409`
- * (`DraftConcurrency` / `StalePost` / `PostSlugConflict`): the on-screen copy is
- * stale, so the only safe recovery is to reload the latest and re-apply.
+ * Reload prompt shown when a metadata/draft save returns `409` (slug clash or a
+ * stale concurrency stamp): the on-screen copy is stale, so the safest recovery is
+ * to reload the latest and re-apply. The backend already localizes the specific
+ * reason in `conflict.detail`; fall back to a generic message when it is absent.
  */
 export function PostConflictDialog({ conflict, onReload, onDismiss }: PostConflictDialogProps) {
   const { t } = useTranslation();
 
   const description =
-    conflict?.code === BlogErrorCodes.PostSlugConflict
-      ? t('blog:Conflict.Slug', 'That slug is already in use. Pick another and try again.')
-      : t(
-          'blog:Conflict.Stale',
-          'This post was changed elsewhere since you loaded it. Reload to get the latest version, then re-apply your changes.'
-        );
+    conflict?.detail ??
+    t(
+      'blog:Conflict.Stale',
+      'This post was changed elsewhere since you loaded it. Reload to get the latest version, then re-apply your changes.'
+    );
 
   return (
     <ConfirmActionDialog

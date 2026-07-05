@@ -10,7 +10,7 @@ export { usePublicPost, usePublicPosts } from './hooks/use-public-posts';
 export { useBlogLatestPosts } from './hooks/use-latest-posts';
 
 // ─── Hooks — admin (posts) ──────────────────────────────────────────────────---
-export { usePost, usePostsGrid, usePostsGridMeta } from './hooks/use-posts';
+export { usePost, usePosts, usePostsQueryMeta } from './hooks/use-posts';
 export {
   useAddPostAttachment,
   useCreatePost,
@@ -60,7 +60,7 @@ export { BlogPostSeoHead } from './components/blog-post-seo-head';
 export type { BlogPostSeoHeadProps } from './components/blog-post-seo-head';
 
 // ─── Conflict helpers ─────────────────────────────────────────────────────────
-export { extractBlogConflict, isBlogConcurrencyConflict } from './lib/extract-conflict';
+export { extractBlogConflict } from './lib/extract-conflict';
 export type { BlogConflict } from './lib/extract-conflict';
 
 // ─── Constants ────────────────────────────────────────────────────────────────

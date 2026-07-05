@@ -7,8 +7,8 @@ import { toISODateString } from '@granit/types';
 import type {
   BlogAuthorProfileResponse,
   BlogLatestPostsData,
-  BlogPostGridRow,
-  BlogPostListItem,
+  BlogPostListItemResponse,
+  BlogPostPublishedListItemResponse,
   BlogPostPublishedResponse,
   BlogPostResponse,
 } from '@granit/blog';
@@ -71,16 +71,13 @@ export const mockPosts: BlogPostResponse[] = [
   },
 ];
 
-export const mockPostGridRows: BlogPostGridRow[] = [
+export const mockPostListItems: BlogPostListItemResponse[] = [
   {
     id: 'post-1',
     siteId: BLOG_SITE_ID,
     slug: 'hello-world',
     authorId: 'author-1',
-    authorDisplayName: 'Ada Lovelace',
-    status: 'Published',
     coverImageDocumentId: 'doc-cover-1',
-    publishedAt: toISODateString('2026-06-05T10:00:00Z'),
     scheduledAtUtc: null,
     createdAt: toISODateString('2026-06-01T00:00:00Z'),
     modifiedAt: null,
@@ -90,17 +87,14 @@ export const mockPostGridRows: BlogPostGridRow[] = [
     siteId: BLOG_SITE_ID,
     slug: 'draft-post',
     authorId: 'author-2',
-    authorDisplayName: 'Alan Turing',
-    status: 'Draft',
     coverImageDocumentId: null,
-    publishedAt: null,
-    scheduledAtUtc: null,
+    scheduledAtUtc: toISODateString('2026-08-01T09:00:00Z'),
     createdAt: toISODateString('2026-06-02T00:00:00Z'),
     modifiedAt: null,
   },
 ];
 
-export const mockPublicPostItems: BlogPostListItem[] = [
+export const mockPublicPostItems: BlogPostPublishedListItemResponse[] = [
   {
     id: 'post-1',
     slug: 'hello-world',

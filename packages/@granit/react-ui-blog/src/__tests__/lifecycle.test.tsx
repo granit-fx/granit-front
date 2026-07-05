@@ -87,7 +87,7 @@ describe('PostConflictDialog', () => {
   it('renders a reload prompt and confirms it', async () => {
     const onReload = vi.fn();
     const onDismiss = vi.fn();
-    const conflict: BlogConflict = { status: 409, code: 'Granit:Blog:StalePost', detail: null };
+    const conflict: BlogConflict = { status: 409, detail: null };
     const { user } = renderWithProviders(
       <PostConflictDialog conflict={conflict} onReload={onReload} onDismiss={onDismiss} />
     );
@@ -96,16 +96,12 @@ describe('PostConflictDialog', () => {
     expect(onReload).toHaveBeenCalled();
   });
 
-  it('shows the slug-specific message', () => {
-    const conflict: BlogConflict = {
-      status: 409,
-      code: 'Granit:Blog:PostSlugConflict',
-      detail: null,
-    };
+  it('surfaces the backend localized detail when present', () => {
+    const conflict: BlogConflict = { status: 409, detail: 'That slug is already in use.' };
     renderWithProviders(
       <PostConflictDialog conflict={conflict} onReload={vi.fn()} onDismiss={vi.fn()} />
     );
-    expect(screen.getByText(/slug is already in use/)).toBeInTheDocument();
+    expect(screen.getByText('That slug is already in use.')).toBeInTheDocument();
   });
 
   it('renders nothing when there is no conflict', () => {

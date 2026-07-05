@@ -13,7 +13,7 @@ import {
   BLOG_SITE_ID,
   mockAuthors,
   mockLatestPostsData,
-  mockPostGridRows,
+  mockPostListItems,
   mockPosts,
   mockPublicPostItems,
   mockPublishedPost,
@@ -23,9 +23,9 @@ import type {
   BlogAuthorProfileCreateRequest,
   BlogAuthorProfileResponse,
   BlogAuthorProfileUpdateRequest,
-  BlogPostAddAttachmentRequest,
+  BlogPostAttachmentAddRequest,
   BlogPostCreateRequest,
-  BlogPostReorderAttachmentsRequest,
+  BlogPostAttachmentReorderRequest,
   BlogPostResponse,
   BlogPostUpdateRequest,
 } from '@granit/blog';
@@ -73,7 +73,7 @@ export function createBlogPublicHandlers(baseUrl = '/api/blog'): RequestHandler[
   ];
 }
 
-/** Admin posts handlers (`/api/blog`) — grid, CRUD, draft, gallery, lifecycle. */
+/** Admin posts handlers (`/api/blog`) — list, CRUD, draft, gallery, lifecycle. */
 export function createBlogAdminHandlers(baseUrl = '/api/blog'): RequestHandler[] {
   const posts: BlogPostResponse[] = mockPosts.map((post) => ({
     ...post,
@@ -83,11 +83,11 @@ export function createBlogAdminHandlers(baseUrl = '/api/blog'): RequestHandler[]
   const find = (id: string | readonly string[] | undefined) => posts.find((post) => post.id === id);
 
   return [
-    http.get(`${baseUrl}/grid`, ({ request }) => {
+    http.get(`${baseUrl}/posts`, ({ request }) => {
       const url = new URL(request.url);
       const page = Number(url.searchParams.get('page') ?? '1');
       const pageSize = Number(url.searchParams.get('pageSize') ?? '20');
-      return HttpResponse.json(paged(mockPostGridRows, page, pageSize));
+      return HttpResponse.json(paged(mockPostListItems, page, pageSize));
     }),
 
     http.post(`${baseUrl}/sites/:siteId/posts`, async ({ params, request }) => {
@@ -144,7 +144,7 @@ export function createBlogAdminHandlers(baseUrl = '/api/blog'): RequestHandler[]
     http.post(`${baseUrl}/posts/:id/attachments`, async ({ params, request }) => {
       const existing = find(params.id);
       if (!existing) return notFound();
-      const dto = (await request.json()) as BlogPostAddAttachmentRequest;
+      const dto = (await request.json()) as BlogPostAttachmentAddRequest;
       const updated: BlogPostResponse = {
         ...existing,
         attachments: [
@@ -175,7 +175,7 @@ export function createBlogAdminHandlers(baseUrl = '/api/blog'): RequestHandler[]
     http.put(`${baseUrl}/posts/:id/attachments/order`, async ({ params, request }) => {
       const existing = find(params.id);
       if (!existing) return notFound();
-      const dto = (await request.json()) as BlogPostReorderAttachmentsRequest;
+      const dto = (await request.json()) as BlogPostAttachmentReorderRequest;
       const reordered = dto.documentIdsInOrder
         .map((documentId, index) => {
           const att = existing.attachments.find((a) => a.documentId === documentId);

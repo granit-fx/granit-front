@@ -18,9 +18,9 @@ import type { ISODateString } from '@granit/types';
 
 /**
  * A published post as it appears in a list/archive page.
- * Maps `Granit.Blog.Posts.Endpoints.Dtos.BlogPostListItem`.
+ * Maps `Granit.Blog.Posts.Endpoints.Dtos.BlogPostPublishedListItemResponse`.
  */
-export interface BlogPostListItem {
+export interface BlogPostPublishedListItemResponse {
   readonly id: string;
   readonly slug: string;
   readonly authorId: string;
@@ -37,7 +37,7 @@ export interface BlogPostListItem {
  * `Granit.Blog.Posts.Endpoints.Dtos.BlogPostListResponse`.
  */
 export interface BlogPostListResponse {
-  readonly items: readonly BlogPostListItem[];
+  readonly items: readonly BlogPostPublishedListItemResponse[];
   readonly total: number;
   readonly skip: number;
   readonly take: number;
@@ -65,14 +65,11 @@ export interface BlogPostPublishedResponse {
 
 // ─── Posts — admin ──────────────────────────────────────────────────────────
 
-/** Lifecycle state of a post, derived from its draft/publication/schedule. */
-export type BlogPostStatus = 'Draft' | 'Scheduled' | 'Published';
-
 /**
  * One media attachment on a post. `sortOrder` is the gallery position.
  * Maps `Granit.Blog.Posts.Endpoints.Dtos.BlogPostAttachmentResponse`.
  */
-export interface BlogPostAttachment {
+export interface BlogPostAttachmentResponse {
   readonly documentId: string;
   readonly caption?: string | null;
   readonly altText?: string | null;
@@ -92,7 +89,7 @@ export interface BlogPostResponse {
   readonly coverImageDocumentId?: string | null;
   /** UTC instant the post is scheduled to publish, when in the `Scheduled` state. */
   readonly scheduledAtUtc?: ISODateString | null;
-  readonly attachments: readonly BlogPostAttachment[];
+  readonly attachments: readonly BlogPostAttachmentResponse[];
   readonly concurrencyStamp: string;
   readonly createdAt: ISODateString;
   readonly modifiedAt?: ISODateString | null;
@@ -132,41 +129,43 @@ export interface BlogPostDraftContentResponse {
   readonly versionId: string;
 }
 
-/** `POST /posts/{id}/attachments`. Maps `BlogPostAddAttachmentRequest`. */
-export interface BlogPostAddAttachmentRequest {
+/** `POST /posts/{id}/attachments`. Maps `BlogPostAttachmentAddRequest`. */
+export interface BlogPostAttachmentAddRequest {
   readonly documentId: string;
   readonly caption?: string | null;
   readonly altText?: string | null;
 }
 
-/** `PATCH /posts/{id}/attachments/{documentId}`. Maps `BlogPostUpdateAttachmentRequest`. */
-export interface BlogPostUpdateAttachmentRequest {
-  readonly caption?: string | null;
-  readonly altText?: string | null;
+/**
+ * `PATCH /posts/{id}/attachments/{documentId}` — replaces the caption and alt
+ * text (send `null` to clear either). Maps `BlogPostAttachmentDescribeRequest`.
+ */
+export interface BlogPostAttachmentDescribeRequest {
+  readonly caption: string | null;
+  readonly altText: string | null;
 }
 
 /**
  * `PUT /posts/{id}/attachments/order` — must be the exact current set of
  * attachment document ids in the desired order (422 otherwise).
- * Maps `BlogPostReorderAttachmentsRequest`.
+ * Maps `BlogPostAttachmentReorderRequest`.
  */
-export interface BlogPostReorderAttachmentsRequest {
+export interface BlogPostAttachmentReorderRequest {
   readonly documentIdsInOrder: readonly string[];
 }
 
 /**
- * One row of the admin posts grid (QueryEngine projection).
- * Maps `Granit.Blog.Posts.Endpoints.Dtos.BlogPostGridRow`.
+ * One row of the admin posts list (QueryEngine projection over `BlogPostListItemResponse`,
+ * `GET /posts`). Routing/ownership metadata only — the per-culture title/summary
+ * live on the published version and are loaded by the editor, not the list.
+ * Maps `Granit.Blog.Queries.BlogPostListItemResponse`.
  */
-export interface BlogPostGridRow {
+export interface BlogPostListItemResponse {
   readonly id: string;
   readonly siteId: string;
   readonly slug: string;
   readonly authorId: string;
-  readonly authorDisplayName: string;
-  readonly status: BlogPostStatus;
   readonly coverImageDocumentId?: string | null;
-  readonly publishedAt?: ISODateString | null;
   readonly scheduledAtUtc?: ISODateString | null;
   readonly createdAt: ISODateString;
   readonly modifiedAt?: ISODateString | null;
@@ -253,5 +252,5 @@ export interface ListPublicPostsParams {
   readonly authorId?: string;
 }
 
-/** QueryEngine request for the admin posts grid. */
+/** QueryEngine request for the admin posts list (`GET /posts`). */
 export type ListBlogPostsParams = QueryRequest;

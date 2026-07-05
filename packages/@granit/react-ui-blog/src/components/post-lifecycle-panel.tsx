@@ -1,4 +1,3 @@
-import { BlogErrorCodes } from '@granit/blog';
 import {
   useCancelPostSchedule,
   usePublishPost,
@@ -16,21 +15,21 @@ export interface PostLifecyclePanelProps {
   readonly post: BlogPostResponse;
 }
 
-function errorStatus(error: unknown): number | null {
-  if (typeof error !== 'object' || error === null || !('response' in error)) return null;
-  return (error as { response?: { status?: number } }).response?.status ?? null;
-}
-
-function errorCode(error: unknown): string | null {
-  if (typeof error !== 'object' || error === null || !('response' in error)) return null;
-  const data = (error as { response?: { data?: { code?: string } } }).response?.data;
-  return data?.code ?? null;
+/** Parses `{ status, detail }` from a rejected mutation error (RFC 7807 body). */
+function errorInfo(error: unknown): { status: number | null; detail: string | null } {
+  if (typeof error !== 'object' || error === null || !('response' in error)) {
+    return { status: null, detail: null };
+  }
+  const response = (error as { response?: { status?: number; data?: { detail?: string } } })
+    .response;
+  return { status: response?.status ?? null, detail: response?.data?.detail ?? null };
 }
 
 /**
  * Publish / unpublish / schedule / cancel-schedule for a post. Scheduling takes a
  * wall-clock local time + IANA zone (resolved server-side, DST-correct). A `422`
- * (`PostHasNoDraft`) surfaces the "nothing to publish" message.
+ * (no draft to publish / invalid schedule) surfaces the backend's localized
+ * `detail`, falling back to the "nothing to publish" message.
  */
 export function PostLifecyclePanel({ post }: PostLifecyclePanelProps) {
   const { t } = useTranslation();
@@ -45,11 +44,12 @@ export function PostLifecyclePanel({ post }: PostLifecyclePanelProps) {
   const isScheduled = Boolean(post.scheduledAtUtc);
 
   function handlePublishError(error: unknown) {
-    if (errorStatus(error) === 422 && errorCode(error) === BlogErrorCodes.PostHasNoDraft) {
-      toast.error(t('blog:Lifecycle.NoDraft', 'There is no draft to publish.'));
+    const { status, detail } = errorInfo(error);
+    if (status === 422) {
+      toast.error(detail ?? t('blog:Lifecycle.NoDraft', 'There is no draft to publish.'));
       return;
     }
-    toast.error(t('blog:Lifecycle.ActionError', 'The action could not be completed.'));
+    toast.error(detail ?? t('blog:Lifecycle.ActionError', 'The action could not be completed.'));
   }
 
   function onPublish() {

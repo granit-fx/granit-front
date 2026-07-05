@@ -1,6 +1,6 @@
 import { BlogPermissions } from '@granit/blog';
 import { usePermissions } from '@granit/react-authorization';
-import { useBlogConfig, useDeletePost, usePostsGridMeta } from '@granit/react-blog';
+import { useBlogConfig, useDeletePost, usePostsQueryMeta } from '@granit/react-blog';
 import { useTranslation } from '@granit/react-localization';
 import { QueryProvider, useQueryEndpoint } from '@granit/react-query-engine';
 import { Alert, AlertDescription, Button, toast } from '@granit/react-ui';
@@ -10,10 +10,10 @@ import { useMemo, useState } from 'react';
 
 import { createPostsColumns } from './posts-columns';
 
-import type { BlogPostGridRow } from '@granit/blog';
+import type { BlogPostListItemResponse } from '@granit/blog';
 import type { SortEntry } from '@granit/query-engine';
 
-/** Static fallback sort used until `/grid` metadata resolves its `defaultSort`. */
+/** Static fallback sort used until `/posts` metadata resolves its `defaultSort`. */
 const POSTS_DEFAULT_SORT = '-createdAt';
 
 function parseSort(token: string): readonly SortEntry[] {
@@ -33,21 +33,21 @@ export function PostsListPage({ onNewPost, onEditPost }: PostsListPageProps = {}
   const { client, basePath } = useBlogConfig();
 
   return (
-    <QueryProvider config={{ client, basePath: `${basePath}/grid` }}>
-      <PostsGrid onNewPost={onNewPost} onEditPost={onEditPost} />
+    <QueryProvider config={{ client, basePath: `${basePath}/posts` }}>
+      <PostsList onNewPost={onNewPost} onEditPost={onEditPost} />
     </QueryProvider>
   );
 }
 
-function PostsGrid({ onNewPost, onEditPost }: PostsListPageProps) {
+function PostsList({ onNewPost, onEditPost }: PostsListPageProps) {
   const { t } = useTranslation();
   const { hasPermission } = usePermissions();
   const canManage = hasPermission(BlogPermissions.Posts.Manage);
-  const { data: meta } = usePostsGridMeta();
+  const { data: meta } = usePostsQueryMeta();
   const deletePost = useDeletePost();
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; slug: string } | null>(null);
 
-  const queryEndpoint = useQueryEndpoint<BlogPostGridRow>({
+  const queryEndpoint = useQueryEndpoint<BlogPostListItemResponse>({
     initialParams: { sort: parseSort(meta?.defaultSort ?? POSTS_DEFAULT_SORT) },
   });
   const isError = queryEndpoint.query.isError;

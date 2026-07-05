@@ -2,7 +2,7 @@
 
 Admin authoring UI for the Granit **Blog** module. Composes the headless
 [`@granit/react-blog`](../react-blog) hooks with the foundation UI packages
-(`@granit/react-ui`, `@granit/react-ui-kit`) — posts grid, per-culture Puck
+(`@granit/react-ui`, `@granit/react-ui-kit`) — posts list, per-culture Puck
 content editor, media gallery, publish/schedule lifecycle, and author-profile
 CRUD.
 
@@ -12,7 +12,7 @@ Published package (tsup build, `dist/`).
 
 | Export                              | Purpose                                                                 |
 | ----------------------------------- | ----------------------------------------------------------------------- |
-| `PostsListPage`                     | QueryEngine grid over `/grid`, permission-gated row actions             |
+| `PostsListPage`                     | QueryEngine list over `/posts`, permission-gated row actions            |
 | `PostEditorPage`                    | Create/edit orchestration — metadata / content / media / lifecycle tabs |
 | `PostMetadataForm`                  | Slug, author picker, cover image; spec-validated                        |
 | `PostContentEditor`                 | Per-culture draft authoring with the embedded Puck editor               |

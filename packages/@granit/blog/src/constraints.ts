@@ -14,45 +14,45 @@ import type { SchemaConstraints } from '@granit/validation';
 
 export const blogConstraints = {
   BlogPostCreateRequest: {
-    slug: { required: true, maxLength: 200, pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$' },
+    slug: { required: true, maxLength: 256, pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$' },
     authorId: { required: true, format: 'uuid' },
     coverImageDocumentId: { format: 'uuid' },
   },
   BlogPostUpdateRequest: {
-    slug: { required: true, maxLength: 200, pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$' },
+    slug: { required: true, maxLength: 256, pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$' },
     authorId: { required: true, format: 'uuid' },
     coverImageDocumentId: { format: 'uuid' },
     concurrencyStamp: { required: true },
   },
   BlogPostDraftContentRequest: {
-    culture: { required: true, maxLength: 35 },
+    culture: { required: true, maxLength: 20 },
     contentJson: { required: true },
-    title: { required: true, maxLength: 200 },
-    summary: { maxLength: 500 },
+    title: { required: true, maxLength: 500 },
+    summary: { maxLength: 2000 },
     concurrencyStamp: {},
   },
-  BlogPostAddAttachmentRequest: {
+  BlogPostAttachmentAddRequest: {
     documentId: { required: true, format: 'uuid' },
-    caption: { maxLength: 300 },
-    altText: { maxLength: 300 },
+    caption: { maxLength: 1000 },
+    altText: { maxLength: 1000 },
   },
-  BlogPostUpdateAttachmentRequest: {
-    caption: { maxLength: 300 },
-    altText: { maxLength: 300 },
+  BlogPostAttachmentDescribeRequest: {
+    caption: { maxLength: 1000 },
+    altText: { maxLength: 1000 },
   },
   BlogPostScheduleRequest: {
     localDateTime: { required: true },
-    timeZoneId: { required: true, maxLength: 100 },
+    timeZoneId: { required: true, maxLength: 64 },
   },
   BlogAuthorProfileCreateRequest: {
     userId: { required: true, format: 'uuid' },
     displayName: { required: true, maxLength: 200 },
-    bio: { maxLength: 2000 },
+    bio: { maxLength: 4000 },
     avatarDocumentId: { format: 'uuid' },
   },
   BlogAuthorProfileUpdateRequest: {
     displayName: { required: true, maxLength: 200 },
-    bio: { maxLength: 2000 },
+    bio: { maxLength: 4000 },
     avatarDocumentId: { format: 'uuid' },
   },
 } satisfies Record<string, SchemaConstraints>;

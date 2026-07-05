@@ -115,9 +115,10 @@ describe('attachments', () => {
     const client = createMockClient();
     vi.mocked(client.patch).mockResolvedValue(axiosResponse(post));
 
-    await updatePostAttachment(client, BASE, 'post-1', 'doc-1', { altText: 'alt' });
+    await updatePostAttachment(client, BASE, 'post-1', 'doc-1', { caption: null, altText: 'alt' });
 
     expect(client.patch).toHaveBeenCalledWith(`${BASE}/posts/post-1/attachments/doc-1`, {
+      caption: null,
       altText: 'alt',
     });
   });

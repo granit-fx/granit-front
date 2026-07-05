@@ -40,6 +40,7 @@ Last updated: 2026-07-04
 | @microsoft/fetch-event-source   | 2.0.1   | Copyright (c) Microsoft Corporation        |
 | @microsoft/signalr              | 10.0.0  | Copyright (c) .NET Foundation              |
 | @tanstack/react-query           | 5.101.2 | Copyright (c) Tanner Linsley               |
+| @tanstack/react-table           | 8.21.3  | Copyright (c) Tanner Linsley               |
 | @tanstack/react-virtual         | 3.14.5  | Copyright (c) Tanner Linsley               |
 | @testing-library/jest-dom       | 6.9.1   | Copyright (c) Testing Library Contributors |
 | @testing-library/react          | 16.3.2  | Copyright (c) Testing Library Contributors |

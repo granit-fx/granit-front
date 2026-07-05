@@ -25,7 +25,7 @@ function Archive() {
 ## What's inside
 
 - **Hooks** — public (`usePublicPosts`, `usePublicPost`, `useBlogLatestPosts`),
-  admin posts (`usePostsGrid`, `usePost`, create/update/delete/draft/gallery
+  admin posts (`usePosts`, `usePost`, create/update/delete/draft/gallery
   mutations), lifecycle (`usePublishPost`, `useSchedulePost`, …), authors, and
   media (`useResolvedDocuments`). Query keys via the `blogKeys` factory.
 - **`blog-latest-posts` block** — presentational `BlogLatestPostsBlock` +

@@ -1,30 +1,27 @@
-import { BlogErrorCodes } from '@granit/blog';
-
-import type { BlogErrorCode } from '@granit/blog';
-
-/** A parsed RFC 7807 conflict (`409`) body from a Blog endpoint. */
+/**
+ * A parsed RFC 7807 conflict (`409`) body from a Blog endpoint.
+ *
+ * The Blog backend returns conflicts (slug clash, stale concurrency stamp,
+ * concurrent draft edit) as a ProblemDetails carrying only the HTTP status and a
+ * localized `detail` sentence — there is no machine-readable `code`/`errorCode`
+ * member on the wire. So the UI surfaces `detail` directly (already localized by
+ * the backend) rather than branching on a code.
+ */
 export interface BlogConflict {
   readonly status: 409;
-  readonly code: BlogErrorCode | string | null;
+  /** Localized, human-readable explanation from the backend (may be absent). */
   readonly detail: string | null;
 }
 
 /**
  * Extracts a Blog `409` conflict from a rejected mutation error, or `null` for
  * any other error (those are surfaced by the global MutationCache toast). Use to
- * drive a reload prompt on stale `concurrencyStamp` (`DraftConcurrency` /
- * `StalePost`) or a slug/author conflict dialog.
+ * drive a reload prompt on a stale save, showing the backend's localized `detail`.
  */
 export function extractBlogConflict(error: unknown): BlogConflict | null {
   if (typeof error !== 'object' || error === null || !('response' in error)) return null;
   const response = (error as { response?: { status?: number; data?: unknown } }).response;
   if (!response || response.status !== 409) return null;
-  const data = (response.data ?? {}) as { code?: string; detail?: string };
-  return { status: 409, code: data.code ?? null, detail: data.detail ?? null };
-}
-
-/** True when the error is a stale-stamp conflict (draft or post metadata). */
-export function isBlogConcurrencyConflict(error: unknown): boolean {
-  const code = extractBlogConflict(error)?.code;
-  return code === BlogErrorCodes.DraftConcurrency || code === BlogErrorCodes.StalePost;
+  const data = (response.data ?? {}) as { detail?: string };
+  return { status: 409, detail: data.detail ?? null };
 }

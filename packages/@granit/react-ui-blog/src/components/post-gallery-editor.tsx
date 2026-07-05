@@ -11,7 +11,7 @@ import { useState } from 'react';
 
 import { DocumentPickerButton } from './document-picker-button';
 
-import type { BlogPostAttachment, BlogPostResponse } from '@granit/blog';
+import type { BlogPostAttachmentResponse, BlogPostResponse } from '@granit/blog';
 
 export interface PostGalleryEditorProps {
   readonly post: BlogPostResponse;
@@ -108,7 +108,7 @@ function AttachmentRow({
   onSave,
 }: {
   readonly postId: string;
-  readonly attachment: BlogPostAttachment;
+  readonly attachment: BlogPostAttachmentResponse;
   readonly index: number;
   readonly total: number;
   readonly onMove: (index: number, delta: number) => void;

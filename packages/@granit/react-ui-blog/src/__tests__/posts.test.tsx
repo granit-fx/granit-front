@@ -6,7 +6,7 @@ import { PostsListPage } from '../components/posts-list-page';
 
 import { renderWithProviders } from './test-utils';
 
-import type { BlogPostGridRow } from '@granit/blog';
+import type { BlogPostListItemResponse } from '@granit/blog';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { ReactElement } from 'react';
 
@@ -18,7 +18,7 @@ vi.mock('@granit/react-authorization', () => ({
 
 vi.mock('@granit/react-blog', () => ({
   useBlogConfig: () => ({ client: {}, basePath: '/api/blog' }),
-  usePostsGridMeta: () => ({ data: { defaultSort: '-createdAt' } }),
+  usePostsQueryMeta: () => ({ data: { defaultSort: '-createdAt' } }),
   useDeletePost: () => ({ mutate: deleteMutate }),
 }));
 
@@ -36,16 +36,15 @@ afterEach(() => vi.clearAllMocks());
 
 const t = ((_key: string, fallback?: string) => fallback ?? _key) as never;
 
-const row = (over: Partial<BlogPostGridRow> = {}): { original: BlogPostGridRow } => ({
+const row = (
+  over: Partial<BlogPostListItemResponse> = {}
+): { original: BlogPostListItemResponse } => ({
   original: {
     id: 'post-1',
     siteId: 'site-1',
     slug: 'hello-world',
     authorId: 'author-1',
-    authorDisplayName: 'Ada Lovelace',
-    status: 'Published',
     coverImageDocumentId: null,
-    publishedAt: '2026-06-05T10:00:00Z',
     scheduledAtUtc: null,
     createdAt: '2026-06-01T00:00:00Z',
     modifiedAt: null,
@@ -54,8 +53,8 @@ const row = (over: Partial<BlogPostGridRow> = {}): { original: BlogPostGridRow }
 });
 
 function renderCell(
-  column: ColumnDef<BlogPostGridRow, unknown>,
-  ctx: { original: BlogPostGridRow }
+  column: ColumnDef<BlogPostListItemResponse, unknown>,
+  ctx: { original: BlogPostListItemResponse }
 ) {
   const cell = column.cell as (c: unknown) => ReactElement;
   return renderWithProviders(<>{cell({ row: ctx })}</>);
@@ -75,13 +74,7 @@ describe('PostsListPage', () => {
 describe('createPostsColumns', () => {
   it('includes the actions column when canManage is true', () => {
     const columns = createPostsColumns({ t, onEdit: vi.fn(), onDelete: vi.fn(), canManage: true });
-    expect(columns.map((c) => c.id)).toEqual([
-      'slug',
-      'authorDisplayName',
-      'status',
-      'publishedAt',
-      'actions',
-    ]);
+    expect(columns.map((c) => c.id)).toEqual(['slug', 'scheduledAtUtc', 'createdAt', 'actions']);
   });
 
   it('omits the actions column for read-only viewers', () => {
@@ -100,24 +93,18 @@ describe('createPostsColumns', () => {
     );
     expect(screen.getByText('hello-world')).toBeInTheDocument();
 
-    renderCell(
-      columns.find((c) => c.id === 'authorDisplayName')!,
-      row()
-    );
-    expect(screen.getByText('Ada Lovelace')).toBeInTheDocument();
-
-    renderCell(
-      columns.find((c) => c.id === 'status')!,
-      row({ status: 'Draft' })
-    );
-    expect(screen.getByText('Draft')).toBeInTheDocument();
-
     // Scheduled → shows the scheduled date badge branch.
     renderCell(
-      columns.find((c) => c.id === 'publishedAt')!,
-      row({ status: 'Scheduled', scheduledAtUtc: '2026-08-01T09:00:00Z', publishedAt: null })
+      columns.find((c) => c.id === 'scheduledAtUtc')!,
+      row({ scheduledAtUtc: '2026-08-01T09:00:00Z' })
     );
     expect(screen.getByText('2026-08-01')).toBeInTheDocument();
+
+    renderCell(
+      columns.find((c) => c.id === 'createdAt')!,
+      row()
+    );
+    expect(screen.getByText('2026-06-01')).toBeInTheDocument();
 
     const { user } = renderCell(
       columns.find((c) => c.id === 'actions')!,

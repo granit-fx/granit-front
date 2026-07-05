@@ -33,7 +33,7 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
 });
 
-const gridMetaHandler = http.get(`${BLOG_BASE}/grid/meta`, () =>
+const postsMetaHandler = http.get(`${BLOG_BASE}/posts/meta`, () =>
   HttpResponse.json({
     columns: [],
     filterableFields: [],
@@ -61,7 +61,9 @@ const meta: Meta<typeof PostsListPage> = {
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
-    msw: { handlers: [gridMetaHandler, permissionsHandler, ...createBlogAdminHandlers(BLOG_BASE)] },
+    msw: {
+      handlers: [postsMetaHandler, permissionsHandler, ...createBlogAdminHandlers(BLOG_BASE)],
+    },
   },
   args: { onNewPost: () => undefined, onEditPost: () => undefined },
   decorators: [
@@ -86,5 +88,5 @@ const meta: Meta<typeof PostsListPage> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Posts admin grid — server-driven filter/sort/pagination, permission-gated actions. */
+/** Posts admin list — server-driven filter/sort/pagination, permission-gated actions. */
 export const Default: Story = {};

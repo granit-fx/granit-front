@@ -32,11 +32,11 @@ await publishPost(client, '/api/blog', postId);
 | Public        | `getPublicPosts`, `getPublicPostBySlug`, `buildBlogFeedUrl`                                   |
 | Posts (admin) | `createPost`, `getPost`, `updatePost`, `deletePost`, `saveDraftContent`                       |
 | Gallery       | `addPostAttachment`, `updatePostAttachment`, `removePostAttachment`, `reorderPostAttachments` |
-| Grid          | `listPostsGrid`, `getPostsGridMeta`                                                           |
+| List          | `listPosts`, `getPostsQueryMeta`                                                              |
 | Lifecycle     | `publishPost`, `unpublishPost`, `schedulePost`, `cancelPostSchedule`                          |
 | Authors       | `listAuthors`, `getAuthor`, `createAuthor`, `updateAuthor`, `deleteAuthor`                    |
 
-`BlogPermissions`, `BlogErrorCodes` and `blogConstraints` are also exported.
+`BlogPermissions` and `blogConstraints` are also exported.
 
 ## Conventions
 

@@ -1047,14 +1047,14 @@
           "signature": "async function getPublicPosts( client: AxiosInstance, basePath: string, params?: ListPublicPostsParams, fetchOptions?: RequestFetchOptions ): Promise<BlogPostListResponse>"
         },
         {
-          "name": "getPostsGridMeta",
+          "name": "getPostsQueryMeta",
           "kind": "function",
-          "signature": "async function getPostsGridMeta( client: AxiosInstance, basePath: string, options?:"
+          "signature": "async function getPostsQueryMeta( client: AxiosInstance, basePath: string, options?:"
         },
         {
-          "name": "listPostsGrid",
+          "name": "listPosts",
           "kind": "function",
-          "signature": "async function listPostsGrid( client: AxiosInstance, basePath: string, params?: ListBlogPostsParams, options?:"
+          "signature": "async function listPosts( client: AxiosInstance, basePath: string, params?: ListBlogPostsParams, options?:"
         },
         {
           "name": "createAuthor",
@@ -1085,16 +1085,6 @@
           "name": "BlogPermissions",
           "kind": "const",
           "signature": "const BlogPermissions"
-        },
-        {
-          "name": "BlogErrorCodes",
-          "kind": "const",
-          "signature": "const BlogErrorCodes"
-        },
-        {
-          "name": "BlogErrorCode",
-          "kind": "type",
-          "signature": "type BlogErrorCode = (typeof BlogErrorCodes)[keyof typeof BlogErrorCodes]"
         },
         {
           "name": "blogConstraints",
@@ -4243,14 +4233,14 @@
           "signature": "function usePost( id: string, options?:"
         },
         {
-          "name": "usePostsGrid",
+          "name": "usePosts",
           "kind": "function",
-          "signature": "function usePostsGrid( params?: ListBlogPostsParams, options?:"
+          "signature": "function usePosts( params?: ListBlogPostsParams, options?:"
         },
         {
-          "name": "usePostsGridMeta",
+          "name": "usePostsQueryMeta",
           "kind": "function",
-          "signature": "function usePostsGridMeta(options?:"
+          "signature": "function usePostsQueryMeta(options?:"
         },
         {
           "name": "useAuthor",
@@ -4427,11 +4417,6 @@
           "name": "extractBlogConflict",
           "kind": "function",
           "signature": "function extractBlogConflict(error: unknown): BlogConflict | null"
-        },
-        {
-          "name": "isBlogConcurrencyConflict",
-          "kind": "function",
-          "signature": "function isBlogConcurrencyConflict(error: unknown): boolean"
         },
         {
           "name": "BlogConflict",

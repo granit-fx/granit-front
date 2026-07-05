@@ -1,20 +1,19 @@
 // ─── Types ───────────────────────────────────────────────────────────────────
 export type {
   // Posts — public
-  BlogPostListItem,
+  BlogPostPublishedListItemResponse,
   BlogPostListResponse,
   BlogPostPublishedResponse,
   // Posts — admin
-  BlogPostAttachment,
+  BlogPostListItemResponse,
+  BlogPostAttachmentResponse,
+  BlogPostAttachmentAddRequest,
+  BlogPostAttachmentDescribeRequest,
+  BlogPostAttachmentReorderRequest,
   BlogPostCreateRequest,
   BlogPostDraftContentRequest,
   BlogPostDraftContentResponse,
-  BlogPostAddAttachmentRequest,
-  BlogPostUpdateAttachmentRequest,
-  BlogPostReorderAttachmentsRequest,
-  BlogPostGridRow,
   BlogPostResponse,
-  BlogPostStatus,
   BlogPostUpdateRequest,
   // Posts — lifecycle
   BlogPostPublicationResponse,
@@ -47,8 +46,8 @@ export {
   updatePostAttachment,
 } from './api/posts-admin';
 
-// ─── API — Admin (grid) ───────────────────────────────────────────────────────
-export { getPostsGridMeta, listPostsGrid } from './api/posts-grid';
+// ─── API — Admin (posts list) ─────────────────────────────────────────────────
+export { getPostsQueryMeta, listPosts } from './api/posts-query';
 
 // ─── API — Admin (lifecycle) ──────────────────────────────────────────────────
 export {
@@ -61,10 +60,8 @@ export {
 // ─── API — Admin (author profiles) ────────────────────────────────────────────
 export { createAuthor, deleteAuthor, getAuthor, listAuthors, updateAuthor } from './api/authors';
 
-// ─── Permissions & error codes ────────────────────────────────────────────────
+// ─── Permissions ──────────────────────────────────────────────────────────────
 export { BlogPermissions } from './permissions';
-export { BlogErrorCodes } from './errors';
-export type { BlogErrorCode } from './errors';
 
 // ─── Validation constraints (interim — see constraints.ts) ────────────────────
 export { blogConstraints } from './constraints';

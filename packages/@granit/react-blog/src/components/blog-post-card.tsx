@@ -1,7 +1,7 @@
-import type { BlogPostListItem } from '@granit/blog';
+import type { BlogPostPublishedListItemResponse } from '@granit/blog';
 
 export interface BlogPostCardProps {
-  readonly post: BlogPostListItem;
+  readonly post: BlogPostPublishedListItemResponse;
   /** Reader href for this post. */
   readonly href: string;
   /** Resolved cover URL (see `useResolvedDocuments`). Optional. */

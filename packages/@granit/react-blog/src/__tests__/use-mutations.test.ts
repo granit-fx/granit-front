@@ -131,7 +131,7 @@ describe('post mutations', () => {
     await upd.result.current.mutateAsync({
       id: post.id,
       documentId: 'd',
-      request: { altText: 'a' },
+      request: { caption: null, altText: 'a' },
     });
     expect(updatePostAttachment).toHaveBeenCalled();
 

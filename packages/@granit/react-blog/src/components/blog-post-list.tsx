@@ -1,9 +1,9 @@
 import { BlogPostCard } from './blog-post-card';
 
-import type { BlogPostListItem } from '@granit/blog';
+import type { BlogPostPublishedListItemResponse } from '@granit/blog';
 
 export interface BlogPostListProps {
-  readonly posts: readonly BlogPostListItem[];
+  readonly posts: readonly BlogPostPublishedListItemResponse[];
   /** Builds the reader href for a post slug. Defaults to `/blog/{slug}`. */
   readonly buildHref?: (slug: string) => string;
   /** Resolved cover URLs keyed by `coverImageDocumentId`. Optional. */

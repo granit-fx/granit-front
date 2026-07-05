@@ -1,7 +1,6 @@
-import { BlogErrorCodes } from '@granit/blog';
 import { describe, expect, it } from 'vitest';
 
-import { extractBlogConflict, isBlogConcurrencyConflict } from '../lib/extract-conflict';
+import { extractBlogConflict } from '../lib/extract-conflict';
 
 describe('extractBlogConflict', () => {
   it('returns null for non-409 and non-response errors', () => {
@@ -10,32 +9,17 @@ describe('extractBlogConflict', () => {
     expect(extractBlogConflict(null)).toBeNull();
   });
 
-  it('parses a 409 problem+json body', () => {
+  it('parses a 409 problem+json body, surfacing the localized detail', () => {
     const conflict = extractBlogConflict({
-      response: { status: 409, data: { code: BlogErrorCodes.PostSlugConflict, detail: 'taken' } },
+      response: { status: 409, data: { detail: 'That slug is already in use.' } },
     });
-    expect(conflict).toEqual({
-      status: 409,
-      code: BlogErrorCodes.PostSlugConflict,
-      detail: 'taken',
-    });
+    expect(conflict).toEqual({ status: 409, detail: 'That slug is already in use.' });
   });
 
-  it('detects concurrency conflicts', () => {
-    expect(
-      isBlogConcurrencyConflict({
-        response: { status: 409, data: { code: BlogErrorCodes.DraftConcurrency } },
-      })
-    ).toBe(true);
-    expect(
-      isBlogConcurrencyConflict({
-        response: { status: 409, data: { code: BlogErrorCodes.StalePost } },
-      })
-    ).toBe(true);
-    expect(
-      isBlogConcurrencyConflict({
-        response: { status: 409, data: { code: BlogErrorCodes.PostSlugConflict } },
-      })
-    ).toBe(false);
+  it('tolerates a 409 with no detail', () => {
+    expect(extractBlogConflict({ response: { status: 409, data: {} } })).toEqual({
+      status: 409,
+      detail: null,
+    });
   });
 });

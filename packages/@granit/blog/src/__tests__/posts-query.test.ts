@@ -1,17 +1,17 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getPostsGridMeta, listPostsGrid } from '../api/posts-grid';
+import { getPostsQueryMeta, listPosts } from '../api/posts-query';
 
-import type { BlogPostGridRow } from '../types/index';
+import type { BlogPostListItemResponse } from '../types/index';
 import type { PagedResult } from '@granit/query-engine';
 
 const BASE = 'https://blog.example.com/api/blog';
 
-describe('listPostsGrid', () => {
-  it('GET /grid with no params', async () => {
+describe('listPosts', () => {
+  it('GET /posts with no params', async () => {
     const client = createMockClient();
-    const paged: PagedResult<BlogPostGridRow> = {
+    const paged: PagedResult<BlogPostListItemResponse> = {
       items: [],
       totalCount: 0,
       hasMore: false,
@@ -19,9 +19,9 @@ describe('listPostsGrid', () => {
     };
     vi.mocked(client.get).mockResolvedValue(axiosResponse(paged));
 
-    const result = await listPostsGrid(client, BASE);
+    const result = await listPosts(client, BASE);
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/grid`, undefined);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/posts`, undefined);
     expect(result).toEqual(paged);
   });
 
@@ -31,20 +31,20 @@ describe('listPostsGrid', () => {
       axiosResponse({ items: [], totalCount: 0, hasMore: false, nextCursor: null })
     );
 
-    await listPostsGrid(client, BASE, { page: 1, pageSize: 10 });
+    await listPosts(client, BASE, { page: 1, pageSize: 10 });
 
-    expect(client.get).toHaveBeenCalledWith(`${BASE}/grid?page=1&pageSize=10`, undefined);
+    expect(client.get).toHaveBeenCalledWith(`${BASE}/posts?page=1&pageSize=10`, undefined);
   });
 });
 
-describe('getPostsGridMeta', () => {
-  it('GET /grid/meta', async () => {
+describe('getPostsQueryMeta', () => {
+  it('GET /posts/meta', async () => {
     const client = createMockClient();
     vi.mocked(client.get).mockResolvedValue(
       axiosResponse({ columns: [], filters: [], defaultSort: null })
     );
 
-    await getPostsGridMeta(client, BASE);
+    await getPostsQueryMeta(client, BASE);
 
     expect(client.get).toHaveBeenCalled();
   });

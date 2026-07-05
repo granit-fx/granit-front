@@ -1,26 +1,19 @@
-import { Badge, Button, StatusBadge } from '@granit/react-ui';
+import { Badge, Button } from '@granit/react-ui';
 import { Pencil, Trash2 } from 'lucide-react';
 
-import type { BlogPostGridRow, BlogPostStatus } from '@granit/blog';
+import type { BlogPostListItemResponse } from '@granit/blog';
 import type { useTranslation } from '@granit/react-localization';
-import type { StatusBadgeIntent } from '@granit/react-ui';
 import type { ColumnDef } from '@tanstack/react-table';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
 interface PostsColumnOptions {
   readonly t: TranslateFn;
-  readonly onEdit: (post: BlogPostGridRow) => void;
-  readonly onDelete: (post: BlogPostGridRow) => void;
+  readonly onEdit: (post: BlogPostListItemResponse) => void;
+  readonly onDelete: (post: BlogPostListItemResponse) => void;
   /** When false, the edit/delete actions are hidden (read-only viewers). */
   readonly canManage: boolean;
 }
-
-const STATUS_INTENT: Record<BlogPostStatus, StatusBadgeIntent> = {
-  Draft: 'neutral',
-  Scheduled: 'warning',
-  Published: 'success',
-};
 
 function formatDate(value: string | null | undefined): string {
   if (!value) return '—';
@@ -29,17 +22,20 @@ function formatDate(value: string | null | undefined): string {
 }
 
 /**
- * Columns for the posts admin grid (`MapGranitQuery<BlogPost>` → `BlogPostGridRow`).
- * Server-driven sort/filter/pagination is owned by the surrounding
- * `QueryEndpointDataTable`. Edit/delete actions render only when `canManage`.
+ * Columns for the posts admin list (`MapGranitQuery<BlogPost>` → `BlogPostListItemResponse`).
+ * The projection carries routing/ownership metadata only (no per-culture title or
+ * publication status — those are not SQL-joinable from the aggregate), so the list
+ * shows slug / schedule / created date and the editor loads the rest. Server-driven
+ * sort/filter/pagination is owned by the surrounding `QueryEndpointDataTable`.
+ * Edit/delete actions render only when `canManage`.
  */
 export function createPostsColumns({
   t,
   onEdit,
   onDelete,
   canManage,
-}: PostsColumnOptions): ColumnDef<BlogPostGridRow, unknown>[] {
-  const columns: ColumnDef<BlogPostGridRow, unknown>[] = [
+}: PostsColumnOptions): ColumnDef<BlogPostListItemResponse, unknown>[] {
+  const columns: ColumnDef<BlogPostListItemResponse, unknown>[] = [
     {
       id: 'slug',
       accessorKey: 'slug',
@@ -47,37 +43,27 @@ export function createPostsColumns({
       cell: ({ row }) => <span className="font-mono text-sm">{row.original.slug}</span>,
     },
     {
-      id: 'authorDisplayName',
-      accessorKey: 'authorDisplayName',
-      enableSorting: false,
-      header: t('blog:Posts.Columns.Author', 'Author'),
-      cell: ({ row }) => <span>{row.original.authorDisplayName}</span>,
-    },
-    {
-      id: 'status',
-      accessorKey: 'status',
-      header: t('blog:Posts.Columns.Status', 'Status'),
-      cell: ({ row }) => (
-        <StatusBadge intent={STATUS_INTENT[row.original.status]}>
-          {t(`blog:Posts.Status.${row.original.status}`, row.original.status)}
-        </StatusBadge>
-      ),
-    },
-    {
-      id: 'publishedAt',
-      accessorKey: 'publishedAt',
-      header: t('blog:Posts.Columns.PublishedAt', 'Published'),
+      id: 'scheduledAtUtc',
+      accessorKey: 'scheduledAtUtc',
+      header: t('blog:Posts.Columns.Scheduled', 'Scheduled'),
       cell: ({ row }) => {
-        const { status, scheduledAtUtc, publishedAt } = row.original;
-        if (status === 'Scheduled' && scheduledAtUtc) {
-          return (
-            <Badge variant="secondary" className="font-mono text-xs">
-              {formatDate(scheduledAtUtc)}
-            </Badge>
-          );
-        }
-        return <span className="text-sm text-muted-foreground">{formatDate(publishedAt)}</span>;
+        const { scheduledAtUtc } = row.original;
+        return scheduledAtUtc ? (
+          <Badge variant="secondary" className="font-mono text-xs">
+            {formatDate(scheduledAtUtc)}
+          </Badge>
+        ) : (
+          <span className="text-sm text-muted-foreground">—</span>
+        );
       },
+    },
+    {
+      id: 'createdAt',
+      accessorKey: 'createdAt',
+      header: t('blog:Posts.Columns.Created', 'Created'),
+      cell: ({ row }) => (
+        <span className="text-sm text-muted-foreground">{formatDate(row.original.createdAt)}</span>
+      ),
     },
   ];
 
