@@ -77,6 +77,49 @@ function useDefaultParentSelection(
 }
 
 /**
+ * Link-out to the visual block editor (granit-cms-renderer). Enabled only when a
+ * renderer URL is configured (`VITE_CMS_RENDERER_URL`); otherwise a disabled button
+ * explains why. Lives outside {@link PageFormPage} to keep its cognitive load down.
+ */
+function PageContentEditorSection({ editorUrl }: { readonly editorUrl: string | null }) {
+  const { t } = useTranslation();
+  return (
+    <div className="space-y-2 rounded-md border border-border bg-muted/30 p-4">
+      <p className="text-sm font-medium text-foreground">
+        {t('cms:Pages.Content.Title', 'Page content')}
+      </p>
+      <p className="text-xs text-muted-foreground">
+        {t(
+          'cms:Pages.Content.Description',
+          'Block content is authored in the visual editor (granit-cms-renderer).'
+        )}
+      </p>
+      {editorUrl ? (
+        <Button variant="outline" size="sm" asChild>
+          <a href={editorUrl} target="_blank" rel="noopener noreferrer">
+            <ExternalLink className="mr-2 h-4 w-4" />
+            {t('cms:Pages.Content.EditContent', 'Edit content')}
+          </a>
+        </Button>
+      ) : (
+        <Button
+          variant="outline"
+          size="sm"
+          disabled
+          title={t(
+            'cms:Pages.Content.NoRenderer',
+            'Set VITE_CMS_RENDERER_URL to enable content editing.'
+          )}
+        >
+          <ExternalLink className="mr-2 h-4 w-4" />
+          {t('cms:Pages.Content.EditContent', 'Edit content')}
+        </Button>
+      )}
+    </div>
+  );
+}
+
+/**
  * Create / rename a CMS page *structure* node (slug + parent + layout).
  *
  * Page *content* (blocks) is authored in the granit-cms-renderer Puck editor —
@@ -311,40 +354,7 @@ export function PageFormPage() {
           )}
         </div>
 
-        {isEdit && (
-          <div className="space-y-2 rounded-md border border-border bg-muted/30 p-4">
-            <p className="text-sm font-medium text-foreground">
-              {t('cms:Pages.Content.Title', 'Page content')}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {t(
-                'cms:Pages.Content.Description',
-                'Block content is authored in the visual editor (granit-cms-renderer).'
-              )}
-            </p>
-            {editorUrl ? (
-              <Button variant="outline" size="sm" asChild>
-                <a href={editorUrl} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  {t('cms:Pages.Content.EditContent', 'Edit content')}
-                </a>
-              </Button>
-            ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                disabled
-                title={t(
-                  'cms:Pages.Content.NoRenderer',
-                  'Set VITE_CMS_RENDERER_URL to enable content editing.'
-                )}
-              >
-                <ExternalLink className="mr-2 h-4 w-4" />
-                {t('cms:Pages.Content.EditContent', 'Edit content')}
-              </Button>
-            )}
-          </div>
-        )}
+        {isEdit && <PageContentEditorSection editorUrl={editorUrl} />}
 
         <div className="flex gap-3">
           <Button type="submit" disabled={isPending || isSiteRoot}>

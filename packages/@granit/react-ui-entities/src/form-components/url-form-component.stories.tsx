@@ -46,7 +46,7 @@ export const Populated: Story = {
 export const HttpProtocol: Story = {
   args: {
     field: field(),
-    value: 'http://legacy.internal',
+    value: 'http://legacy.internal', // NOSONAR S5332: story fixture demonstrating how the input parses a non-default (non-https) scheme; not a live endpoint
   },
 };
 

@@ -1,5 +1,6 @@
 import { useQueryFieldMetadata } from '@granit/react-analytics';
 import { Button, Checkbox } from '@granit/react-ui';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -53,6 +54,31 @@ const SERIES_CAPABLE: ReadonlySet<ChartType> = new Set([
 const STACK_CAPABLE: ReadonlySet<ChartType> = new Set(['Bar', 'HorizontalBar', 'Line', 'Area']);
 
 /**
+ * Stable per-row keys for the combo measures. `ChartComboSeries` mirrors a backend
+ * DTO and carries no id, so we mint client-side keys and keep them aligned with the
+ * list through structural edits — the array index would misassign React per-row
+ * control state when a measure is removed from the middle of the list.
+ */
+function useMeasureKeys(count: number) {
+  const [keys, setKeys] = useState<string[]>(() =>
+    Array.from({ length: count }, () => crypto.randomUUID())
+  );
+  // Reconcile if the list length changed outside our handlers (e.g. widget reload).
+  if (keys.length !== count) {
+    setKeys((prev) => {
+      const next = prev.slice(0, count);
+      while (next.length < count) next.push(crypto.randomUUID());
+      return next;
+    });
+  }
+  return {
+    keys,
+    added: () => setKeys((prev) => [...prev, crypto.randomUUID()]),
+    removed: (index: number) => setKeys((prev) => prev.filter((_, i) => i !== index)),
+  };
+}
+
+/**
  * Built-in config form for {@link ChartWidgetDefinition}. Edits the
  * essential fields needed to bind a query: queryName, groupBy, the
  * aggregation function, the optional aggregated field, and the chart
@@ -80,10 +106,19 @@ export function ChartConfigForm({
   const hasSeriesBy = widget.seriesBy != null && widget.seriesBy !== '';
 
   const measures = widget.comboSeries ?? [];
+  const measureKeys = useMeasureKeys(measures.length);
   const setMeasures = (next: readonly ChartComboSeries[]) =>
     onChange({ ...widget, comboSeries: next });
   const updateMeasure = (index: number, patch: Partial<ChartComboSeries>) =>
     setMeasures(measures.map((m, i) => (i === index ? { ...m, ...patch } : m)));
+  const addMeasure = () => {
+    setMeasures([...measures, DEFAULT_COMBO_MEASURE]);
+    measureKeys.added();
+  };
+  const removeMeasure = (index: number) => {
+    setMeasures(measures.filter((_, i) => i !== index));
+    measureKeys.removed(index);
+  };
 
   return (
     <div data-slot="chart-config-form" className="space-y-3">
@@ -158,7 +193,11 @@ export function ChartConfigForm({
           {measures.map((measure, index) => {
             const measureIsCount = measure.aggregation === 'Count';
             return (
-              <div key={index} className="flex items-center gap-1" data-slot="chart-combo-measure">
+              <div
+                key={measureKeys.keys[index]}
+                className="flex items-center gap-1"
+                data-slot="chart-combo-measure"
+              >
                 <EnumSelect
                   slot="combo-aggregation"
                   value={measure.aggregation}
@@ -193,19 +232,14 @@ export function ChartConfigForm({
                     defaultValue: 'Remove measure',
                   })}
                   disabled={measures.length <= 1}
-                  onClick={() => setMeasures(measures.filter((_, i) => i !== index))}
+                  onClick={() => removeMeasure(index)}
                 >
                   ×
                 </Button>
               </div>
             );
           })}
-          <Button
-            type="button"
-            variant="outline"
-            size="xs"
-            onClick={() => setMeasures([...measures, DEFAULT_COMBO_MEASURE])}
-          >
+          <Button type="button" variant="outline" size="xs" onClick={addMeasure}>
             {t('Dashboard:Widget.Chart.ComboSeries.Add', { defaultValue: 'Add measure' })}
           </Button>
         </div>

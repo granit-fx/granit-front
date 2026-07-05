@@ -207,9 +207,9 @@ export function PhoneInput({
     <div data-slot="phone-input" className={cn('flex w-full', disabled && 'opacity-60', className)}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <button
+          <button // NOSONAR jsx-a11y/prefer-tag-over-role: custom typeahead combobox — native <input list>/<select> cannot model the rich country selector
             type="button"
-            role="combobox" // NOSONAR(jsx-a11y/prefer-tag-over-role): custom typeahead combobox — native <input list>/<select> cannot model the rich country selector
+            role="combobox"
             aria-expanded={open}
             aria-controls="phone-input-country-list"
             aria-label={ariaLabelCountry ?? t('Common.Phone.Country', 'Select country')}

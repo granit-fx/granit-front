@@ -74,9 +74,9 @@ export function TopProgressBar() {
     // Custom top-loading bar (nProgress-style). `<progress>` would be
     // ideal but its native styling cannot be themed reliably across
     // browsers; the visual fill is a child div animating its width.
-    <div
+    <div // NOSONAR jsx-a11y/prefer-tag-over-role: native <progress> styling cannot be themed reliably across browsers; the fill is a child div animating its width
       data-slot="top-progress-bar"
-      role="progressbar" // NOSONAR(jsx-a11y/prefer-tag-over-role)
+      role="progressbar"
       aria-hidden={!visible}
       aria-valuemin={0}
       aria-valuemax={100}

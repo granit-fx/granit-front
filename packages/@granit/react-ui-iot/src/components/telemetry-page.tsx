@@ -4,7 +4,29 @@ import { QueryEndpointDataTable } from '@granit/react-ui-kit';
 import { useMemo } from 'react';
 
 import type { TelemetryPoint } from '@granit/iot';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { CellContext, ColumnDef } from '@tanstack/react-table';
+
+type TelemetryCell = CellContext<TelemetryPoint, unknown>;
+
+function DeviceCell({ row }: TelemetryCell) {
+  return <span className="font-mono text-xs text-muted-foreground">{row.original.deviceId}</span>;
+}
+
+function RecordedAtCell({ row }: TelemetryCell) {
+  const { formatDateTime } = useDateFormatter();
+  return <span className="text-sm text-foreground">{formatDateTime(row.original.recordedAt)}</span>;
+}
+
+function SourceCell({ row }: TelemetryCell) {
+  return <span className="text-sm text-muted-foreground">{row.original.source ?? '—'}</span>;
+}
+
+function IngestedAtCell({ row }: TelemetryCell) {
+  const { formatDateTime } = useDateFormatter();
+  return (
+    <span className="text-sm text-muted-foreground">{formatDateTime(row.original.createdAt)}</span>
+  );
+}
 
 /**
  * Telemetry explorer grid. The telemetry QueryEngine scope (a sibling surface to
@@ -21,7 +43,6 @@ export function TelemetryPage() {
 
 function TelemetryContent() {
   const { t } = useTranslation();
-  const { formatDateTime } = useDateFormatter();
   const queryEndpoint = useTelemetryQuery();
 
   const columns = useMemo<ColumnDef<TelemetryPoint, unknown>[]>(
@@ -31,41 +52,31 @@ function TelemetryContent() {
         accessorKey: 'deviceId',
         header: t('IoT.Telemetry.Columns.Device'),
         enableSorting: true,
-        cell: ({ row }) => (
-          <span className="font-mono text-xs text-muted-foreground">{row.original.deviceId}</span>
-        ),
+        cell: DeviceCell,
       },
       {
         id: 'recordedAt',
         accessorKey: 'recordedAt',
         header: t('IoT.Telemetry.Columns.RecordedAt'),
         enableSorting: true,
-        cell: ({ row }) => (
-          <span className="text-sm text-foreground">{formatDateTime(row.original.recordedAt)}</span>
-        ),
+        cell: RecordedAtCell,
       },
       {
         id: 'source',
         accessorKey: 'source',
         header: t('IoT.Telemetry.Columns.Source'),
         enableSorting: true,
-        cell: ({ row }) => (
-          <span className="text-sm text-muted-foreground">{row.original.source ?? '—'}</span>
-        ),
+        cell: SourceCell,
       },
       {
         id: 'createdAt',
         accessorKey: 'createdAt',
         header: t('IoT.Telemetry.Columns.IngestedAt'),
         enableSorting: true,
-        cell: ({ row }) => (
-          <span className="text-sm text-muted-foreground">
-            {formatDateTime(row.original.createdAt)}
-          </span>
-        ),
+        cell: IngestedAtCell,
       },
     ],
-    [t, formatDateTime]
+    [t]
   );
 
   return (

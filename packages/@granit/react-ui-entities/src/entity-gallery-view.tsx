@@ -312,10 +312,10 @@ function GroupedCard({
 function renderGroupHeader(value: unknown, count: number, key: number): ReactNode {
   const label = stringifyGroupValue(value);
   return (
-    <li
+    <li // NOSONAR jsx-a11y/prefer-tag-over-role: group separator inside the gallery list must not be announced as a list item; no native tag fits
       key={`granit-gallery-group-header-${key}`}
       data-granit-gallery-group-header=""
-      role="presentation" // NOSONAR(jsx-a11y/prefer-tag-over-role)
+      role="presentation"
     >
       <span data-granit-gallery-group-label="">{label}</span>
       <span data-granit-gallery-group-count="">{count}</span>

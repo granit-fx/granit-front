@@ -182,7 +182,7 @@ export function AddressAutocompleteInput(props: AddressAutocompleteInputProps): 
       ) : null}
 
       {showList ? (
-        <ul
+        <ul // NOSONAR jsx-a11y/prefer-tag-over-role: async autocomplete combobox pattern — native <select>/<datalist> cannot render server-fetched suggestions
           id={listboxId}
           role="listbox"
           className="absolute z-50 mt-1 max-h-72 w-full overflow-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md"

@@ -34,8 +34,8 @@ function TreeGroup({ className, ...props }: React.ComponentProps<'ul'>) {
   // role="group" is mandated by the WAI-ARIA tree pattern for nested item sets;
   // the suggested native tags (details/fieldset/optgroup) cannot model a subtree.
   return (
-    <ul
-      role="group" // NOSONAR(jsx-a11y/prefer-tag-over-role)
+    <ul // NOSONAR jsx-a11y/prefer-tag-over-role: WAI-ARIA tree pattern mandates role="group" for nested item sets; details/fieldset/optgroup cannot model a subtree
+      role="group"
       data-slot="tree-group"
       className={cn(className)}
       {...props}
