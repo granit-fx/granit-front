@@ -96,6 +96,10 @@ export default defineConfig({
         __dirname,
         'packages/@granit/react-invoicing/src/testing/index.ts'
       ),
+      '@granit/react-iot/testing': path.resolve(
+        __dirname,
+        'packages/@granit/react-iot/src/testing/index.ts'
+      ),
       '@granit/react-localization/testing': path.resolve(
         __dirname,
         'packages/@granit/react-localization/src/testing/index.ts'

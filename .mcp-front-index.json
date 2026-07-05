@@ -1914,6 +1914,22 @@
       ]
     },
     {
+      "name": "@granit/iot",
+      "description": "IoT device fleet & telemetry referential — types and API functions (provision, update, decommission, list devices, latest & aggregate telemetry)",
+      "exports": [
+        {
+          "name": "IotPermissions",
+          "kind": "const",
+          "signature": "const IotPermissions"
+        },
+        {
+          "name": "iotConstraints",
+          "kind": "const",
+          "signature": "const iotConstraints"
+        }
+      ]
+    },
+    {
       "name": "@granit/ip-geolocation",
       "description": "Geolocation contract — TypeScript mirror of Granit.IpGeolocation.GeoLocation",
       "exports": [
@@ -6255,6 +6271,39 @@
       ]
     },
     {
+      "name": "@granit/react-iot",
+      "description": "React bindings for @granit/iot — IotProvider, device & telemetry hooks",
+      "exports": [
+        {
+          "name": "IotConfig",
+          "kind": "interface",
+          "signature": "interface IotConfig extends GranitProviderConfig",
+          "members": []
+        },
+        {
+          "name": "IotProviderProps",
+          "kind": "type",
+          "signature": "type IotProviderProps = GranitProviderProps<IotConfig>"
+        },
+        {
+          "name": "ResolvedIotConfig",
+          "kind": "type",
+          "signature": "type ResolvedIotConfig = ResolvedGranitProviderConfig<IotConfig>"
+        },
+        {
+          "name": "TelemetryAggregateArgs",
+          "kind": "interface",
+          "signature": "interface TelemetryAggregateArgs extends TelemetryAggregateParams",
+          "members": []
+        },
+        {
+          "name": "UpdateDeviceVariables",
+          "kind": "type",
+          "signature": "type UpdateDeviceVariables = { readonly id: string; readonly request: DeviceUpdateRequest; }"
+        }
+      ]
+    },
+    {
       "name": "@granit/react-localization",
       "description": "",
       "exports": [
@@ -9694,6 +9743,74 @@
           "name": "INVOICE_WORKFLOW_STATES",
           "kind": "const",
           "signature": "const INVOICE_WORKFLOW_STATES"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-iot",
+      "description": "Granit admin UI for the IoT module — the device fleet grid, device detail (provision / update / decommission / latest telemetry / metric aggregate) and the telemetry explorer. Composes @granit/react-iot (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "DeviceListPage",
+          "kind": "function",
+          "signature": "function DeviceListPage()"
+        },
+        {
+          "name": "DeviceDetailPage",
+          "kind": "function",
+          "signature": "function DeviceDetailPage()"
+        },
+        {
+          "name": "TelemetryPage",
+          "kind": "function",
+          "signature": "function TelemetryPage()"
+        },
+        {
+          "name": "DeviceForm",
+          "kind": "function",
+          "signature": "function DeviceForm(props: Readonly<DeviceFormProps>)"
+        },
+        {
+          "name": "DeviceFormValues",
+          "kind": "interface",
+          "signature": "interface DeviceFormValues",
+          "members": [
+            {
+              "name": "serialNumber",
+              "kind": "property",
+              "signature": "serialNumber: string"
+            },
+            {
+              "name": "hardwareModel",
+              "kind": "property",
+              "signature": "hardwareModel: string"
+            },
+            {
+              "name": "firmwareVersion",
+              "kind": "property",
+              "signature": "firmwareVersion: string"
+            },
+            {
+              "name": "label",
+              "kind": "property",
+              "signature": "label: string"
+            }
+          ]
+        },
+        {
+          "name": "createDeviceColumns",
+          "kind": "function",
+          "signature": "function createDeviceColumns("
+        },
+        {
+          "name": "DecommissionDeviceDialog",
+          "kind": "function",
+          "signature": "function DecommissionDeviceDialog("
+        },
+        {
+          "name": "DeviceTelemetryCard",
+          "kind": "function",
+          "signature": "function DeviceTelemetryCard("
         }
       ]
     },

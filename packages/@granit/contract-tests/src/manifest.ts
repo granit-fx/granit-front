@@ -894,6 +894,25 @@ export const CONTRACTS: readonly ModuleContract[] = [
     types: ['TaxRateResponse', 'TaxRateEntry', 'TaxValidateRequest', 'TaxValidateResponse'],
   },
   {
+    // Devices + telemetry admin surface. The device grid (GET /devices +
+    // /devices/meta) and telemetry grid (GET /telemetry + /telemetry/meta) are
+    // served by the query-engine generic surface, not by an api/ function —
+    // ignore those routes here (covered by the package's own unit tests).
+    slug: 'iot',
+    package: 'iot',
+    types: [
+      'DeviceResponse',
+      'DeviceProvisionRequest',
+      'DeviceUpdateRequest',
+      'Device',
+      'TelemetryPointResponse',
+      'TelemetryPoint',
+      'TelemetryAggregateResponse',
+    ],
+    checkEndpoints: true,
+    endpointIgnore: ['/devices', '/devices/meta', '/telemetry', '/telemetry/meta'],
+  },
+  {
     slug: 'workspaces',
     package: 'workspaces',
     types: [

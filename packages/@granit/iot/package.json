@@ -1,0 +1,38 @@
+{
+  "name": "@granit/iot",
+  "description": "IoT device fleet & telemetry referential — types and API functions (provision, update, decommission, list devices, latest & aggregate telemetry)",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/validation": "workspace:*"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/validation": "workspace:*"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "registry": "https://npm.pkg.github.com"
+  }
+}
