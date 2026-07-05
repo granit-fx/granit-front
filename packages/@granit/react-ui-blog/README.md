@@ -27,36 +27,23 @@ i18next bundles.
 
 ## Host wiring
 
-These screens only call hooks — the host app must provide the providers:
+These screens only call hooks and are **router-agnostic** — navigation flows
+through callback props / ids, so the host owns routing (React Router, React
+Navigation, …). The host provides the providers:
+
+- `AuthorizationProvider` — permission gating
+- `BlogProvider` — Blog hooks
+- `CmsProvider` — block catalog for the editor
+- `DocumentsProvider` — media pickers
 
 ```tsx
-<AuthorizationProvider config={{ client }}>
-  {' '}
-  {/* permission gating */}
-  <BlogProvider config={{ client }}>
-    {' '}
-    {/* Blog hooks */}
-    <CmsProvider config={{ client }}>
-      {' '}
-      {/* block catalog for the editor */}
-      <DocumentsProvider config={{ client }}>
-        {' '}
-        {/* media pickers */}
-        <Routes>
-          <Route path="/blog/posts" element={<PostsListPage />} />
-          <Route path="/blog/posts/new" element={<PostEditorPage siteId={siteId} />} />
-          <Route
-            path="/blog/posts/:id/edit"
-            element={<PostEditorPage cultures={site.allowedCultures} />}
-          />
-          <Route path="/blog/authors" element={<AuthorsListPage siteId={siteId} />} />
-          <Route path="/blog/authors/new" element={<AuthorFormPage siteId={siteId} />} />
-          <Route path="/blog/authors/:id/edit" element={<AuthorFormPage siteId={siteId} />} />
-        </Routes>
-      </DocumentsProvider>
-    </CmsProvider>
-  </BlogProvider>
-</AuthorizationProvider>
+// Inside the host's own router:
+<PostsListPage onNewPost={() => nav('/blog/posts/new')} onEditPost={(id) => nav(`/blog/posts/${id}/edit`)} />
+<PostEditorPage siteId={siteId} onBack={() => nav('/blog/posts')} onSaved={(p) => nav(`/blog/posts/${p.id}/edit`)} />
+<PostEditorPage postId={id} cultures={site.allowedCultures} onBack={() => nav('/blog/posts')} />
+<AuthorsListPage siteId={siteId} onNewAuthor={() => nav('/blog/authors/new')} onEditAuthor={(id) => nav(`/blog/authors/${id}/edit`)} />
+<AuthorFormPage siteId={siteId} onDone={() => nav('/blog/authors')} onCancel={() => nav('/blog/authors')} />
+<AuthorFormPage siteId={siteId} authorId={id} onDone={() => nav('/blog/authors')} onCancel={() => nav('/blog/authors')} />
 ```
 
 Register the locale bundles: `i18n.addResourceBundle('en', 'translation', blogTranslationsEn, true, true)`.
