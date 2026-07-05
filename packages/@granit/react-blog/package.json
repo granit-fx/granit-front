@@ -1,0 +1,60 @@
+{
+  "name": "@granit/react-blog",
+  "description": "React Query hooks, the blog-latest-posts Puck block, public rendering components (post body, card, gallery, byline, SEO head) and MSW test fixtures for the Granit Blog",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./server": "./src/index.server.ts",
+    "./testing": "./src/testing/index.ts"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/blog": "workspace:*",
+    "@granit/cms": "workspace:*",
+    "@granit/cms-seo": "workspace:*",
+    "@granit/documents": "workspace:*",
+    "@granit/logger": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-cms": "workspace:*",
+    "@granit/react-documents": "workspace:*",
+    "@granit/react-testing": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@puckeditor/core": "^0.22.0",
+    "@tanstack/react-query": "^5.0.0"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/blog": "workspace:*",
+    "@granit/cms": "workspace:*",
+    "@granit/cms-seo": "workspace:*",
+    "@granit/documents": "workspace:*",
+    "@granit/logger": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/react-api-client": "workspace:*",
+    "@granit/react-cms": "workspace:*",
+    "@granit/react-documents": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/utils": "workspace:*",
+    "@puckeditor/core": "^0.22.0",
+    "@tanstack/react-query": "^5.0.0",
+    "lucide-react": "^1.23.0",
+    "msw": "^2.14.6",
+    "react": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@granit/api-client": {
+      "optional": true
+    },
+    "@granit/react-api-client": {
+      "optional": true
+    },
+    "msw": {
+      "optional": true
+    }
+  }
+}

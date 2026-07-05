@@ -1,0 +1,23 @@
+{
+  "name": "@granit/blog",
+  "description": "Granit Blog — types and API client (public posts feed, admin posts lifecycle, media gallery, author profiles)",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/testing": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/validation": "workspace:*"
+  },
+  "peerDependencies": {
+    "@granit/api-client": "workspace:*",
+    "@granit/query-engine": "workspace:*",
+    "@granit/types": "workspace:*",
+    "@granit/validation": "workspace:*"
+  }
+}

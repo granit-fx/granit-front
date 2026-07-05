@@ -1028,6 +1028,82 @@
       ]
     },
     {
+      "name": "@granit/blog",
+      "description": "Granit Blog — types and API client (public posts feed, admin posts lifecycle, media gallery, author profiles)",
+      "exports": [
+        {
+          "name": "buildBlogFeedUrl",
+          "kind": "function",
+          "signature": "function buildBlogFeedUrl(basePath: string): string"
+        },
+        {
+          "name": "getPublicPostBySlug",
+          "kind": "function",
+          "signature": "async function getPublicPostBySlug( client: AxiosInstance, basePath: string, slug: string, culture?: string, fetchOptions?: RequestFetchOptions ): Promise<BlogPostPublishedResponse | null>"
+        },
+        {
+          "name": "getPublicPosts",
+          "kind": "function",
+          "signature": "async function getPublicPosts( client: AxiosInstance, basePath: string, params?: ListPublicPostsParams, fetchOptions?: RequestFetchOptions ): Promise<BlogPostListResponse>"
+        },
+        {
+          "name": "getPostsGridMeta",
+          "kind": "function",
+          "signature": "async function getPostsGridMeta( client: AxiosInstance, basePath: string, options?:"
+        },
+        {
+          "name": "listPostsGrid",
+          "kind": "function",
+          "signature": "async function listPostsGrid( client: AxiosInstance, basePath: string, params?: ListBlogPostsParams, options?:"
+        },
+        {
+          "name": "createAuthor",
+          "kind": "function",
+          "signature": "async function createAuthor( client: AxiosInstance, basePath: string, siteId: string, request: BlogAuthorProfileCreateRequest ): Promise<BlogAuthorProfileResponse>"
+        },
+        {
+          "name": "deleteAuthor",
+          "kind": "function",
+          "signature": "async function deleteAuthor( client: AxiosInstance, basePath: string, id: string ): Promise<void>"
+        },
+        {
+          "name": "getAuthor",
+          "kind": "function",
+          "signature": "async function getAuthor( client: AxiosInstance, basePath: string, id: string ): Promise<BlogAuthorProfileResponse>"
+        },
+        {
+          "name": "listAuthors",
+          "kind": "function",
+          "signature": "async function listAuthors( client: AxiosInstance, basePath: string, siteId: string, options?:"
+        },
+        {
+          "name": "updateAuthor",
+          "kind": "function",
+          "signature": "async function updateAuthor( client: AxiosInstance, basePath: string, id: string, request: BlogAuthorProfileUpdateRequest ): Promise<BlogAuthorProfileResponse>"
+        },
+        {
+          "name": "BlogPermissions",
+          "kind": "const",
+          "signature": "const BlogPermissions"
+        },
+        {
+          "name": "BlogErrorCodes",
+          "kind": "const",
+          "signature": "const BlogErrorCodes"
+        },
+        {
+          "name": "BlogErrorCode",
+          "kind": "type",
+          "signature": "type BlogErrorCode = (typeof BlogErrorCodes)[keyof typeof BlogErrorCodes]"
+        },
+        {
+          "name": "blogConstraints",
+          "kind": "const",
+          "signature": "const blogConstraints"
+        }
+      ]
+    },
+    {
       "name": "@granit/catalog",
       "description": "Product catalog types and API functions — mirrors Granit.Catalog .NET (products, lifecycle, external mappings)",
       "exports": [
@@ -4107,6 +4183,271 @@
           "name": "buildBlobStorageQueryKey",
           "kind": "function",
           "signature": "function buildBlobStorageQueryKey( config: Pick<BlobStorageConfig, 'queryKeyPrefix'>, ...segments: readonly unknown[] ): readonly unknown[]"
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-blog",
+      "description": "React Query hooks, the blog-latest-posts Puck block, public rendering components (post body, card, gallery, byline, SEO head) and MSW test fixtures for the Granit Blog",
+      "exports": [
+        {
+          "name": "BlogProvider",
+          "kind": "const",
+          "signature": "const BlogProvider"
+        },
+        {
+          "name": "useBlogConfig",
+          "kind": "const",
+          "signature": "const useBlogConfig"
+        },
+        {
+          "name": "BlogConfig",
+          "kind": "interface",
+          "signature": "interface BlogConfig extends GranitProviderConfig",
+          "members": []
+        },
+        {
+          "name": "BlogProviderProps",
+          "kind": "type",
+          "signature": "type BlogProviderProps = GranitProviderProps<BlogConfig>"
+        },
+        {
+          "name": "ResolvedBlogConfig",
+          "kind": "interface",
+          "signature": "interface ResolvedBlogConfig extends BlogConfig",
+          "members": []
+        },
+        {
+          "name": "blogKeys",
+          "kind": "const",
+          "signature": "const blogKeys"
+        },
+        {
+          "name": "usePublicPost",
+          "kind": "function",
+          "signature": "function usePublicPost( slug: string, culture?: string, options?:"
+        },
+        {
+          "name": "usePublicPosts",
+          "kind": "function",
+          "signature": "function usePublicPosts( params?: ListPublicPostsParams, options?:"
+        },
+        {
+          "name": "useBlogLatestPosts",
+          "kind": "function",
+          "signature": "function useBlogLatestPosts( params:"
+        },
+        {
+          "name": "usePost",
+          "kind": "function",
+          "signature": "function usePost( id: string, options?:"
+        },
+        {
+          "name": "usePostsGrid",
+          "kind": "function",
+          "signature": "function usePostsGrid( params?: ListBlogPostsParams, options?:"
+        },
+        {
+          "name": "usePostsGridMeta",
+          "kind": "function",
+          "signature": "function usePostsGridMeta(options?:"
+        },
+        {
+          "name": "useAuthor",
+          "kind": "function",
+          "signature": "function useAuthor( id: string, options?:"
+        },
+        {
+          "name": "useAuthors",
+          "kind": "function",
+          "signature": "function useAuthors( siteId: string, options?:"
+        },
+        {
+          "name": "useCreateAuthor",
+          "kind": "function",
+          "signature": "function useCreateAuthor(): UseMutationResult< BlogAuthorProfileResponse, Error,"
+        },
+        {
+          "name": "useDeleteAuthor",
+          "kind": "function",
+          "signature": "function useDeleteAuthor(): UseMutationResult<void, Error,"
+        },
+        {
+          "name": "useUpdateAuthor",
+          "kind": "function",
+          "signature": "function useUpdateAuthor(): UseMutationResult< BlogAuthorProfileResponse, Error,"
+        },
+        {
+          "name": "useResolvedDocuments",
+          "kind": "function",
+          "signature": "function useResolvedDocuments( documentIds: readonly string[], renditionType?: RenditionType, options?:"
+        },
+        {
+          "name": "ResolvedDocumentMap",
+          "kind": "type",
+          "signature": "type ResolvedDocumentMap = ReadonlyMap<string, ResolvedDocumentResponse>"
+        },
+        {
+          "name": "BlogLatestPostsBlock",
+          "kind": "function",
+          "signature": "function BlogLatestPostsBlock("
+        },
+        {
+          "name": "BLOG_BLOCK_COMPONENTS",
+          "kind": "const",
+          "signature": "const BLOG_BLOCK_COMPONENTS: Readonly<Record<string, ComponentType<never>>>"
+        },
+        {
+          "name": "BlogLatestPostsBlockProps",
+          "kind": "interface",
+          "signature": "interface BlogLatestPostsBlockProps",
+          "members": []
+        },
+        {
+          "name": "BlogLatestPostsLayout",
+          "kind": "type",
+          "signature": "type BlogLatestPostsLayout = 'Grid' | 'List'"
+        },
+        {
+          "name": "registerBlogBlocks",
+          "kind": "function",
+          "signature": "function registerBlogBlocks( baseConfig: Config, options: RegisterBlogBlocksOptions ="
+        },
+        {
+          "name": "RegisterBlogBlocksOptions",
+          "kind": "interface",
+          "signature": "interface RegisterBlogBlocksOptions",
+          "members": [
+            {
+              "name": "resolveBlockData",
+              "kind": "property",
+              "signature": "resolveBlockData?: ResolveBlockDataFn"
+            },
+            {
+              "name": "siteId",
+              "kind": "property",
+              "signature": "siteId?: string"
+            },
+            {
+              "name": "culture",
+              "kind": "property",
+              "signature": "culture?: string"
+            },
+            {
+              "name": "category",
+              "kind": "property",
+              "signature": "category?: string"
+            }
+          ]
+        },
+        {
+          "name": "BlogPostBody",
+          "kind": "function",
+          "signature": "function BlogPostBody("
+        },
+        {
+          "name": "BlogPostBodyProps",
+          "kind": "interface",
+          "signature": "interface BlogPostBodyProps",
+          "members": []
+        },
+        {
+          "name": "BlogPostCard",
+          "kind": "function",
+          "signature": "function BlogPostCard("
+        },
+        {
+          "name": "BlogPostCardProps",
+          "kind": "interface",
+          "signature": "interface BlogPostCardProps",
+          "members": []
+        },
+        {
+          "name": "BlogPostList",
+          "kind": "function",
+          "signature": "function BlogPostList("
+        },
+        {
+          "name": "BlogPostListProps",
+          "kind": "interface",
+          "signature": "interface BlogPostListProps",
+          "members": []
+        },
+        {
+          "name": "BlogPostCover",
+          "kind": "function",
+          "signature": "function BlogPostCover("
+        },
+        {
+          "name": "BlogPostCoverProps",
+          "kind": "interface",
+          "signature": "interface BlogPostCoverProps",
+          "members": []
+        },
+        {
+          "name": "BlogPostGallery",
+          "kind": "function",
+          "signature": "function BlogPostGallery("
+        },
+        {
+          "name": "BlogGalleryImage",
+          "kind": "interface",
+          "signature": "interface BlogGalleryImage",
+          "members": []
+        },
+        {
+          "name": "BlogPostGalleryProps",
+          "kind": "interface",
+          "signature": "interface BlogPostGalleryProps",
+          "members": []
+        },
+        {
+          "name": "BlogAuthorByline",
+          "kind": "function",
+          "signature": "function BlogAuthorByline("
+        },
+        {
+          "name": "BlogAuthorBylineProps",
+          "kind": "interface",
+          "signature": "interface BlogAuthorBylineProps",
+          "members": []
+        },
+        {
+          "name": "BlogPostSeoHead",
+          "kind": "function",
+          "signature": "function BlogPostSeoHead("
+        },
+        {
+          "name": "BlogPostSeoHeadProps",
+          "kind": "interface",
+          "signature": "interface BlogPostSeoHeadProps",
+          "members": []
+        },
+        {
+          "name": "extractBlogConflict",
+          "kind": "function",
+          "signature": "function extractBlogConflict(error: unknown): BlogConflict | null"
+        },
+        {
+          "name": "isBlogConcurrencyConflict",
+          "kind": "function",
+          "signature": "function isBlogConcurrencyConflict(error: unknown): boolean"
+        },
+        {
+          "name": "BlogConflict",
+          "kind": "interface",
+          "signature": "interface BlogConflict",
+          "members": []
+        },
+        {
+          "name": "BLOG_LATEST_POSTS_BLOCK_NAME",
+          "kind": "const",
+          "signature": "const BLOG_LATEST_POSTS_BLOCK_NAME"
+        },
+        {
+          "name": "BLOG_LATEST_POSTS_DATA_SOURCE_KEY",
+          "kind": "const",
+          "signature": "const BLOG_LATEST_POSTS_DATA_SOURCE_KEY"
         }
       ]
     },
@@ -8680,6 +9021,127 @@
           "name": "ImageUploadFieldProps",
           "kind": "interface",
           "signature": "interface ImageUploadFieldProps",
+          "members": []
+        }
+      ]
+    },
+    {
+      "name": "@granit/react-ui-blog",
+      "description": "Granit admin UI for the Blog module — posts grid, per-culture Puck content editor, media gallery, publish/schedule lifecycle, and author-profile CRUD. Composes @granit/react-blog (headless) with the foundation UI packages.",
+      "exports": [
+        {
+          "name": "PostsListPage",
+          "kind": "function",
+          "signature": "function PostsListPage("
+        },
+        {
+          "name": "PostsListPageProps",
+          "kind": "interface",
+          "signature": "interface PostsListPageProps",
+          "members": []
+        },
+        {
+          "name": "createPostsColumns",
+          "kind": "function",
+          "signature": "function createPostsColumns("
+        },
+        {
+          "name": "PostEditorPage",
+          "kind": "function",
+          "signature": "function PostEditorPage("
+        },
+        {
+          "name": "PostEditorPageProps",
+          "kind": "interface",
+          "signature": "interface PostEditorPageProps",
+          "members": []
+        },
+        {
+          "name": "PostMetadataForm",
+          "kind": "function",
+          "signature": "function PostMetadataForm("
+        },
+        {
+          "name": "PostMetadataFormProps",
+          "kind": "interface",
+          "signature": "interface PostMetadataFormProps",
+          "members": []
+        },
+        {
+          "name": "PostContentEditor",
+          "kind": "function",
+          "signature": "function PostContentEditor("
+        },
+        {
+          "name": "PostContentEditorProps",
+          "kind": "interface",
+          "signature": "interface PostContentEditorProps",
+          "members": []
+        },
+        {
+          "name": "PostGalleryEditor",
+          "kind": "function",
+          "signature": "function PostGalleryEditor("
+        },
+        {
+          "name": "PostGalleryEditorProps",
+          "kind": "interface",
+          "signature": "interface PostGalleryEditorProps",
+          "members": []
+        },
+        {
+          "name": "PostLifecyclePanel",
+          "kind": "function",
+          "signature": "function PostLifecyclePanel("
+        },
+        {
+          "name": "PostLifecyclePanelProps",
+          "kind": "interface",
+          "signature": "interface PostLifecyclePanelProps",
+          "members": []
+        },
+        {
+          "name": "PostConflictDialog",
+          "kind": "function",
+          "signature": "function PostConflictDialog("
+        },
+        {
+          "name": "PostConflictDialogProps",
+          "kind": "interface",
+          "signature": "interface PostConflictDialogProps",
+          "members": []
+        },
+        {
+          "name": "AuthorsListPage",
+          "kind": "function",
+          "signature": "function AuthorsListPage("
+        },
+        {
+          "name": "AuthorsListPageProps",
+          "kind": "interface",
+          "signature": "interface AuthorsListPageProps",
+          "members": []
+        },
+        {
+          "name": "AuthorFormPage",
+          "kind": "function",
+          "signature": "function AuthorFormPage("
+        },
+        {
+          "name": "AuthorFormPageProps",
+          "kind": "interface",
+          "signature": "interface AuthorFormPageProps",
+          "members": []
+        },
+        {
+          "name": "DocumentPickerButton",
+          "kind": "function",
+          "signature": "function DocumentPickerButton("
+        },
+        {
+          "name": "DocumentPickerButtonProps",
+          "kind": "interface",
+          "signature": "interface DocumentPickerButtonProps",
           "members": []
         }
       ]
