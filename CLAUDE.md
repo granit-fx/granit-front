@@ -82,7 +82,8 @@ Our `base.css` uses hex (not OKLCH) and adds Granit palettes (admin/status/theme
 - `@granit/authentication`: `BaseAuthContextType` is the shared base — providers extend
   it, apps extend further.
 - **Git hooks** (`.husky/`): `commit-msg` → commitlint (Conventional Commits);
-  `pre-commit` → gitleaks → lint-staged → `tsc -r --noEmit` → regenerate
+  `pre-commit` → gitleaks → lint-staged → `tsc --noEmit` scoped to the staged
+  packages (full workspace typecheck stays in CI) → regenerate
   `.mcp-front-index.json` when `packages/@granit/*/src/` changed.
 
 ### Mirroring DTOs from `contracts/openapi/*.json`

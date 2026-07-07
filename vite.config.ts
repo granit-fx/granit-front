@@ -2,24 +2,16 @@
  * Vite config for development tooling (vitest).
  * granit-front is a library workspace — there is no app build.
  */
-import path from 'node:path';
-
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
-const root = __dirname;
-const pkg = (name: string) => path.join(root, `packages/@granit/${name}/src/index.ts`);
+import { granitWorkspaceAliases } from './scripts/workspace-aliases';
 
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: {
-      '@granit/logger': pkg('logger'),
-      '@granit/utils': pkg('utils'),
-      '@granit/storage': pkg('storage'),
-      '@granit/cookies': pkg('cookies'),
-      '@granit/query-engine': pkg('query-engine'),
-      '@granit/data-exchange': pkg('data-exchange'),
-    },
+    // Auto-discovered from every package's `exports` map — see
+    // scripts/workspace-aliases.ts.
+    alias: granitWorkspaceAliases(__dirname),
   },
 });

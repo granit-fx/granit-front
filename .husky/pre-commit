@@ -1,4 +1,14 @@
-gitleaks git --pre-commit --staged --no-banner && pnpm exec lint-staged && pnpm -r exec -- tsc --noEmit
+gitleaks git --pre-commit --staged --no-banner || exit 1
+pnpm exec lint-staged || exit 1
+
+# Typecheck only the packages with staged changes — the full-workspace
+# typecheck (pnpm tsc) stays in CI, which catches cross-package breaks.
+CHANGED_PACKAGE_DIRS=$(git diff --cached --name-only | grep -oE '^packages/@granit/[^/]+' | sort -u)
+for dir in $CHANGED_PACKAGE_DIRS; do
+  if [ -f "$dir/package.json" ]; then
+    (cd "$dir" && pnpm exec tsc --noEmit) || exit 1
+  fi
+done
 
 # Regenerate validation constraints if a contract spec or the generator changed
 if git diff --cached --name-only | grep -qE 'contracts/openapi/.*\.json|scripts/generate-front-constraints\.mjs'; then
