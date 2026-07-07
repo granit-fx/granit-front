@@ -6568,6 +6568,21 @@
       "description": "React bindings for @granit/invoicing — InvoicingProvider and hooks",
       "exports": [
         {
+          "name": "InvoicingProvider",
+          "kind": "function",
+          "signature": "function InvoicingProvider("
+        },
+        {
+          "name": "useInvoicingConfig",
+          "kind": "const",
+          "signature": "const useInvoicingConfig"
+        },
+        {
+          "name": "buildInvoicingQueryKey",
+          "kind": "function",
+          "signature": "function buildInvoicingQueryKey( config: InvoicingConfig, ...segments: readonly string[] ): readonly unknown[]"
+        },
+        {
           "name": "InvoicingConfig",
           "kind": "interface",
           "signature": "interface InvoicingConfig extends GranitProviderConfig",
@@ -7144,6 +7159,21 @@
       "name": "@granit/react-parties",
       "description": "React bindings for @granit/parties — PartiesProvider, hooks and TanStack Query mutations (headless; styled components live in @granit/react-ui-parties)",
       "exports": [
+        {
+          "name": "PartiesProvider",
+          "kind": "const",
+          "signature": "const PartiesProvider"
+        },
+        {
+          "name": "usePartiesConfig",
+          "kind": "const",
+          "signature": "const usePartiesConfig"
+        },
+        {
+          "name": "buildPartiesQueryKey",
+          "kind": "function",
+          "signature": "function buildPartiesQueryKey( config: PartiesConfig, ...segments: readonly unknown[] ): readonly unknown[]"
+        },
         {
           "name": "PartiesConfig",
           "kind": "interface",

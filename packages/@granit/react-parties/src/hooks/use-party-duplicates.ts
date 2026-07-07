@@ -6,7 +6,9 @@ import {
 } from '@granit/parties';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildPartiesQueryKey, usePartiesConfig } from '../providers/parties-provider';
+import { usePartiesConfig } from '../providers/parties-provider';
+
+import { buildPartiesQueryKey } from './query-keys';
 
 import type {
   PartyDuplicateCandidateId,

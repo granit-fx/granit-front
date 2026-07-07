@@ -58,12 +58,3 @@ function InvoicingQueryScope({ children }: { readonly children: ReactNode }) {
 
 /** Returns the invoicing configuration from the nearest `InvoicingProvider`. */
 export const useInvoicingConfig = useConfig;
-
-/** Builds a consistent React Query key for invoicing operations. */
-export function buildInvoicingQueryKey(
-  config: InvoicingConfig,
-  ...segments: readonly string[]
-): readonly unknown[] {
-  const prefix = config.queryKeyPrefix ?? ['invoicing'];
-  return [...prefix, ...segments];
-}

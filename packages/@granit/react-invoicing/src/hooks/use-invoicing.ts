@@ -13,7 +13,9 @@ import {
 import { useQueryEndpoint } from '@granit/react-query-engine';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { buildInvoicingQueryKey, useInvoicingConfig } from '../providers/invoicing-provider';
+import { useInvoicingConfig } from '../providers/invoicing-provider';
+
+import { buildInvoicingQueryKey } from './query-keys';
 
 import type {
   CancelInvoiceRequest,

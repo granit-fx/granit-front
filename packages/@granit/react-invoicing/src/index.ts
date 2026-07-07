@@ -1,9 +1,6 @@
 // Provider
-export {
-  InvoicingProvider,
-  buildInvoicingQueryKey,
-  useInvoicingConfig,
-} from './providers/invoicing-provider';
+export { InvoicingProvider, useInvoicingConfig } from './providers/invoicing-provider';
+export { buildInvoicingQueryKey } from './hooks/query-keys';
 export type { InvoicingConfig, InvoicingProviderProps } from './providers/invoicing-provider';
 
 // Hooks

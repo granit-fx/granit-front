@@ -3,7 +3,9 @@ import { mergeParty, previewPartyMerge } from '@granit/parties';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { logger } from '../logger';
-import { buildPartiesQueryKey, usePartiesConfig } from '../providers/parties-provider';
+import { usePartiesConfig } from '../providers/parties-provider';
+
+import { buildPartiesQueryKey } from './query-keys';
 
 import type { PartyId, PartyMergeRequest, PartyMergeResponse } from '@granit/parties';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';

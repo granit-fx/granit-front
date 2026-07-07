@@ -3,11 +3,8 @@ import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
 import { DEFAULT_BASE_PATH } from '../constants';
-import {
-  InvoicingProvider,
-  buildInvoicingQueryKey,
-  useInvoicingConfig,
-} from '../providers/invoicing-provider';
+import { buildInvoicingQueryKey } from '../hooks/query-keys';
+import { InvoicingProvider, useInvoicingConfig } from '../providers/invoicing-provider';
 
 import type { InvoicingConfig } from '../providers/invoicing-provider';
 import type { AxiosInstance } from 'axios';

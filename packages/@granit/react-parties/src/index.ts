@@ -1,9 +1,6 @@
 // Provider
-export {
-  PartiesProvider,
-  buildPartiesQueryKey,
-  usePartiesConfig,
-} from './providers/parties-provider';
+export { PartiesProvider, usePartiesConfig } from './providers/parties-provider';
+export { buildPartiesQueryKey } from './hooks/query-keys';
 export type { PartiesConfig, PartiesProviderProps } from './providers/parties-provider';
 export { PartiesListProvider } from './providers/parties-list-provider';
 export type { PartiesListProviderProps } from './providers/parties-list-provider';
