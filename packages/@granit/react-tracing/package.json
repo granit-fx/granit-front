@@ -1,7 +1,7 @@
 {
   "name": "@granit/react-tracing",
   "description": "React bindings for @granit/tracing — TracingProvider, useTracer, useSpan",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {

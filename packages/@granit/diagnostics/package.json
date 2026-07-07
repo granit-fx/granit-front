@@ -1,7 +1,7 @@
 {
   "name": "@granit/diagnostics",
   "description": "Monitoring health types and API — mirrors Granit.Diagnostics .NET contract",
-  "version": "0.3.0",
+  "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {

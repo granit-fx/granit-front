@@ -1,7 +1,7 @@
 {
   "name": "@granit/react-ai",
   "description": "React bindings for @granit/ai — AIProvider, useAIWorkspaces, useAIChat, useAIChatStream, useAIEmbeddings, workspace CRUD mutations",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {

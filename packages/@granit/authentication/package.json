@@ -1,7 +1,7 @@
 {
   "name": "@granit/authentication",
   "description": "Provider-agnostic OIDC authentication types — base context, user info, login/logout options",
-  "version": "0.3.0",
+  "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {

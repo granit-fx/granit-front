@@ -1,7 +1,7 @@
 {
   "name": "@granit/testing",
   "description": "Shared test utilities for @granit/* packages — mock clients, mock loggers, Axios response helpers",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {

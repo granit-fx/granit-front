@@ -1,7 +1,7 @@
 {
   "name": "@granit/react-diagnostics",
   "description": "React hooks for monitoring health — useMonitoringHealth",
-  "version": "0.3.0",
+  "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {

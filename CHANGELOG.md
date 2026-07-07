@@ -9,6 +9,11 @@ Ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ### Ajouté
 
+- **@granit/arch-tests** : suite `baselines.test.ts` — chaque entrée des
+  allowlists et baselines de ratchet (`FETCH_ALLOWLIST`, `UI_ROUTER_BASELINE`,
+  `STORYBOOK_PAGE_BUDGET`, …) doit référencer un package existant et être
+  unique, pour qu'un package renommé/supprimé ne persiste pas en entrée morte
+  (2026-07-07)
 - **@granit/account** et **@granit/react-account** : facteur 2FA par code à usage
   unique envoyé par email (opt-in). Endpoints d'enrôlement
   (`sendTwoFactorEmailEnrollmentCode`, `enableTwoFactorEmail`,
@@ -73,6 +78,19 @@ Ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ### Modifié
 
+- **Outillage** : les alias Vite/Vitest du workspace sont désormais
+  auto-découverts depuis le champ `exports` de chaque `package.json`
+  (`scripts/workspace-aliases.ts`) — plus de liste d'alias maintenue à la main
+  dans `vitest.config.ts` / `vite.config.ts` (2026-07-07)
+- **Outillage** : le hook pre-commit ne typecheck plus que les packages
+  modifiés par le commit (le typecheck complet du workspace reste en CI) ;
+  chaque étape du hook échoue désormais explicitement (2026-07-07)
+- **Versions** : toutes les versions des packages sont normalisées à `0.1.0`
+  en attendant la première release (2026-07-07)
+- **@granit/react-parties** et **@granit/react-invoicing** : les fabriques de
+  query keys (`buildPartiesQueryKey`, `buildInvoicingQueryKey`) déménagent de
+  `providers/` vers le fichier canonique `hooks/query-keys.ts` — export public
+  inchangé (2026-07-07)
 - **@granit/authentication-local** et **@granit/react-authentication-local** :
   le contrat de login 2FA remplace `useRecoveryCode?: boolean` par
   `method?: "Authenticator" | "RecoveryCode" | "Email"` (défaut `Authenticator`)
@@ -131,6 +149,11 @@ Ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ### Supprimé
 
+- Résidus de packages supprimés/renommés : dossiers `packages/@granit/react-map`
+  (renommé en `react-ui-map`, #884) et `packages/@granit/cookies-klaro`
+  (abandonné, #710) — coquilles `node_modules` non trackées ; fichier
+  `debug-storybook.log` retiré du dépôt et `*.log` ajouté au `.gitignore`
+  (2026-07-07)
 - **@granit/ui** : supprimé lors du passage à l'architecture headless — les
   composants UI vivent désormais dans les applications consommatrices (2026-03-06)
 - **@granit/types** : supprimé — types distribués dans les modules

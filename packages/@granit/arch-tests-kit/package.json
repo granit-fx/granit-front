@@ -1,7 +1,7 @@
 {
   "name": "@granit/arch-tests-kit",
   "description": "Reusable architecture-test primitives — pure scanner functions returning violations. Consumed by `@granit/arch-tests` (framework) and by downstream app test suites (showcase, future DD apps).",
-  "version": "0.3.0",
+  "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {

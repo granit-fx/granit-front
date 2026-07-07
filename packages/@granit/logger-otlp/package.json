@@ -1,7 +1,7 @@
 {
   "name": "@granit/logger-otlp",
   "description": "OTLP transport for @granit/logger",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {

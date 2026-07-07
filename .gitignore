@@ -1,6 +1,7 @@
 node_modules/
 coverage/
 *.tsbuildinfo
+*.log
 .pnpm-store/
 dist/
 .sonar/

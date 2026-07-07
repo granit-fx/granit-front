@@ -1,7 +1,7 @@
 {
   "name": "@granit/background-jobs",
   "description": "Background job status types — mirrors Granit.BackgroundJobs .NET contract",
-  "version": "0.3.0",
+  "version": "0.1.0",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
