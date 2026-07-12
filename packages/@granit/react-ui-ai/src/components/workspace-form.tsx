@@ -23,13 +23,12 @@ import {
   Textarea,
 } from '@granit/react-ui';
 import { useMemo, useRef } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm, useWatch, type Resolver } from 'react-hook-form';
 
 import {
   createWorkspaceResolver,
   type CreateWorkspaceFormValues,
   type EditWorkspaceFormValues,
-  type WorkspaceFormValues,
 } from '../validation';
 
 import { WorkspaceCapabilities } from './workspace-capabilities';
@@ -68,6 +67,24 @@ interface EditWorkspaceFormProps extends WorkspaceFormBaseProps {
 
 type WorkspaceFormProps = CreateWorkspaceFormProps | EditWorkspaceFormProps;
 
+/**
+ * Concrete superset shape backing the react-hook-form instance. RHF 7.81 makes
+ * `Control<T>` invariant, so the `CreateWorkspaceFormValues | EditWorkspaceFormValues`
+ * union no longer satisfies the form/provider generics. The form is driven by this
+ * single shape (mode-specific `key`/`activated` optional) and narrowed back to the
+ * discriminated union at the submit boundary.
+ */
+interface WorkspaceFormShape {
+  key?: string;
+  provider: string;
+  model: string;
+  displayName?: string;
+  systemPrompt?: string;
+  temperature?: number | string;
+  maxOutputTokens?: number | string;
+  activated?: boolean;
+}
+
 export function WorkspaceForm(props: Readonly<WorkspaceFormProps>) {
   const { mode, onCancel, isPending = false } = props;
   const { t } = useTranslation();
@@ -78,8 +95,8 @@ export function WorkspaceForm(props: Readonly<WorkspaceFormProps>) {
     [isCreate, t]
   );
 
-  const form = useForm<WorkspaceFormValues>({
-    resolver: formResolver,
+  const form = useForm<WorkspaceFormShape>({
+    resolver: formResolver as unknown as Resolver<WorkspaceFormShape>,
     defaultValues: {
       provider: '',
       model: '',
@@ -329,7 +346,7 @@ export function WorkspaceForm(props: Readonly<WorkspaceFormProps>) {
                 render={({ field }) => (
                   <FormItem className="flex items-center gap-3">
                     <FormControl>
-                      <Switch checked={field.value as boolean} onCheckedChange={field.onChange} />
+                      <Switch checked={field.value ?? false} onCheckedChange={field.onChange} />
                     </FormControl>
                     <FormLabel className="!mt-0 cursor-pointer">
                       {t('AI.Workspaces.Form.IsActive')}
