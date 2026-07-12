@@ -20,7 +20,7 @@
     "@granit/react-analytics": "workspace:*",
     "@granit/react-dashboard-editor": "workspace:*",
     "@granit/react-ui": "workspace:*",
-    "i18next": "^26.0.0",
+    "i18next": "^26.3.6",
     "react": "^19.0.0",
     "react-i18next": "^17.0.0"
   },
@@ -43,6 +43,6 @@
     "@granit/react-query-engine": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/react-ui": "workspace:*",
-    "i18next": "^26.0.0"
+    "i18next": "^26.3.6"
   }
 }
