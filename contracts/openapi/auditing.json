@@ -394,7 +394,7 @@
       "get": {
         "tags": ["Audit Log"],
         "summary": "Returns audit entries matching a distributed tracing correlation ID.",
-        "description": "Returns all audit log entries that share the given correlation ID, ordered by timestamp descending. This is essential for distributed tracing investigation — correlating audit events across multiple services or operations that belong to the same logical transaction. The correlation ID is limited to 256 characters.",
+        "description": "Returns the audit log entries that share the given correlation ID, paginated and ordered by timestamp descending. This is essential for distributed tracing investigation — correlating audit events across multiple services or operations that belong to the same logical transaction. The correlation ID is limited to 256 characters.",
         "operationId": "GetAuditEntriesByCorrelationId",
         "parameters": [
           {
@@ -405,6 +405,24 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "1-based page index.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -413,10 +431,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AuditEntryDetailResponse"
-                  }
+                  "$ref": "#/components/schemas/PagedResultOfAuditEntryResponse"
                 }
               }
             }
@@ -769,7 +784,7 @@
             "type": "string"
           },
           "changeType": {
-            "type": "string"
+            "$ref": "#/components/schemas/AuditChangeType"
           },
           "propertyChanges": {
             "type": "array",
@@ -843,7 +858,7 @@
             "type": ["null", "string"]
           },
           "category": {
-            "type": "string"
+            "$ref": "#/components/schemas/AuditCategory"
           },
           "ipAddress": {
             "type": ["null", "string"]
@@ -864,6 +879,30 @@
               "$ref": "#/components/schemas/AuditEntityChangeResponse"
             }
           }
+        },
+        "example": {
+          "id": "b3f7a1c2-9d4e-4f8a-b6c5-1e2d3f4a5b6c",
+          "timestamp": "2026-03-17T10:15:30+00:00",
+          "userId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          "userName": "Jane Doe",
+          "category": "DataMutation",
+          "ipAddress": "198.51.100.42",
+          "tenantId": "d4e5f6a7-b8c9-0123-4567-89abcdef0123",
+          "correlationId": "req-abc123def456",
+          "entityChanges": [
+            {
+              "entityType": "Patient",
+              "entityId": "42",
+              "changeType": "Modified",
+              "propertyChanges": [
+                {
+                  "propertyName": "Email",
+                  "originalValue": "old@example.com",
+                  "newValue": "new@example.com"
+                }
+              ]
+            }
+          ]
         }
       },
       "AuditEntryResponse": {
@@ -911,6 +950,17 @@
             "type": "integer",
             "format": "int32"
           }
+        },
+        "example": {
+          "id": "b3f7a1c2-9d4e-4f8a-b6c5-1e2d3f4a5b6c",
+          "timestamp": "2026-03-17T10:15:30+00:00",
+          "userId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          "userName": "Jane Doe",
+          "category": "DataMutation",
+          "ipAddress": "198.51.100.42",
+          "tenantId": "d4e5f6a7-b8c9-0123-4567-89abcdef0123",
+          "correlationId": "req-abc123def456",
+          "entityChangeCount": 2
         }
       },
       "AuditPropertyChangeResponse": {
@@ -964,6 +1014,22 @@
             "type": "boolean"
           },
           "format": {
+            "type": ["null", "string"]
+          },
+          "valueKind": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ValueKind"
+              }
+            ]
+          },
+          "currencyCode": {
+            "type": ["null", "string"]
+          },
+          "currencyCodeField": {
             "type": ["null", "string"]
           }
         }
@@ -1322,6 +1388,17 @@
                   "type": "integer",
                   "format": "int32"
                 }
+              },
+              "example": {
+                "id": "b3f7a1c2-9d4e-4f8a-b6c5-1e2d3f4a5b6c",
+                "timestamp": "2026-03-17T10:15:30+00:00",
+                "userId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                "userName": "Jane Doe",
+                "category": "DataMutation",
+                "ipAddress": "198.51.100.42",
+                "tenantId": "d4e5f6a7-b8c9-0123-4567-89abcdef0123",
+                "correlationId": "req-abc123def456",
+                "entityChangeCount": 2
               }
             }
           },
@@ -1484,6 +1561,33 @@
             "type": "string"
           }
         }
+      },
+      "ValueKind": {
+        "enum": [
+          "Count",
+          "Number",
+          "Currency",
+          "Percentage",
+          "Duration",
+          "Date",
+          "Url",
+          "Email",
+          "Phone",
+          "Bytes",
+          "DateTime",
+          "Boolean",
+          "Enum",
+          "RelativeTime",
+          "Time",
+          "Color",
+          "Image",
+          "Json",
+          "Markdown",
+          "Tags",
+          "Rating",
+          "Identifier",
+          null
+        ]
       }
     }
   },

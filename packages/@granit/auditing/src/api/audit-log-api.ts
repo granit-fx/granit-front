@@ -19,20 +19,22 @@ export async function getAuditLogEntry(
 }
 
 /**
- * Get all audit log entries sharing a distributed-tracing correlation ID.
+ * Get the audit entries sharing a distributed-tracing correlation ID (paginated).
  *
- * Returns full detail entries (with entity changes), ordered newest-first.
- * Not paginated — the backend returns the complete correlated set.
+ * Returns summary projections, ordered newest-first. Fetch a single entry's
+ * full detail (with entity changes) by id.
  *
  * `GET {basePath}/correlation/{correlationId}`
  */
 export async function getAuditEntriesByCorrelationId(
   client: AxiosInstance,
   basePath: string,
-  correlationId: string
-): Promise<readonly AuditEntryDetailResponse[]> {
-  const { data } = await client.get<readonly AuditEntryDetailResponse[]>(
-    `${basePath}/correlation/${encodeURIComponent(correlationId)}`
+  correlationId: string,
+  params?: PaginationParams
+): Promise<AuditPage> {
+  const { data } = await client.get<AuditPage>(
+    `${basePath}/correlation/${encodeURIComponent(correlationId)}`,
+    { params }
   );
   return data;
 }

@@ -57,13 +57,15 @@ describe('createAuditHandlers — audit-entries', () => {
     expect(response.status).toBe(404);
   });
 
-  it('returns correlated detail entries', async () => {
+  it('returns a correlated summary page', async () => {
     server.use(...createAuditHandlers(BASE));
     const response = await fetch(`${BASE}/audit-entries/correlation/corr-1`);
-    const details = (await response.json()) as AuditEntryDetailResponse[];
-    expect(Array.isArray(details)).toBe(true);
-    expect(details.length).toBe(2);
-    expect(details[0]).toHaveProperty('entityChanges');
+    const page = (await response.json()) as AuditPage;
+    expect(page.totalCount).toBe(2);
+    expect(page.items.length).toBe(2);
+    // Summary projection — no full entity-change hierarchy, just the count.
+    expect(page.items[0]).toHaveProperty('entityChangeCount');
+    expect(page.items[0]).not.toHaveProperty('entityChanges');
   });
 
   it('returns a per-entity audit trail page', async () => {

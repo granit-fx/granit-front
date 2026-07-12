@@ -263,10 +263,18 @@ export function createAuditHandlers(baseUrl = DEFAULT_BASE_PATH) {
       );
     }),
 
-    // GET /audit-entries/correlation/:correlationId — correlated detail set
-    http.get(`${auditEntriesUrl}/correlation/:correlationId`, () =>
-      HttpResponse.json(mockAuditEntries.slice(0, 2).map(toDetail))
-    ),
+    // GET /audit-entries/correlation/:correlationId — correlated summary page
+    http.get(`${auditEntriesUrl}/correlation/:correlationId`, ({ request }) => {
+      const url = new URL(request.url);
+      const page = Number(url.searchParams.get('page') ?? 1);
+      const pageSize = Number(url.searchParams.get('pageSize') ?? 25);
+      const correlated = mockAuditEntries.slice(0, 2);
+      const start = (page - 1) * pageSize;
+      return pagedResponse<AuditEntryResponse>(
+        correlated.slice(start, start + pageSize),
+        correlated.length
+      );
+    }),
 
     // POST /audit-entries/pseudonymize/:userId — GDPR pseudonymization (204)
     http.post(

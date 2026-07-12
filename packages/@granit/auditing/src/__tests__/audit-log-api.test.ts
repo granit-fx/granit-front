@@ -75,15 +75,37 @@ describe('audit-log-api', () => {
   });
 
   describe('getAuditEntriesByCorrelationId', () => {
-    it('should GET the correlation endpoint with an encoded id and return the array', async () => {
+    it('should GET the correlation endpoint with an encoded id and return a page', async () => {
       const client = createMockClient();
-      const details: AuditEntryDetailResponse[] = [];
-      vi.mocked(client.get).mockResolvedValue(axiosResponse(details));
+      const page: AuditPage = {
+        items: [
+          {
+            id: toEntityId<'AuditEntry'>('abc-123'),
+            timestamp: toISODateString('2026-03-17T10:00:00Z'),
+            userId: toEntityId<'User'>('user-1'),
+            userName: 'admin',
+            category: AuditCategory.DataMutation,
+            ipAddress: '127.0.0.1',
+            tenantId: null,
+            correlationId: null,
+            entityChangeCount: 3,
+          },
+        ],
+        totalCount: 1,
+        hasMore: false,
+        nextCursor: null,
+      };
+      vi.mocked(client.get).mockResolvedValue(axiosResponse(page));
 
-      const result = await getAuditEntriesByCorrelationId(client, basePath, 'corr/42');
+      const result = await getAuditEntriesByCorrelationId(client, basePath, 'corr/42', {
+        page: 1,
+        pageSize: 10,
+      });
 
-      expect(client.get).toHaveBeenCalledWith('/audit-log/correlation/corr%2F42');
-      expect(result).toBe(details);
+      expect(client.get).toHaveBeenCalledWith('/audit-log/correlation/corr%2F42', {
+        params: { page: 1, pageSize: 10 },
+      });
+      expect(result).toBe(page);
     });
   });
 });

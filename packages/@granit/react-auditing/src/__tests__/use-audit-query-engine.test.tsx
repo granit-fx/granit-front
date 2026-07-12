@@ -13,7 +13,7 @@ import {
 import { AuditEntityChangesProvider } from '../providers/audit-entity-changes-provider';
 import { AuditLogProvider } from '../providers/audit-log-provider';
 
-import type { AuditEntryDetailResponse, AuditPage } from '@granit/auditing';
+import type { AuditPage } from '@granit/auditing';
 import type { AxiosInstance } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -76,17 +76,19 @@ describe('useAuditEntityChanges (query engine)', () => {
 });
 
 describe('useAuditEntriesByCorrelation', () => {
-  it('fetches correlated detail entries', async () => {
+  it('fetches a correlated summary page', async () => {
     const client = createMockClient();
-    const details: AuditEntryDetailResponse[] = [];
-    vi.mocked(client.get).mockResolvedValue(axiosResponse(details));
+    vi.mocked(client.get).mockResolvedValue(axiosResponse(emptyPage));
 
-    const { result } = renderHook(() => useAuditEntriesByCorrelation('corr-1'), {
+    const { result } = renderHook(() => useAuditEntriesByCorrelation('corr-1', { page: 1 }), {
       wrapper: auditWrapper(client),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.get).toHaveBeenCalledWith('/api/v1/auditing/audit-entries/correlation/corr-1');
+    expect(result.current.data).toEqual(emptyPage);
+    expect(client.get).toHaveBeenCalledWith('/api/v1/auditing/audit-entries/correlation/corr-1', {
+      params: { page: 1 },
+    });
   });
 
   it('does not fetch when correlationId is empty', () => {

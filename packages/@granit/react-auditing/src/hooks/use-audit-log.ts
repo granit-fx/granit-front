@@ -91,10 +91,10 @@ export function useEntityAuditTrail(
 }
 
 /**
- * Get all audit entries sharing a distributed-tracing correlation ID.
+ * Get the audit entries sharing a distributed-tracing correlation ID (paginated).
  *
- * Returns full detail entries (with entity changes), newest-first — useful for
- * tracing a single logical transaction across services.
+ * Returns summary projections, newest-first — useful for tracing a single logical
+ * transaction across services. Fetch a single entry's full detail by id.
  *
  * @example
  * ```tsx
@@ -102,16 +102,17 @@ export function useEntityAuditTrail(
  * ```
  */
 export function useAuditEntriesByCorrelation(
-  correlationId: string
-): UseQueryResult<readonly AuditEntryDetailResponse[]> {
+  correlationId: string,
+  params?: PaginationParams
+): UseQueryResult<AuditPage> {
   const config = useAuditLogConfig();
   const auditEntriesPath = `${config.basePath}/audit-entries`;
 
   return useQuery({
-    queryKey: buildAuditLogQueryKey(config, 'correlation', correlationId),
+    queryKey: buildAuditLogQueryKey(config, 'correlation', correlationId, params),
     queryFn: () => {
       logger.debug('Fetching audit entries by correlation', { correlationId });
-      return getAuditEntriesByCorrelationId(config.client, auditEntriesPath, correlationId);
+      return getAuditEntriesByCorrelationId(config.client, auditEntriesPath, correlationId, params);
     },
     enabled: correlationId.length > 0,
   });
