@@ -33,6 +33,25 @@ env:
 
 jobs:
   # ---------------------------------------------------------------------------
+  # DEP UNIFORMITY: fail fast on shared-dependency version drift (e.g. a partial
+  # Dependabot bump splitting react-hook-form across the workspace). Pure Node,
+  # no install — a dedicated, sub-minute red signal before the full test suite.
+  # ---------------------------------------------------------------------------
+  dep-uniformity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Check shared-dependency version uniformity
+        run: node scripts/check-shared-dep-versions.mjs
+
+  # ---------------------------------------------------------------------------
   # LINT
   # ---------------------------------------------------------------------------
   lint:

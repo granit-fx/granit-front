@@ -48,6 +48,15 @@ updates:
           - "react-hook-form"
           - "react-router"
           - "react-router-dom"
+      # Singleton libraries the `dep-uniformity` gate requires to stay on one
+      # constraint workspace-wide. Grouping keeps a bump atomic and reviewable as
+      # one unit (React/i18n singletons already travel via the react/i18n groups).
+      shared-runtime:
+        patterns:
+          - "date-fns"
+          - "zod"
+          - "clsx"
+          - "tailwind-merge"
       build:
         patterns:
           - "tsup"
@@ -83,6 +92,10 @@ updates:
           - "react-hook-form"
           - "react-router"
           - "react-router-dom"
+          - "date-fns"
+          - "zod"
+          - "clsx"
+          - "tailwind-merge"
           - "tsup"
           - "typescript"
 

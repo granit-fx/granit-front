@@ -1,0 +1,5 @@
+# Block a push that introduces shared-dependency version drift (e.g. React,
+# react-hook-form, i18next) before it reaches CI. Pure Node, sub-second — the
+# same check runs as the `dep-uniformity` CI job for Dependabot pushes, which
+# never trigger local hooks.
+node scripts/check-shared-dep-versions.mjs || exit 1

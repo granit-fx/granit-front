@@ -10,6 +10,9 @@ describe('uniformity (delegated to kit)', () => {
     expect(scanReadmePresence(ctx)).toEqual([]);
   });
 
+  // In-suite defense-in-depth mirror of scripts/check-shared-dep-versions.mjs
+  // (the canonical list enforced by the pre-push hook and the dep-uniformity CI
+  // job). Keep the two dep lists in sync when adding a shared singleton.
   it('shared deps use the same version constraint across every package', () => {
     expect(
       scanSharedDepVersions({
