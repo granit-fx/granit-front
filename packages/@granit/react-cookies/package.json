@@ -17,7 +17,7 @@
   "peerDependencies": {
     "@granit/cookies": "workspace:*",
     "@granit/logger": "workspace:*",
-    "msw": "^2.14.6",
+    "msw": "^2.15.0",
     "react": "^19.0.0"
   },
   "peerDependenciesMeta": {
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@granit/logger": "workspace:*",
-    "msw": "^2.14.6"
+    "msw": "^2.15.0"
   },
   "publishConfig": {
     "exports": {
