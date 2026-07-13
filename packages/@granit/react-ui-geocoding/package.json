@@ -19,7 +19,7 @@
     "@granit/react-ui": "workspace:*",
     "@granit/utils": "workspace:*",
     "react": "^19.0.0",
-    "react-i18next": "^17.0.0"
+    "react-i18next": "^17.0.9"
   },
   "publishConfig": {
     "exports": {

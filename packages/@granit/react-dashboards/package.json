@@ -22,10 +22,10 @@
     "@granit/timing": "workspace:*",
     "@granit/utils": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
-    "i18next": "^26.0.0",
-    "msw": "^2.14.6",
+    "i18next": "^26.3.6",
+    "msw": "^2.15.0",
     "react": "^19.0.0",
-    "react-i18next": "^17.0.0"
+    "react-i18next": "^17.0.9"
   },
   "peerDependenciesMeta": {
     "msw": {
@@ -54,6 +54,6 @@
     "@granit/testing": "workspace:*",
     "@granit/timing": "workspace:*",
     "@granit/utils": "workspace:*",
-    "msw": "^2.14.6"
+    "msw": "^2.15.0"
   }
 }
