@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "description": "Shared TypeScript/React framework for Digital Dynamics front-end applications",
   "type": "module",
-  "packageManager": "pnpm@10.34.3",
+  "packageManager": "pnpm@11.12.0",
   "scripts": {
     "lint": "eslint 'packages/@granit/*/src/**/*.{ts,tsx}' --max-warnings 0",
     "tsc": "pnpm -r exec -- tsc --noEmit",
@@ -84,33 +84,6 @@
     "vanilla-cookieconsent": "3.1.0",
     "vite": "^8.1.3",
     "vitest": "^4.1.9"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@firebase/util",
-      "@parcel/watcher",
-      "esbuild",
-      "msw",
-      "protobufjs",
-      "unrs-resolver"
-    ],
-    "overrides": {
-      "@opentelemetry/core": ">=2.8.0",
-      "@tanstack/query-core": "^5.100.11",
-      "@tanstack/react-query": "^5.0.0",
-      "axios": "^1.18.1",
-      "dompurify": ">=3.4.11",
-      "esbuild": ">=0.28.1",
-      "js-cookie": ">=3.0.7",
-      "js-yaml": "^4.2.0",
-      "markdown-it": ">=14.2.0",
-      "msw": "^2.14.6",
-      "picomatch": ">=4.0.4",
-      "protobufjs": ">=8",
-      "react": "^19.0.0",
-      "react-dom": "^19.0.0",
-      "uuid": "^11.1.1"
-    }
   },
   "lint-staged": {
     "*.{ts,tsx,css,json}": "prettier --write",
