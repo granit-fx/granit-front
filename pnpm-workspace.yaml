@@ -9,12 +9,12 @@ overrides:
   '@tanstack/query-core': '^5.100.11'
   '@tanstack/react-query': '^5.0.0'
   axios: '^1.18.1'
-  dompurify: '>=3.4.11'
+  dompurify: '>=3.4.12'
   esbuild: '>=0.28.1'
   js-cookie: '>=3.0.7'
   js-yaml: '^4.2.0'
   markdown-it: '>=14.2.0'
-  msw: '^2.14.6'
+  msw: '^2.15.0'
   picomatch: '>=4.0.4'
   protobufjs: '>=8'
   react: '^19.0.0'
@@ -30,3 +30,7 @@ allowBuilds:
   msw: true
   protobufjs: true
   unrs-resolver: true
+
+minimumReleaseAgeExclude:
+  - '@tanstack/react-virtual@3.14.6'
+  - '@tanstack/virtual-core@3.17.4'

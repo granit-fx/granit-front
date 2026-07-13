@@ -26,11 +26,11 @@
     "@tanstack/react-table": "^8.21.3",
     "cmdk": "^1.1.1",
     "libphonenumber-js": "^1.13.7",
-    "lucide-react": "^1.23.0",
+    "lucide-react": "^1.24.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.81.0",
-    "react-i18next": "^17.0.0"
+    "react-i18next": "^17.0.9"
   },
   "publishConfig": {
     "exports": {
@@ -52,12 +52,12 @@
     "@granit/react-query-engine": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/utils": "workspace:*",
-    "@storybook/react-vite": "^10.4.6",
+    "@storybook/react-vite": "^10.5.0",
     "@tanstack/react-query": "^5.0.0",
     "@tanstack/react-table": "^8.21.3",
     "cmdk": "^1.1.1",
     "libphonenumber-js": "^1.13.8",
-    "msw": "^2.14.6",
-    "storybook": "^10.4.6"
+    "msw": "^2.15.0",
+    "storybook": "^10.5.0"
   }
 }

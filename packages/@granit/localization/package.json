@@ -18,7 +18,7 @@
     "@granit/logger": "workspace:*",
     "@granit/storage": "workspace:*",
     "@granit/types": "workspace:*",
-    "i18next": "^26.0.0"
+    "i18next": "^26.3.6"
   },
   "devDependencies": {
     "@granit/api-client": "workspace:*",

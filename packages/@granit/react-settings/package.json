@@ -19,7 +19,7 @@
     "@granit/react-api-client": "workspace:*",
     "@granit/settings": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
-    "msw": "^2.14.6",
+    "msw": "^2.15.0",
     "react": "^19.0.0"
   },
   "peerDependenciesMeta": {

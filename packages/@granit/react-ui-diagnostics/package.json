@@ -20,7 +20,7 @@
     "@granit/react-localization": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/utils": "workspace:*",
-    "lucide-react": "^1.23.0",
+    "lucide-react": "^1.24.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -41,7 +41,7 @@
     "@granit/react-localization": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/utils": "workspace:*",
-    "@storybook/react-vite": "^10.4.6",
-    "storybook": "^10.4.6"
+    "@storybook/react-vite": "^10.5.0",
+    "storybook": "^10.5.0"
   }
 }
