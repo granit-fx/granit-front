@@ -67,11 +67,21 @@ CMP adapter packages implement `CookieConsentAdapter` and wire `loadConfig` to
 
 ```ts
 const adapter: CookieConsentAdapter = {
-  async init() {/* load CMP SDK, hydrate stored consent */},
+  async init() {
+    /* load CMP SDK, hydrate stored consent */
+  },
   getConsents: () => defaultConsentState(),
-  onConsentChange: (cb) => {/* subscribe */ return () => {/* unsubscribe */};},
-  setConsent: (category, granted) => {/* persist single category */},
-  setAllConsents: (granted) => {/* persist all non-essential */},
+  onConsentChange: (cb) => {
+    /* subscribe */ return () => {
+      /* unsubscribe */
+    };
+  },
+  setConsent: (category, granted) => {
+    /* persist single category */
+  },
+  setAllConsents: (granted) => {
+    /* persist all non-essential */
+  },
   hasConsented: () => false,
 };
 ```
@@ -99,7 +109,7 @@ const adapter: CookieConsentAdapter = {
 - **`setConsentedCookie` is a gate, not enforcement.** It refuses to write when
   the category is not consented, but it cannot stop other code (or a CMP SDK)
   from calling `document.cookie` directly. Route all first-party writes through
-  it; for third-party scripts, gate the *script load* via the CMP adapter.
+  it; for third-party scripts, gate the _script load_ via the CMP adapter.
 - **SSR / non-browser:** `getCookie` returns `null`, and `setConsentedCookie` /
   `removeCookie` are no-ops when `document` is undefined. No cookie state is
   reconstructed server-side here.
@@ -107,9 +117,9 @@ const adapter: CookieConsentAdapter = {
   `sameSite: 'lax'`; `SameSite=None` always co-sends `Secure`. `removeCookie`
   must receive the same `path`/`domain` used to write, or the browser keeps the
   original cookie.
-- **`saleorsharing` is verbatim.** The CCPA "Sale or Sharing" category serializes
-  without an underscore (backend `ToLowerInvariant()` fallback) — do not
-  normalize it to `sale_or_sharing`.
+- **`sale_or_sharing` is snake_case.** The CCPA "Sale or Sharing" category
+  serializes with an underscore — the backend maps it explicitly (a plain
+  `ToLowerInvariant()` would have glued the words into `saleorsharing`).
 - **No React, no CMP SDK, no UI.** The provider and consent-aware hooks
   (`useCookieConsent`, `useConsentedCookie`) live in
   [`@granit/react-cookies`](../react-cookies); concrete CMP wiring lives in

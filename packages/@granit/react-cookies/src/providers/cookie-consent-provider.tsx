@@ -1,7 +1,15 @@
 'use client';
 
 import { defaultConsentState } from '@granit/cookies';
-import { createContext, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 
 import { logger } from '../logger';
 
@@ -11,8 +19,18 @@ import type { CookieCategory, CookieConsentAdapter, ConsentState } from '@granit
 export const CookieConsentContext = createContext<CookieConsentContextValue | null>(null);
 
 interface CookieConsentProviderProps {
-  /** The CMP adapter implementation (vanilla-cookieconsent, Klaro, etc.). */
+  /** The CMP adapter implementation (vanilla-cookieconsent, etc.). */
   provider: CookieConsentAdapter;
+  /**
+   * Optional server-side consent persistence. When set, every post-init consent
+   * decision is forwarded so the app can record it in the backend ledger
+   * (`POST /cookies/consent` — GDPR Art. 7(1) accountability). Wire it to the
+   * Axios client, e.g.
+   * `recordConsent={(consents) => recordCookieConsentDecision(apiClient, '/cookies', toConsentDecision(consents))}`.
+   * Rejections are logged and swallowed — persistence is best-effort and never
+   * blocks the consent UI.
+   */
+  recordConsent?: (consents: ConsentState) => void | Promise<void>;
   children: ReactNode;
 }
 
@@ -22,18 +40,25 @@ interface CookieConsentProviderProps {
  *
  * @example
  * ```tsx
- * <CookieConsentProvider provider={klaroProvider}>
+ * <CookieConsentProvider provider={cookieConsentProvider}>
  *   <App />
  * </CookieConsentProvider>
  * ```
  */
 export function CookieConsentProvider({
   provider,
+  recordConsent,
   children,
 }: Readonly<CookieConsentProviderProps>) {
   const [consents, setConsents] = useState<ConsentState>(defaultConsentState);
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasConsented, setHasConsented] = useState(false);
+
+  // Kept in a ref so a changing `recordConsent` identity never re-runs the init
+  // effect (which would re-bootstrap the CMP); the change subscriber always
+  // calls the latest callback.
+  const recordConsentRef = useRef(recordConsent);
+  recordConsentRef.current = recordConsent;
 
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
@@ -47,6 +72,12 @@ export function CookieConsentProvider({
         unsubscribe = provider.onConsentChange((newConsents) => {
           setConsents(newConsents);
           setHasConsented(provider.hasConsented());
+          // Persist the decision server-side (best-effort). Only post-init
+          // changes reach here — the page-reload re-affirmation fires before
+          // this subscription, so the ledger records genuine user decisions.
+          void Promise.resolve(recordConsentRef.current?.(newConsents)).catch((err: unknown) => {
+            logger.error('Recording cookie-consent decision failed', err);
+          });
         });
       })
       .catch((err: unknown) => {

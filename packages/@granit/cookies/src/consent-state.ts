@@ -14,6 +14,6 @@ export function defaultConsentState(): ConsentState {
     preferences: false,
     analytics: false,
     marketing: false,
-    saleorsharing: false,
+    sale_or_sharing: false,
   };
 }

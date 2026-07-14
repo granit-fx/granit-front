@@ -173,7 +173,7 @@ describe('useCookieConsent', () => {
       preferences: true,
       analytics: true,
       marketing: true,
-      saleorsharing: false,
+      sale_or_sharing: false,
     });
   });
 
@@ -202,7 +202,7 @@ describe('useCookieConsent', () => {
       preferences: false,
       analytics: false,
       marketing: false,
-      saleorsharing: false,
+      sale_or_sharing: false,
     });
   });
 

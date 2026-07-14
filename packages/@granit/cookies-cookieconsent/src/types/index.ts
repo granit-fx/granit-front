@@ -12,8 +12,8 @@ export interface CategoryNames {
   readonly analytics: string;
   /** cc_cookie name for the `marketing` category. Default: `"marketing"`. */
   readonly marketing: string;
-  /** cc_cookie name for the `saleorsharing` (CCPA) category. Default: `"sale_or_sharing"`. */
-  readonly saleorsharing: string;
+  /** cc_cookie name for the `sale_or_sharing` (CCPA) category. Default: `"sale_or_sharing"`. */
+  readonly sale_or_sharing: string;
 }
 
 /**

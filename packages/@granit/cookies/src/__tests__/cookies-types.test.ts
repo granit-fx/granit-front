@@ -16,7 +16,7 @@ describe('@granit/cookies types', () => {
       expectTypeOf<'preferences'>().toMatchTypeOf<CookieCategory>();
       expectTypeOf<'analytics'>().toMatchTypeOf<CookieCategory>();
       expectTypeOf<'marketing'>().toMatchTypeOf<CookieCategory>();
-      expectTypeOf<'saleorsharing'>().toMatchTypeOf<CookieCategory>();
+      expectTypeOf<'sale_or_sharing'>().toMatchTypeOf<CookieCategory>();
     });
   });
 
@@ -26,7 +26,7 @@ describe('@granit/cookies types', () => {
       expectTypeOf<ConsentState['strictly_necessary']>().toBeBoolean();
       expectTypeOf<ConsentState>().toHaveProperty('analytics');
       expectTypeOf<ConsentState['analytics']>().toBeBoolean();
-      expectTypeOf<ConsentState>().toHaveProperty('saleorsharing');
+      expectTypeOf<ConsentState>().toHaveProperty('sale_or_sharing');
     });
   });
 

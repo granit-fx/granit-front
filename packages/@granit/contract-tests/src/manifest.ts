@@ -553,7 +553,12 @@ export const CONTRACTS: readonly ModuleContract[] = [
   {
     slug: 'cookies',
     package: 'cookies',
-    types: ['CookieConsentConfigResponse', 'CookieDefinitionResponse', 'ThirdPartyServiceResponse'],
+    types: [
+      'CookieConsentConfigResponse',
+      'CookieDefinitionResponse',
+      'ThirdPartyServiceResponse',
+      'ConsentDecisionRequest',
+    ],
   },
   {
     slug: 'diagnostics',

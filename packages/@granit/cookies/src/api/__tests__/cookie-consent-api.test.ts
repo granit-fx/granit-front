@@ -1,9 +1,9 @@
 import { axiosResponse, createMockClient } from '@granit/testing';
 import { describe, expect, it, vi } from 'vitest';
 
-import { getCookieConsentConfig } from '../cookie-consent-api';
+import { getCookieConsentConfig, recordCookieConsentDecision } from '../cookie-consent-api';
 
-import type { CookieConsentConfigResponse } from '../../types/index';
+import type { ConsentDecisionRequest, CookieConsentConfigResponse } from '../../types/index';
 
 describe('getCookieConsentConfig', () => {
   it('GETs {basePath}/config and returns the response body', async () => {
@@ -20,5 +20,22 @@ describe('getCookieConsentConfig', () => {
 
     expect(client.get).toHaveBeenCalledWith('/cookies/config');
     expect(result).toEqual(config);
+  });
+});
+
+describe('recordCookieConsentDecision', () => {
+  it('POSTs the decision to {basePath}/consent', async () => {
+    const client = createMockClient();
+    const request: ConsentDecisionRequest = {
+      grantedCategories: ['strictly_necessary', 'analytics'],
+      deniedCategories: ['marketing', 'sale_or_sharing'],
+      mode: 'OptIn',
+      cmpSource: 'cookieconsent',
+    };
+    vi.mocked(client.post).mockResolvedValue(axiosResponse(undefined));
+
+    await recordCookieConsentDecision(client, '/cookies', request);
+
+    expect(client.post).toHaveBeenCalledWith('/cookies/consent', request);
   });
 });

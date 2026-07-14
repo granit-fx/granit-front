@@ -19,7 +19,6 @@ utilities, Axios HTTP client, Keycloak authentication, notifications, querying, 
 | [`@granit/authorization`](packages/@granit/authorization/)                                 | Permission and role authorization types                                 |
 | [`@granit/background-jobs`](packages/@granit/background-jobs/)                             | Background job monitoring types                                         |
 | [`@granit/cookies`](packages/@granit/cookies/)                                             | Cookie consent abstraction with React context and hooks                 |
-| [`@granit/cookies-klaro`](packages/@granit/cookies-klaro/)                                 | Klaro CMP adapter for `@granit/cookies`                                 |
 | [`@granit/data-exchange`](packages/@granit/data-exchange/)                                 | Tabular data import/export hooks and providers                          |
 | [`@granit/error-boundary`](packages/@granit/error-boundary/)                               | Structured error capture with React error boundary and global listeners |
 | [`@granit/idempotency`](packages/@granit/idempotency/)                                     | Automatic `Idempotency-Key` header injection for mutation requests      |

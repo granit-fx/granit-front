@@ -1410,9 +1410,25 @@
           "signature": "async function getCookieConsentConfig( client: AxiosInstance, basePath: string ): Promise<CookieConsentConfigResponse>"
         },
         {
+          "name": "recordCookieConsentDecision",
+          "kind": "function",
+          "signature": "async function recordCookieConsentDecision( client: AxiosInstance, basePath: string, request: ConsentDecisionRequest ): Promise<void>"
+        },
+        {
           "name": "defaultConsentState",
           "kind": "function",
           "signature": "function defaultConsentState(): ConsentState"
+        },
+        {
+          "name": "toConsentDecision",
+          "kind": "function",
+          "signature": "function toConsentDecision( consents: ConsentState, options: ToConsentDecisionOptions ="
+        },
+        {
+          "name": "ToConsentDecisionOptions",
+          "kind": "interface",
+          "signature": "interface ToConsentDecisionOptions",
+          "members": []
         },
         {
           "name": "getCookie",

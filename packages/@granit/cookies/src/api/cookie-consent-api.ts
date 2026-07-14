@@ -1,4 +1,4 @@
-import type { CookieConsentConfigResponse } from '../types/index';
+import type { ConsentDecisionRequest, CookieConsentConfigResponse } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 
 /**
@@ -21,4 +21,29 @@ export async function getCookieConsentConfig(
 ): Promise<CookieConsentConfigResponse> {
   const { data } = await client.get<CookieConsentConfigResponse>(`${basePath}/config`);
   return data;
+}
+
+/**
+ * Records a cookie-consent decision in the server-side ledger.
+ *
+ * `POST {basePath}/consent` (default backend route `POST /cookies/consent`) —
+ * anonymous, returns `204 No Content`. Appends the decision to the append-only
+ * consent ledger (GDPR Art. 7(1) accountability). Best-effort: the backend
+ * acknowledges the decision even when no persistent ledger is registered.
+ *
+ * @example
+ * ```ts
+ * await recordCookieConsentDecision(
+ *   apiClient,
+ *   '/cookies',
+ *   toConsentDecision(consents, { cmpSource: 'cookieconsent' })
+ * );
+ * ```
+ */
+export async function recordCookieConsentDecision(
+  client: AxiosInstance,
+  basePath: string,
+  request: ConsentDecisionRequest
+): Promise<void> {
+  await client.post(`${basePath}/consent`, request);
 }

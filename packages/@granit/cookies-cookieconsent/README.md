@@ -71,7 +71,7 @@ The adapter maps each `CookieCategory` to a `cc_cookie` category name:
 | `preferences`        | `functional`      |
 | `analytics`          | `analytics`       |
 | `marketing`          | `marketing`       |
-| `saleorsharing`      | `sale_or_sharing` |
+| `sale_or_sharing`    | `sale_or_sharing` |
 
 Override the optional names via `categoryNames` when the backend is configured
 with non-default values:
@@ -84,11 +84,11 @@ createCookieConsentProvider({
 
 ## Public API
 
-| Symbol                                | Kind | Purpose                                                               |
-| ------------------------------------- | ---- | --------------------------------------------------------------------- |
-| `createCookieConsentProvider`         | fn   | Build a headless `CookieConsentAdapter` over `vanilla-cookieconsent`  |
-| `CreateCookieConsentProviderOptions`  | type | `loadConfig?`, `cookieName?`, `categoryNames?` factory options        |
-| `CategoryNames`                       | type | `CookieCategory` → `cc_cookie` name map (optional categories)         |
+| Symbol                               | Kind | Purpose                                                              |
+| ------------------------------------ | ---- | -------------------------------------------------------------------- |
+| `createCookieConsentProvider`        | fn   | Build a headless `CookieConsentAdapter` over `vanilla-cookieconsent` |
+| `CreateCookieConsentProviderOptions` | type | `loadConfig?`, `cookieName?`, `categoryNames?` factory options       |
+| `CategoryNames`                      | type | `CookieCategory` → `cc_cookie` name map (optional categories)        |
 
 `createCookieConsentProvider` returns a `CookieConsentAdapter` (defined in
 `@granit/cookies`), implementing `init`, `getConsents`, `onConsentChange`,
@@ -106,8 +106,9 @@ createCookieConsentProvider({
 - **Category names must match the backend.** `cookieName` and `categoryNames`
   must agree with `Http:Cookies:CookieConsent:*` configuration; otherwise consent
   written by the client will not be read consistently by the backend.
-- **`saleorsharing` is verbatim.** The CCPA "Sale or Sharing" category is
-  serialized without an underscore by the backend; do not "normalize" it.
+- **`sale_or_sharing` is snake_case.** The CCPA "Sale or Sharing" category is
+  serialized with an underscore by the backend (mapped explicitly, not via
+  `ToLowerInvariant()`); keep the category key and `cc_cookie` name aligned.
 - **CMP-agnostic by design.** Because the React layer depends only on the
   `CookieConsentAdapter` interface, replacing `vanilla-cookieconsent` with
   another CMP means swapping this adapter alone — provider wiring and hooks are

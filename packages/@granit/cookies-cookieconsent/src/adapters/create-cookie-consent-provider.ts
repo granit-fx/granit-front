@@ -11,7 +11,7 @@ const DEFAULT_CATEGORY_NAMES: CategoryNames = {
   preferences: 'functional',
   analytics: 'analytics',
   marketing: 'marketing',
-  saleorsharing: 'sale_or_sharing',
+  sale_or_sharing: 'sale_or_sharing',
 };
 
 /** Category name for the always-on necessary category in vanilla-cookieconsent. */
@@ -23,7 +23,7 @@ function buildConsentState(cc: VanillaCookieConsent, names: CategoryNames): Cons
     preferences: cc.acceptedCategory(names.preferences),
     analytics: cc.acceptedCategory(names.analytics),
     marketing: cc.acceptedCategory(names.marketing),
-    saleorsharing: cc.acceptedCategory(names.saleorsharing),
+    sale_or_sharing: cc.acceptedCategory(names.sale_or_sharing),
   };
 }
 
@@ -74,7 +74,7 @@ export function createCookieConsentProvider(
         [resolvedNames.preferences]: {},
         [resolvedNames.analytics]: {},
         [resolvedNames.marketing]: {},
-        [resolvedNames.saleorsharing]: {},
+        [resolvedNames.sale_or_sharing]: {},
       };
 
       if (options.loadConfig) {
@@ -87,7 +87,7 @@ export function createCookieConsentProvider(
           preferences: resolvedNames.preferences,
           analytics: resolvedNames.analytics,
           marketing: resolvedNames.marketing,
-          saleorsharing: resolvedNames.saleorsharing,
+          sale_or_sharing: resolvedNames.sale_or_sharing,
         };
         for (const [granitCat, ccName] of Object.entries(categoryMap)) {
           if (!activeCategories.has(granitCat as CookieCategory)) {
