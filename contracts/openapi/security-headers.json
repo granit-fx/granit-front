@@ -7,9 +7,7 @@
   "paths": {
     "/security-headers/csp": {
       "get": {
-        "tags": [
-          "Security Headers"
-        ],
+        "tags": ["Security Headers"],
         "summary": "Returns the effective Content-Security-Policy per endpoint.",
         "description": "Returns a snapshot of the composed CSP for every registered endpoint, plus the base directives and the list of registered ICspContributor implementations. Contributors that branch on request-scoped state beyond endpoint metadata (e.g. authenticated user, tenant) will under-report — the audit synthesises requests carrying only the matched endpoint.",
         "operationId": "GetCspAudit",
@@ -61,13 +59,7 @@
   "components": {
     "schemas": {
       "CspAuditResponse": {
-        "required": [
-          "baseDirectives",
-          "rawOverride",
-          "reportOnly",
-          "contributors",
-          "endpoints"
-        ],
+        "required": ["baseDirectives", "rawOverride", "reportOnly", "contributors", "endpoints"],
         "type": "object",
         "properties": {
           "baseDirectives": {
@@ -80,10 +72,7 @@
             }
           },
           "rawOverride": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "reportOnly": {
             "type": "boolean"
@@ -103,10 +92,7 @@
         }
       },
       "CspContributorInfo": {
-        "required": [
-          "name",
-          "fullTypeName"
-        ],
+        "required": ["name", "fullTypeName"],
         "type": "object",
         "properties": {
           "name": {
@@ -118,13 +104,7 @@
         }
       },
       "CspEndpointAudit": {
-        "required": [
-          "httpMethods",
-          "pattern",
-          "displayName",
-          "headerName",
-          "composedCsp"
-        ],
+        "required": ["httpMethods", "pattern", "displayName", "headerName", "composedCsp"],
         "type": "object",
         "properties": {
           "httpMethods": {

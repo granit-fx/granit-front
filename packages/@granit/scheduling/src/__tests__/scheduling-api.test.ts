@@ -40,6 +40,7 @@ const sampleAction: ScheduledActionResponse = {
   executedAt: null,
   cancelledBy: null,
   failureReason: null,
+  attemptCount: 0,
   createdAt: toISODateString('2026-06-01T10:00:00Z'),
   modifiedAt: null,
 };

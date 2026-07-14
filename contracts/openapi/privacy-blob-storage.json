@@ -1,26 +1,48 @@
 {
   "openapi": "3.1.1",
   "info": {
-    "title": "query-engine",
+    "title": "privacy-blob-storage",
     "version": "1"
   },
   "paths": {
-    "/catalog": {
+    "/privacy/exports/{requestId}/download": {
       "get": {
-        "tags": ["Query Engine"],
-        "summary": "Lists every registered QueryDefinition the caller may see.",
-        "description": "Returns the query catalogue surfaced by IQueryDefinitionRegistry so a dashboard editor can offer a dropdown of queries instead of a free-text queryName. Entries are ordered by owning module, then by name, so the editor can group them under module headings. Each entry carries the wire identifier, its owning module, a localization key for the label (the target entity's display key when registered, else Query:{Name}), and — when a MapGranitQuery route exposes it — the resolved base path of its list endpoint. Registration and routing are decoupled: a query registered without a mapped route is returned with a null base path rather than a forged URL. Queries that declare a RequiredPermission are omitted for callers who lack it.",
-        "operationId": "ListQueryCatalog",
+        "tags": ["Privacy"],
+        "summary": "Returns a presigned URL to download a completed export archive.",
+        "description": "Looks up the export request in the tracker, verifies the caller is the owner, and issues a 302 redirect to a short-lived presigned URL of the ZIP archive assembled by the archive-assembly handler. Returns 404 if the request does not exist or belongs to another user, and 409 if the archive is not ready (Pending, TimedOut with no fragments, SizeLimitExceeded).",
+        "operationId": "DownloadPrivacyExportArchive",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "description": "Unique identifier of the request.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
-          "200": {
-            "description": "OK",
+          "302": {
+            "description": "Found"
+          },
+          "404": {
+            "description": "Not Found",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/QueryCatalogEntryResponse"
-                  }
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -85,30 +107,12 @@
             "description": "A URI reference that identifies the specific occurrence."
           }
         }
-      },
-      "QueryCatalogEntryResponse": {
-        "required": ["moduleName", "name", "basePath", "labelKey"],
-        "type": "object",
-        "properties": {
-          "moduleName": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "basePath": {
-            "type": ["null", "string"]
-          },
-          "labelKey": {
-            "type": "string"
-          }
-        }
       }
     }
   },
   "tags": [
     {
-      "name": "Query Engine"
+      "name": "Privacy"
     }
   ]
 }

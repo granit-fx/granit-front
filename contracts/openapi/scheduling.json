@@ -500,6 +500,22 @@
           },
           "format": {
             "type": ["null", "string"]
+          },
+          "valueKind": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ValueKind"
+              }
+            ]
+          },
+          "currencyCode": {
+            "type": ["null", "string"]
+          },
+          "currencyCodeField": {
+            "type": ["null", "string"]
           }
         }
       },
@@ -587,7 +603,10 @@
           "Lt",
           "Lte",
           "In",
-          "Between"
+          "Between",
+          "Ne",
+          "IsNull",
+          "IsNotNull"
         ]
       },
       "GroupByField": {
@@ -747,6 +766,10 @@
                 },
                 "failureReason": {
                   "type": ["null", "string"]
+                },
+                "attemptCount": {
+                  "type": "integer",
+                  "format": "int32"
                 },
                 "tenantId": {
                   "type": ["null", "string"],
@@ -983,6 +1006,10 @@
           "failureReason": {
             "type": ["null", "string"]
           },
+          "attemptCount": {
+            "type": "integer",
+            "format": "int32"
+          },
           "tenantId": {
             "type": ["null", "string"],
             "format": "uuid"
@@ -1034,6 +1061,7 @@
           "executedAt",
           "cancelledBy",
           "failureReason",
+          "attemptCount",
           "createdAt",
           "modifiedAt"
         ],
@@ -1066,6 +1094,10 @@
           "failureReason": {
             "type": ["null", "string"]
           },
+          "attemptCount": {
+            "type": "integer",
+            "format": "int32"
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -1087,6 +1119,33 @@
             "type": "string"
           }
         }
+      },
+      "ValueKind": {
+        "enum": [
+          "Count",
+          "Number",
+          "Currency",
+          "Percentage",
+          "Duration",
+          "Date",
+          "Url",
+          "Email",
+          "Phone",
+          "Bytes",
+          "DateTime",
+          "Boolean",
+          "Enum",
+          "RelativeTime",
+          "Time",
+          "Color",
+          "Image",
+          "Json",
+          "Markdown",
+          "Tags",
+          "Rating",
+          "Identifier",
+          null
+        ]
       }
     }
   },

@@ -7,9 +7,7 @@
   "paths": {
     "/diagnostics/health": {
       "get": {
-        "tags": [
-          "Diagnostics"
-        ],
+        "tags": ["Diagnostics"],
         "summary": "Returns the aggregated health status of all registered services.",
         "description": "Returns the current health status, response time, and description for every registered health check. Results are cached for the configured monitoring cache duration (default 30 seconds).",
         "operationId": "GetMonitoringHealth",
@@ -56,15 +54,131 @@
           }
         }
       }
+    },
+    "/security-headers/csp": {
+      "get": {
+        "tags": ["Security Headers"],
+        "summary": "Returns the effective Content-Security-Policy per endpoint.",
+        "description": "Returns a snapshot of the composed CSP for every registered endpoint, plus the base directives and the list of registered ICspContributor implementations. Contributors that branch on request-scoped state beyond endpoint metadata (e.g. authenticated user, tenant) will under-report — the audit synthesises requests carrying only the matched endpoint.",
+        "operationId": "GetCspAudit",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CspAuditResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "CspAuditResponse": {
+        "required": ["baseDirectives", "rawOverride", "reportOnly", "contributors", "endpoints"],
+        "type": "object",
+        "properties": {
+          "baseDirectives": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "rawOverride": {
+            "type": ["null", "string"]
+          },
+          "reportOnly": {
+            "type": "boolean"
+          },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CspContributorInfo"
+            }
+          },
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CspEndpointAudit"
+            }
+          }
+        }
+      },
+      "CspContributorInfo": {
+        "required": ["name", "fullTypeName"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "fullTypeName": {
+            "type": "string"
+          }
+        }
+      },
+      "CspEndpointAudit": {
+        "required": ["httpMethods", "pattern", "displayName", "headerName", "composedCsp"],
+        "type": "object",
+        "properties": {
+          "httpMethods": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "pattern": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "headerName": {
+            "type": "string"
+          },
+          "composedCsp": {
+            "type": "string"
+          }
+        }
+      },
       "MonitoringHealthResponse": {
-        "required": [
-          "services",
-          "checkedAt"
-        ],
+        "required": ["services", "checkedAt"],
         "type": "object",
         "properties": {
           "services": {
@@ -105,14 +219,7 @@
         }
       },
       "ServiceHealthResponse": {
-        "required": [
-          "id",
-          "name",
-          "status",
-          "responseTimeMs",
-          "description",
-          "tags"
-        ],
+        "required": ["id", "name", "status", "responseTimeMs", "description", "tags"],
         "type": "object",
         "properties": {
           "id": {
@@ -126,18 +233,11 @@
           },
           "responseTimeMs": {
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-            "type": [
-              "null",
-              "number",
-              "string"
-            ],
+            "type": ["null", "number", "string"],
             "format": "double"
           },
           "description": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "tags": {
             "type": "array",
@@ -152,6 +252,9 @@
   "tags": [
     {
       "name": "Diagnostics"
+    },
+    {
+      "name": "Security Headers"
     }
   ]
 }

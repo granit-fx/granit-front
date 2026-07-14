@@ -27,6 +27,7 @@ export interface ScheduledActionResponse {
   readonly executedAt: ISODateString | null;
   readonly cancelledBy: string | null;
   readonly failureReason: string | null;
+  readonly attemptCount: number;
   readonly createdAt: ISODateString;
   readonly modifiedAt: ISODateString | null;
 }
