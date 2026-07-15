@@ -118,11 +118,47 @@ describe('useImportReport', () => {
       wrapper: createWrapper(),
     });
 
-    await result.current.downloadCorrection();
+    const downloaded = await result.current.downloadCorrection();
 
+    expect(downloaded).toBe(true);
     expect(mockCreateObjectURL).toHaveBeenCalledWith(blob);
     expect(mockClick).toHaveBeenCalledOnce();
     expect(mockRevokeObjectURL).toHaveBeenCalledWith('blob:test');
+  });
+
+  it('downloadCorrection skips the download when the blob is empty (HTTP 204)', async () => {
+    const emptyBlob = new Blob([]);
+    vi.spyOn(mockClient, 'get').mockImplementation((url: string) => {
+      if (typeof url === 'string' && url.includes('/correction-file')) {
+        return Promise.resolve({ data: emptyBlob, headers: {} });
+      }
+      return Promise.resolve({ data: {} });
+    });
+
+    const mockCreateObjectURL = vi.fn(() => 'blob:test');
+    (globalThis as Record<string, unknown>).URL = {
+      ...URL,
+      createObjectURL: mockCreateObjectURL,
+      revokeObjectURL: vi.fn(),
+    };
+    const mockClick = vi.fn();
+    const originalCreateElement = document.createElement.bind(document);
+    vi.spyOn(document, 'createElement').mockImplementation((tag: string) => {
+      if (tag === 'a') {
+        return { href: '', download: '', click: mockClick } as unknown as HTMLAnchorElement;
+      }
+      return originalCreateElement(tag);
+    });
+
+    const { result } = renderHook(() => useImportReport('job-1'), {
+      wrapper: createWrapper(),
+    });
+
+    const downloaded = await result.current.downloadCorrection();
+
+    expect(downloaded).toBe(false);
+    expect(mockCreateObjectURL).not.toHaveBeenCalled();
+    expect(mockClick).not.toHaveBeenCalled();
   });
 
   it('downloadCorrection does nothing when jobId is undefined', async () => {
@@ -132,7 +168,8 @@ describe('useImportReport', () => {
       wrapper: createWrapper(),
     });
 
-    await result.current.downloadCorrection();
+    const downloaded = await result.current.downloadCorrection();
+    expect(downloaded).toBe(false);
     expect(getSpy).not.toHaveBeenCalled();
   });
 });

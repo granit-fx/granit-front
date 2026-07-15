@@ -190,6 +190,8 @@ function TenantListContent() {
       {/* Data table */}
       <QueryEndpointDataTable queryEndpoint={queryEndpoint} columns={columns} />
 
+      {/* Casing must match TenantExportDefinition.Name exactly — the backend resolves
+          definition names with an Ordinal (case-sensitive) comparison (404 on mismatch). */}
       <ExportDialog
         definitionName="Granit.MultiTenancy.TenantExport"
         open={exportOpen}

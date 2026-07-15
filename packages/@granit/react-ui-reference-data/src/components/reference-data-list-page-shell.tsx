@@ -58,7 +58,17 @@ export interface ReferenceDataListPageShellProps<
   readonly basePath: string;
   readonly queryConfig: QueryConfig;
   readonly dataExchangeConfig?: DataExchangeConfig;
+  /**
+   * Export definition name, passed verbatim to the export API. Must match the
+   * backend registration EXACTLY — the backend resolves definition names with
+   * an Ordinal (case-sensitive) comparison, so a casing mismatch yields HTTP 404.
+   */
   readonly exportDefinition: string;
+  /**
+   * Import definition name, passed verbatim to the import API. Must match the
+   * backend registration EXACTLY — the backend resolves definition names with
+   * an Ordinal (case-sensitive) comparison, so a casing mismatch yields HTTP 404.
+   */
   readonly importDefinition: string;
   readonly columns: ColumnDef<T, unknown>[];
   readonly deactivateMutation: MutationLike<string>;

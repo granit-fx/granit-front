@@ -590,7 +590,7 @@
       "delete": {
         "tags": ["Data Exchange"],
         "summary": "Cancels an import job that has not yet started execution.",
-        "description": "Cancels the import job and deletes the uploaded file from blob storage. Only jobs that have not yet started execution (Executing, Completed, PartiallyCompleted, Failed) can be cancelled. Returns 400 if the job is in a non-cancellable state.",
+        "description": "Cancels the import job and deletes the uploaded file from blob storage. Only jobs that have not yet started execution (Created, Previewed, Mapped) can be cancelled — Returns 400 once the job has entered Executing, Completed, PartiallyCompleted, or Failed.",
         "operationId": "CancelImportJob",
         "parameters": [
           {
@@ -813,7 +813,7 @@
       "get": {
         "tags": ["Data Exchange"],
         "summary": "Lists export jobs with optional status filter and pagination.",
-        "description": "Returns a paginated list of export jobs ordered by creation date descending. Supports filtering by job status (Created, Processing, Completed, Failed). Intended for admin dashboards monitoring export activity.",
+        "description": "Returns a paginated list of export jobs ordered by creation date descending. Supports filtering by job status (Queued, Exporting, Completed, Failed). Intended for admin dashboards monitoring export activity.",
         "operationId": "ListExportJobs",
         "parameters": [
           {
@@ -971,7 +971,7 @@
       "get": {
         "tags": ["Data Exchange"],
         "summary": "Returns the current status of an export job.",
-        "description": "Returns the current status of the export job (Created, Processing, Completed, Failed). Once the status is Completed, the download endpoint becomes available. Returns 404 if the job ID is not found.",
+        "description": "Returns the current status of the export job (Queued, Exporting, Completed, Failed). Once the status is Completed, the download endpoint becomes available. Returns 404 if the job ID is not found.",
         "operationId": "GetExportJobStatus",
         "parameters": [
           {
@@ -1470,12 +1470,20 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ImportColumnMapping"
-            },
-            "x-granit-validator": "Validation:AtLeastOneMappingTarget"
+            }
           },
           "concurrencyStamp": {
             "type": "string"
           }
+        },
+        "example": {
+          "mappings": [
+            {
+              "sourceColumn": "Nom",
+              "targetProperty": "LastName",
+              "confidence": "Exact"
+            }
+          ]
         }
       },
       "CreateExportJobRequest": {
@@ -1520,6 +1528,13 @@
             "maxLength": 1000,
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "definitionName": "Acme.PatientExport",
+          "format": "xlsx",
+          "selectedFields": ["LastName", "FirstName", "Email"],
+          "includeIdForImport": false,
+          "sort": "-createdAt,lastName"
         }
       },
       "ExportDefinitionResponse": {
@@ -1990,6 +2005,13 @@
           "includeIdForImport": {
             "type": "boolean"
           }
+        },
+        "example": {
+          "definitionName": "Acme.PatientExport",
+          "presetName": "Party details",
+          "selectedFields": ["LastName", "FirstName", "Email", "Phone"],
+          "format": "xlsx",
+          "includeIdForImport": false
         }
       }
     }
