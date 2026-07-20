@@ -31,7 +31,7 @@
     }
   },
   "devDependencies": {
-    "@capacitor/push-notifications": "^8.1.1",
+    "@capacitor/push-notifications": "^8.1.2",
     "@granit/api-client": "workspace:*",
     "@granit/logger": "workspace:*",
     "@granit/react-api-client": "workspace:*",
