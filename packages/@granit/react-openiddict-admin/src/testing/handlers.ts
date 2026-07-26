@@ -14,8 +14,9 @@ import {
 
 import type {
   AdminOidcApplicationResponse,
+  AdminOidcCreateApplicationRequest,
   AdminOidcCreateAuthorizationRequest,
-  AdminOidcScopeResponse,
+  AdminOidcCreateScopeRequest,
   AdminOidcUpdateScopeRequest,
 } from '@granit/openiddict-admin';
 import type { QueryMetadata } from '@granit/query-engine';
@@ -23,6 +24,18 @@ import type { QueryMetadata } from '@granit/query-engine';
 const OIDC_APPLICATION_TYPES = ['web', 'native'];
 const OIDC_AUTHORIZATION_STATUSES = ['valid', 'revoked', 'inactive'];
 const OIDC_AUTHORIZATION_TYPES = ['permanent', 'ad-hoc'];
+
+/**
+ * Slice a fixture list into a `PagedResult` the way the admin OIDC endpoints do:
+ * 1-based `page` (default 1) and `pageSize` (default 25, clamped to [1, 100]).
+ */
+function pageOf<T>(items: readonly T[], url: URL) {
+  const page = Math.max(1, Number(url.searchParams.get('page') ?? 1));
+  const pageSize = Math.min(100, Math.max(1, Number(url.searchParams.get('pageSize') ?? 25)));
+  const start = (page - 1) * pageSize;
+  const slice = items.slice(start, start + pageSize);
+  return pagedResponse(slice, items.length, start + slice.length < items.length);
+}
 
 /** Mock /meta payload for the admin users resource. */
 export const adminUserQueryMetadata: QueryMetadata = {
@@ -372,7 +385,9 @@ export function createOpenIddictAdminHandlers(
 
     // ── OIDC Applications ─────────────────────────────────────────────────────
 
-    http.get(`${baseUrl}/oidc/applications`, () => HttpResponse.json(mockOidcApplications)),
+    http.get(`${baseUrl}/oidc/applications`, ({ request }) =>
+      pageOf(mockOidcApplications, new URL(request.url))
+    ),
 
     http.get(`${baseUrl}/oidc/applications/:clientId`, ({ params }) => {
       const app = mockOidcApplications.find(
@@ -382,12 +397,12 @@ export function createOpenIddictAdminHandlers(
     }),
 
     http.post(`${baseUrl}/oidc/applications`, async ({ request }) => {
-      const body = (await request.json()) as Partial<AdminOidcApplicationResponse>;
+      const body = (await request.json()) as Partial<AdminOidcCreateApplicationRequest>;
       const newApp: (typeof mockOidcApplications)[number] = {
         clientId: body.clientId ?? `client-${String(mockOidcApplications.length)}`,
         displayName: body.displayName ?? null,
         type: body.type ?? null,
-        tenantId: null,
+        tenantId: body.tenantId ?? null,
         permissions: body.permissions ?? [],
         redirectUris: body.redirectUris ?? [],
         postLogoutRedirectUris: body.postLogoutRedirectUris ?? [],
@@ -397,7 +412,13 @@ export function createOpenIddictAdminHandlers(
         hasSigningKey: false,
       };
       mockOidcApplications.push(newApp);
-      return created(newApp);
+      // The plaintext secret rides on the creation response only — it is never
+      // stored on the fixture, mirroring the hashed-at-rest backend.
+      return created(
+        body.generateClientSecret
+          ? { ...newApp, generatedClientSecret: 'mock-secret-generated' }
+          : newApp
+      );
     }),
 
     http.put(`${baseUrl}/oidc/applications/:clientId`, async ({ params, request }) => {
@@ -441,15 +462,18 @@ export function createOpenIddictAdminHandlers(
 
     // ── OIDC Scopes ───────────────────────────────────────────────────────────
 
-    http.get(`${baseUrl}/oidc/scopes`, () => HttpResponse.json(mockOidcScopes)),
+    http.get(`${baseUrl}/oidc/scopes`, ({ request }) =>
+      pageOf(mockOidcScopes, new URL(request.url))
+    ),
 
     http.post(`${baseUrl}/oidc/scopes`, async ({ request }) => {
-      const body = (await request.json()) as Partial<AdminOidcScopeResponse>;
+      const body = (await request.json()) as Partial<AdminOidcCreateScopeRequest>;
       const newScope: (typeof mockOidcScopes)[number] = {
         name: body.name ?? `scope-${String(mockOidcScopes.length)}`,
         displayName: body.displayName ?? null,
         description: body.description ?? null,
         resources: body.resources ?? [],
+        tenantId: body.tenantId ?? null,
       };
       mockOidcScopes.push(newScope);
       return created(newScope);
@@ -492,14 +516,14 @@ export function createOpenIddictAdminHandlers(
 
     http.get(`${baseUrl}/oidc/authorizations`, ({ request }) => {
       const url = new URL(request.url);
-      const userId = url.searchParams.get('userId');
+      const subject = url.searchParams.get('subject');
       const clientId = url.searchParams.get('clientId');
 
       let filtered = [...mockOidcAuthorizations];
-      if (userId) filtered = filtered.filter((a) => a.subject === userId);
+      if (subject) filtered = filtered.filter((a) => a.subject === subject);
       if (clientId) filtered = filtered.filter((a) => a.clientId === clientId);
 
-      return HttpResponse.json(filtered);
+      return pageOf(filtered, url);
     }),
 
     http.delete(`${baseUrl}/oidc/authorizations/:id`, ({ params }) => {

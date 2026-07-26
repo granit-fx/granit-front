@@ -7,10 +7,34 @@ import { renderWithProviders } from './test-utils';
 
 import type { AdminOidcAuthorizationResponse } from '@granit/openiddict-admin';
 
-let authQuery: { data: readonly AdminOidcAuthorizationResponse[]; isLoading: boolean } = {
+// Tests assign a plain array (plus optional totalCount/hasMore); the mocked hook
+// wraps it in the PagedResult envelope the page actually consumes.
+let authQuery: {
+  data: readonly AdminOidcAuthorizationResponse[];
+  isLoading: boolean;
+  totalCount?: number | null;
+  hasMore?: boolean;
+} = {
   data: [],
   isLoading: false,
 };
+
+/** Records the params the page passes to `useOidcAuthorizations`. */
+const authListParams = vi.fn();
+
+function authPage(params?: unknown) {
+  authListParams(params);
+  return {
+    data: {
+      items: authQuery.data,
+      // `null` is a meaningful wire value (backend withheld the count), so only
+      // an absent key falls back to the fixture length.
+      totalCount: 'totalCount' in authQuery ? authQuery.totalCount : authQuery.data.length,
+      hasMore: authQuery.hasMore ?? false,
+    },
+    isLoading: authQuery.isLoading,
+  };
+}
 let granted = new Set<string>([
   'OpenIddict.Authorizations.Create',
   'OpenIddict.Authorizations.Revoke',
@@ -22,7 +46,7 @@ const revokeUserMutate = vi.fn();
 let pending = false;
 
 vi.mock('@granit/react-openiddict-admin', () => ({
-  useOidcAuthorizations: () => authQuery,
+  useOidcAuthorizations: (params?: unknown) => authPage(params),
   useCreateOidcAuthorization: () => ({ mutateAsync: createMutate, isPending: pending }),
   useRevokeAuthorization: () => ({ mutateAsync: revokeMutate, isPending: pending }),
   useRevokeUserAuthorizations: () => ({ mutateAsync: revokeUserMutate, isPending: pending }),
@@ -53,6 +77,81 @@ beforeEach(() => {
   revokeUserMutate.mockReset().mockResolvedValue(undefined);
   toastSuccess.mockReset();
   toastError.mockReset();
+  authListParams.mockReset();
+});
+
+describe('OidcAuthorizationsPage — server-side paging and filters', () => {
+  it('requests the first page with the default page size', () => {
+    renderWithProviders(<OidcAuthorizationsPage />);
+    expect(authListParams).toHaveBeenLastCalledWith({ page: 1, pageSize: 25 });
+  });
+
+  it('hides pagination controls when a single page covers the results', () => {
+    authQuery = { data: mockOidcAuthorizations, isLoading: false, totalCount: 2 };
+    renderWithProviders(<OidcAuthorizationsPage />);
+    expect(document.querySelector('[data-slot="table-pagination"]')).not.toBeInTheDocument();
+  });
+
+  it('shows pagination controls once totalCount exceeds the page size', () => {
+    authQuery = { data: mockOidcAuthorizations, isLoading: false, totalCount: 120, hasMore: true };
+    renderWithProviders(<OidcAuthorizationsPage />);
+    expect(document.querySelector('[data-slot="table-pagination"]')).toBeInTheDocument();
+  });
+
+  it('paginates on hasMore alone when the backend withholds totalCount', () => {
+    authQuery = { data: mockOidcAuthorizations, isLoading: false, totalCount: null, hasMore: true };
+    renderWithProviders(<OidcAuthorizationsPage />);
+    expect(document.querySelector('[data-slot="table-pagination"]')).toBeInTheDocument();
+  });
+
+  it('sends subject and clientId as server-side filters and resets to page 1', async () => {
+    authQuery = { data: mockOidcAuthorizations, isLoading: false, totalCount: 120, hasMore: true };
+    const { user } = renderWithProviders(<OidcAuthorizationsPage />);
+
+    await user.type(screen.getByLabelText('Subject'), 'usr-001');
+    await user.type(screen.getByLabelText('Client ID'), 'guava-front');
+    await user.click(screen.getByRole('button', { name: 'Filter' }));
+
+    expect(authListParams).toHaveBeenLastCalledWith({
+      page: 1,
+      pageSize: 25,
+      subject: 'usr-001',
+      clientId: 'guava-front',
+    });
+  });
+
+  it('omits blank filter inputs from the request', async () => {
+    const { user } = renderWithProviders(<OidcAuthorizationsPage />);
+
+    await user.type(screen.getByLabelText('Subject'), '   ');
+    await user.click(screen.getByRole('button', { name: 'Filter' }));
+
+    expect(authListParams).toHaveBeenLastCalledWith({
+      page: 1,
+      pageSize: 25,
+      subject: undefined,
+      clientId: undefined,
+    });
+  });
+
+  it('clears active filters', async () => {
+    const { user } = renderWithProviders(<OidcAuthorizationsPage />);
+
+    await user.type(screen.getByLabelText('Subject'), 'usr-001');
+    await user.click(screen.getByRole('button', { name: 'Filter' }));
+    await user.click(screen.getByRole('button', { name: /clear/i }));
+
+    expect(authListParams).toHaveBeenLastCalledWith({ page: 1, pageSize: 25 });
+  });
+
+  it('shows a filter-aware empty state when a filtered page comes back empty', async () => {
+    const { user } = renderWithProviders(<OidcAuthorizationsPage />);
+
+    await user.type(screen.getByLabelText('Client ID'), 'unknown-client');
+    await user.click(screen.getByRole('button', { name: 'Filter' }));
+
+    expect(screen.getByText('No authorizations match these filters.')).toBeInTheDocument();
+  });
 });
 
 describe('OidcAuthorizationsPage', () => {

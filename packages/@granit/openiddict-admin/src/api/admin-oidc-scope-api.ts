@@ -1,6 +1,8 @@
 import type {
   AdminOidcScopeResponse,
   AdminOidcCreateScopeRequest,
+  AdminOidcScopeListParams,
+  AdminOidcScopePage,
   AdminOidcUpdateScopeRequest,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
@@ -8,15 +10,16 @@ import type { AxiosInstance } from '@granit/api-client';
 // ── OIDC Scope CRUD ──────────────────────────────────────────────────────────
 
 /**
- * List all OIDC scopes.
+ * List one page of OIDC scopes.
  *
  * `GET {basePath}/oidc/scopes`
  */
 export async function listScopes(
   client: AxiosInstance,
-  basePath: string
-): Promise<readonly AdminOidcScopeResponse[]> {
-  const { data } = await client.get<readonly AdminOidcScopeResponse[]>(`${basePath}/oidc/scopes`);
+  basePath: string,
+  params?: AdminOidcScopeListParams
+): Promise<AdminOidcScopePage> {
+  const { data } = await client.get<AdminOidcScopePage>(`${basePath}/oidc/scopes`, { params });
   return data;
 }
 

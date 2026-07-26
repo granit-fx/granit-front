@@ -17,7 +17,10 @@ import {
 } from '../hooks/use-oidc-authorizations';
 import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider';
 
-import type { AdminOidcAuthorizationResponse } from '@granit/openiddict-admin';
+import type {
+  AdminOidcAuthorizationPage,
+  AdminOidcAuthorizationResponse,
+} from '@granit/openiddict-admin';
 
 vi.mock('@granit/openiddict-admin', () => ({
   listAuthorizations: vi.fn(),
@@ -50,9 +53,15 @@ const mockAuthorizations: readonly AdminOidcAuthorizationResponse[] = [
   },
 ];
 
+const mockAuthorizationPage: AdminOidcAuthorizationPage = {
+  items: mockAuthorizations,
+  totalCount: mockAuthorizations.length,
+  hasMore: false,
+};
+
 describe('useOidcAuthorizations', () => {
-  it('should fetch authorizations', async () => {
-    vi.mocked(listAuthorizations).mockResolvedValueOnce(mockAuthorizations);
+  it('should fetch a page of authorizations', async () => {
+    vi.mocked(listAuthorizations).mockResolvedValueOnce(mockAuthorizationPage);
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useOidcAuthorizations(), { wrapper });
@@ -60,19 +69,25 @@ describe('useOidcAuthorizations', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(listAuthorizations).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', undefined);
-    expect(result.current.data).toEqual(mockAuthorizations);
+    expect(result.current.data?.items).toEqual(mockAuthorizations);
+    expect(result.current.data?.totalCount).toBe(1);
   });
 
-  it('should pass params to listAuthorizations', async () => {
-    vi.mocked(listAuthorizations).mockResolvedValueOnce(mockAuthorizations);
+  it('should pass subject/clientId filters and paging to listAuthorizations', async () => {
+    vi.mocked(listAuthorizations).mockResolvedValueOnce(mockAuthorizationPage);
 
     const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useOidcAuthorizations({ userId: 'usr-001' }), { wrapper });
+    const { result } = renderHook(
+      () => useOidcAuthorizations({ subject: 'usr-001', clientId: 'guava-front', page: 2 }),
+      { wrapper }
+    );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(listAuthorizations).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', {
-      userId: 'usr-001',
+      subject: 'usr-001',
+      clientId: 'guava-front',
+      page: 2,
     });
   });
 

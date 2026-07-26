@@ -1,4 +1,6 @@
 import type {
+  AdminOidcApplicationListParams,
+  AdminOidcApplicationPage,
   AdminOidcApplicationResponse,
   AdminOidcCreateApplicationRequest,
   AdminOidcRotateSecretResponse,
@@ -9,17 +11,18 @@ import type { AxiosInstance } from '@granit/api-client';
 // ── OIDC Application CRUD ────────────────────────────────────────────────────
 
 /**
- * List all OIDC applications.
+ * List one page of OIDC applications.
  *
  * `GET {basePath}/oidc/applications`
  */
 export async function listApplications(
   client: AxiosInstance,
-  basePath: string
-): Promise<readonly AdminOidcApplicationResponse[]> {
-  const { data } = await client.get<readonly AdminOidcApplicationResponse[]>(
-    `${basePath}/oidc/applications`
-  );
+  basePath: string,
+  params?: AdminOidcApplicationListParams
+): Promise<AdminOidcApplicationPage> {
+  const { data } = await client.get<AdminOidcApplicationPage>(`${basePath}/oidc/applications`, {
+    params,
+  });
   return data;
 }
 
@@ -59,6 +62,10 @@ export async function getApplicationInfo(
  * Create a new OIDC application.
  *
  * `POST {basePath}/oidc/applications`
+ *
+ * When the request sets `generateClientSecret: true`, the response carries the
+ * plaintext secret in `generatedClientSecret` — this is the only time it is ever
+ * returned, so surface it to the operator immediately.
  */
 export async function createApplication(
   client: AxiosInstance,

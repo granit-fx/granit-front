@@ -1,6 +1,8 @@
 // Types
 export type {
   AdminImpersonationResponse,
+  AdminOidcApplicationListParams,
+  AdminOidcApplicationPage,
   AdminOidcApplicationResponse,
   AdminOidcCreateApplicationRequest,
   AdminOidcRotateSecretResponse,
@@ -8,8 +10,11 @@ export type {
   AdminOidcAuthorizationResponse,
   AdminOidcCreateAuthorizationRequest,
   AdminOidcAuthorizationListParams,
+  AdminOidcAuthorizationPage,
   AdminOidcScopeResponse,
   AdminOidcCreateScopeRequest,
+  AdminOidcScopeListParams,
+  AdminOidcScopePage,
   AdminOidcUpdateScopeRequest,
   AdminUser,
   AdminUserListParams,

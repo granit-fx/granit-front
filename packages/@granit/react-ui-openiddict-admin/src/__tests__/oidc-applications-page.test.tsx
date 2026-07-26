@@ -24,11 +24,31 @@ const nullApp: AdminOidcApplicationResponse = {
   hasSigningKey: true,
 };
 
-let appsQuery: { data: readonly AdminOidcApplicationResponse[]; isLoading: boolean } = {
+// Tests assign a plain array (plus optional totalCount/hasMore); the mocked hook
+// wraps it in the PagedResult envelope the page actually consumes.
+let appsQuery: {
+  data: readonly AdminOidcApplicationResponse[];
+  isLoading: boolean;
+  totalCount?: number | null;
+  hasMore?: boolean;
+} = {
   data: [],
   isLoading: false,
 };
 let canManage = true;
+
+function appsPage() {
+  return {
+    data: {
+      items: appsQuery.data,
+      // `null` is a meaningful wire value (backend withheld the count), so only
+      // an absent key falls back to the fixture length.
+      totalCount: 'totalCount' in appsQuery ? appsQuery.totalCount : appsQuery.data.length,
+      hasMore: appsQuery.hasMore ?? false,
+    },
+    isLoading: appsQuery.isLoading,
+  };
+}
 
 const createMutate = vi.fn();
 const updateMutate = vi.fn();
@@ -36,7 +56,7 @@ const deleteMutate = vi.fn();
 let pending = false;
 
 vi.mock('@granit/react-openiddict-admin', () => ({
-  useOidcApplications: () => appsQuery,
+  useOidcApplications: () => appsPage(),
   useCreateOidcApplication: () => ({ mutateAsync: createMutate, isPending: pending }),
   useUpdateOidcApplication: () => ({ mutateAsync: updateMutate, isPending: pending }),
   useDeleteOidcApplication: () => ({ mutateAsync: deleteMutate, isPending: pending }),
@@ -59,11 +79,91 @@ beforeEach(() => {
   appsQuery = { data: [], isLoading: false };
   canManage = true;
   pending = false;
-  createMutate.mockReset().mockResolvedValue(undefined);
+  // The real mutation resolves the created application; without a body the page
+  // cannot tell whether a secret was generated.
+  createMutate.mockReset().mockResolvedValue({ ...nullApp, clientId: 'new-client' });
   updateMutate.mockReset().mockResolvedValue(undefined);
   deleteMutate.mockReset().mockResolvedValue(undefined);
   toastSuccess.mockReset();
   toastError.mockReset();
+});
+
+describe('OidcApplicationsPage — server-side paging', () => {
+  it('hides pagination controls when a single page covers the results', () => {
+    appsQuery = { data: mockOidcApplications, isLoading: false, totalCount: 3 };
+    renderWithProviders(<OidcApplicationsPage />);
+    expect(document.querySelector('[data-slot="table-pagination"]')).not.toBeInTheDocument();
+  });
+
+  it('shows pagination controls once totalCount exceeds the page size', () => {
+    appsQuery = { data: mockOidcApplications, isLoading: false, totalCount: 90, hasMore: true };
+    renderWithProviders(<OidcApplicationsPage />);
+    expect(document.querySelector('[data-slot="table-pagination"]')).toBeInTheDocument();
+  });
+
+  it('renders rows from the envelope items', () => {
+    appsQuery = { data: mockOidcApplications, isLoading: false, totalCount: 90 };
+    renderWithProviders(<OidcApplicationsPage />);
+    expect(screen.getByText(mockOidcApplications[0]!.clientId!)).toBeInTheDocument();
+  });
+});
+
+describe('OidcApplicationsPage — server-generated client secret', () => {
+  it('requests generation and reveals the returned secret once', async () => {
+    createMutate.mockResolvedValue({
+      ...nullApp,
+      clientId: 'new-client',
+      generatedClientSecret: 'sup3r-s3cr3t',
+    });
+    const { user } = renderWithProviders(<OidcApplicationsPage />);
+    await user.click(screen.getByRole('button', { name: 'Create Application' }));
+
+    const dialog = within(await screen.findByRole('dialog'));
+    await user.type(dialog.getByLabelText('Client ID'), 'new-client');
+    await user.click(dialog.getByLabelText('Generate the client secret'));
+    await user.click(dialog.getByRole('button', { name: 'Create Application' }));
+
+    await waitFor(() => expect(createMutate).toHaveBeenCalledTimes(1));
+    expect(createMutate.mock.calls[0]![0]).toMatchObject({
+      clientId: 'new-client',
+      generateClientSecret: true,
+    });
+
+    expect(
+      await screen.findByRole('heading', { name: 'Client secret generated' })
+    ).toBeInTheDocument();
+    expect(screen.getByText('sup3r-s3cr3t')).toBeInTheDocument();
+  });
+
+  it('does not send an explicit clientSecret when generation is requested', async () => {
+    const { user } = renderWithProviders(<OidcApplicationsPage />);
+    await user.click(screen.getByRole('button', { name: 'Create Application' }));
+
+    const dialog = within(await screen.findByRole('dialog'));
+    await user.type(dialog.getByLabelText('Client ID'), 'new-client');
+    await user.type(dialog.getByLabelText('Client Secret'), 'typed-by-hand');
+    await user.click(dialog.getByLabelText('Generate the client secret'));
+    await user.click(dialog.getByRole('button', { name: 'Create Application' }));
+
+    await waitFor(() => expect(createMutate).toHaveBeenCalledTimes(1));
+    expect(createMutate.mock.calls[0]![0]).toMatchObject({ generateClientSecret: true });
+    expect(createMutate.mock.calls[0]![0].clientSecret).toBeUndefined();
+  });
+
+  it('does not open the reveal dialog when no secret was generated', async () => {
+    const { user } = renderWithProviders(<OidcApplicationsPage />);
+    await user.click(screen.getByRole('button', { name: 'Create Application' }));
+
+    const dialog = within(await screen.findByRole('dialog'));
+    await user.type(dialog.getByLabelText('Client ID'), 'new-client');
+    await user.click(dialog.getByRole('button', { name: 'Create Application' }));
+
+    await waitFor(() => expect(createMutate).toHaveBeenCalledTimes(1));
+    expect(createMutate.mock.calls[0]![0].generateClientSecret).toBeUndefined();
+    expect(
+      screen.queryByRole('heading', { name: 'Client secret generated' })
+    ).not.toBeInTheDocument();
+  });
 });
 
 describe('OidcApplicationsPage', () => {

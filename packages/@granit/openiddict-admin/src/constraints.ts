@@ -33,7 +33,11 @@ export const openiddictConstraints = {
       "maxLength": 65536
     },
     "clientSide": {},
-    "deviceKind": {}
+    "deviceKind": {},
+    "tenantId": {
+      "format": "uuid"
+    },
+    "generateClientSecret": {}
   },
   "AdminOidcCreateAuthorizationRequest": {
     "subject": {
@@ -61,6 +65,9 @@ export const openiddictConstraints = {
     },
     "resources": {
       "maxLength": 512
+    },
+    "tenantId": {
+      "format": "uuid"
     }
   },
   "AdminOidcUpdateApplicationRequest": {

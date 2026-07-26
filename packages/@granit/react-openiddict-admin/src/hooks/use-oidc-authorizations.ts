@@ -12,6 +12,7 @@ import type {
   AdminOidcAuthorizationResponse,
   AdminOidcCreateAuthorizationRequest,
   AdminOidcAuthorizationListParams,
+  AdminOidcAuthorizationPage,
 } from '@granit/openiddict-admin';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
@@ -35,10 +36,10 @@ export function useCreateOidcAuthorization(): UseMutationResult<
   });
 }
 
-/** Fetches OIDC authorizations with optional filtering. */
+/** Fetches one page of OIDC authorizations, filtered server-side by `subject`/`clientId`. */
 export function useOidcAuthorizations(
   params?: AdminOidcAuthorizationListParams
-): UseQueryResult<readonly AdminOidcAuthorizationResponse[]> {
+): UseQueryResult<AdminOidcAuthorizationPage> {
   const config = useAdminConfig();
 
   return useQuery({

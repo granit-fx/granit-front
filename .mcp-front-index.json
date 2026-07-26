@@ -2410,7 +2410,7 @@
         {
           "name": "listScopes",
           "kind": "function",
-          "signature": "async function listScopes( client: AxiosInstance, basePath: string ): Promise<readonly AdminOidcScopeResponse[]>"
+          "signature": "async function listScopes( client: AxiosInstance, basePath: string, params?: AdminOidcScopeListParams ): Promise<AdminOidcScopePage>"
         },
         {
           "name": "updateScope",

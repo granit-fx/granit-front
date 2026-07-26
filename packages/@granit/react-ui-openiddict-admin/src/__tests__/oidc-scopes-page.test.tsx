@@ -14,9 +14,17 @@ const nullScope: AdminOidcScopeResponse = {
   displayName: null,
   description: null,
   resources: null,
+  tenantId: null,
 };
 
-let scopesQuery: { data: readonly AdminOidcScopeResponse[]; isLoading: boolean } = {
+// Tests assign a plain array (plus optional totalCount/hasMore); the mocked hook
+// wraps it in the PagedResult envelope the page actually consumes.
+let scopesQuery: {
+  data: readonly AdminOidcScopeResponse[];
+  isLoading: boolean;
+  totalCount?: number | null;
+  hasMore?: boolean;
+} = {
   data: [],
   isLoading: false,
 };
@@ -27,8 +35,21 @@ const updateMutate = vi.fn();
 const deleteMutate = vi.fn();
 let pending = false;
 
+function scopesPage() {
+  return {
+    data: {
+      items: scopesQuery.data,
+      // `null` is a meaningful wire value (backend withheld the count), so only
+      // an absent key falls back to the fixture length.
+      totalCount: 'totalCount' in scopesQuery ? scopesQuery.totalCount : scopesQuery.data.length,
+      hasMore: scopesQuery.hasMore ?? false,
+    },
+    isLoading: scopesQuery.isLoading,
+  };
+}
+
 vi.mock('@granit/react-openiddict-admin', () => ({
-  useOidcScopes: () => scopesQuery,
+  useOidcScopes: () => scopesPage(),
   useCreateOidcScope: () => ({ mutateAsync: createMutate, isPending: pending }),
   useUpdateOidcScope: () => ({ mutateAsync: updateMutate, isPending: pending }),
   useDeleteOidcScope: () => ({ mutateAsync: deleteMutate, isPending: pending }),
@@ -56,6 +77,26 @@ beforeEach(() => {
   deleteMutate.mockReset().mockResolvedValue(undefined);
   toastSuccess.mockReset();
   toastError.mockReset();
+});
+
+describe('OidcScopesPage — server-side paging', () => {
+  it('hides pagination controls when a single page covers the results', () => {
+    scopesQuery = { data: mockOidcScopes, isLoading: false, totalCount: 4 };
+    renderWithProviders(<OidcScopesPage />);
+    expect(document.querySelector('[data-slot="table-pagination"]')).not.toBeInTheDocument();
+  });
+
+  it('shows pagination controls once totalCount exceeds the page size', () => {
+    scopesQuery = { data: mockOidcScopes, isLoading: false, totalCount: 60, hasMore: true };
+    renderWithProviders(<OidcScopesPage />);
+    expect(document.querySelector('[data-slot="table-pagination"]')).toBeInTheDocument();
+  });
+
+  it('renders rows from the envelope items', () => {
+    scopesQuery = { data: mockOidcScopes, isLoading: false, totalCount: 60 };
+    renderWithProviders(<OidcScopesPage />);
+    expect(screen.getByText(mockOidcScopes[0]!.name!)).toBeInTheDocument();
+  });
 });
 
 describe('OidcScopesPage', () => {

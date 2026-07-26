@@ -6,17 +6,21 @@ import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admi
 import type {
   AdminOidcScopeResponse,
   AdminOidcCreateScopeRequest,
+  AdminOidcScopeListParams,
+  AdminOidcScopePage,
   AdminOidcUpdateScopeRequest,
 } from '@granit/openiddict-admin';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
-/** Fetches all OIDC scopes. */
-export function useOidcScopes(): UseQueryResult<readonly AdminOidcScopeResponse[]> {
+/** Fetches one page of OIDC scopes. */
+export function useOidcScopes(
+  params?: AdminOidcScopeListParams
+): UseQueryResult<AdminOidcScopePage> {
   const config = useAdminConfig();
 
   return useQuery({
-    queryKey: buildAdminQueryKey(config, 'oidc', 'scopes'),
-    queryFn: () => listScopes(config.client, config.basePath!),
+    queryKey: [...buildAdminQueryKey(config, 'oidc', 'scopes'), params],
+    queryFn: () => listScopes(config.client, config.basePath!, params),
   });
 }
 

@@ -31,9 +31,16 @@ interface GroupedResult<T> {
  *
  * @param items  - page of results to return
  * @param totalCount - total across all pages (defaults to `items.length`)
+ * @param hasMore - whether further pages exist; omitted from the body when not
+ *   supplied, so existing single-page fixtures keep their previous shape
  */
-export function pagedResponse<T>(items: readonly T[], totalCount: number = items.length) {
-  const body: PagedResult<T> = { items, totalCount };
+export function pagedResponse<T>(
+  items: readonly T[],
+  totalCount: number = items.length,
+  hasMore?: boolean
+) {
+  const body: PagedResult<T> =
+    hasMore === undefined ? { items, totalCount } : { items, totalCount, hasMore };
   return HttpResponse.json(body);
 }
 

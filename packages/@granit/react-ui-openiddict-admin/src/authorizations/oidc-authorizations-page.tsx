@@ -24,13 +24,14 @@ import {
   Spinner,
   toast,
 } from '@granit/react-ui';
-import { EmptyState } from '@granit/react-ui-kit';
+import { EmptyState, TablePagination } from '@granit/react-ui-kit';
 import { createConstraintsResolver } from '@granit/react-validation';
-import { KeyRound, Loader2, Plus, ShieldOff } from 'lucide-react';
+import { KeyRound, Loader2, Plus, ShieldOff, X } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
 
 import { logger } from '../logger';
+import { PAGE_SIZE_OPTIONS, shouldPaginate, usePageState } from '../pagination';
 
 import type { AxiosError } from '@granit/react-openiddict-admin';
 
@@ -59,7 +60,18 @@ export function OidcAuthorizationsPage() {
   const canCreate = hasPermission(OpenIddictPermissions.Authorizations.Create);
   const canRevoke = hasPermission(OpenIddictPermissions.Authorizations.Revoke);
 
-  const { data: authorizations, isLoading } = useOidcAuthorizations();
+  const { page, pageSize, setPage, setPageSize, onRowsRemoved, resetPage } = usePageState();
+  // Draft inputs are applied on submit so each keystroke doesn't hit the server.
+  const [subjectDraft, setSubjectDraft] = useState('');
+  const [clientIdDraft, setClientIdDraft] = useState('');
+  const [filters, setFilters] = useState<{ subject?: string; clientId?: string }>({});
+
+  const { data: authorizationsPage, isLoading } = useOidcAuthorizations({
+    page,
+    pageSize,
+    ...filters,
+  });
+  const authorizations = authorizationsPage?.items;
   const createMutation = useCreateOidcAuthorization();
   const revokeMutation = useRevokeAuthorization();
   const revokeUserMutation = useRevokeUserAuthorizations();
@@ -68,6 +80,27 @@ export function OidcAuthorizationsPage() {
   const [revokeTarget, setRevokeTarget] = useState<string | null>(null);
   const [revokeUserTarget, setRevokeUserTarget] = useState<string | null>(null);
   const [scopeInput, setScopeInput] = useState('');
+
+  const hasFilters = filters.subject !== undefined || filters.clientId !== undefined;
+
+  const applyFilters = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      setFilters({
+        subject: subjectDraft.trim() || undefined,
+        clientId: clientIdDraft.trim() || undefined,
+      });
+      resetPage();
+    },
+    [subjectDraft, clientIdDraft, resetPage]
+  );
+
+  const clearFilters = useCallback(() => {
+    setSubjectDraft('');
+    setClientIdDraft('');
+    setFilters({});
+    resetPage();
+  }, [resetPage]);
 
   const grantResolver = createConstraintsResolver(
     openiddictConstraints.AdminOidcCreateAuthorizationRequest,
@@ -131,6 +164,7 @@ export function OidcAuthorizationsPage() {
       await revokeMutation.mutateAsync(revokeTarget);
       toast.success(t('OpenIddict.Authorizations.RevokeSuccess'));
       setRevokeTarget(null);
+      onRowsRemoved((authorizations?.length ?? 1) - 1);
     } catch (err) {
       logger.error('[OidcAuthorizations] revoke failed', err);
       toast.error(t('OpenIddict.Authorizations.RevokeError'));
@@ -167,6 +201,46 @@ export function OidcAuthorizationsPage() {
           </Button>
         )}
       </div>
+
+      <form
+        className="flex flex-wrap items-end gap-2"
+        onSubmit={applyFilters}
+        data-slot="oidc-authorizations-filters"
+      >
+        <div className="flex flex-col gap-1">
+          <label htmlFor="filter-subject" className="text-xs text-muted-foreground">
+            {t('OpenIddict.Authorizations.Filters.Subject')}
+          </label>
+          <Input
+            id="filter-subject"
+            value={subjectDraft}
+            onChange={(e) => setSubjectDraft(e.target.value)}
+            placeholder={t('OpenIddict.Authorizations.Filters.SubjectPlaceholder')}
+            className="w-64"
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label htmlFor="filter-client-id" className="text-xs text-muted-foreground">
+            {t('OpenIddict.Authorizations.Filters.ClientId')}
+          </label>
+          <Input
+            id="filter-client-id"
+            value={clientIdDraft}
+            onChange={(e) => setClientIdDraft(e.target.value)}
+            placeholder={t('OpenIddict.Authorizations.Filters.ClientIdPlaceholder')}
+            className="w-64"
+          />
+        </div>
+        <Button type="submit" variant="secondary">
+          {t('OpenIddict.Authorizations.Filters.Apply')}
+        </Button>
+        {hasFilters && (
+          <Button type="button" variant="ghost" onClick={clearFilters}>
+            <X className="mr-1 size-3.5" />
+            {t('OpenIddict.Authorizations.Filters.Clear')}
+          </Button>
+        )}
+      </form>
 
       {isLoading && (
         <div className="flex h-64 items-center justify-center">
@@ -246,8 +320,26 @@ export function OidcAuthorizationsPage() {
         </div>
       )}
 
+      {!isLoading && shouldPaginate(authorizationsPage, pageSize) && (
+        <TablePagination
+          page={page}
+          pageSize={pageSize}
+          totalCount={authorizationsPage?.totalCount ?? 0}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+          pageSizeOptions={PAGE_SIZE_OPTIONS}
+        />
+      )}
+
       {!isLoading && (!authorizations || authorizations.length === 0) && (
-        <EmptyState icon={KeyRound} message={t('OpenIddict.Authorizations.Empty')} />
+        <EmptyState
+          icon={KeyRound}
+          message={
+            hasFilters
+              ? t('OpenIddict.Authorizations.EmptyFiltered')
+              : t('OpenIddict.Authorizations.Empty')
+          }
+        />
       )}
 
       {/* Grant consent dialog */}

@@ -37,6 +37,25 @@ describe('pagedResponse', () => {
     expect(body).toEqual({ items, totalCount: 100 });
   });
 
+  it('omits hasMore when not supplied', async () => {
+    const body = (await pagedResponse([{ id: 1 }]).json()) as Record<string, unknown>;
+    expect('hasMore' in body).toBe(false);
+  });
+
+  it('includes hasMore when supplied', async () => {
+    const items = [{ id: 1 }];
+    const res = pagedResponse(items, 100, true);
+    const body = await res.json();
+    expect(body).toEqual({ items, totalCount: 100, hasMore: true });
+  });
+
+  it('includes hasMore when explicitly false', async () => {
+    const items = [{ id: 1 }];
+    const res = pagedResponse(items, 1, false);
+    const body = await res.json();
+    expect(body).toEqual({ items, totalCount: 1, hasMore: false });
+  });
+
   it('returns 200', () => {
     expect(pagedResponse([]).status).toBe(200);
   });

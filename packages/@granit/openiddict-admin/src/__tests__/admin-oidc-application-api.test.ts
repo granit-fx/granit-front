@@ -9,7 +9,11 @@ import {
   updateApplication,
 } from '../api/admin-oidc-application-api';
 
-import type { AdminOidcApplicationResponse, AdminOidcRotateSecretResponse } from '../types/index';
+import type {
+  AdminOidcApplicationPage,
+  AdminOidcApplicationResponse,
+  AdminOidcRotateSecretResponse,
+} from '../types/index';
 
 const BASE = '/admin';
 
@@ -27,18 +31,37 @@ const mockApplication: AdminOidcApplicationResponse = {
   hasSigningKey: false,
 };
 
+const mockApplicationPage: AdminOidcApplicationPage = {
+  items: [mockApplication],
+  totalCount: 1,
+  hasMore: false,
+};
+
 describe('admin-oidc-application-api', () => {
   // ── List ──────────────────────────────────────────────────────────────────
 
   describe('listApplications', () => {
-    it('sends GET to /oidc/applications', async () => {
+    it('sends GET to /oidc/applications and returns the paged envelope', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValueOnce({ data: [mockApplication] });
+      vi.mocked(client.get).mockResolvedValueOnce({ data: mockApplicationPage });
 
       const result = await listApplications(client, BASE);
 
-      expect(client.get).toHaveBeenCalledWith(`${BASE}/oidc/applications`);
-      expect(result).toEqual([mockApplication]);
+      expect(client.get).toHaveBeenCalledWith(`${BASE}/oidc/applications`, { params: undefined });
+      expect(result.items).toEqual([mockApplication]);
+      expect(result.totalCount).toBe(1);
+      expect(result.hasMore).toBe(false);
+    });
+
+    it('forwards page/pageSize', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValueOnce({ data: mockApplicationPage });
+
+      await listApplications(client, BASE, { page: 2, pageSize: 100 });
+
+      expect(client.get).toHaveBeenCalledWith(`${BASE}/oidc/applications`, {
+        params: { page: 2, pageSize: 100 },
+      });
     });
   });
 
@@ -59,6 +82,33 @@ describe('admin-oidc-application-api', () => {
         displayName: 'My SPA',
       });
       expect(result).toEqual(mockApplication);
+    });
+
+    it('returns the one-shot generated secret when generateClientSecret is set', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValueOnce({
+        data: { ...mockApplication, generatedClientSecret: 's3cr3t' },
+      });
+
+      const result = await createApplication(client, BASE, {
+        clientId: 'my-spa',
+        generateClientSecret: true,
+      });
+
+      expect(client.post).toHaveBeenCalledWith(`${BASE}/oidc/applications`, {
+        clientId: 'my-spa',
+        generateClientSecret: true,
+      });
+      expect(result.generatedClientSecret).toBe('s3cr3t');
+    });
+
+    it('omits generatedClientSecret when the server did not generate one', async () => {
+      const client = createMockClient();
+      vi.mocked(client.post).mockResolvedValueOnce({ data: mockApplication });
+
+      const result = await createApplication(client, BASE, { clientId: 'my-spa' });
+
+      expect(result.generatedClientSecret).toBeUndefined();
     });
   });
 

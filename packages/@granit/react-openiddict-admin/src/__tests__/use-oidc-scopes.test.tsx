@@ -14,7 +14,7 @@ import {
 } from '../hooks/use-oidc-scopes';
 import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider';
 
-import type { AdminOidcScopeResponse } from '@granit/openiddict-admin';
+import type { AdminOidcScopePage, AdminOidcScopeResponse } from '@granit/openiddict-admin';
 
 vi.mock('@granit/openiddict-admin', () => ({
   listScopes: vi.fn(),
@@ -42,24 +42,32 @@ const mockScope: AdminOidcScopeResponse = {
   displayName: 'API access',
   description: null,
   resources: ['api://my-api'],
+  tenantId: null,
 };
 
 const mockScopes: readonly AdminOidcScopeResponse[] = [
   mockScope,
-  { name: 'openid', displayName: 'OpenID', description: null, resources: [] },
+  { name: 'openid', displayName: 'OpenID', description: null, resources: [], tenantId: null },
 ];
 
+const mockScopePage: AdminOidcScopePage = {
+  items: mockScopes,
+  totalCount: mockScopes.length,
+  hasMore: false,
+};
+
 describe('useOidcScopes', () => {
-  it('should fetch all OIDC scopes', async () => {
-    vi.mocked(listScopes).mockResolvedValueOnce(mockScopes);
+  it('should fetch a page of OIDC scopes', async () => {
+    vi.mocked(listScopes).mockResolvedValueOnce(mockScopePage);
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useOidcScopes(), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(listScopes).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin');
-    expect(result.current.data).toEqual(mockScopes);
+    expect(listScopes).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', undefined);
+    expect(result.current.data?.items).toEqual(mockScopes);
+    expect(result.current.data?.totalCount).toBe(2);
   });
 
   it('should handle fetch error', async () => {

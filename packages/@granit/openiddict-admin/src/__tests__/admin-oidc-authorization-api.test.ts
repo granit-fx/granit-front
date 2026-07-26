@@ -9,6 +9,7 @@ import {
 } from '../api/admin-oidc-authorization-api';
 
 import type {
+  AdminOidcAuthorizationPage,
   AdminOidcAuthorizationResponse,
   AdminOidcCreateAuthorizationRequest,
 } from '../types/index';
@@ -24,7 +25,11 @@ const mockAuthorization: AdminOidcAuthorizationResponse = {
   scopes: ['openid', 'profile'],
 };
 
-const mockAuthorizations: readonly AdminOidcAuthorizationResponse[] = [mockAuthorization];
+const mockAuthorizationPage: AdminOidcAuthorizationPage = {
+  items: [mockAuthorization],
+  totalCount: 1,
+  hasMore: false,
+};
 
 describe('admin-oidc-authorization-api', () => {
   // ── Create ────────────────────────────────────────────────────────────────
@@ -49,30 +54,34 @@ describe('admin-oidc-authorization-api', () => {
   // ── List ──────────────────────────────────────────────────────────────────
 
   describe('listAuthorizations', () => {
-    it('sends GET to /oidc/authorizations with params', async () => {
+    it('sends GET to /oidc/authorizations with subject/client filters and paging', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValueOnce({ data: mockAuthorizations });
+      vi.mocked(client.get).mockResolvedValueOnce({ data: mockAuthorizationPage });
 
       const result = await listAuthorizations(client, BASE, {
-        userId: 'user-001',
+        subject: 'user-001',
+        clientId: 'my-spa',
+        page: 2,
+        pageSize: 50,
       });
 
       expect(client.get).toHaveBeenCalledWith(`${BASE}/oidc/authorizations`, {
-        params: { userId: 'user-001' },
+        params: { subject: 'user-001', clientId: 'my-spa', page: 2, pageSize: 50 },
       });
-      expect(result).toEqual(mockAuthorizations);
+      expect(result).toEqual(mockAuthorizationPage);
     });
 
     it('sends GET to /oidc/authorizations without params', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValueOnce({ data: mockAuthorizations });
+      vi.mocked(client.get).mockResolvedValueOnce({ data: mockAuthorizationPage });
 
       const result = await listAuthorizations(client, BASE);
 
       expect(client.get).toHaveBeenCalledWith(`${BASE}/oidc/authorizations`, {
         params: undefined,
       });
-      expect(result).toEqual(mockAuthorizations);
+      expect(result.items).toEqual([mockAuthorization]);
+      expect(result.totalCount).toBe(1);
     });
   });
 

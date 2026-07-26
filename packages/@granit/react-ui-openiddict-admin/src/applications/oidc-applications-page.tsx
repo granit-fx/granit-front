@@ -9,6 +9,7 @@ import {
 } from '@granit/react-openiddict-admin';
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogContent,
   DialogFooter,
@@ -31,17 +32,18 @@ import {
   Textarea,
   toast,
 } from '@granit/react-ui';
-import { EmptyState } from '@granit/react-ui-kit';
+import { EmptyState, TablePagination } from '@granit/react-ui-kit';
 import {
   createConstraintsResolver,
   type ConstraintsResolver,
   type TranslateFunction,
 } from '@granit/react-validation';
-import { CheckCircle2, Loader2, Pencil, Plus, Shield, Trash2, XCircle } from 'lucide-react';
+import { CheckCircle2, Copy, Loader2, Pencil, Plus, Shield, Trash2, XCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useForm, type FieldValues, type Resolver } from 'react-hook-form';
 
 import { logger } from '../logger';
+import { PAGE_SIZE_OPTIONS, shouldPaginate, usePageState } from '../pagination';
 
 import type { AdminOidcApplicationResponse } from '@granit/openiddict-admin';
 import type { AxiosError } from '@granit/react-openiddict-admin';
@@ -75,6 +77,7 @@ function isAbsoluteUri(value: string): boolean {
 interface CreateFormValues {
   readonly clientId: string;
   readonly clientSecret?: string;
+  readonly generateClientSecret?: boolean;
   readonly displayName?: string;
   readonly type?: string | null;
   readonly permissions?: string[];
@@ -150,7 +153,9 @@ export function OidcApplicationsPage() {
   const { hasPermission } = usePermissions();
   const canManage = hasPermission(OpenIddictPermissions.Applications.Manage);
 
-  const { data: applications, isLoading } = useOidcApplications();
+  const { page, pageSize, setPage, setPageSize, onRowsRemoved } = usePageState();
+  const { data: applicationsPage, isLoading } = useOidcApplications({ page, pageSize });
+  const applications = applicationsPage?.items;
   const createMutation = useCreateOidcApplication();
   const updateMutation = useUpdateOidcApplication();
   const deleteMutation = useDeleteOidcApplication();
@@ -158,6 +163,11 @@ export function OidcApplicationsPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<AdminOidcApplicationResponse | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<AdminOidcApplicationResponse | null>(null);
+  // Plaintext secret minted by the server on create — shown once, then dropped.
+  const [revealedSecret, setRevealedSecret] = useState<{
+    clientId: string;
+    secret: string;
+  } | null>(null);
 
   const createResolver = withUriListValidation(
     createConstraintsResolver(openiddictConstraints.AdminOidcCreateApplicationRequest, t, {
@@ -180,6 +190,7 @@ export function OidcApplicationsPage() {
     defaultValues: {
       clientId: '',
       clientSecret: '',
+      generateClientSecret: false,
       displayName: '',
       type: null,
       permissions: [],
@@ -207,9 +218,10 @@ export function OidcApplicationsPage() {
 
   const handleCreate = async (data: CreateFormValues) => {
     try {
-      await createMutation.mutateAsync({
+      const created = await createMutation.mutateAsync({
         clientId: data.clientId,
-        clientSecret: data.clientSecret || undefined,
+        // A server-generated secret and an explicit one are mutually exclusive.
+        clientSecret: data.generateClientSecret ? undefined : data.clientSecret || undefined,
         displayName: data.displayName || undefined,
         type: data.type || undefined,
         permissions: data.permissions?.length ? data.permissions : undefined,
@@ -220,10 +232,18 @@ export function OidcApplicationsPage() {
         consentType: data.consentType || undefined,
         signingKeyJwk: data.signingKeyJwk || undefined,
         clientSide: data.clientSide ?? undefined,
+        generateClientSecret: data.generateClientSecret || undefined,
       });
       toast.success(t('OpenIddict.Applications.CreateSuccess'));
       setCreateOpen(false);
       createForm.reset();
+      // Only ever present on a create-with-generation response.
+      if (created.generatedClientSecret) {
+        setRevealedSecret({
+          clientId: created.clientId ?? data.clientId,
+          secret: created.generatedClientSecret,
+        });
+      }
     } catch (err) {
       logger.error('[OidcApplications] create failed', err);
       toast.error(t('OpenIddict.Applications.CreateError'));
@@ -279,6 +299,7 @@ export function OidcApplicationsPage() {
       await deleteMutation.mutateAsync(deleteTarget.clientId);
       toast.success(t('OpenIddict.Applications.DeleteSuccess'));
       setDeleteTarget(null);
+      onRowsRemoved((applications?.length ?? 1) - 1);
     } catch (err) {
       logger.error('[OidcApplications] delete failed', err);
       toast.error(t('OpenIddict.Applications.DeleteError'));
@@ -400,6 +421,17 @@ export function OidcApplicationsPage() {
         </div>
       )}
 
+      {!isLoading && shouldPaginate(applicationsPage, pageSize) && (
+        <TablePagination
+          page={page}
+          pageSize={pageSize}
+          totalCount={applicationsPage?.totalCount ?? 0}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+          pageSizeOptions={PAGE_SIZE_OPTIONS}
+        />
+      )}
+
       {!isLoading && (!applications || applications.length === 0) && (
         <EmptyState icon={Shield} message={t('OpenIddict.Applications.Empty')} />
       )}
@@ -468,12 +500,40 @@ export function OidcApplicationsPage() {
               />
               <FormField
                 control={createForm.control}
+                name="generateClientSecret"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-2">
+                      <FormControl>
+                        <Checkbox
+                          id="generateClientSecret"
+                          checked={field.value ?? false}
+                          onCheckedChange={(checked) => field.onChange(checked === true)}
+                        />
+                      </FormControl>
+                      <FormLabel htmlFor="generateClientSecret" className="mt-0!">
+                        {t('OpenIddict.Applications.Fields.GenerateClientSecret')}
+                      </FormLabel>
+                    </div>
+                    <FormDescription>
+                      {t('OpenIddict.Applications.Fields.GenerateClientSecretHint')}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={createForm.control}
                 name="clientSecret"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t('OpenIddict.Applications.Fields.ClientSecret')}</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <Input
+                        type="password"
+                        {...field}
+                        disabled={createForm.watch('generateClientSecret') === true}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -878,6 +938,45 @@ export function OidcApplicationsPage() {
               {deleteMutation.isPending && <Loader2 className="mr-1 size-3.5 animate-spin" />}
               {t('OpenIddict.Applications.Delete')}
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* One-shot reveal of the server-generated secret — never retrievable again */}
+      <Dialog open={!!revealedSecret} onOpenChange={(open) => !open && setRevealedSecret(null)}>
+        <DialogContent data-slot="oidc-generated-secret-dialog">
+          <DialogHeader>
+            <DialogTitle>{t('OpenIddict.Applications.GeneratedSecretTitle')}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 rounded-lg border border-warning/50 bg-warning/10 p-4">
+            <p className="text-sm text-foreground">
+              {t('OpenIddict.Applications.GeneratedSecretWarning')}
+            </p>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 break-all rounded bg-muted px-2 py-1 font-mono text-xs">
+                {revealedSecret?.secret}
+              </code>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  void navigator.clipboard.writeText(revealedSecret?.secret ?? '');
+                  toast.success(t('Common.Copied', 'Copied!'));
+                }}
+                aria-label={t('Common.Copy', 'Copy')}
+              >
+                <Copy className="size-4" />
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {t('OpenIddict.Applications.GeneratedSecretFor', {
+                clientId: revealedSecret?.clientId ?? '',
+              })}
+            </p>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setRevealedSecret(null)}>{t('Common.Close', 'Close')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

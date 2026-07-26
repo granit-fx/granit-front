@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { createScope, deleteScope, listScopes, updateScope } from '../api/admin-oidc-scope-api';
 
-import type { AdminOidcScopeResponse } from '../types/index';
+import type { AdminOidcScopePage, AdminOidcScopeResponse } from '../types/index';
 
 const BASE = '/admin';
 
@@ -12,20 +12,39 @@ const mockScope: AdminOidcScopeResponse = {
   displayName: 'API Access',
   description: null,
   resources: ['api://my-api'],
+  tenantId: null,
+};
+
+const mockScopePage: AdminOidcScopePage = {
+  items: [mockScope],
+  totalCount: 1,
+  hasMore: false,
 };
 
 describe('admin-oidc-scope-api', () => {
   // ── List ──────────────────────────────────────────────────────────────────
 
   describe('listScopes', () => {
-    it('sends GET to /oidc/scopes', async () => {
+    it('sends GET to /oidc/scopes and returns the paged envelope', async () => {
       const client = createMockClient();
-      vi.mocked(client.get).mockResolvedValueOnce({ data: [mockScope] });
+      vi.mocked(client.get).mockResolvedValueOnce({ data: mockScopePage });
 
       const result = await listScopes(client, BASE);
 
-      expect(client.get).toHaveBeenCalledWith(`${BASE}/oidc/scopes`);
-      expect(result).toEqual([mockScope]);
+      expect(client.get).toHaveBeenCalledWith(`${BASE}/oidc/scopes`, { params: undefined });
+      expect(result.items).toEqual([mockScope]);
+      expect(result.totalCount).toBe(1);
+    });
+
+    it('forwards page/pageSize', async () => {
+      const client = createMockClient();
+      vi.mocked(client.get).mockResolvedValueOnce({ data: mockScopePage });
+
+      await listScopes(client, BASE, { page: 3, pageSize: 10 });
+
+      expect(client.get).toHaveBeenCalledWith(`${BASE}/oidc/scopes`, {
+        params: { page: 3, pageSize: 10 },
+      });
     });
   });
 

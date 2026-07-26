@@ -11,6 +11,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { buildAdminQueryKey, useAdminConfig } from '../providers/openiddict-admin-provider';
 
 import type {
+  AdminOidcApplicationListParams,
+  AdminOidcApplicationPage,
   AdminOidcApplicationResponse,
   AdminOidcCreateApplicationRequest,
   AdminOidcRotateSecretResponse,
@@ -39,13 +41,15 @@ export function useOidcApplication(
   });
 }
 
-/** Fetches all OIDC applications. */
-export function useOidcApplications(): UseQueryResult<readonly AdminOidcApplicationResponse[]> {
+/** Fetches one page of OIDC applications. */
+export function useOidcApplications(
+  params?: AdminOidcApplicationListParams
+): UseQueryResult<AdminOidcApplicationPage> {
   const config = useAdminConfig();
 
   return useQuery({
-    queryKey: buildAdminQueryKey(config, 'oidc', 'applications'),
-    queryFn: () => listApplications(config.client, config.basePath!),
+    queryKey: [...buildAdminQueryKey(config, 'oidc', 'applications'), params],
+    queryFn: () => listApplications(config.client, config.basePath!, params),
   });
 }
 

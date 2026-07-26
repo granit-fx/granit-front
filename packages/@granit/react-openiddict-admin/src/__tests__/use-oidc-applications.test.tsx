@@ -24,6 +24,7 @@ import {
 import { OpenIddictAdminProvider } from '../providers/openiddict-admin-provider';
 
 import type {
+  AdminOidcApplicationPage,
   AdminOidcApplicationResponse,
   AdminOidcRotateSecretResponse,
 } from '@granit/openiddict-admin';
@@ -54,19 +55,40 @@ const mockApp: AdminOidcApplicationResponse = mockOidcApplications[0]!;
 const clientId = mockApp.clientId!;
 const displayName = mockApp.displayName!;
 
-const mockApps: readonly AdminOidcApplicationResponse[] = mockOidcApplications;
+const mockAppPage: AdminOidcApplicationPage = {
+  items: mockOidcApplications,
+  totalCount: mockOidcApplications.length,
+  hasMore: false,
+};
 
 describe('useOidcApplications', () => {
-  it('should fetch all OIDC applications', async () => {
-    vi.mocked(listApplications).mockResolvedValueOnce(mockApps);
+  it('should fetch a page of OIDC applications', async () => {
+    vi.mocked(listApplications).mockResolvedValueOnce(mockAppPage);
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useOidcApplications(), { wrapper });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(listApplications).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin');
-    expect(result.current.data).toEqual(mockApps);
+    expect(listApplications).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', undefined);
+    expect(result.current.data?.items).toEqual(mockOidcApplications);
+    expect(result.current.data?.totalCount).toBe(mockOidcApplications.length);
+  });
+
+  it('should forward page/pageSize', async () => {
+    vi.mocked(listApplications).mockResolvedValueOnce(mockAppPage);
+
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useOidcApplications({ page: 2, pageSize: 50 }), {
+      wrapper,
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(listApplications).toHaveBeenCalledWith(expect.anything(), '/api/v1/admin', {
+      page: 2,
+      pageSize: 50,
+    });
   });
 
   it('should handle fetch error', async () => {

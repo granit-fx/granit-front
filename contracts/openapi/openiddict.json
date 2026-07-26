@@ -8,19 +8,36 @@
     "/admin/oidc/applications": {
       "get": {
         "tags": ["OIDC - Admin"],
-        "summary": "Returns all OIDC applications.",
-        "description": "Returns all registered OIDC client applications with their full configuration: client ID, display name, type, tenant, permissions, redirect URIs, consent type, and signing-key presence. Use this list to manage the registered clients in the admin panel.",
+        "summary": "Returns a page of OIDC applications.",
+        "description": "Returns a page of registered OIDC client applications with their full configuration: client ID, display name, type, tenant, permissions, redirect URIs, consent type, and signing-key presence. Paginated via the 'page' (1-based, default 1) and 'pageSize' (default 25, max 100) query parameters; the envelope carries the total count and a has-more flag.",
         "operationId": "ListOidcApplications",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "1-based page index.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AdminOidcApplicationResponse"
-                  }
+                  "$ref": "#/components/schemas/PagedResultOfAdminOidcApplicationResponse"
                 }
               }
             }
@@ -60,7 +77,7 @@
       "post": {
         "tags": ["OIDC - Admin"],
         "summary": "Creates a new OIDC application.",
-        "description": "Registers a new OIDC client with the specified permissions, redirect URIs, and consent policy. For confidential clients, a client secret is generated and returned once in the response. Returns 409 Conflict if a client with the same client ID already exists.",
+        "description": "Registers a new OIDC client with the specified permissions, redirect URIs, and consent policy. Set generateClientSecret=true to have the server mint a cryptographically strong secret and return it once in the response's generatedClientSecret field (confidential client); alternatively provide clientSecret explicitly; omitting both creates a public client. Stored secrets are hashed. Returns 409 Conflict if a client with the same client ID already exists.",
         "operationId": "CreateOidcApplication",
         "requestBody": {
           "content": {
@@ -93,8 +110,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "403": {
+            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -103,8 +120,18 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -422,19 +449,36 @@
     "/admin/oidc/scopes": {
       "get": {
         "tags": ["OIDC - Admin"],
-        "summary": "Returns all OIDC scopes.",
-        "description": "Returns all registered OIDC scopes with their name, display name, and associated resources. Scopes define the claims and resources that tokens can grant access to. Use this endpoint to audit which scopes are available for client configuration.",
+        "summary": "Returns a page of OIDC scopes.",
+        "description": "Returns a page of registered OIDC scopes with their name, display name, and associated resources. Scopes define the claims and resources that tokens can grant access to. Paginated via the 'page' (1-based, default 1) and 'pageSize' (default 25, max 100) query parameters; the envelope carries the total count and a has-more flag.",
         "operationId": "ListOidcScopes",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "1-based page index.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AdminOidcScopeResponse"
-                  }
+                  "$ref": "#/components/schemas/PagedResultOfAdminOidcScopeResponse"
                 }
               }
             }
@@ -507,8 +551,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "403": {
+            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -517,8 +561,18 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -764,19 +818,51 @@
       },
       "get": {
         "tags": ["OIDC - Admin"],
-        "summary": "Returns OIDC authorizations.",
-        "description": "Returns OIDC authorizations filterable by user ID and client ID. Each authorization represents a user's consent grant to an application. Includes the authorization status (valid, revoked) and type (permanent, ad-hoc).",
+        "summary": "Returns a page of OIDC authorizations.",
+        "description": "Returns a page of OIDC authorizations. Each authorization represents a user's consent grant to an application, with its status (valid, revoked) and type (permanent, ad-hoc). Paginated via the 'page' (1-based, default 1) and 'pageSize' (default 25, max 100) query parameters; the envelope carries the total count and a has-more flag. Optionally filter server-side by 'subject' (user id) and/or 'clientId'; an unknown clientId yields an empty page.",
         "operationId": "ListOidcAuthorizations",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "1-based page index.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "subject",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "clientId",
+            "in": "query",
+            "description": "OAuth/OIDC client identifier (registered application).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AdminOidcAuthorizationResponse"
-                  }
+                  "$ref": "#/components/schemas/PagedResultOfAdminOidcAuthorizationResponse"
                 }
               }
             }
@@ -1080,6 +1166,9 @@
           },
           "hasSigningKey": {
             "type": "boolean"
+          },
+          "generatedClientSecret": {
+            "type": ["null", "string"]
           }
         }
       },
@@ -1177,6 +1266,14 @@
                 "$ref": "#/components/schemas/DeviceKind"
               }
             ]
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "generateClientSecret": {
+            "type": "boolean",
+            "default": false
           }
         }
       },
@@ -1222,6 +1319,10 @@
             "items": {
               "type": "string"
             }
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
           }
         }
       },
@@ -1241,7 +1342,7 @@
         }
       },
       "AdminOidcScopeResponse": {
-        "required": ["name", "displayName", "description", "resources"],
+        "required": ["name", "displayName", "description", "resources", "tenantId"],
         "type": "object",
         "properties": {
           "name": {
@@ -1258,6 +1359,10 @@
             "items": {
               "type": "string"
             }
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
           }
         }
       },
@@ -1397,6 +1502,72 @@
             "type": ["null", "string"]
           },
           "displayName": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "PagedResultOfAdminOidcApplicationResponse": {
+        "required": ["items", "totalCount", "hasMore"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminOidcApplicationResponse"
+            }
+          },
+          "totalCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "PagedResultOfAdminOidcAuthorizationResponse": {
+        "required": ["items", "totalCount", "hasMore"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminOidcAuthorizationResponse"
+            }
+          },
+          "totalCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "PagedResultOfAdminOidcScopeResponse": {
+        "required": ["items", "totalCount", "hasMore"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminOidcScopeResponse"
+            }
+          },
+          "totalCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
             "type": ["null", "string"]
           }
         }

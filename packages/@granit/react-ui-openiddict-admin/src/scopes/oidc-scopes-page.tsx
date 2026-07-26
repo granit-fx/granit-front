@@ -26,13 +26,14 @@ import {
   Textarea,
   toast,
 } from '@granit/react-ui';
-import { EmptyState } from '@granit/react-ui-kit';
+import { EmptyState, TablePagination } from '@granit/react-ui-kit';
 import { createConstraintsResolver } from '@granit/react-validation';
 import { Layers, Loader2, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
 
 import { logger } from '../logger';
+import { PAGE_SIZE_OPTIONS, shouldPaginate, usePageState } from '../pagination';
 
 import type { AdminOidcScopeResponse } from '@granit/openiddict-admin';
 import type { AxiosError } from '@granit/react-openiddict-admin';
@@ -64,7 +65,9 @@ export function OidcScopesPage() {
   const { hasPermission } = usePermissions();
   const canManage = hasPermission(OpenIddictPermissions.Scopes.Manage);
 
-  const { data: scopes, isLoading } = useOidcScopes();
+  const { page, pageSize, setPage, setPageSize, onRowsRemoved } = usePageState();
+  const { data: scopesPage, isLoading } = useOidcScopes({ page, pageSize });
+  const scopes = scopesPage?.items;
   const createMutation = useCreateOidcScope();
   const updateMutation = useUpdateOidcScope();
   const deleteMutation = useDeleteOidcScope();
@@ -149,6 +152,7 @@ export function OidcScopesPage() {
       await deleteMutation.mutateAsync(deleteTarget.name);
       toast.success(t('OpenIddict.Scopes.DeleteSuccess'));
       setDeleteTarget(null);
+      onRowsRemoved((scopes?.length ?? 1) - 1);
     } catch (err) {
       logger.error('[OidcScopes] delete failed', err);
       toast.error(t('OpenIddict.Scopes.DeleteError'));
@@ -234,6 +238,17 @@ export function OidcScopesPage() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {!isLoading && shouldPaginate(scopesPage, pageSize) && (
+        <TablePagination
+          page={page}
+          pageSize={pageSize}
+          totalCount={scopesPage?.totalCount ?? 0}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+          pageSizeOptions={PAGE_SIZE_OPTIONS}
+        />
       )}
 
       {!isLoading && (!scopes || scopes.length === 0) && (

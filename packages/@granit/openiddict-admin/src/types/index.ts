@@ -1,4 +1,6 @@
 export type {
+  AdminOidcApplicationListParams,
+  AdminOidcApplicationPage,
   AdminOidcApplicationResponse,
   AdminOidcCreateApplicationRequest,
   AdminOidcRotateSecretResponse,
@@ -6,14 +8,17 @@ export type {
 } from './admin-oidc-application';
 
 export type {
+  AdminOidcAuthorizationListParams,
+  AdminOidcAuthorizationPage,
   AdminOidcAuthorizationResponse,
   AdminOidcCreateAuthorizationRequest,
-  AdminOidcAuthorizationListParams,
 } from './admin-oidc-authorization';
 
 export type {
-  AdminOidcScopeResponse,
   AdminOidcCreateScopeRequest,
+  AdminOidcScopeListParams,
+  AdminOidcScopePage,
+  AdminOidcScopeResponse,
   AdminOidcUpdateScopeRequest,
 } from './admin-oidc-scope';
 
