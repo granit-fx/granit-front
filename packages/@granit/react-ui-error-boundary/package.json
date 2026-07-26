@@ -16,7 +16,7 @@
   "peerDependencies": {
     "@granit/react-localization": "workspace:*",
     "@granit/react-ui": "workspace:*",
-    "lucide-react": "^1.24.0",
+    "lucide-react": "^1.27.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.0"
@@ -33,13 +33,13 @@
   "devDependencies": {
     "@granit/react-localization": "workspace:*",
     "@granit/react-ui": "workspace:*",
-    "@storybook/react-vite": "^10.5.0",
+    "@storybook/react-vite": "^10.5.4",
     "i18next": "^26.3.6",
-    "lucide-react": "^1.24.0",
+    "lucide-react": "^1.27.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-i18next": "^17.0.11",
     "react-router-dom": "^7.18.1",
-    "storybook": "^10.5.0"
+    "storybook": "^10.5.4"
   }
 }

@@ -27,7 +27,7 @@
     "@granit/react-validation": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "@tanstack/react-table": "^8.21.3",
-    "lucide-react": "^1.24.0",
+    "lucide-react": "^1.27.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-hook-form": "^7.83.0",
@@ -55,16 +55,16 @@
     "@granit/react-ui-kit": "workspace:*",
     "@granit/react-validation": "workspace:*",
     "@granit/types": "workspace:*",
-    "@storybook/react-vite": "^10.5.0",
+    "@storybook/react-vite": "^10.5.4",
     "@tanstack/react-query": "^5.0.0",
     "@tanstack/react-table": "^8.21.3",
     "i18next": "^26.3.6",
-    "lucide-react": "^1.24.0",
+    "lucide-react": "^1.27.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-hook-form": "^7.83.0",
     "react-i18next": "^17.0.11",
     "react-router-dom": "^7.18.1",
-    "storybook": "^10.5.0"
+    "storybook": "^10.5.4"
   }
 }

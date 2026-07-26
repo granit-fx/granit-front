@@ -41,7 +41,7 @@
     "@granit/react-localization": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/utils": "workspace:*",
-    "@storybook/react-vite": "^10.5.0",
-    "storybook": "^10.5.0"
+    "@storybook/react-vite": "^10.5.4",
+    "storybook": "^10.5.4"
   }
 }

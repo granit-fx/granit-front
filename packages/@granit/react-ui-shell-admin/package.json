@@ -66,7 +66,7 @@
     "@granit/ui-theme": "workspace:*",
     "@granit/utils": "workspace:*",
     "@granit/workspaces": "workspace:*",
-    "@storybook/react-vite": "^10.5.0",
+    "@storybook/react-vite": "^10.5.4",
     "next-themes": "^0.4.6",
     "react-router-dom": "^7.18.1"
   }
