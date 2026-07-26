@@ -29,8 +29,8 @@
     "dompurify": "^3.4.12",
     "lucide-react": "^1.24.0",
     "marked": "^18.0.6",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.0"
   },
   "publishConfig": {
@@ -65,8 +65,8 @@
     "lucide-react": "^1.24.0",
     "marked": "^18.0.6",
     "msw": "^2.15.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "react-i18next": "^17.0.11",
     "react-router-dom": "^7.18.1",
     "storybook": "^10.5.0"

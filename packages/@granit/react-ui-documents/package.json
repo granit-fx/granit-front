@@ -21,8 +21,8 @@
     "@granit/react-taxonomy": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/react-ui-taxonomy": "workspace:*",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.0"
   },
   "publishConfig": {
@@ -47,8 +47,8 @@
     "@storybook/react-vite": "^10.5.0",
     "@tanstack/react-query": "^5.0.0",
     "i18next": "^26.3.6",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "react-i18next": "^17.0.11",
     "react-router-dom": "^7.18.1",
     "storybook": "^10.5.0"

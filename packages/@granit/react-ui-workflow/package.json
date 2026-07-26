@@ -20,8 +20,8 @@
     "@granit/utils": "workspace:*",
     "@granit/workflow": "workspace:*",
     "lucide-react": "^1.24.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
   "publishConfig": {
     "exports": {
@@ -43,8 +43,8 @@
     "@tanstack/react-query": "^5.0.0",
     "i18next": "^26.3.6",
     "lucide-react": "^1.24.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "react-i18next": "^17.0.11",
     "storybook": "^10.5.0"
   }

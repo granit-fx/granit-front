@@ -26,8 +26,8 @@
     "@tiptap/starter-kit": "^3.27.4",
     "@tiptap/suggestion": "^3.27.4",
     "lucide-react": "^1.24.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "tippy.js": "^6.3.7"
   },
   "publishConfig": {
@@ -54,8 +54,8 @@
     "@tiptap/suggestion": "^3.27.4",
     "i18next": "^26.3.6",
     "lucide-react": "^1.24.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "react-i18next": "^17.0.11",
     "storybook": "^10.5.0",
     "tippy.js": "^6.3.7"
