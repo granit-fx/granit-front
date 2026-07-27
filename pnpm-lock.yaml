@@ -90,13 +90,13 @@ importers:
         version: 4.3.3(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tanstack/react-virtual':
-        specifier: ^3.14.6
-        version: 3.14.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^3.14.8
+        version: 3.14.8(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
@@ -1929,7 +1929,7 @@ importers:
         version: 0.22.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
 
   packages/@granit/react-catalog:
     dependencies:
@@ -1960,7 +1960,7 @@ importers:
         version: link:../types
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       msw:
         specifier: ^2.15.0
         version: 2.15.0(@types/node@26.1.1)(typescript@7.0.2)
@@ -2052,7 +2052,7 @@ importers:
         version: 0.22.2(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
 
   packages/@granit/react-cms-hostnames:
     dependencies:
@@ -2086,7 +2086,7 @@ importers:
         version: link:../types
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
 
   packages/@granit/react-cms-redirects:
     dependencies:
@@ -2123,7 +2123,7 @@ importers:
         version: link:../types
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
 
   packages/@granit/react-cms-seo:
     dependencies:
@@ -2157,7 +2157,7 @@ importers:
         version: link:../types
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
 
   packages/@granit/react-cookies:
     dependencies:
@@ -2959,7 +2959,7 @@ importers:
         version: link:../testing
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
 
   packages/@granit/react-notifications-mobile-push:
     dependencies:
@@ -3642,7 +3642,7 @@ importers:
         version: link:../types
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
 
   packages/@granit/react-tracing:
     dependencies:
@@ -3776,7 +3776,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@7.0.2)
@@ -3848,7 +3848,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -3929,7 +3929,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       dompurify:
         specifier: '>=3.4.12'
         version: 3.4.12
@@ -4004,7 +4004,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@7.0.2)
@@ -4117,7 +4117,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -4187,7 +4187,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@7.0.2)
@@ -4385,7 +4385,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@7.0.2)
@@ -4440,7 +4440,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -4492,7 +4492,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -4596,7 +4596,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -4693,7 +4693,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -4772,7 +4772,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -4839,7 +4839,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       storybook:
         specifier: ^10.5.4
         version: 10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8)
@@ -4906,7 +4906,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -4967,7 +4967,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       msw:
         specifier: ^2.15.0
         version: 2.15.0(@types/node@26.1.1)(typescript@7.0.2)
@@ -5028,7 +5028,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       storybook:
         specifier: ^10.5.4
         version: 10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8)
@@ -5089,7 +5089,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -5150,7 +5150,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -5226,7 +5226,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -5290,7 +5290,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -5366,7 +5366,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       storybook:
         specifier: ^10.5.4
         version: 10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8)
@@ -5412,7 +5412,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -5494,7 +5494,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@7.0.2)
@@ -5575,7 +5575,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -5656,7 +5656,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@7.0.2)
@@ -5708,7 +5708,7 @@ importers:
         version: link:../testing
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
 
   packages/@granit/react-ui-error-boundary:
     devDependencies:
@@ -5781,7 +5781,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       storybook:
         specifier: ^10.5.4
         version: 10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8)
@@ -5818,7 +5818,7 @@ importers:
         version: link:../utils
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
 
   packages/@granit/react-ui-hostnames:
     dependencies:
@@ -5867,7 +5867,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       storybook:
         specifier: ^10.5.4
         version: 10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8)
@@ -5931,7 +5931,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@7.0.2)
@@ -5991,7 +5991,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6076,7 +6076,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6143,7 +6143,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6216,7 +6216,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6271,7 +6271,7 @@ importers:
         version: link:../utils
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@types/leaflet':
         specifier: ^1.9.21
         version: 1.9.21
@@ -6347,7 +6347,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6398,7 +6398,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6474,7 +6474,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@7.0.2)
@@ -6522,7 +6522,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@7.0.2)
@@ -6615,7 +6615,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6703,7 +6703,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6757,7 +6757,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6847,7 +6847,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6982,7 +6982,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -7037,7 +7037,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
 
   packages/@granit/react-ui-shell-admin:
     dependencies:
@@ -7174,7 +7174,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -7250,7 +7250,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -7301,7 +7301,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@7.0.2)
@@ -7391,7 +7391,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -7469,7 +7469,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tiptap/extension-mention':
         specifier: ^3.29.0
         version: 3.29.0(@tiptap/core@3.29.0(@tiptap/pm@3.29.0))(@tiptap/pm@3.29.0)(@tiptap/suggestion@3.29.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.29.0(@tiptap/pm@3.29.0))(@tiptap/pm@3.29.0))
@@ -7553,7 +7553,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -7613,7 +7613,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@7.0.2)
@@ -7658,7 +7658,7 @@ importers:
         version: 10.5.4(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.2)(storybook@10.5.4(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.8))(typescript@7.0.2)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.100.0)(yaml@2.9.0))
       '@tanstack/react-query':
         specifier: ^5.0.0
-        version: 5.101.2(react@19.2.8)
+        version: 5.101.4(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@7.0.2)
@@ -7851,7 +7851,7 @@ importers:
         version: link:../idempotency
       '@tanstack/query-core':
         specifier: ^5.100.11
-        version: 5.101.2
+        version: 5.101.4
       axios:
         specifier: ^1.18.1
         version: 1.18.1
@@ -10909,20 +10909,22 @@ packages:
   '@tanstack/query-core@5.101.2':
     resolution: {integrity: sha512-hH5MLoJhF7KaIGd7q3xTXGXvslI+GYlM1Z/35aSHHWaCJWB7XvTSHYuV3eM7tw+aE0mT/xMro4M4Q9rCGHT0lw==}
 
+  '@tanstack/query-core@5.101.4':
+    resolution: {integrity: sha512-gNwcvOJcRbLWPOLG/2OBm+zM+Yv+MKsXKEOWC57USuZDEsI71hEErQsiEGx5wX9rzWWkfwM0fVSPoiIFSsxfiw==}
+
   '@tanstack/react-query@5.101.2':
     resolution: {integrity: sha512-seDkr6kzGzX1okaaTtZPtgA688CDPlXUz1C6xSg0ESqn04Vuc8tlrYms1s3de+znBqhPVxFRfpAfUf+6XvfPWg==}
+    peerDependencies:
+      react: ^19.0.0
+
+  '@tanstack/react-query@5.101.4':
+    resolution: {integrity: sha512-yRg2pfOCxIs4ZJW3XYYHU/WgtD04FHSnfHlpRT7h7pR77hwkdRG4wxbKe4aq6P0RvXUTBSQpQeadS1SUYUe+KA==}
     peerDependencies:
       react: ^19.0.0
 
   '@tanstack/react-table@8.21.3':
     resolution: {integrity: sha512-5nNMTSETP4ykGegmVkhjcS8tTLW6Vl4axfEGQN3v0zdHYbK4UfoqfPChclTrJ4EoK9QynqAu9oUf8VEmrpZ5Ww==}
     engines: {node: '>=12'}
-    peerDependencies:
-      react: ^19.0.0
-      react-dom: ^19.0.0
-
-  '@tanstack/react-virtual@3.14.6':
-    resolution: {integrity: sha512-4+Uq8m0/gzO4kMCHUEpTtGX1RnONK0C+g88b2ltwPMWUBiaVarBuWKoPJaz7gj1cKCVRAdyu+U8GcKhwCc2beA==}
     peerDependencies:
       react: ^19.0.0
       react-dom: ^19.0.0
@@ -10936,9 +10938,6 @@ packages:
   '@tanstack/table-core@8.21.3':
     resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
     engines: {node: '>=12'}
-
-  '@tanstack/virtual-core@3.17.4':
-    resolution: {integrity: sha512-nGm5KteqxasUdThLc2izl6dHUqLv0LQj7Nuyo5gYalTPf/U8a9ermvsl7reT+6ioBW1l8WfpP/mcU338nLXpqw==}
 
   '@tanstack/virtual-core@3.17.6':
     resolution: {integrity: sha512-h0/Ebo18CkOrChlQIhNtQkM5ySUnh/GumQ/D1st3hG2HWUPEF+ILUc2k29UtivCi/9G7w7G3/f7Xyd5cCFbKBw==}
@@ -17248,6 +17247,8 @@ snapshots:
 
   '@tanstack/query-core@5.101.2': {}
 
+  '@tanstack/query-core@5.101.4': {}
+
   '@tanstack/react-query@5.101.2(react@19.2.7)':
     dependencies:
       '@tanstack/query-core': 5.101.2
@@ -17258,15 +17259,14 @@ snapshots:
       '@tanstack/query-core': 5.101.2
       react: 19.2.8
 
+  '@tanstack/react-query@5.101.4(react@19.2.8)':
+    dependencies:
+      '@tanstack/query-core': 5.101.4
+      react: 19.2.8
+
   '@tanstack/react-table@8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@tanstack/table-core': 8.21.3
-      react: 19.2.8
-      react-dom: 19.2.8(react@19.2.8)
-
-  '@tanstack/react-virtual@3.14.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
-    dependencies:
-      '@tanstack/virtual-core': 3.17.4
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
 
@@ -17277,8 +17277,6 @@ snapshots:
       react-dom: 19.2.8(react@19.2.8)
 
   '@tanstack/table-core@8.21.3': {}
-
-  '@tanstack/virtual-core@3.17.4': {}
 
   '@tanstack/virtual-core@3.17.6': {}
 

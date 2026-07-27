@@ -21,7 +21,7 @@
     "@granit/query-engine": "workspace:*",
     "@granit/react-query-engine": "workspace:*",
     "@granit/types": "workspace:*",
-    "@tanstack/react-query": "^5.0.0",
+    "@tanstack/react-query": "^5.101.4",
     "msw": "^2.15.0",
     "react": "^19.0.0"
   },
@@ -48,6 +48,6 @@
     "@granit/logger": "workspace:*",
     "@granit/react-testing": "workspace:*",
     "@granit/testing": "workspace:*",
-    "@tanstack/react-query": "^5.0.0"
+    "@tanstack/react-query": "^5.101.4"
   }
 }

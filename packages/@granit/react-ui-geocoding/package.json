@@ -38,6 +38,6 @@
     "@granit/react-ui": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/utils": "workspace:*",
-    "@tanstack/react-query": "^5.0.0"
+    "@tanstack/react-query": "^5.101.4"
   }
 }
