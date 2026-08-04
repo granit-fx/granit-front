@@ -21,8 +21,8 @@
     "@granit/react-taxonomy": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/react-ui-taxonomy": "workspace:*",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-router-dom": "^7.18.0"
   },
   "publishConfig": {
@@ -44,13 +44,13 @@
     "@granit/react-ui": "workspace:*",
     "@granit/react-ui-taxonomy": "workspace:*",
     "@granit/testing": "workspace:*",
-    "@storybook/react-vite": "^10.5.4",
-    "@tanstack/react-query": "^5.101.4",
+    "@storybook/react-vite": "^10.5.6",
+    "@tanstack/react-query": "^5.0.0",
     "i18next": "^26.3.6",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "react-i18next": "^17.0.11",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-i18next": "^17.0.9",
     "react-router-dom": "^7.18.2",
-    "storybook": "^10.5.4"
+    "storybook": "^10.5.6"
   }
 }

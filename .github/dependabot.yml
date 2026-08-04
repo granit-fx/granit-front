@@ -8,6 +8,41 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - "dependencies"
+    ignore:
+      # Singleton peer dependencies. The framework advertises a deliberately wide
+      # compatible range (react ^19.0.0, @tanstack/react-query ^5.0.0, …) and the
+      # `dep-uniformity` gate requires ONE identical constraint across 237
+      # manifests. Dependabot rewrites only the subset of manifests whose range
+      # does not already satisfy the new version, so a routine patch bump splits
+      # the workspace in two — pnpm then resolves two physical copies of React and
+      # every hook reads as null under Vitest. Bump these deliberately, workspace
+      # wide, with `pnpm dedupe` afterwards. Majors still raise a PR for review.
+      - dependency-name: "react"
+        update-types:
+          ["version-update:semver-minor", "version-update:semver-patch"]
+      - dependency-name: "react-dom"
+        update-types:
+          ["version-update:semver-minor", "version-update:semver-patch"]
+      - dependency-name: "@tanstack/react-query"
+        update-types:
+          ["version-update:semver-minor", "version-update:semver-patch"]
+      - dependency-name: "react-i18next"
+        update-types:
+          ["version-update:semver-minor", "version-update:semver-patch"]
+      - dependency-name: "react-hook-form"
+        update-types:
+          ["version-update:semver-minor", "version-update:semver-patch"]
+      # TypeScript 7 (the native Go port) is not adoptable yet, on two counts:
+      #   1. typescript-eslint declares `typescript: >=4.8.4 <6.1.0` and hard-throws
+      #      "does not support TS 7.0" at load — `pnpm lint` dies with exit 2.
+      #      Support is tracked for TS >= 7.1 in typescript-eslint#10940.
+      #   2. TS 7 drops the compiler API from the package entry point
+      #      (`exports["."]` -> ./lib/version.cjs); the full AST surface only lives
+      #      under the explicitly unstable `typescript/unstable/*` subpaths, which
+      #      @granit/contract-tests consumes via `import * as ts from 'typescript'`.
+      # Revisit once typescript-eslint ships TS 7.1 support.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
     groups:
       granit:
         patterns:
