@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { cmsRedirectsTranslationsEn } from '../locales';
 

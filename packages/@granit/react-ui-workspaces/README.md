@@ -44,7 +44,7 @@ Register the bundled translations in your i18n instance once at startup.
 ```tsx
 import { WorkspaceIcon } from '@granit/react-ui-shell-admin';
 import { WorkspacePage } from '@granit/react-ui-workspaces';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 function WorkspacePageRoute() {
   // `/w/:workspace` — pass the param straight through; the page looks it up in
@@ -77,12 +77,12 @@ i18n.addResourceBundle('fr', 'translation', workspacesTranslationsFr, true, true
 
 ## Public API
 
-| Symbol                    | Kind      | Purpose                                                       |
-| ------------------------- | --------- | ------------------------------------------------------------- |
-| `WorkspacePage`           | component | Workspace landing screen (icon + title + subtitle from tree)  |
-| `WorkspacePageProps`      | type      | `{ workspaceName: string \| undefined, renderIcon }`          |
-| `workspacesTranslationsEn`| const     | English `Workspace.*` strings for the `translation` namespace |
-| `workspacesTranslationsFr`| const     | French `Workspace.*` strings for the `translation` namespace  |
+| Symbol                     | Kind      | Purpose                                                       |
+| -------------------------- | --------- | ------------------------------------------------------------- |
+| `WorkspacePage`            | component | Workspace landing screen (icon + title + subtitle from tree)  |
+| `WorkspacePageProps`       | type      | `{ workspaceName: string \| undefined, renderIcon }`          |
+| `workspacesTranslationsEn` | const     | English `Workspace.*` strings for the `translation` namespace |
+| `workspacesTranslationsFr` | const     | French `Workspace.*` strings for the `translation` namespace  |
 
 ## Out of scope / caveats
 

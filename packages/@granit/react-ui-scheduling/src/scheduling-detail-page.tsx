@@ -27,7 +27,7 @@ import { ScheduledActionStatus, SchedulingPermissions } from '@granit/scheduling
 import { toEntityId, toISODateString } from '@granit/types';
 import { ArrowLeft, Ban, CalendarClock } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 
 import { SchedulingStatusBadge } from './components/scheduling-status-badge';
 

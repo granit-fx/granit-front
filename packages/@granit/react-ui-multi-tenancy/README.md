@@ -47,7 +47,7 @@ the pages under a `GranitClientProvider` and declare these peers:
 - `@granit/react-validation` — `createConstraintsResolver` for the tenant form.
 - `@tanstack/react-query` (`^5`), `@tanstack/react-table` (`^8.21`),
   `react` / `react-dom` (`^19`), `react-hook-form` (`^7.80`),
-  `react-router-dom` (`^7.18`), and `lucide-react` (`^1.21`).
+  `react-router` (`^7.18`), and `lucide-react` (`^1.21`).
 
 ## Quick start
 
@@ -61,11 +61,15 @@ import {
   TenantEditPage,
   multiTenancyTranslationsEn,
 } from '@granit/react-ui-multi-tenancy';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 i18n.addResourceBundle('en', 'translation', multiTenancyTranslationsEn, true, true);
 
-function TenantAdminRoutes({ renderTimeline }: { renderTimeline: (id: string) => React.ReactNode }) {
+function TenantAdminRoutes({
+  renderTimeline,
+}: {
+  renderTimeline: (id: string) => React.ReactNode;
+}) {
   // Mount under a <GranitClientProvider>; each page wraps its own TenantAdminProvider.
   return (
     <Routes>
@@ -103,20 +107,20 @@ TanStack Table `ColumnDef[]` factory, permission-aware).
 
 ## Public API
 
-| Symbol                       | Kind      | Purpose                                                                   |
-| ---------------------------- | --------- | ------------------------------------------------------------------------- |
-| `TenantListPage`             | component | Query-driven list: smart filters, sort/group-by, export, status toggle    |
-| `TenantCreatePage`           | component | Create form page; submits via `useCreateTenant`, navigates to the list    |
-| `TenantEditPage`             | component | Edit form + status actions + host-injected activity aside                 |
-| `TenantEditPageProps`        | type      | `{ renderActivityAside?, activityAsideTitle? }`                           |
-| `TenantForm`                 | component | Create/edit form; auto-slug identifier, `multiTenancyConstraints` rules   |
-| `TenantStatusDialog`         | component | Activate / deactivate confirmation `AlertDialog`                          |
-| `createTenantColumns`        | fn        | TanStack Table `ColumnDef[]` factory, gated by `canUpdate` / `canManage`  |
-| `CreateTenantFormValues`     | type      | `{ name, identifier, contactEmail, jurisdiction }` form shape             |
-| `EditTenantFormValues`       | type      | `{ name, contactEmail, jurisdiction }` (identifier is read-only)          |
-| `TenantQueryItem`            | type      | Row shape returned by the query-engine tenant endpoint (camelCase)        |
-| `multiTenancyTranslationsEn` | const     | English `Tenants.*` resource bundle                                       |
-| `multiTenancyTranslationsFr` | const     | French `Tenants.*` resource bundle                                        |
+| Symbol                       | Kind      | Purpose                                                                  |
+| ---------------------------- | --------- | ------------------------------------------------------------------------ |
+| `TenantListPage`             | component | Query-driven list: smart filters, sort/group-by, export, status toggle   |
+| `TenantCreatePage`           | component | Create form page; submits via `useCreateTenant`, navigates to the list   |
+| `TenantEditPage`             | component | Edit form + status actions + host-injected activity aside                |
+| `TenantEditPageProps`        | type      | `{ renderActivityAside?, activityAsideTitle? }`                          |
+| `TenantForm`                 | component | Create/edit form; auto-slug identifier, `multiTenancyConstraints` rules  |
+| `TenantStatusDialog`         | component | Activate / deactivate confirmation `AlertDialog`                         |
+| `createTenantColumns`        | fn        | TanStack Table `ColumnDef[]` factory, gated by `canUpdate` / `canManage` |
+| `CreateTenantFormValues`     | type      | `{ name, identifier, contactEmail, jurisdiction }` form shape            |
+| `EditTenantFormValues`       | type      | `{ name, contactEmail, jurisdiction }` (identifier is read-only)         |
+| `TenantQueryItem`            | type      | Row shape returned by the query-engine tenant endpoint (camelCase)       |
+| `multiTenancyTranslationsEn` | const     | English `Tenants.*` resource bundle                                      |
+| `multiTenancyTranslationsFr` | const     | French `Tenants.*` resource bundle                                       |
 
 ## Out of scope / caveats
 

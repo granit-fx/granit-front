@@ -12,7 +12,7 @@ import { DetailAsideLayout, DetailAsideMobileTrigger } from '@granit/react-ui-ki
 import { useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, Loader2, Network } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router';
 
 import { TenantForm } from './components/tenant-form';
 import { TenantStatusDialog } from './components/tenant-status-dialog';

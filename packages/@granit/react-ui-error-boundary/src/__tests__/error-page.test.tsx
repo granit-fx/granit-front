@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { I18nextProvider } from 'react-i18next';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 
 import { ErrorPage } from '../error-page';
 

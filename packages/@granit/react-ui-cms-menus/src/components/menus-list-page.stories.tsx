@@ -4,7 +4,7 @@ import { CmsProvider } from '@granit/react-cms';
 import { CORPORATE_SITE_ID, createMenusHandlers } from '@granit/react-cms/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { MenusListPage } from './menus-list-page';
 

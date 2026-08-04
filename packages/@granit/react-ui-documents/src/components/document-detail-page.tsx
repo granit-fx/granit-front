@@ -9,7 +9,7 @@ import {
   TAXONOMY_TARGET_TYPES,
 } from '@granit/react-ui-taxonomy';
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 
 import { DOCUMENTS_PERMISSIONS } from '../constants';
 

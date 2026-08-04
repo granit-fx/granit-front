@@ -32,7 +32,7 @@ import {
 import { cn } from '@granit/utils';
 import { AlertTriangle, Bell, BellOff, MessageSquare, Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { TimelineComposer } from './timeline-composer';
 import { TimelineStream } from './timeline-stream';
@@ -158,8 +158,7 @@ const EDIT_WINDOW_MS = 15 * 60 * 1000;
 function handleEditRejection(err: unknown, t: ReturnType<typeof useTranslation>['t']): void {
   if (isAxiosError(err) && err.response?.status === 403) {
     const data = err.response.data as
-      | { type?: string; extensions?: { reason?: string } }
-      | undefined;
+      { type?: string; extensions?: { reason?: string } } | undefined;
     if (data?.type === 'timeline-entry-not-editable') {
       const reason = data.extensions?.reason as TimelineEntryNotEditableReasonValue | undefined;
       const fallbacks: Record<TimelineEntryNotEditableReasonValue, string> = {

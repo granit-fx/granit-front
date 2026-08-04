@@ -2,7 +2,7 @@ import { useTranslation } from '@granit/react-localization';
 import { Skeleton } from '@granit/react-ui';
 import { useWorkspaces } from '@granit/react-workspaces';
 import { buildWorkspaceUrl, type WorkspaceResponse } from '@granit/workspaces';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { useActiveWorkspace } from './use-active-workspace';
 import { WorkspaceIcon } from './workspace-icon';

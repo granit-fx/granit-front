@@ -50,7 +50,7 @@ peers:
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/utils` — `cn` class-name helper.
 - `@granit/logger` — `createLogger` for the mutation-failure log paths.
-- `react` / `react-dom` (`^19`) and `react-router-dom` (`^7`) — the legal-document
+- `react` / `react-dom` (`^19`) and `react-router` (`^8`) — the legal-document
   pages use `Link` / `useNavigate` / `useParams` / `useSearchParams`.
 - `react-hook-form` (`^7`), `@hookform/resolvers` (`^5`), `zod` (`^4`) — the
   legal-document forms.
@@ -77,7 +77,7 @@ import {
   privacyTranslationsEn,
 } from '@granit/react-ui-privacy';
 import { useGranitClient } from '@granit/react-api-client';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 i18n.addResourceBundle('en', 'translation', privacyTranslationsEn, true, true);
 
@@ -119,29 +119,29 @@ import {
 
 ## Public API
 
-| Symbol                          | Kind      | Purpose                                                               |
-| ------------------------------- | --------- | --------------------------------------------------------------------- |
-| `PrivacyExportPage`             | component | Request/list/download personal-data exports + scopes + on-behalf-of   |
-| `PrivacyDeletionPage`           | component | Request immediate/deferred deletion; embeds `DeletionRequestTable`    |
-| `PrivacyAgreementsPage`         | component | Accept required legal documents; per-document acceptance history      |
-| `PrivacyRegulationPage`         | component | Read-only regulation profile + declared processing purposes           |
-| `PrivacyOptOutPage`             | component | CCPA Do-Not-Sell-or-Share opt-out preference + status                 |
-| `PrivacyAdminDsrPage`           | component | Admin DSR — export on behalf of a subject by user id                  |
-| `LegalDocumentListPage`         | component | Legal-document grid; filter, view-versions, edit/publish menu         |
-| `LegalDocumentCreatePage`       | component | Create a legal document (`create` mode of `LegalDocumentForm`)        |
-| `LegalDocumentEditPage`         | component | Edit a draft document; redirects away from non-draft states           |
-| `DeletionRequestTable`          | component | Deletion-request table with cancel action for deferred requests       |
-| `DeletionStatusBadge`           | component | Status badge for a `DeletionState`                                    |
-| `LegalDocumentForm`             | component | Discriminated `create`/`edit` zod-resolved form                       |
-| `LegalDocumentPublishDialog`    | component | Confirm dialog wrapping the publish mutation                          |
-| `LegalDocumentStatusBadge`      | component | Status badge for a `LegalDocumentLifecycleStatus`                     |
-| `useLegalDocumentColumns`       | hook      | `ColumnDef[]` factory for the grid; gates actions on permissions      |
-| `createLegalDocumentSchema`     | const     | Zod schema for create (slug-validated `documentId`)                   |
-| `editLegalDocumentSchema`       | const     | Zod schema for edit (carries `concurrencyStamp`)                      |
-| `CreateLegalDocumentFormValues` | type      | `z.infer` of `createLegalDocumentSchema`                              |
-| `EditLegalDocumentFormValues`   | type      | `z.infer` of `editLegalDocumentSchema`                                |
-| `privacyTranslationsEn`         | const     | English `Privacy.*` i18n bundle (host registers it)                   |
-| `privacyTranslationsFr`         | const     | French `Privacy.*` i18n bundle                                        |
+| Symbol                          | Kind      | Purpose                                                             |
+| ------------------------------- | --------- | ------------------------------------------------------------------- |
+| `PrivacyExportPage`             | component | Request/list/download personal-data exports + scopes + on-behalf-of |
+| `PrivacyDeletionPage`           | component | Request immediate/deferred deletion; embeds `DeletionRequestTable`  |
+| `PrivacyAgreementsPage`         | component | Accept required legal documents; per-document acceptance history    |
+| `PrivacyRegulationPage`         | component | Read-only regulation profile + declared processing purposes         |
+| `PrivacyOptOutPage`             | component | CCPA Do-Not-Sell-or-Share opt-out preference + status               |
+| `PrivacyAdminDsrPage`           | component | Admin DSR — export on behalf of a subject by user id                |
+| `LegalDocumentListPage`         | component | Legal-document grid; filter, view-versions, edit/publish menu       |
+| `LegalDocumentCreatePage`       | component | Create a legal document (`create` mode of `LegalDocumentForm`)      |
+| `LegalDocumentEditPage`         | component | Edit a draft document; redirects away from non-draft states         |
+| `DeletionRequestTable`          | component | Deletion-request table with cancel action for deferred requests     |
+| `DeletionStatusBadge`           | component | Status badge for a `DeletionState`                                  |
+| `LegalDocumentForm`             | component | Discriminated `create`/`edit` zod-resolved form                     |
+| `LegalDocumentPublishDialog`    | component | Confirm dialog wrapping the publish mutation                        |
+| `LegalDocumentStatusBadge`      | component | Status badge for a `LegalDocumentLifecycleStatus`                   |
+| `useLegalDocumentColumns`       | hook      | `ColumnDef[]` factory for the grid; gates actions on permissions    |
+| `createLegalDocumentSchema`     | const     | Zod schema for create (slug-validated `documentId`)                 |
+| `editLegalDocumentSchema`       | const     | Zod schema for edit (carries `concurrencyStamp`)                    |
+| `CreateLegalDocumentFormValues` | type      | `z.infer` of `createLegalDocumentSchema`                            |
+| `EditLegalDocumentFormValues`   | type      | `z.infer` of `editLegalDocumentSchema`                              |
+| `privacyTranslationsEn`         | const     | English `Privacy.*` i18n bundle (host registers it)                 |
+| `privacyTranslationsFr`         | const     | French `Privacy.*` i18n bundle                                      |
 
 ## Out of scope / caveats
 

@@ -1,4 +1,4 @@
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 
 import { ErrorPage } from './error-page';
 

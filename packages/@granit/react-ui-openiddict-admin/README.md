@@ -46,7 +46,7 @@ these peers:
   `OpenIddict.*` strings, the host registers them.
 - `@granit/api-client` — the `AxiosError` type used in mutation error handling.
 - `@granit/logger` — `createLogger` for failure logging.
-- `react` / `react-dom` (`^19`) and `react-router-dom` (`^7`) — the pages read
+- `react` / `react-dom` (`^19`) and `react-router` (`^8`) — the pages read
   `useSearchParams`; mount them under a router.
 - `react-hook-form` (`^7`), `@hookform/resolvers` (`^5`) and `zod` (`^4`) — the
   dialog forms and their schemas.
@@ -71,7 +71,7 @@ import {
 import { OpenIddictAdminProvider } from '@granit/react-openiddict-admin';
 import { AuthorizationProvider } from '@granit/react-authorization';
 import { useGranitClient } from '@granit/react-api-client';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Register the bundled OpenIddict.* strings once, at app boot.
 i18n.addResourceBundle('en', 'translation', openIddictAdminTranslationsEn, true, true);
@@ -141,7 +141,7 @@ resolved from context or props:
   prop (`{ sub?: string }`); the host passes the subject from its own auth so
   the consent grant binds to the right user.
 - **Routing** — every page reads `useSearchParams` (`returnUrl` on consent,
-  `user_code` on device); mount them under a `react-router-dom` router.
+  `user_code` on device); mount them under a `react-router` router.
 - **i18n** — the package ships only its `OpenIddict.*` strings; the host
   registers `openIddictAdminTranslationsEn` / `Fr` into its i18next instance.
 
@@ -165,7 +165,7 @@ display of those values — they must not round-trip to the browser.
   only renders them.
 - **Authentication** — issuing / refreshing tokens is `@granit/authentication`
   and the BFF; these pages consume the already-authenticated Axios client. The
-  consent and device pages drive the OIDC *authorization* sub-flows, not login.
+  consent and device pages drive the OIDC _authorization_ sub-flows, not login.
 - **User administration** — listing and impersonating users lives in the hooks
   layer and `@granit/react-identity`, not in this kit.
 

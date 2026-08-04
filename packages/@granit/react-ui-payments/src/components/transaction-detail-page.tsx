@@ -14,7 +14,7 @@ import { toEntityId } from '@granit/types';
 import { formatCurrency } from '@granit/utils';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 
 import { createDisputeColumns } from './dispute-columns';
 import { createRefundColumns } from './refund-columns';

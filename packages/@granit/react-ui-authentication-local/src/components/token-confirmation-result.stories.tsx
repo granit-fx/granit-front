@@ -1,6 +1,6 @@
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { authLocalTranslationsEn } from '../locales';
 

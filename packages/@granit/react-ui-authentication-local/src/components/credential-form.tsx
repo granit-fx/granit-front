@@ -22,7 +22,7 @@ import {
 import { createConstraintsResolver } from '@granit/react-validation';
 import { AlertCircle, Fingerprint } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { logger } from '../logger';
 import {

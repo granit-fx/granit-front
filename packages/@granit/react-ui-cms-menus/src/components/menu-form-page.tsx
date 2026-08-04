@@ -6,7 +6,7 @@ import { createConstraintsResolver } from '@granit/react-validation';
 import { ArrowLeft } from 'lucide-react';
 import { useEffect } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router';
 
 interface MenuFormValues {
   key: string;

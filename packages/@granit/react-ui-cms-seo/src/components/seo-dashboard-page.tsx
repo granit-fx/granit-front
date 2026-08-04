@@ -33,7 +33,7 @@ import { createConstraintsResolver } from '@granit/react-validation';
 import { Check, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import { createSeoAuditColumns } from './seo-audit-columns';
 

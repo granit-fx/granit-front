@@ -50,7 +50,7 @@ these peers:
 - `@granit/utils` — `cn` class merge.
 - `@tanstack/react-table` (`^8.21`) — the meter list table model.
 - `react-hook-form` (`^7.80`) — the meter / record-events forms.
-- `react-router-dom` (`^7.18`) — navigation + route params in the pages.
+- `react-router` (`^7.18`) — navigation + route params in the pages.
 - `lucide-react` (`^1.21`), `react` (`^19`), `react-dom` (`^19`).
 
 ## Quick start
@@ -69,7 +69,7 @@ import {
   meteringTranslationsEn,
   meteringTranslationsFr,
 } from '@granit/react-ui-metering';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import i18n from 'i18next';
 
 // Flat keys keep the literal "Metering." prefix; the host i18n is configured
@@ -156,7 +156,7 @@ function QuotaTile({ meterId }: { meterId: string }) {
   immutable on edit (absent from `MeterDefinitionUpdateRequest`).
 - **i18n registration is the host's job.** The bundles ship flat keys carrying
   the literal `Metering.` prefix (host i18n uses `nsSeparator`/`keySeparator =
-  false`); the host must `addResourceBundle` them and also provide the shared
+false`); the host must `addResourceBundle` them and also provide the shared
   `Common.*` keys (`Save`, `Cancel`, `NoResults`, …) the pages reference.
 - **Detail page period window.** `MeterDetailPage` queries usage for the current
   UTC billing month (`[month-start, next-month-start)`); the usage endpoint

@@ -37,7 +37,7 @@ for app consumption through a public registry. A consumer must declare these pee
   react-hook-form resolver.
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `react` (`^19`), `react-dom` (`^19`), `react-hook-form` (`^7.80`),
-  `react-router-dom` (`^7.18`), and `lucide-react` (`^1.21`) for the icons.
+  `react-router` (`^7.18`), and `lucide-react` (`^1.21`) for the icons.
 
 ## Quick start
 
@@ -53,7 +53,7 @@ import {
 } from '@granit/react-ui-cms-releases';
 import { CmsProvider } from '@granit/react-cms';
 import { useGranitClient } from '@granit/react-api-client';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Flat keys keep the literal `cms:` prefix; the host i18n runs with
 // nsSeparator/keySeparator = false, so register under the `translation` namespace.
@@ -66,10 +66,7 @@ function CmsAdminRoutes() {
       <Routes>
         {/* `:id` is the site id, read from the route by both pages. */}
         <Route path="/cms/sites/:id/releases" element={<ReleasesListPage />} />
-        <Route
-          path="/cms/sites/:id/releases/:releaseId"
-          element={<ReleaseDetailPage />}
-        />
+        <Route path="/cms/sites/:id/releases/:releaseId" element={<ReleaseDetailPage />} />
       </Routes>
     </CmsProvider>
   );
@@ -88,7 +85,9 @@ function CreateReleaseButton({ siteId }: { siteId: string }) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)}>New release</button>
+      <button type="button" onClick={() => setOpen(true)}>
+        New release
+      </button>
       {/* Scheduling is optional: a date/time triggers create-then-schedule. */}
       <ReleaseFormDialog open={open} onOpenChange={setOpen} siteId={siteId} />
     </>
@@ -112,7 +111,7 @@ function CreateReleaseButton({ siteId }: { siteId: string }) {
 - **Release list is not site-scoped on the wire.** `useReleases()` returns the
   query-engine paginated surface (`PaginationParams`); it is not filterable by
   `siteId`. The `:id` route param scopes navigation, not the fetch.
-- **No delete.** Releases are *cancelled* from the detail page, never deleted — the
+- **No delete.** Releases are _cancelled_ from the detail page, never deleted — the
   backend exposes no DELETE endpoint. Cancel is only offered while a release is
   schedulable.
 - **Schedulable states.** Only `Draft` / `Ready` releases can be (re)scheduled or
@@ -120,7 +119,7 @@ function CreateReleaseButton({ siteId }: { siteId: string }) {
   page hides the schedule form and cancel button for them.
 - **Publish gate.** The list's publish (`Send`) action is shown only for `Ready`
   releases.
-- **Create-then-schedule.** A release with a date/time is created and *then*
+- **Create-then-schedule.** A release with a date/time is created and _then_
   scheduled — two API calls, matching the backend's create-then-schedule model. The
   second call carries the new release's `concurrencyStamp`.
 - **Optimistic concurrency.** `ScheduleReleaseRequest` carries the loaded release's
@@ -139,7 +138,7 @@ function CreateReleaseButton({ siteId }: { siteId: string }) {
 - **Validation rules** — the `name`, `localDateTime`, and `timeZoneId` constraints
   come from `cmsConstraints` in [`@granit/cms`](../cms) (derived from the OpenAPI
   spec), not hand-written here.
-- **i18n strings** — this package *ships* its `cms:Releases.*` bundles; the host app
+- **i18n strings** — this package _ships_ its `cms:Releases.*` bundles; the host app
   is responsible for registering them with i18next.
 - **Other CMS surfaces** — pages, sites, menus, SEO, redirects, and hostnames each
   have their own `react-ui-cms-*` sibling.

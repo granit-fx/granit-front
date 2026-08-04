@@ -9,7 +9,7 @@ import { buildEmptyQueryMeta, createQueryMetaHandler } from '@granit/react-query
 import { pagedResponse } from '@granit/testing/msw';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http } from 'msw';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { EntityActionScopeProvider } from './entity-action-scope';
 import { WorkspaceEntityPage } from './workspace-entity-page';

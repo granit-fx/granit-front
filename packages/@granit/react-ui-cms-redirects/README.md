@@ -38,7 +38,7 @@ these peers:
 - `lucide-react` (`^1.21`) — row/action icons.
 - `react` / `react-dom` (`^19`).
 - `react-hook-form` (`^7.80`) — drives the form dialog.
-- `react-router-dom` (`^7.18`) — `RedirectsListPage` reads the site id from the
+- `react-router` (`^7.18`) — `RedirectsListPage` reads the site id from the
   route and links back to the sites list.
 
 ## Quick start

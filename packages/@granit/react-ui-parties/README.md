@@ -47,7 +47,7 @@ consumer must declare these peers:
   zod schemas and every label).
 - `@granit/api-client` — `isAxiosError` (used to detect the create-conflict 409).
 - `@granit/types`, `@granit/utils`, `@granit/logger` — branded ids, `cn`, `createLogger`.
-- `react` (`^19`), `react-dom` (`^19`), `react-router-dom` (`^7`) — pages use
+- `react` (`^19`), `react-dom` (`^19`), `react-router` (`^8`) — pages use
   `Link` / `useNavigate` / `useParams`.
 - `react-hook-form` (`^7`), `@hookform/resolvers` (`^5`), `zod` (`^4`) — the form layer.
 - `@tanstack/react-table` (`^8`) — the list grid.
@@ -70,7 +70,7 @@ import {
   DuplicatesInboxPage,
   partiesAdminTranslationsEn,
 } from '@granit/react-ui-parties';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Register the kit's strings into the default `translation` namespace once.
 // The headless package owns `partiesTranslationsEn/Fr` (the in-package
@@ -114,7 +114,7 @@ pages plus the zod schemas that drive every form.
 
 | Symbol                | Kind      | Purpose                                                             |
 | --------------------- | --------- | ------------------------------------------------------------------- |
-| `PartiesListPage`     | component | Filterable party table (search + role / status filters)            |
+| `PartiesListPage`     | component | Filterable party table (search + role / status filters)             |
 | `PartyCreatePage`     | component | Create form + `CreateConflictDialog` for the deterministic-409 flow |
 | `PartyDetailPage`     | component | Tabbed detail (8 tabs) + lifecycle, vCard, merge, taxonomy          |
 | `DuplicatesInboxPage` | component | Wraps headless `DuplicatesInbox`, drives survivor-pick → merge      |
@@ -137,16 +137,16 @@ pages plus the zod schemas that drive every form.
 
 ### Detail tabs
 
-| Symbol                | Kind      | Purpose                                                  |
-| --------------------- | --------- | -------------------------------------------------------- |
-| `AddressesTab`        | component | List + add / remove party addresses                      |
-| `EmailsTab`           | component | List + add / remove party emails                         |
-| `PhonesTab`           | component | List + add / remove party phones                         |
-| `ExternalMappingsTab` | component | List + add / remove provider mappings                    |
-| `RolesTab`            | component | View / assign party roles                                |
-| `MetadataTab`         | component | Key/value metadata editor (limits in `metadataLimits`)   |
-| `TaxStatusCard`       | component | Tax status summary + edit / clear                        |
-| `EditTaxStatusDialog` | component | Edit exempt / reverse-charge / VATIN                     |
+| Symbol                | Kind      | Purpose                                                |
+| --------------------- | --------- | ------------------------------------------------------ |
+| `AddressesTab`        | component | List + add / remove party addresses                    |
+| `EmailsTab`           | component | List + add / remove party emails                       |
+| `PhonesTab`           | component | List + add / remove party phones                       |
+| `ExternalMappingsTab` | component | List + add / remove provider mappings                  |
+| `RolesTab`            | component | View / assign party roles                              |
+| `MetadataTab`         | component | Key/value metadata editor (limits in `metadataLimits`) |
+| `TaxStatusCard`       | component | Tax status summary + edit / clear                      |
+| `EditTaxStatusDialog` | component | Edit exempt / reverse-charge / VATIN                   |
 
 ### Add-sub-resource dialogs
 
@@ -162,37 +162,37 @@ pages plus the zod schemas that drive every form.
 
 ### Constants
 
-| Symbol                       | Kind  | Purpose                                                  |
-| ---------------------------- | ----- | -------------------------------------------------------- |
-| `PARTY_KINDS`                | const | `['Individual', 'Company', 'Department']`                |
-| `PARTY_STATUSES`             | const | `['Active', 'Suspended', 'Archived']`                    |
-| `PARTY_ASSIGNABLE_ROLES`     | const | `['Customer', 'Supplier', 'Employee', 'Lead']`           |
-| `ADDRESS_KINDS`              | const | `['Billing', 'Shipping', 'Other']`                       |
-| `PHONE_KINDS`                | const | `['Mobile', 'Work', 'Home', 'Other']`                    |
-| `PARTY_LIST_ROLE_FILTERS`    | const | `['All', ...PARTY_ASSIGNABLE_ROLES]` for the list filter |
-| `PARTY_LIST_STATUS_FILTERS`  | const | `['All', ...PARTY_STATUSES]` for the list filter         |
-| `parsePartyRoleFlags`        | fn    | Split a comma-flag role string into known `PartyRole`s   |
-| `PartyListRoleFilter`        | type  | `(typeof PARTY_LIST_ROLE_FILTERS)[number]`               |
-| `PartyListStatusFilter`      | type  | `(typeof PARTY_LIST_STATUS_FILTERS)[number]`             |
+| Symbol                      | Kind  | Purpose                                                  |
+| --------------------------- | ----- | -------------------------------------------------------- |
+| `PARTY_KINDS`               | const | `['Individual', 'Company', 'Department']`                |
+| `PARTY_STATUSES`            | const | `['Active', 'Suspended', 'Archived']`                    |
+| `PARTY_ASSIGNABLE_ROLES`    | const | `['Customer', 'Supplier', 'Employee', 'Lead']`           |
+| `ADDRESS_KINDS`             | const | `['Billing', 'Shipping', 'Other']`                       |
+| `PHONE_KINDS`               | const | `['Mobile', 'Work', 'Home', 'Other']`                    |
+| `PARTY_LIST_ROLE_FILTERS`   | const | `['All', ...PARTY_ASSIGNABLE_ROLES]` for the list filter |
+| `PARTY_LIST_STATUS_FILTERS` | const | `['All', ...PARTY_STATUSES]` for the list filter         |
+| `parsePartyRoleFlags`       | fn    | Split a comma-flag role string into known `PartyRole`s   |
+| `PartyListRoleFilter`       | type  | `(typeof PARTY_LIST_ROLE_FILTERS)[number]`               |
+| `PartyListStatusFilter`     | type  | `(typeof PARTY_LIST_STATUS_FILTERS)[number]`             |
 
 ### Validation (zod schema factories + form-value types)
 
 Each schema is a factory taking the `t` function so messages are localized. The
 `*FormValues` types are `z.infer` of the matching schema.
 
-| Symbol                         | Kind  | Purpose                                                  |
-| ------------------------------ | ----- | -------------------------------------------------------- |
-| `partyCreateSchema`            | fn    | Create form (kind, name, currency, role, website, …)     |
-| `partyIdentitySchema`          | fn    | Identity edit subset of the create form                  |
-| `partyAddressSchema`           | fn    | Address (ISO-3166 country, line / city / postal-code)    |
-| `partyEmailSchema`             | fn    | Email (RFC email pipe + optional label / primary)        |
-| `partyPhoneSchema`             | fn    | Phone (E.164 via `isValidPhoneNumber`)                   |
-| `partyExternalMappingSchema`   | fn    | Provider name + external id                              |
-| `partyTaxStatusSchema`         | fn    | Tax status (mutually-exclusive exempt / reverse-charge)  |
-| `metadataEntrySchema`          | fn    | Single metadata key/value entry                          |
-| `partyLimits`                  | const | `{ nameMax, notesMax }`                                  |
-| `metadataLimits`               | const | `{ keyMax, valueMax, entriesMax }`                       |
-| `Party*FormValues`             | type  | Inferred values for each schema above                    |
+| Symbol                       | Kind  | Purpose                                                 |
+| ---------------------------- | ----- | ------------------------------------------------------- |
+| `partyCreateSchema`          | fn    | Create form (kind, name, currency, role, website, …)    |
+| `partyIdentitySchema`        | fn    | Identity edit subset of the create form                 |
+| `partyAddressSchema`         | fn    | Address (ISO-3166 country, line / city / postal-code)   |
+| `partyEmailSchema`           | fn    | Email (RFC email pipe + optional label / primary)       |
+| `partyPhoneSchema`           | fn    | Phone (E.164 via `isValidPhoneNumber`)                  |
+| `partyExternalMappingSchema` | fn    | Provider name + external id                             |
+| `partyTaxStatusSchema`       | fn    | Tax status (mutually-exclusive exempt / reverse-charge) |
+| `metadataEntrySchema`        | fn    | Single metadata key/value entry                         |
+| `partyLimits`                | const | `{ nameMax, notesMax }`                                 |
+| `metadataLimits`             | const | `{ keyMax, valueMax, entriesMax }`                      |
+| `Party*FormValues`           | type  | Inferred values for each schema above                   |
 
 ### i18n
 
@@ -204,7 +204,7 @@ Each schema is a factory taking the `t` function so messages are localized. The
 ## Caveats
 
 - **Constants mirror the backend enums, by necessity.** `@granit/parties` exports the
-  union *types* (`PartyKind`, `PartyStatus`, `PartyRole`, `AddressKind`, `PhoneKind`)
+  union _types_ (`PartyKind`, `PartyStatus`, `PartyRole`, `AddressKind`, `PhoneKind`)
   but not the runtime value arrays, so this package hand-mirrors them one-for-one
   against the .NET source enums (`PartyKind`, `PartyStatus`, `PartyRoles [Flags]`,
   `AddressKind`, `PhoneKind`). Tracked in granit-front issue #393 — once the framework

@@ -22,7 +22,7 @@ import { toISODateString } from '@granit/types';
 import { Loader2 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { API_KEY_ENVIRONMENTS, API_KEY_TYPES, CACHE_BEHAVIORS } from '../constants';
 import { type ApiKeyCreateFormValues } from '../validation';

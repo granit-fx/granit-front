@@ -2,7 +2,7 @@ import { useTranslation } from '@granit/react-localization';
 import { TemplatingProvider, useTemplateMutations } from '@granit/react-templating';
 import { toast, Button, Separator } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 
 import { TEMPLATING_CONFIG } from '../constants';
 import { logger } from '../logger';

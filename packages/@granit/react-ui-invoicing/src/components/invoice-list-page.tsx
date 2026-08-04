@@ -6,7 +6,7 @@ import { Button, Skeleton } from '@granit/react-ui';
 import { ManualDataTable } from '@granit/react-ui-kit';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { CreateInvoiceDialog } from './create-invoice-dialog';
 import { createInvoiceColumns } from './invoice-columns';

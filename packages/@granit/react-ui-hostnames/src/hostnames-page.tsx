@@ -25,7 +25,7 @@ import {
 } from '@granit/react-ui';
 import { Loader2, Network, Plus } from 'lucide-react';
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 
 import { AddHostnameDialog } from './components/hostname-add-dialog';
 import { DnsDetails } from './components/hostname-dns-details';

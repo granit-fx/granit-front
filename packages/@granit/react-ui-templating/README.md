@@ -43,7 +43,7 @@ existing `GranitClientProvider` and must declare these peers:
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter` (the pages
   read translation keys, never literal strings).
 - `@granit/logger`, `@granit/utils` — `createLogger` and `cn`.
-- `react` / `react-dom` (`^19`), `react-router-dom` (`^7`), `react-hook-form`
+- `react` / `react-dom` (`^19`), `react-router` (`^8`), `react-hook-form`
   (`^7`) + `@hookform/resolvers` (`^5`), `zod` (`^4`), `class-variance-authority`,
   `lucide-react`, `diff` (`^9`), `next-themes`.
 - TipTap (`@tiptap/react` + starter-kit and extensions) for the WYSIWYG editor and
@@ -65,7 +65,7 @@ import {
   TemplateEditPage,
   templatesTranslationsEn,
 } from '@granit/react-ui-templating';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Merge the package's Templates.* keys into the host i18n instance. Common.* and
 // DataExchange.* keys are host-owned and must already be present in the app bundle.
@@ -152,7 +152,7 @@ function CustomGridHeader({ template }: { template: TemplateDetail }) {
   with no `client`; both resolve the Axios client (CSRF / auth / tenant
   interceptors) from a `GranitClientProvider` higher in the tree via
   `@granit/react-api-client`. There is no way to pass a client through page props.
-- **Routing assumptions.** The pages use `react-router-dom` and hard-code the
+- **Routing assumptions.** The pages use `react-router` and hard-code the
   `/templating/templates`, `/new` and `/:name` paths in their `Link` / `navigate`
   targets, and the export / import dialogs use fixed data-exchange definition names
   (`Showcase.TemplateExport` / `Showcase.TemplateImport`). Mount the routes at those

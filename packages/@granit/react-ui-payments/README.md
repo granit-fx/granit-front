@@ -42,7 +42,7 @@ for app consumption through a public registry. A consumer must declare these pee
 - `@granit/utils` — `cn` class-name helper.
 - `@tanstack/react-table` (`^8.21`) — the table model behind the column factories.
 - `react-hook-form` (`^7.80`) — the charge/refund dialog forms.
-- `react-router-dom` (`^7.18`) — `:id` route param + detail-page links.
+- `react-router` (`^7.18`) — `:id` route param + detail-page links.
 - `i18next` (`^26`), `lucide-react` (`^1.21`), `react` (`^19`), `react-dom` (`^19`).
 
 ## Quick start
@@ -62,7 +62,7 @@ import {
   paymentsTranslationsFr,
 } from '@granit/react-ui-payments';
 import i18n from 'i18next';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Flat `Payments.*` keys, "translation" namespace (last `true` = deep + overwrite).
 i18n.addResourceBundle('en', 'translation', paymentsTranslationsEn, true, true);

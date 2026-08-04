@@ -13,7 +13,7 @@ import {
 import { useWorkspaces } from '@granit/react-workspaces';
 import { buildWorkspaceUrl } from '@granit/workspaces';
 import { Check, ChevronsUpDown, Shield } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { useActiveWorkspace } from './use-active-workspace';
 import { WorkspaceIcon } from './workspace-icon';

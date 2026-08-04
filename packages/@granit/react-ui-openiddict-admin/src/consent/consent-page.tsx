@@ -2,7 +2,7 @@ import { useTranslation } from '@granit/react-localization';
 import { useConsentApplication, useConsentFlow } from '@granit/react-openiddict-admin';
 import { Button, Spinner } from '@granit/react-ui';
 import { AlertTriangle, ShieldCheck } from 'lucide-react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 
 import type { ComponentType, ReactNode } from 'react';
 

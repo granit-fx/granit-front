@@ -44,7 +44,7 @@ these peers:
 - `@granit/types` — branded ids (`UserId`, `toEntityId`).
 - `@granit/utils` — the `cn` class helper.
 - `@granit/logger` — `createLogger` for the pages' error logging.
-- `react` (`^19`), `react-dom` (`^19`), `react-router-dom` (`^7`) — the pages
+- `react` (`^19`), `react-dom` (`^19`), `react-router` (`^8`) — the pages
   read route params (`useParams`) and navigate (`useNavigate`).
 - `lucide-react` (`^1.21`) — the icon set.
 
@@ -68,7 +68,7 @@ import {
   IdentityCachePage,
   identityAdminTranslationsEn,
 } from '@granit/react-ui-identity';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Flat Identity.*/Users.*/Sessions.* keys live in the `translation` namespace.
 i18next.addResourceBundle('en', 'translation', identityAdminTranslationsEn, true, true);

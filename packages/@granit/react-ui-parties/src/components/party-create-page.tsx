@@ -3,7 +3,7 @@ import { isAxiosError, useCreatePartyMutation } from '@granit/react-parties';
 import { toast, Button, Separator } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 
 import { logger } from '../logger';
 

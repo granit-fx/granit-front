@@ -6,7 +6,7 @@ import { AIPromptsProvider } from '@granit/react-ai-prompts';
 import { GranitClientProvider } from '@granit/react-api-client';
 import { SettingsProvider } from '@granit/react-settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { ChatPage } from './chat-page';
 

@@ -23,7 +23,7 @@ import {
 } from '@granit/react-ui-kit';
 import { FolderOpen, Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { DEFAULT_PAGE_SIZE, QUERY_CONFIG, TEMPLATING_CONFIG } from '../constants';
 

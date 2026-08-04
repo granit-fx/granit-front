@@ -39,7 +39,7 @@ these peers:
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/utils` — shared helpers.
 - `react-hook-form` (`^7.80`) — the add-form's form state.
-- `react-router-dom` (`^7.18`) — `HostnamesPage` reads `:id` via `useParams` and
+- `react-router` (`^7.18`) — `HostnamesPage` reads `:id` via `useParams` and
   renders a back-link to `/cms/sites`.
 - `lucide-react` (`^1.21`), `react` (`^19`), and `react-dom` (`^19`).
 
@@ -54,7 +54,7 @@ provider.
 ```tsx
 import { CmsHostnamesProvider } from '@granit/react-cms-hostnames';
 import { HostnamesPage, cmsHostnamesTranslationsEn } from '@granit/react-ui-cms-hostnames';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Register the bundle once at startup. `cms:` is a LITERAL flat-key prefix
 // (the host runs i18next with nsSeparator=false), not an i18next namespace.
@@ -87,16 +87,16 @@ import { CmsHostnameAddForm, CmsHostnameStatusBadge } from '@granit/react-ui-cms
 
 ## Public API
 
-| Symbol                          | Kind      | Purpose                                                                      |
-| ------------------------------- | --------- | ---------------------------------------------------------------------------- |
-| `HostnamesPage`                 | component | Route view: site-id from `useParams`, table + verify/remove + add-form       |
-| `CmsHostnameAddForm`            | component | Add-hostname form (`host` + `isPrimary`), spec-driven validation             |
-| `CmsHostnameAddFormProps`       | type      | `{ siteId: string }`                                                         |
-| `CmsHostnameStatusBadge`        | component | Maps a free-form status string to a `Badge` variant                          |
-| `CmsHostnameStatusBadgeProps`   | type      | `{ status: string }`                                                         |
-| `cmsHostnamesTranslationsEn`    | const     | English i18next bundle (`cms:Hostnames.*`, `cms:Sites.Title`, flat keys)     |
-| `cmsHostnamesTranslationsFr`    | const     | French i18next bundle (same flat keys)                                       |
-| `CmsHostnamesTranslations`      | type      | Shape of a translation bundle (`typeof cmsHostnamesTranslationsEn`)          |
+| Symbol                        | Kind      | Purpose                                                                  |
+| ----------------------------- | --------- | ------------------------------------------------------------------------ |
+| `HostnamesPage`               | component | Route view: site-id from `useParams`, table + verify/remove + add-form   |
+| `CmsHostnameAddForm`          | component | Add-hostname form (`host` + `isPrimary`), spec-driven validation         |
+| `CmsHostnameAddFormProps`     | type      | `{ siteId: string }`                                                     |
+| `CmsHostnameStatusBadge`      | component | Maps a free-form status string to a `Badge` variant                      |
+| `CmsHostnameStatusBadgeProps` | type      | `{ status: string }`                                                     |
+| `cmsHostnamesTranslationsEn`  | const     | English i18next bundle (`cms:Hostnames.*`, `cms:Sites.Title`, flat keys) |
+| `cmsHostnamesTranslationsFr`  | const     | French i18next bundle (same flat keys)                                   |
+| `CmsHostnamesTranslations`    | type      | Shape of a translation bundle (`typeof cmsHostnamesTranslationsEn`)      |
 
 Data hooks (`useSiteHostnames`, `useAddSiteHostname`, …), the
 `CmsHostnamesProvider`, and the DTOs (`SiteHostnameResponse`, …) are **not**

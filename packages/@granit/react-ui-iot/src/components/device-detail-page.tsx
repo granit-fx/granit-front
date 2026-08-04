@@ -18,7 +18,7 @@ import {
 import { cn } from '@granit/utils';
 import { ArrowLeft, Pencil, Power } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { DecommissionDeviceDialog } from './decommission-device-dialog';
 import { DeviceForm } from './device-form';

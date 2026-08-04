@@ -39,7 +39,7 @@ these peers:
   bundles this package ships.
 - `lucide-react` (`^1.21`) — `ArrowLeft`, `ChevronDown`, `ChevronRight` icons.
 - `react` / `react-dom` (`^19`).
-- `react-router-dom` (`^7.18`) — the pages use `useNavigate`, `useParams`, and
+- `react-router` (`^7.18`) — the pages use `useNavigate`, `useParams`, and
   `<Link>`; they expect a router in the host.
 
 ## Quick start
@@ -52,7 +52,7 @@ client resolved via `useGranitClient`, so a host only needs a
 ```tsx
 import { FeatureDetailPage, FeatureListPage } from '@granit/react-ui-features';
 import { featuresTranslationsEn } from '@granit/react-ui-features';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import i18n from './i18n';
 
 // Register the shipped Features.* strings once, at app boot.

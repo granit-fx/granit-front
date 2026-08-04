@@ -11,17 +11,17 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { SidePeekDrawer } from './side-peek-drawer';
 
 import type { ReactNode } from 'react';
-import type * as ReactRouterDom from 'react-router-dom';
+import type * as ReactRouterDom from 'react-router';
 
 const navigateSpy = vi.hoisted(() => vi.fn());
 
-vi.mock('react-router-dom', async (importOriginal) => {
+vi.mock('react-router', async (importOriginal) => {
   const actual = await importOriginal<typeof ReactRouterDom>();
   return { ...actual, useNavigate: () => navigateSpy };
 });

@@ -9,7 +9,7 @@ import {
   useSmartFilterSync,
 } from '@granit/react-ui-kit';
 import { useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { DEFAULT_PAGE_SIZE } from '../constants';
 

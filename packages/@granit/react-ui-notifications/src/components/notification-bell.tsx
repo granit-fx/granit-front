@@ -4,7 +4,7 @@ import { Button, Popover, PopoverContent, PopoverTrigger } from '@granit/react-u
 import { cn } from '@granit/utils';
 import { Bell, CheckCheck, ExternalLink } from 'lucide-react';
 import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { BELL_PREVIEW_SIZE } from '../constants';
 import { resolveNotificationPresentation } from '../rendering';

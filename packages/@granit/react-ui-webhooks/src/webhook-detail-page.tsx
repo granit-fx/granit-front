@@ -28,7 +28,7 @@ import {
 import { WebhookSubscriptionStatus } from '@granit/webhooks';
 import { AlertTriangle, ArrowLeft, Info } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { WebhookDashboard } from './components/webhook-dashboard';
 import { WebhookDeliveryTable } from './components/webhook-delivery-table';

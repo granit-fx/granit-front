@@ -7,7 +7,7 @@ import {
 import { useTranslation } from '@granit/react-localization';
 import { Alert, AlertDescription, Button, Spinner } from '@granit/react-ui';
 import { AlertCircle, ShieldAlert, ShieldCheck } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router';
 
 /** Host layout wrapper (e.g. the public/anonymous shell). Defaults to a
  * passthrough so the package renders without a host layout. */

@@ -24,7 +24,7 @@ import { DetailAsideLayout, DetailAsideMobileTrigger } from '@granit/react-ui-ki
 import { toEntityId } from '@granit/types';
 import { AlertTriangle, ArrowLeft, AlertCircle, Pencil, Trash2 } from 'lucide-react';
 import * as React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 
 import { logger } from '../logger';
 

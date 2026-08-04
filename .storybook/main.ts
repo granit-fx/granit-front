@@ -84,7 +84,7 @@ const config: StorybookConfig = {
       ...(cfg.resolve.dedupe ?? []),
       'react',
       'react-dom',
-      'react-router-dom',
+      'react-router',
       '@tanstack/react-query',
       '@tanstack/react-table',
       'cmdk',

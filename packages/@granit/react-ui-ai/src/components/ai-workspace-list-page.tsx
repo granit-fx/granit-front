@@ -6,7 +6,7 @@ import { toast, Badge, Button, Card, CardContent, Spinner } from '@granit/react-
 import { ViewSwitcher } from '@granit/react-ui-kit';
 import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { logger } from '../logger';
 

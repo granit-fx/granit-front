@@ -2,7 +2,7 @@ import { useTranslation } from '@granit/react-localization';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@granit/react-ui';
 import { useSidePeek } from '@granit/react-workspaces';
 import { useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 
 import { EntityDetailContent } from './entity-detail-content';
 

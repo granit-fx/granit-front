@@ -1,5 +1,5 @@
 import { I18nextProvider } from 'react-i18next';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { fn } from 'storybook/test';
 
 import { storyI18n } from '../stories-i18n';

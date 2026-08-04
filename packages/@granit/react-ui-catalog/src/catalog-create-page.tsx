@@ -22,7 +22,7 @@ import {
 import { createConstraintsResolver } from '@granit/react-validation';
 import { Loader2 } from 'lucide-react';
 import { useForm, type Resolver } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { PRODUCT_TYPES } from './constants';
 import { capitalize } from './lib/capitalize';

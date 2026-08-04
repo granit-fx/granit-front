@@ -6,14 +6,14 @@ import { UserDetailPage } from './user-detail-page';
 
 import type { AdminUser } from './types';
 
-// Mock react-router-dom useParams
+// Mock react-router useParams
 const { mockUseParams } = vi.hoisted(() => ({
   mockUseParams: vi.fn(),
 }));
 
-vi.mock('react-router-dom', async (importOriginal) => {
+vi.mock('react-router', async (importOriginal) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-  const actual = await importOriginal<typeof import('react-router-dom')>();
+  const actual = await importOriginal<typeof import('react-router')>();
   return {
     ...actual,
     useParams: mockUseParams,

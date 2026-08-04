@@ -9,7 +9,7 @@ import type { IdentityGroup, IdentityUser } from '@granit/identity';
 // Stub useParams/useNavigate so the page resolves a group id.
 const { mockUseParams } = vi.hoisted(() => ({ mockUseParams: vi.fn() }));
 
-vi.mock('react-router-dom', async (importOriginal) => {
+vi.mock('react-router', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return { ...actual, useParams: mockUseParams, useNavigate: () => vi.fn() };
 });

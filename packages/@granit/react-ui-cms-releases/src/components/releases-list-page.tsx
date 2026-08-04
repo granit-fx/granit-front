@@ -5,7 +5,7 @@ import { Alert, AlertDescription, Button, Separator, toast } from '@granit/react
 import { QueryEndpointDataTable } from '@granit/react-ui-kit';
 import { ArrowLeft, Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router';
 
 import { ReleaseFormDialog } from './release-form-dialog';
 import { createReleasesColumns } from './releases-columns';

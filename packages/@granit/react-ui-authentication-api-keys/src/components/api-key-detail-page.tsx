@@ -17,7 +17,7 @@ import {
 } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { ApiKeyEnvironmentBadge } from './api-key-environment-badge';
 import { ApiKeyRevokeDialog } from './api-key-revoke-dialog';

@@ -55,7 +55,7 @@ import {
   ImportListPage,
   dataExchangeTranslationsEn,
 } from '@granit/react-ui-data-exchange';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Register the DataExchange.* strings once at app bootstrap. Common.* keys
 // (Save/Cancel/Close/…) are app-global and assumed already present.
@@ -99,16 +99,8 @@ function PartiesToolbar() {
         <ExportButton onExport={() => setExportOpen(true)} />
         <ImportButton onImport={() => setImportOpen(true)} />
 
-        <ExportDialog
-          definitionName="Party"
-          open={exportOpen}
-          onOpenChange={setExportOpen}
-        />
-        <ImportDialog
-          definitionName="Party"
-          open={importOpen}
-          onOpenChange={setImportOpen}
-        />
+        <ExportDialog definitionName="Party" open={exportOpen} onOpenChange={setExportOpen} />
+        <ImportDialog definitionName="Party" open={importOpen} onOpenChange={setImportOpen} />
       </ImportProvider>
     </ExportProvider>
   );
@@ -148,17 +140,17 @@ function useImportColumns(onViewReport: (job: ImportJobResponse) => void) {
 ## Public API
 
 | Symbol                       | Kind      | Purpose                                                       |
-| ---------------------------- | --------- | ------------------------------------------------------------ |
+| ---------------------------- | --------- | ------------------------------------------------------------- |
 | `ExportListPage`             | component | Self-wiring export history page (provider + filters + grid)   |
 | `ImportListPage`             | component | Self-wiring import history page (+ filters, grid, report)     |
 | `ExportButton`               | component | Toolbar button that triggers an export (`onExport`)           |
-| `ExportDialog`               | component | Field/format/preset/roundtrip config + start + progress      |
+| `ExportDialog`               | component | Field/format/preset/roundtrip config + start + progress       |
 | `ImportButton`               | component | Toolbar button that triggers an import (`onImport`)           |
-| `ImportDialog`               | component | Four-step wizard: upload, map, execute, report               |
+| `ImportDialog`               | component | Four-step wizard: upload, map, execute, report                |
 | `HistoryFilters`             | component | Status filter bar; `mode` picks import vs export status set   |
 | `ImportReportDialog`         | component | Read-only import report modal (counts, errors, correction)    |
 | `JobStatusBadge`             | component | Localized status pill for an import/export job status         |
-| `ColumnMappingTable`         | component | Source-to-target property mapping editor with previews       |
+| `ColumnMappingTable`         | component | Source-to-target property mapping editor with previews        |
 | `FileDropZone`               | component | Drag-and-drop file picker with click-to-browse fallback       |
 | `ImportRowErrors`            | component | Table of per-row import errors (`maxDisplay` cap, default 50) |
 | `ImportReportSummary`        | component | Result card: total/succeeded/failed/skipped/inserted/updated  |

@@ -1,5 +1,5 @@
 import { mockFeatureGroups, mockFeatureValues } from '@granit/react-features/testing';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { FeatureGroupCard } from './feature-group-card';
 

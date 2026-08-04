@@ -1,7 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { Alert, AlertDescription, AlertTitle, Button } from '@granit/react-ui';
 import { AlertCircle } from 'lucide-react';
-import { Navigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router';
 
 import type { ComponentType, ReactNode } from 'react';
 

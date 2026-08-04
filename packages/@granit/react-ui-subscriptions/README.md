@@ -44,7 +44,7 @@ these peers:
 - `@granit/logger` — `createLogger` for the local logger.
 - `@granit/types` — `toEntityId` and the branded id types.
 - `@tanstack/react-table` (`^8.21`), `lucide-react` (`^1.21`).
-- `react-router-dom` (`^7.18`) — pages use `Link` / `useParams` / `useNavigate`.
+- `react-router` (`^7.18`) — pages use `Link` / `useParams` / `useNavigate`.
 - `react` and `react-dom` (`^19`).
 
 ## Quick start
@@ -110,7 +110,7 @@ pages — they are not part of the barrel. Compose at the page granularity.
   `SubscriptionsProvider` higher in the tree (via the
   [`@granit/react-subscriptions`](../react-subscriptions) hooks). No client is
   baked in.
-- **Routing** — the pages use `react-router-dom` (`Link` / `useParams` /
+- **Routing** — the pages use `react-router` (`Link` / `useParams` /
   `useNavigate`) and link between the list and detail routes shown above; mount
   them under a router.
 - **i18n** — ships its `Subscriptions.*` strings (`subscriptionsTranslationsEn` /

@@ -54,7 +54,7 @@ import {
   CustomizationPage,
   entitiesCustomizationAdminTranslationsEn,
 } from '@granit/react-ui-entities-customization';
-import { Route } from 'react-router-dom';
+import { Route } from 'react-router';
 
 // Flat `customization:*` / `views:*` keys live in the `translation` namespace —
 // register with key/namespace separators disabled so the dotted keys resolve

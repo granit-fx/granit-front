@@ -11,7 +11,7 @@ import type {
   MessageResponse,
   SendMessageRequest,
 } from '@granit/ai-chat';
-import type * as ReactRouterDom from 'react-router-dom';
+import type * as ReactRouterDom from 'react-router';
 
 // ---------------------------------------------------------------------------
 // Mutable per-test state for the mocked data layer. Each test seeds the hook
@@ -86,8 +86,8 @@ function defaultMessages(): MessagesState {
 // driven from the test.
 // ---------------------------------------------------------------------------
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<typeof ReactRouterDom>('react-router-dom');
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual<typeof ReactRouterDom>('react-router');
   return { ...actual, useNavigate: () => navigate, useParams: () => useParamsMock() };
 });
 

@@ -5,7 +5,7 @@ import { createDocumentsHandlers, DOC_NDA_ID } from '@granit/react-documents/tes
 import { TaxonomyProvider } from '@granit/react-taxonomy';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { I18nextProvider } from 'react-i18next';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { storyI18n } from '../stories-i18n';
 

@@ -2,7 +2,7 @@ import { usePermissions } from '@granit/react-authorization';
 import { DocumentsExplorer, QuotaBadge } from '@granit/react-documents';
 import { useTranslation } from '@granit/react-localization';
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { DOCUMENTS_PERMISSIONS } from '../constants';
 

@@ -1,7 +1,7 @@
 # @granit/react-ui-account
 
 Self-service **Account** admin feature kit — the visual layer for a signed-in user
-managing their *own* account: profile, account deletion, password, two-factor,
+managing their _own_ account: profile, account deletion, password, two-factor,
 passkeys, external logins, the anonymous "was this you?" sign-in review, and the
 caller's own sessions/devices cards. This is the **react-ui** layer: ready-to-mount
 pages and cards that compose the headless hooks/providers from
@@ -22,7 +22,7 @@ sibling split is two domains, each three layers deep:
 - sessions / devices / review: [`@granit/identity`](../identity) →
   [`@granit/react-identity`](../react-identity) →
   [`@granit/react-ui-identity`](../react-ui-identity), whose `SessionsCard` / `DevicesCard`
-  this kit re-skins for the *self* audience.
+  this kit re-skins for the _self_ audience.
 
 ## Install
 
@@ -38,7 +38,7 @@ app consumption through a public registry. A consumer must declare these peers:
 - `@granit/api-client` — `isAxiosError` / `HttpError` for error routing; supplies the
   Axios client resolved from a provider higher in the tree.
 - `@granit/logger` — `createLogger`, the package's logging seam.
-- `react` / `react-dom` (`^19`) and `react-router-dom` (`^7`) — `SecurityReviewPage` reads
+- `react` / `react-dom` (`^19`) and `react-router` (`^8`) — `SecurityReviewPage` reads
   the token from the URL.
 - `lucide-react` (`^1.21`) — icons; `qrcode.react` (`^4.2`) — the 2FA enrolment QR.
 
@@ -61,7 +61,7 @@ import {
   accountTranslationsEn,
 } from '@granit/react-ui-account';
 import { useAuth } from '@granit/react-authentication';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 i18n.addResourceBundle('en', 'translation', accountTranslationsEn, true, true);
 
@@ -75,7 +75,10 @@ function AccountRoutes({ sessionTrackingEnabled }: { sessionTrackingEnabled: boo
       <Route path="security/passkeys" element={<PasskeysPage />} />
       <Route path="security/external-logins" element={<ExternalLoginsPage />} />
       {/* Host computes `isBffMode || isMockMode`; the cards hide when false. */}
-      <Route path="sessions" element={<SessionsPage sessionTrackingEnabled={sessionTrackingEnabled} />} />
+      <Route
+        path="sessions"
+        element={<SessionsPage sessionTrackingEnabled={sessionTrackingEnabled} />}
+      />
       <Route path="delete" element={<DeleteAccountPage onDeleted={logout} />} />
     </Routes>
   );
@@ -88,7 +91,7 @@ function AccountRoutes({ sessionTrackingEnabled }: { sessionTrackingEnabled: boo
 
 The pages are self-contained: each owns its loading/empty/error states and surfaces
 mutation failures through the global `MutationCache.onError` toast (WebAuthn aborts and
-`HttpError` challenge failures, which are *not* Axios errors, are toasted locally).
+`HttpError` challenge failures, which are _not_ Axios errors, are toasted locally).
 
 ## Injection
 
@@ -147,7 +150,7 @@ button labels come from the backend `displayName`, icons are keyed by the provid
 - **Passkey names are privacy-limited.** Browsers never expose the real machine hostname
   and WebAuthn returns no device identity, so `getDefaultPasskeyName` derives only a
   best-effort `"{browser} – {os}"` label (UA Client Hints, falling back to UA parsing).
-  It returns `""` under SSR or a locked-down UA. The value is a *suggestion* the user
+  It returns `""` under SSR or a locked-down UA. The value is a _suggestion_ the user
   edits before saving.
 - **Step-up auth on teardown.** Disabling 2FA, disabling the email factor, deleting the
   account, and regenerating recovery codes all re-prompt for the current password — the
@@ -171,9 +174,9 @@ button labels come from the backend `displayName`, icons are keyed by the provid
   and the BFF; the headless-login screens live in
   [`@granit/react-ui-authentication-local`](../react-ui-authentication-local). This kit
   consumes the already-authenticated client.
-- **Admin user management** — managing *other* users' sessions/devices/security is the
+- **Admin user management** — managing _other_ users' sessions/devices/security is the
   admin audience in [`@granit/react-ui-identity`](../react-ui-identity); this kit is the
-  *self* audience only.
+  _self_ audience only.
 
 ## License
 

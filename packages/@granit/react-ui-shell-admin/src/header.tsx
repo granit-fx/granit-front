@@ -12,7 +12,7 @@ import {
 } from '@granit/react-ui';
 import { PanelRightClose, PanelRightOpen, Search } from 'lucide-react';
 import { type ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 import { openCommandPalette } from './command-palette-events';
 import { useRightSidebar } from './right-sidebar-context';

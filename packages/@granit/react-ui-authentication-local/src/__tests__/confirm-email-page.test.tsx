@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { I18nextProvider } from 'react-i18next';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { ConfirmEmailPage } from '../components/confirm-email-page';
 

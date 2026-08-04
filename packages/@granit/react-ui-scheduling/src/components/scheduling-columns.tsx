@@ -7,7 +7,7 @@ import {
 } from '@granit/react-ui';
 import { ScheduledActionStatus } from '@granit/scheduling';
 import { Ban, CalendarClock, Eye, MoreHorizontal } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { SchedulingStatusBadge } from './scheduling-status-badge';
 

@@ -1,5 +1,5 @@
 import { toEntityId } from '@granit/types';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { fn } from 'storybook/test';
 
 import { ReferenceDataEditPageShell } from './reference-data-edit-page-shell';

@@ -1,6 +1,6 @@
 import { Button } from '@granit/react-ui';
 import { Eye } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { AuditChangeTypeBadge } from './audit-change-type-badge';
 

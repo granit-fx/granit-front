@@ -11,7 +11,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { WorkspaceEntityDetailPage } from './workspace-entity-detail-page';

@@ -20,7 +20,7 @@ import {
 import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { ArrowLeft, Plus, X } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { UserSearchCombobox } from '../components/user-search-combobox';
 

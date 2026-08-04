@@ -1,7 +1,7 @@
 import { useRoles } from '@granit/react-identity';
 import { useTranslation } from '@granit/react-localization';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@granit/react-ui';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const SKELETON_ROW_KEYS = ['s0', 's1', 's2', 's3'] as const;
 

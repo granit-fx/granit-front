@@ -13,7 +13,7 @@ import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { EntityDetailContent } from './entity-detail-content';

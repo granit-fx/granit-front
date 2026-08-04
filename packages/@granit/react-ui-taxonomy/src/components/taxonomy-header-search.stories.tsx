@@ -2,7 +2,7 @@ import { createApiClient } from '@granit/api-client';
 import { TaxonomyProvider } from '@granit/react-taxonomy';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { TaxonomyHeaderSearch } from './taxonomy-header-search';
 

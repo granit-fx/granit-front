@@ -2,7 +2,7 @@ import { createApiClient } from '@granit/api-client';
 import { CmsProvider } from '@granit/react-cms';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { mockPageTree, mockSites } from '../testing';
 

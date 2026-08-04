@@ -43,7 +43,7 @@ for app consumption through a public registry. A consumer must declare these pee
 - `@granit/types` — `toEntityId` / `toISODateString` branded helpers.
 - `@granit/utils` — `cn` class merge.
 - `@tanstack/react-table` (`^8.21`) — column model for the grid.
-- `react` / `react-dom` (`^19`), `react-router-dom` (`^7.18`) for list ↔ detail
+- `react` / `react-dom` (`^19`), `react-router` (`^7.18`) for list ↔ detail
   navigation, and `lucide-react` (`^1.21`) icons.
 
 The pages resolve the Axios client from a `GranitClientProvider` higher in the tree
@@ -60,7 +60,7 @@ import {
   SchedulingListPage,
   schedulingTranslationsEn,
 } from '@granit/react-ui-scheduling';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Flat `Scheduling.*` keys in the `translation` namespace — register with the
 // key/nesting separators disabled so the dotted keys are looked up verbatim.
@@ -84,10 +84,7 @@ only for actions in the `Pending` status. To embed scheduling status into a besp
 grid, reuse the building blocks directly:
 
 ```tsx
-import {
-  SchedulingStatusBadge,
-  createSchedulingColumns,
-} from '@granit/react-ui-scheduling';
+import { SchedulingStatusBadge, createSchedulingColumns } from '@granit/react-ui-scheduling';
 import type { ScheduledActionResponse } from '@granit/scheduling';
 
 const columns = createSchedulingColumns({
@@ -95,8 +92,8 @@ const columns = createSchedulingColumns({
   formatDateTime,
   onCancel: (action: ScheduledActionResponse) => openCancelDialog(action),
   onReschedule: (action) => openRescheduleDialog(action),
-  canManage,          // omits the per-row actions column when false
-  isMutating,         // disables row actions while a mutation is in flight
+  canManage, // omits the per-row actions column when false
+  isMutating, // disables row actions while a mutation is in flight
 });
 ```
 

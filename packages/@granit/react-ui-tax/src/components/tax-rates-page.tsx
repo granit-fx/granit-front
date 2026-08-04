@@ -15,7 +15,7 @@ import {
   useSmartFilterSync,
 } from '@granit/react-ui-kit';
 import { useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { createTaxRateColumns } from './tax-rate-columns';
 import { TaxRateDetailCard } from './tax-rate-detail-card';

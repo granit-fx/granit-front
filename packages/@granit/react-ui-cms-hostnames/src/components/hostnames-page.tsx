@@ -20,7 +20,7 @@ import {
 import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { ArrowLeft, RefreshCw, Star, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 
 import { CmsHostnameAddForm } from './cms-hostname-add-form';
 import { CmsHostnameStatusBadge } from './cms-hostname-status-badge';

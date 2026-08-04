@@ -39,7 +39,7 @@ these peers:
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/types`, `@granit/utils` — shared base types and the `cn` helper.
 - `@tanstack/react-query` (`^5`), `react` / `react-dom` (`^19`).
-- `react-router-dom` (`^7`) — same-origin mention/URL links route in-app.
+- `react-router` (`^8`) — same-origin mention/URL links route in-app.
 - `@tiptap/react` + `@tiptap/starter-kit` + `@tiptap/extension-mention` +
   `@tiptap/extension-placeholder` (`^3`) and `tippy.js` (`^6`) — the mention
   composer surface and its caret-anchored suggestion popup.
@@ -61,11 +61,7 @@ import { useAuth, usePermissions } from '@granit/react-authorization';
 import { searchUserMentions } from '@app/identity';
 
 function App({ children }: { children: React.ReactNode }) {
-  return (
-    <TimelineProvider config={{ client: useGranitClient() }}>
-      {children}
-    </TimelineProvider>
-  );
+  return <TimelineProvider config={{ client: useGranitClient() }}>{children}</TimelineProvider>;
 }
 
 function PartyTimeline({ partyId }: { partyId: string }) {
@@ -88,7 +84,10 @@ Register the flat `Timeline.*` strings on mount (the host installs them with key
 separators disabled, so the dotted keys resolve verbatim):
 
 ```ts
-import { timelineAdminTranslationsEn, timelineAdminTranslationsFr } from '@granit/react-ui-timeline';
+import {
+  timelineAdminTranslationsEn,
+  timelineAdminTranslationsFr,
+} from '@granit/react-ui-timeline';
 
 i18n.addResourceBundle('en', 'translation', timelineAdminTranslationsEn, true, true);
 i18n.addResourceBundle('fr', 'translation', timelineAdminTranslationsFr, true, true);
@@ -102,27 +101,27 @@ trigger). They compose the same way `EntityTimeline` wires them.
 
 ## Public API
 
-| Symbol | Kind | Purpose |
-| --- | --- | --- |
-| `EntityTimeline` | component | Page-level feed for one entity: composer dialog + threaded stream |
-| `EntityTimelineProps` | type | `entityType`/`entityId` + injected `currentUserId`/`canReact`/`searchMentions` |
-| `TimelineStream` | component | Threaded entry list with depth indentation + load-more button |
-| `TimelineStreamProps` | type | Entries, entity context, `canEdit` predicate, `renderEntry`/`renderBody` |
-| `TimelineEntry` | component | One row: avatar, author/time, body, reaction bar, reply/edit/delete |
-| `TimelineEntryProps` | type | Entry DTO + `canReact`, `depth`, action callbacks, `renderBody` |
-| `TimelineComposer` | component | Entry-type selector + mention editor + submit; used for create and edit |
-| `TimelineComposerProps` | type | `onSubmit`, `entryTypes`, `initialBody`/`initialEntryType`, `searchMentions` |
-| `ReactionStrip` | component | Reaction chips; read-only without `onToggle`, else opens the picker |
-| `ReactionStripProps` | type | `entryId`, `reactions` map, optional `onToggle` |
-| `MentionEditor` | component | TipTap surface; mentions are atomic chips; `@[Name](user:guid)` markdown |
-| `MentionEditorProps` | type | `initialBody`, `onChange`, `searchMentions`, `onSubmit` |
-| `EmojiPicker` | component | Lazy emoji-mart picker (Twitter set, theme-synced, i18n category names) |
-| `EmojiPickerProps` | type | `onSelect(native)` + optional `onClose` |
-| `TwemojiImage` | component | Render an emoji as a Twemoji SVG from the jsdelivr CDN, with glyph fallback |
-| `TwemojiImageProps` | type | `emoji`, `size`, `className`, `style` |
-| `emojiToTwemojiCodepoints` | fn | Map an emoji grapheme to its hyphenated Twemoji codepoint filename |
-| `timelineAdminTranslationsEn` | const | Flat `Timeline.*` English strings for this UI kit |
-| `timelineAdminTranslationsFr` | const | Flat `Timeline.*` French strings for this UI kit |
+| Symbol                        | Kind      | Purpose                                                                        |
+| ----------------------------- | --------- | ------------------------------------------------------------------------------ |
+| `EntityTimeline`              | component | Page-level feed for one entity: composer dialog + threaded stream              |
+| `EntityTimelineProps`         | type      | `entityType`/`entityId` + injected `currentUserId`/`canReact`/`searchMentions` |
+| `TimelineStream`              | component | Threaded entry list with depth indentation + load-more button                  |
+| `TimelineStreamProps`         | type      | Entries, entity context, `canEdit` predicate, `renderEntry`/`renderBody`       |
+| `TimelineEntry`               | component | One row: avatar, author/time, body, reaction bar, reply/edit/delete            |
+| `TimelineEntryProps`          | type      | Entry DTO + `canReact`, `depth`, action callbacks, `renderBody`                |
+| `TimelineComposer`            | component | Entry-type selector + mention editor + submit; used for create and edit        |
+| `TimelineComposerProps`       | type      | `onSubmit`, `entryTypes`, `initialBody`/`initialEntryType`, `searchMentions`   |
+| `ReactionStrip`               | component | Reaction chips; read-only without `onToggle`, else opens the picker            |
+| `ReactionStripProps`          | type      | `entryId`, `reactions` map, optional `onToggle`                                |
+| `MentionEditor`               | component | TipTap surface; mentions are atomic chips; `@[Name](user:guid)` markdown       |
+| `MentionEditorProps`          | type      | `initialBody`, `onChange`, `searchMentions`, `onSubmit`                        |
+| `EmojiPicker`                 | component | Lazy emoji-mart picker (Twitter set, theme-synced, i18n category names)        |
+| `EmojiPickerProps`            | type      | `onSelect(native)` + optional `onClose`                                        |
+| `TwemojiImage`                | component | Render an emoji as a Twemoji SVG from the jsdelivr CDN, with glyph fallback    |
+| `TwemojiImageProps`           | type      | `emoji`, `size`, `className`, `style`                                          |
+| `emojiToTwemojiCodepoints`    | fn        | Map an emoji grapheme to its hyphenated Twemoji codepoint filename             |
+| `timelineAdminTranslationsEn` | const     | Flat `Timeline.*` English strings for this UI kit                              |
+| `timelineAdminTranslationsFr` | const     | Flat `Timeline.*` French strings for this UI kit                               |
 
 `EntityTimeline` requires a `<TimelineProvider>` ancestor and reads/writes the
 stream via the `@granit/react-timeline` hooks. The composer emits the canonical

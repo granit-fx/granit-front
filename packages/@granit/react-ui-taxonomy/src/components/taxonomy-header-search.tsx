@@ -1,7 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { TaxonomySearchBar } from '@granit/react-taxonomy';
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { TAXONOMY_TARGET_TYPES } from '../constants';
 

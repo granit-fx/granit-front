@@ -83,7 +83,7 @@ Last updated: 2026-08-04
 | react-i18next                   | 17.0.11 | Copyright (c) i18next Contributors                                  |
 | react-markdown                  | 10.1.0  | Copyright (c) Espen Hovlandsdal                                     |
 | react-resizable                 | 3.2.0   | Copyright (c) React Grid Layout Authors                             |
-| react-router-dom                | 7.18.2  | Copyright (c) React Training LLC, Remix Software Inc., Shopify Inc. |
+| react-router                    | 8.3.0   | Copyright (c) React Training LLC, Remix Software Inc., Shopify Inc. |
 | remark-gfm                      | 4.0.1   | Copyright (c) Titus Wormer                                          |
 | sonner                          | 2.0.7   | Copyright (c) 2023 Emil Kowalski                                    |
 | storybook                       | 10.5.6  | Storybook Contributors                                              |

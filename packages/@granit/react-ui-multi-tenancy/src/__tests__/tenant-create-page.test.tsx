@@ -19,7 +19,7 @@ vi.mock('@granit/react-multi-tenancy', () => ({
   useDeactivateTenant: () => ({ mutate: vi.fn(), isPending: false }),
 }));
 
-vi.mock('react-router-dom', async (importOriginal) => {
+vi.mock('react-router', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return { ...actual, useNavigate: () => mockNavigate };
 });

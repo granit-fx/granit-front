@@ -2,7 +2,7 @@ import { createApiClient } from '@granit/api-client';
 import { QueryProvider } from '@granit/react-query-engine';
 import { createWebhooksHandlers } from '@granit/react-webhooks/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { SUBSCRIPTIONS_QUERY_CONFIG } from '../constants';
 

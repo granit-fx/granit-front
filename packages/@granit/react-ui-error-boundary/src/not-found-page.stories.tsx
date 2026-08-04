@@ -1,4 +1,4 @@
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { NotFoundPage } from './not-found-page';
 

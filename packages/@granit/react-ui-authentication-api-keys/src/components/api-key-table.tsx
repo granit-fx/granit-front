@@ -13,7 +13,7 @@ import {
   TableRow,
 } from '@granit/react-ui';
 import { MoreHorizontal } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { ApiKeyEnvironmentBadge } from './api-key-environment-badge';
 import { ApiKeyStatusBadge } from './api-key-status-badge';

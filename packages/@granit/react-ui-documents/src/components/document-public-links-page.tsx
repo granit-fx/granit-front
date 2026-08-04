@@ -7,7 +7,7 @@ import {
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Button } from '@granit/react-ui';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import { DOCUMENTS_PERMISSIONS } from '../constants';
 

@@ -3,7 +3,7 @@ import { useTranslation } from '@granit/react-localization';
 import { Button, Card, CardContent, CardHeader, CardTitle, Spinner } from '@granit/react-ui';
 import { toEntityId } from '@granit/types';
 import { ArrowLeft, Pencil } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { ExternalMappingsManager } from './components/external-mappings-manager';
 import { LifecycleActions } from './components/lifecycle-actions';

@@ -46,7 +46,7 @@ these peers (all `workspace:*` inside the monorepo):
 - `@granit/logger` — `createLogger`; edit-save failures are logged for
   diagnostics.
 - `lucide-react` (`^1.21`) — page/button icons.
-- `react` and `react-dom` (`^19`), `react-router-dom` (`^7.18`) — the pages use
+- `react` and `react-dom` (`^19`), `react-router` (`^7.18`) — the pages use
   `useNavigate` / `useParams` / `Link`.
 
 The Axios client is **not** a peer here: the data hooks resolve their client and
@@ -71,7 +71,7 @@ import {
   dashboardsTranslationsEn,
   dashboardsTranslationsFr,
 } from '@granit/react-ui-dashboards';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import i18n from './i18n';
 
 // `Dashboards.*` keys ship here; `Common.*` keys are app-global.

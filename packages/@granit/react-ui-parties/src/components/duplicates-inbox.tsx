@@ -4,7 +4,7 @@ import { Badge, Button } from '@granit/react-ui';
 import { QueryEndpointDataTable } from '@granit/react-ui-kit';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import type { DuplicateMatchTier, PartyDuplicateCandidateResponse } from '@granit/parties';
 import type { CellContext, ColumnDef } from '@tanstack/react-table';

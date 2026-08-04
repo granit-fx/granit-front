@@ -20,7 +20,7 @@ import {
 import { useDebouncedValue } from '@granit/react-ui-kit';
 import { KeyRound, Plus, Search } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { API_KEY_ENVIRONMENTS, API_KEY_TYPES, DEFAULT_PAGE_SIZE } from '../constants';
 

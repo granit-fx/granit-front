@@ -16,7 +16,7 @@ import {
 import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { ArrowLeft, Plus, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router';
 
 export function PageTreePage() {
   const { t } = useTranslation();

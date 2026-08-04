@@ -46,7 +46,7 @@ const {
   mockUpdateMutate: vi.fn(),
 }));
 
-vi.mock('react-router-dom', async (importOriginal) => {
+vi.mock('react-router', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return { ...actual, useNavigate: () => mockNavigate, useParams: mockUseParams };
 });

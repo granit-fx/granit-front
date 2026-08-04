@@ -40,7 +40,7 @@ these peers:
   `QueryConfig` shape that drive the subscription and delivery grids.
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/utils` — `cn` class merge. `@granit/logger` — `createLogger`.
-- `react` (`^19`), `react-dom` (`^19`) and `react-router-dom` (`^7`) — the pages
+- `react` (`^19`), `react-dom` (`^19`) and `react-router` (`^8`) — the pages
   use `Link` / `useParams` / `useNavigate` / `useBeforeUnload`.
 - `react-hook-form` (`^7`), `@hookform/resolvers` (`^5`) and `zod` (`^4`) — the
   subscription and deactivation forms.
@@ -65,7 +65,7 @@ import {
   webhooksTranslationsEn,
   webhooksTranslationsFr,
 } from '@granit/react-ui-webhooks';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import i18n from 'i18next';
 
 i18n.addResourceBundle('en', 'translation', webhooksTranslationsEn, true, true);
@@ -104,9 +104,7 @@ function MiniHeader({ id }: { id: string }) {
     <>
       {sub && <WebhookStatusBadge status={sub.status} />}
       <WebhookDashboard stats={stats} isLoading={isLoading} />
-      {sub && (
-        <WebhookSigningKeys subscriptionId={id} signingSecretHint={sub.signingSecretHint} />
-      )}
+      {sub && <WebhookSigningKeys subscriptionId={id} signingSecretHint={sub.signingSecretHint} />}
     </>
   );
 }
@@ -114,38 +112,38 @@ function MiniHeader({ id }: { id: string }) {
 
 ## Public API
 
-| Symbol                          | Kind      | Purpose                                                             |
-| ------------------------------- | --------- | ------------------------------------------------------------------- |
-| `WebhookListPage`               | component | Route page: subscriptions grid + create button (self-wrapped grid)  |
-| `WebhookCreatePage`             | component | Route page: create form + one-time signing-secret reveal dialog     |
-| `WebhookDetailPage`             | component | Route page: stats, lifecycle, edit, deliveries and settings tabs    |
-| `WebhookDashboard`              | component | Six stat cards from `WebhookSubscriptionStatsResponse`              |
-| `WebhookSubscriptionTable`      | component | Query-engine grid of subscriptions (smart filter, sort, paging)     |
-| `WebhookSubscriptionForm`       | component | Create/edit form; SSRF-gated target URL + event-type select         |
-| `WebhookLifecycleActions`       | component | Activate / suspend / deactivate-with-reason / delete dialogs        |
-| `WebhookSigningKeys`            | component | Key table + rotate (one-time reveal) + last-key-safe revoke         |
-| `WebhookSecretDisplay`          | component | Masked/revealable secret with copy + `curl` HMAC snippet            |
-| `WebhookDeliveryTable`          | component | Query-engine grid of attempts, scoped to one subscription           |
-| `WebhookDeliveryActions`        | component | Per-row retry (failures) + view-payload button                      |
-| `WebhookPayloadViewer`          | component | Dialog: pretty-printed (or verbatim) delivery payload + copy        |
-| `WebhookTestButton`             | component | Send a test ping, render status code + duration                     |
-| `WebhookStatusBadge`            | component | Subscription status pill (Active / Suspended / Deactivated)         |
-| `WebhookDeliveryStatusBadge`    | component | Delivery pill derived from `isSuccess` + `httpStatusCode`           |
-| `WebhookKeyStatusBadge`         | component | Signing-key status pill (Active / Retired / Revoked)                |
-| `createSubscriptionColumns`     | fn        | `ColumnDef[]` factory for the subscription grid                     |
-| `createDeliveryColumns`         | fn        | `ColumnDef[]` factory for the delivery grid                         |
-| `webhookSubscriptionFormSchema` | const     | Zod schema: HTTPS + SSRF/private-IP refinements + event type        |
-| `webhookDeactivationSchema`     | const     | Zod schema: required deactivation reason                            |
-| `WebhookSubscriptionFormValues` | type      | `z.infer` of the subscription schema                                |
-| `WebhookDeactivationFormValues` | type      | `z.infer` of the deactivation schema                                |
-| `SUBSCRIPTIONS_QUERY_CONFIG`    | const     | `QueryConfig` for the subscriptions grid                            |
-| `buildDeliveriesQueryConfig`    | fn        | `QueryConfig` for one subscription's (flat) delivery grid           |
-| `DEFAULT_PAGE_SIZE`             | const     | Default grid page size (`20`)                                       |
-| `WEBHOOK_API_BASE`              | const     | `/api/v1/webhooks` base path                                        |
-| `WEBHOOK_CONFIG_PATH`           | const     | `/api/v1/webhooks/config`                                           |
-| `WEBHOOK_STATS_PATH`            | const     | `/api/v1/webhooks/stats`                                            |
-| `webhooksTranslationsEn`        | const     | English `Webhooks.*` resource bundle                                |
-| `webhooksTranslationsFr`        | const     | French `Webhooks.*` resource bundle                                 |
+| Symbol                          | Kind      | Purpose                                                            |
+| ------------------------------- | --------- | ------------------------------------------------------------------ |
+| `WebhookListPage`               | component | Route page: subscriptions grid + create button (self-wrapped grid) |
+| `WebhookCreatePage`             | component | Route page: create form + one-time signing-secret reveal dialog    |
+| `WebhookDetailPage`             | component | Route page: stats, lifecycle, edit, deliveries and settings tabs   |
+| `WebhookDashboard`              | component | Six stat cards from `WebhookSubscriptionStatsResponse`             |
+| `WebhookSubscriptionTable`      | component | Query-engine grid of subscriptions (smart filter, sort, paging)    |
+| `WebhookSubscriptionForm`       | component | Create/edit form; SSRF-gated target URL + event-type select        |
+| `WebhookLifecycleActions`       | component | Activate / suspend / deactivate-with-reason / delete dialogs       |
+| `WebhookSigningKeys`            | component | Key table + rotate (one-time reveal) + last-key-safe revoke        |
+| `WebhookSecretDisplay`          | component | Masked/revealable secret with copy + `curl` HMAC snippet           |
+| `WebhookDeliveryTable`          | component | Query-engine grid of attempts, scoped to one subscription          |
+| `WebhookDeliveryActions`        | component | Per-row retry (failures) + view-payload button                     |
+| `WebhookPayloadViewer`          | component | Dialog: pretty-printed (or verbatim) delivery payload + copy       |
+| `WebhookTestButton`             | component | Send a test ping, render status code + duration                    |
+| `WebhookStatusBadge`            | component | Subscription status pill (Active / Suspended / Deactivated)        |
+| `WebhookDeliveryStatusBadge`    | component | Delivery pill derived from `isSuccess` + `httpStatusCode`          |
+| `WebhookKeyStatusBadge`         | component | Signing-key status pill (Active / Retired / Revoked)               |
+| `createSubscriptionColumns`     | fn        | `ColumnDef[]` factory for the subscription grid                    |
+| `createDeliveryColumns`         | fn        | `ColumnDef[]` factory for the delivery grid                        |
+| `webhookSubscriptionFormSchema` | const     | Zod schema: HTTPS + SSRF/private-IP refinements + event type       |
+| `webhookDeactivationSchema`     | const     | Zod schema: required deactivation reason                           |
+| `WebhookSubscriptionFormValues` | type      | `z.infer` of the subscription schema                               |
+| `WebhookDeactivationFormValues` | type      | `z.infer` of the deactivation schema                               |
+| `SUBSCRIPTIONS_QUERY_CONFIG`    | const     | `QueryConfig` for the subscriptions grid                           |
+| `buildDeliveriesQueryConfig`    | fn        | `QueryConfig` for one subscription's (flat) delivery grid          |
+| `DEFAULT_PAGE_SIZE`             | const     | Default grid page size (`20`)                                      |
+| `WEBHOOK_API_BASE`              | const     | `/api/v1/webhooks` base path                                       |
+| `WEBHOOK_CONFIG_PATH`           | const     | `/api/v1/webhooks/config`                                          |
+| `WEBHOOK_STATS_PATH`            | const     | `/api/v1/webhooks/stats`                                           |
+| `webhooksTranslationsEn`        | const     | English `Webhooks.*` resource bundle                               |
+| `webhooksTranslationsFr`        | const     | French `Webhooks.*` resource bundle                                |
 
 ## Out of scope / caveats
 
@@ -174,7 +172,7 @@ function MiniHeader({ id }: { id: string }) {
   (use the fixtures from [`@granit/react-webhooks`](../react-webhooks)) and writes
   to no DOM script sink, so it exposes no `csp` subpath.
 - **Routing, client and i18n are the host's job.** The pages assume a
-  `react-router-dom` router and the `/webhooks`, `/webhooks/new`, `/webhooks/:id`
+  `react-router` router and the `/webhooks`, `/webhooks/new`, `/webhooks/:id`
   routes above; the Axios client is resolved from `WebhooksProvider` /
   `GranitClientProvider`; the host registers the `webhooksTranslations{En,Fr}`
   bundles.

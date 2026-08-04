@@ -38,7 +38,7 @@ these peers:
 - `@granit/react-validation` — `createConstraintsResolver` for the validate form.
 - `@granit/utils` — `cn`.
 - `@tanstack/react-table` (`^8.21`), `react-hook-form` (`^7.80`),
-  `react-router-dom` (`^7.18`), `lucide-react` (`^1.21`).
+  `react-router` (`^7.18`), `lucide-react` (`^1.21`).
 - `react` / `react-dom` (`^19`).
 
 ## Quick start
@@ -56,7 +56,7 @@ import {
   taxTranslationsEn,
   taxTranslationsFr,
 } from '@granit/react-ui-tax';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 i18n.addResourceBundle('en', 'translation', taxTranslationsEn, true, true);
 i18n.addResourceBundle('fr', 'translation', taxTranslationsFr, true, true);
@@ -138,7 +138,7 @@ package.
   path, query keys) and the Axios client (`GranitClientProvider`) must already be
   mounted in the host tree; `TaxRatesPage` adds a list-scoped `QueryProvider` but
   nothing more.
-- **Routing is the host's job.** The pages read `react-router-dom` route params
+- **Routing is the host's job.** The pages read `react-router` route params
   and navigate (`/tax/rates/{code}`); mount them under the route paths shown
   above. They do not declare their own routes.
 - **DTOs, HTTP, and validation constraints** are owned by

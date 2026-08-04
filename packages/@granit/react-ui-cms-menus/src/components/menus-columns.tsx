@@ -1,6 +1,6 @@
 import { Button } from '@granit/react-ui';
 import { Pencil, Trash2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import type { MenuResponse } from '@granit/cms';
 import type { useTranslation } from '@granit/react-localization';

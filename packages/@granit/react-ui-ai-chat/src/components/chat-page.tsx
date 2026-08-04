@@ -22,7 +22,7 @@ import { useTranslation } from '@granit/react-localization';
 import { Button } from '@granit/react-ui';
 import { Loader2, MessageSquarePlus } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { buildWorkspaceOptions } from '../lib/model-catalog';
 

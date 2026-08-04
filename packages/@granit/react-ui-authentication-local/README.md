@@ -54,7 +54,7 @@ these peers:
 - `@granit/api-client` — `isAxiosError` / `HttpError` for status-code branching;
   also the Axios client the providers resolve.
 - `@granit/logger` and `@granit/utils` — diagnostics logging and shared helpers.
-- `lucide-react` (`^1.21`), `react-hook-form` (`^7.80`), `react-router-dom`
+- `lucide-react` (`^1.21`), `react-hook-form` (`^7.80`), `react-router`
   (`^7.18`), and `react` / `react-dom` (`^19`).
 
 ## Quick start
@@ -67,7 +67,7 @@ query string themselves.
 import { LocalAuthProvider } from '@granit/react-authentication-local';
 import { AccountProvider } from '@granit/react-account';
 import { useGranitClient } from '@granit/react-api-client';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import {
   LocalLoginPage,
   RegisterPage,

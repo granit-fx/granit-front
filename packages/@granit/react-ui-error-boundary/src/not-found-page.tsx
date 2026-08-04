@@ -2,7 +2,7 @@ import { useTranslation } from '@granit/react-localization';
 import { Button } from '@granit/react-ui';
 import { AlertTriangle } from 'lucide-react';
 import { type ComponentType, type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 export interface NotFoundPageProps {
   /** Optional wrapper (e.g. a public/centered layout). Without it the page renders bare. */

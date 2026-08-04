@@ -21,7 +21,7 @@ import {
 import { useWorkspaces } from '@granit/react-workspaces';
 import { filterNavByPermission } from '@granit/shell-core';
 import { ChevronRight } from 'lucide-react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router';
 
 import { useShellChrome, type ShellNavItem } from './shell-chrome-context';
 import { useActiveWorkspace } from './use-active-workspace';

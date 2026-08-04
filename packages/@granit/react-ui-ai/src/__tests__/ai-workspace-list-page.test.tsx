@@ -18,7 +18,7 @@ const dataMock = vi.hoisted(() => ({
 const navigateMock = vi.hoisted(() => vi.fn());
 const toastMock = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn() }));
 
-vi.mock('react-router-dom', async (importOriginal) => ({
+vi.mock('react-router', async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
   useNavigate: () => navigateMock,
 }));

@@ -1,7 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { Alert, AlertDescription, Button, Spinner } from '@granit/react-ui';
 import { AlertCircle, CheckCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { safeReturnUrl } from '../safe-return-url';
 

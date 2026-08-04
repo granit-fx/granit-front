@@ -40,7 +40,7 @@ these peers:
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/react-validation` — `createConstraintsResolver` for the create form.
 - `react-hook-form` (`^7.80`) — the add-hostname dialog form.
-- `react-router-dom` (`^7.18`) — owner filter via `useSearchParams`.
+- `react-router` (`^7.18`) — owner filter via `useSearchParams`.
 - `lucide-react` (`^1.21`), `react` / `react-dom` (`^19`).
 
 ## Quick start
@@ -53,7 +53,7 @@ route to `HostnamesPage`. The Axios client is resolved from a
 ```tsx
 import { HostnamesProvider } from '@granit/react-hostnames';
 import { HostnamesPage, hostnamesTranslationsEn } from '@granit/react-ui-hostnames';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Flat keys under the default "translation" namespace; deep-merge into the host.
 i18n.addResourceBundle('en', 'translation', hostnamesTranslationsEn, true, true);

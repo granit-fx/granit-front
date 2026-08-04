@@ -17,7 +17,7 @@ import { createConstraintsResolver } from '@granit/react-validation';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { Controller, useForm, type Resolver, type UseFormSetValue } from 'react-hook-form';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router';
 
 import { buildPageEditorUrl } from '../renderer';
 

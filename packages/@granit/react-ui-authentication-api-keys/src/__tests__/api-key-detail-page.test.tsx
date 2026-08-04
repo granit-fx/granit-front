@@ -4,12 +4,12 @@ import { ApiKeyDetailPage } from '../components/api-key-detail-page';
 
 import { renderWithProviders } from './test-utils';
 
-// Mock react-router-dom useParams to supply the :id route param.
+// Mock react-router useParams to supply the :id route param.
 const { mockUseParams } = vi.hoisted(() => ({
   mockUseParams: vi.fn(),
 }));
 
-vi.mock('react-router-dom', async (importOriginal) => {
+vi.mock('react-router', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return {
     ...actual,

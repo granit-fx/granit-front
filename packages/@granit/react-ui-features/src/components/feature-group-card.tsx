@@ -11,7 +11,7 @@ import {
 } from '@granit/react-ui';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { FeatureValueBadge } from './feature-value-badge';
 

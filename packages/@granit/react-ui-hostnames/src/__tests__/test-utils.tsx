@@ -2,7 +2,7 @@ import { TooltipProvider } from '@granit/react-ui';
 import { render } from '@testing-library/react';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { hostnamesTranslationsEn } from '../locales';
 

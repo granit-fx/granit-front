@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { featuresTranslationsEn } from '../locales';
 
@@ -13,7 +13,7 @@ import type { ReactElement, ReactNode } from 'react';
 // Local UI render helper. The page tests stub the data layer (vi.mock
 // @granit/react-features in-workspace); the page resolves an Axios client via
 // useGranitClient, so a GranitClientProvider is supplied. The detail page uses
-// react-router-dom (useParams / useNavigate / Link), so a MemoryRouter wraps the
+// react-router (useParams / useNavigate / Link), so a MemoryRouter wraps the
 // tree. i18n uses the package's own flat bundle plus the few app-global Common.*
 // keys the override dialog renders.
 const testI18n = i18next.createInstance();

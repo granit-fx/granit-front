@@ -4,7 +4,7 @@ import { useTranslation } from '@granit/react-localization';
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Spinner } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
 import { useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { FeatureValueBadge } from './components/feature-value-badge';
 import { SetOverrideDialog } from './components/set-override-dialog';

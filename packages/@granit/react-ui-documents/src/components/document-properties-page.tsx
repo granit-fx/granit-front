@@ -1,7 +1,7 @@
 import { useDocumentProperties } from '@granit/react-documents';
 import { useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Alert, AlertDescription } from '@granit/react-ui';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 function Row({
   label,

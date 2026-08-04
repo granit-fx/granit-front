@@ -17,7 +17,7 @@ import {
 import { ConfirmActionDialog } from '@granit/react-ui-kit';
 import { ArrowLeft, Pencil, Plus, Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 
 import { RedirectFormDialog } from './redirect-form-dialog';
 

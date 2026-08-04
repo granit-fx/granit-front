@@ -3,7 +3,7 @@ import { CmsSeoProvider } from '@granit/react-cms-seo';
 import { createCmsSeoHandlers } from '@granit/react-cms-seo/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import i18next from 'i18next';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { cmsSeoTranslationsEn } from '../locales';
 

@@ -30,7 +30,7 @@ these peers:
 - `@granit/react-ui` — the shadcn `Button` the pages render.
 - `@granit/react-localization` — `useTranslation`, the i18n hook the pages call.
 - `lucide-react` (`^1.21`) — the `AlertTriangle` / `ServerCrash` / `Copy` icons.
-- `react-router-dom` (`^7.18`) — `ErrorPage` reads `useRouteError`, both
+- `react-router` (`^7.18`) — `ErrorPage` reads `useRouteError`, both
   navigating pages use `Link`.
 - `react` and `react-dom` (`^19`).
 
@@ -70,7 +70,7 @@ React Router `errorElement`, `ErrorPage` logs through the host's logger via
 `onError`:
 
 ```tsx
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router';
 import {
   ErrorPage,
   errorBoundaryTranslationsEn,

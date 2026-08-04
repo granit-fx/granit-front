@@ -30,7 +30,7 @@ import { webhooksConstraints } from '@granit/webhooks';
 import { AlertTriangle } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { useForm, useWatch, type Resolver } from 'react-hook-form';
-import { useBeforeUnload } from 'react-router-dom';
+import { useBeforeUnload } from 'react-router';
 
 import { validateTargetUrl, type WebhookSubscriptionFormValues } from '../validation';
 

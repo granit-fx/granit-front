@@ -43,14 +43,14 @@ these peers (see `package.json`):
   and `createLogger`.
 - `@tanstack/react-table` (`^8.21`) — the list grid.
 - `react-hook-form` (`^7.80`) — the create-invoice form.
-- `react-router-dom` (`^7.18`) — list-to-detail navigation and the back link.
+- `react-router` (`^7.18`) — list-to-detail navigation and the back link.
 - `lucide-react` (`^1.21`), `react` (`^19`), `react-dom` (`^19`).
 
 ## Quick start
 
 Register the i18n bundles, then mount the pages under a `GranitClientProvider`
 and an `InvoicingProvider` (from `@granit/react-invoicing`) inside a
-`react-router-dom` tree. The detail page exposes a `renderWorkflow` slot so the
+`react-router` tree. The detail page exposes a `renderWorkflow` slot so the
 host injects its own workflow panel.
 
 ```tsx
@@ -62,7 +62,7 @@ import {
   invoicingTranslationsFr,
 } from '@granit/react-ui-invoicing';
 import { InvoicingProvider } from '@granit/react-invoicing';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 i18n.addResourceBundle('en', 'translation', invoicingTranslationsEn, true, true);
 i18n.addResourceBundle('fr', 'translation', invoicingTranslationsFr, true, true);
@@ -127,7 +127,7 @@ Compose the leaf components directly when you need a custom layout — e.g.
 - **KPI tiles** — the list renders `KpiTile` from `@granit/react-analytics`
   bound to the `Granit.Invoicing.UnpaidInvoiceCountMetric` and
   `…UnpaidInvoiceTotalMetric` metric datasources.
-- **Routing** — `react-router-dom` (`useParams` / `useNavigate`) drives the
+- **Routing** — `react-router` (`useParams` / `useNavigate`) drives the
   list-to-detail navigation and the back link.
 - **i18n** — ships its `Invoicing.*` strings (`invoicingTranslationsEn/Fr`); the
   host registers them and provides the `Common.*` keys used by the dialog.

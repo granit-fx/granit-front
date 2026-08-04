@@ -2,7 +2,7 @@ import { useTranslation } from '@granit/react-localization';
 import { QueryProvider } from '@granit/react-query-engine';
 import { Button } from '@granit/react-ui';
 import { Plus } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { WebhookSubscriptionTable } from './components/webhook-subscription-table';
 import { SUBSCRIPTIONS_QUERY_CONFIG } from './constants';

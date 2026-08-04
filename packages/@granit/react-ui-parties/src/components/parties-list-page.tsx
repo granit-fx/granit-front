@@ -12,7 +12,7 @@ import {
 import { QueryEndpointDataTable } from '@granit/react-ui-kit';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import {
   PARTY_LIST_ROLE_FILTERS,

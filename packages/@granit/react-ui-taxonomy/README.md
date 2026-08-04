@@ -39,7 +39,7 @@ these peers:
   category management actions.
 - `@granit/react-localization` — `useTranslation` for the `taxonomy:*` labels.
 - `react` / `react-dom` (`^19`).
-- `react-router-dom` (`^7.18`) — `useNavigate` drives the header search bar's
+- `react-router` (`^7.18`) — `useNavigate` drives the header search bar's
   navigation to entity-detail routes.
 
 ## Quick start
@@ -57,7 +57,7 @@ import {
   taxonomyAdminTranslationsEn,
 } from '@granit/react-ui-taxonomy';
 import { TaxonomyProvider } from '@granit/react-taxonomy';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Flat `taxonomy:*` keys — registered in the `translation` namespace with key
 // separators disabled (named `*Admin*` to avoid colliding with the headless
@@ -111,7 +111,7 @@ the literal strings stay owned by the core package.
 - **Permissions** — `usePermissions` from `@granit/react-authorization` gates the
   tag / category management actions (`TAXONOMY_PERMISSIONS.TAGS_MANAGE` /
   `TAXONOMY_PERMISSIONS.CATEGORIES_MANAGE`).
-- **Routing** — `react-router-dom` (`useNavigate`) drives the header search bar's
+- **Routing** — `react-router` (`useNavigate`) drives the header search bar's
   navigation; `TaxonomyHeaderSearch` falls back silently when no route is
   registered for a result's target type (only `Document` and `Party` are wired).
 - **i18n** — ships its `taxonomy:*` strings as flat bundles

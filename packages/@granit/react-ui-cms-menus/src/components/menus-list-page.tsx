@@ -5,7 +5,7 @@ import { Alert, AlertDescription, Button, Separator, toast } from '@granit/react
 import { ConfirmActionDialog, QueryEndpointDataTable } from '@granit/react-ui-kit';
 import { ArrowLeft, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router';
 
 import { createMenusColumns } from './menus-columns';
 

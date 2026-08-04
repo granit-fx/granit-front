@@ -1,6 +1,6 @@
 import { cn } from '@granit/utils';
 import { ExternalLink } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import type { NotificationActionLink } from '@granit/react-notifications';
 

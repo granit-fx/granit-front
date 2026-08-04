@@ -7,11 +7,11 @@ import { renderWithProviders } from './test-utils';
 import type { PartyListItemResponse } from '@granit/parties';
 import type { FilterEntry } from '@granit/query-engine';
 import type { ReactNode } from 'react';
-import type * as RouterDom from 'react-router-dom';
+import type * as RouterDom from 'react-router';
 
 const mockNavigate = vi.fn();
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<typeof RouterDom>('react-router-dom');
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual<typeof RouterDom>('react-router');
   return { ...actual, useNavigate: () => mockNavigate };
 });
 

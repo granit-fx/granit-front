@@ -12,7 +12,7 @@ import {
 } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router';
 
 import { TEMPLATING_CONFIG } from '../constants';
 import { logger } from '../logger';

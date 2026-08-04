@@ -88,7 +88,7 @@ export const REACT_ECOSYSTEM_CORE_ALLOWLIST: ReadonlyArray<string> = [];
 
 /**
  * R3 (checklist 7g) — `react-ui-*` packages that currently import a web router
- * (`react-router` / `react-router-dom`) directly in runtime code. This is a RATCHET
+ * (`react-router` / `react-router`) directly in runtime code. This is a RATCHET
  * baseline: no NEW package may be added, and it should SHRINK as pages move
  * navigation behind a port/props so React Native (react-navigation) or Angular
  * Router can substitute. Regenerate from the R3 scan in checklist 7g: grep the

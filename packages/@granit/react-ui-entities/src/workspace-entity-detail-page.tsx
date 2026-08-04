@@ -1,7 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { Button } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { EntityDetailContent } from './entity-detail-content';
 import { EntityPageLayout } from './entity-page-layout';

@@ -24,7 +24,7 @@ backend (contract: `contracts/openapi/api-keys.json`, routes under
 This package is presentational glue; it owns no HTTP transport and no query keys.
 The Axios client resolves from a `GranitClientProvider` in the host tree (the
 pages call `useGranitClient()` and forward `{ client }` to the hooks); the host
-supplies routing (`react-router-dom`) and the global `Common.*` i18n keys.
+supplies routing (`react-router`) and the global `Common.*` i18n keys.
 
 ## Install
 
@@ -45,7 +45,7 @@ these peers:
 - `@granit/types` — `toISODateString` for the `expiresAt` field; shared base types.
 - `@granit/utils` — `cn` class merge for the badge variants.
 - `react` / `react-dom` (`^19`), `react-hook-form` (`^7.80`),
-  `react-router-dom` (`^7.18`), `class-variance-authority` (`^0.7`), and
+  `react-router` (`^7.18`), `class-variance-authority` (`^0.7`), and
   `lucide-react` (`^1.21`).
 
 ## Quick start
@@ -63,7 +63,7 @@ import {
   apiKeysTranslationsEn,
 } from '@granit/react-ui-authentication-api-keys';
 import i18n from 'i18next';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Host owns Common.* keys; this bundle ships only the ApiKeys.* set. Merge it
 // into the host's "translation" namespace (deep + overwrite).
@@ -105,8 +105,12 @@ function MyKeysPanel() {
   return (
     <ApiKeyTable
       items={data?.items ?? []}
-      onRevoke={(k) => {/* open your revoke dialog */}}
-      onRotate={(k) => {/* open your rotate dialog */}}
+      onRevoke={(k) => {
+        /* open your revoke dialog */
+      }}
+      onRotate={(k) => {
+        /* open your rotate dialog */
+      }}
     />
   );
 }
@@ -168,7 +172,7 @@ filters render raw keys.
   do not duplicate constraints in a local Zod schema — regenerate the contract
   instead.
 - **Routing is hard-wired.** The pages navigate to `/api-keys`, `/api-keys/new`,
-  and `/api-keys/:id` via `react-router-dom`; mount them under matching routes or
+  and `/api-keys/:id` via `react-router`; mount them under matching routes or
   fork the pages if your app uses a different path scheme.
 
 ## Out of scope

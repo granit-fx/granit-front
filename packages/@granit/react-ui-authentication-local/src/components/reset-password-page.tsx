@@ -17,7 +17,7 @@ import { createConstraintsResolver } from '@granit/react-validation';
 import { AlertCircle, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { logger } from '../logger';
 import { safeReturnUrl } from '../safe-return-url';

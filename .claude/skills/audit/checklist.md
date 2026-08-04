@@ -287,13 +287,13 @@ the rule — extend the arch-test rather than duplicating an ad-hoc check.
       other file imports that instance — like `@granit/react-ui-bff`. Repeating
       `const logger = createLogger('<pkg>')` inline in several files builds duplicate
       instances of the same prefix; flag as INCONSISTENCY (`Fix: move to src/logger.ts
-      and import it`). Use `logger.child('Feature')` for sub-scopes instead of a manual
+  and import it`). Use `logger.child('Feature')` for sub-scopes instead of a manual
       `'[Feature] …'` string prefix. Enforced by the `>1 createLogger` arch-test.
 - [ ] **Dev observability (debug/info)**: the default log level is `DEBUG` in dev
       and `WARN` in prod (`resolveLogLevelName`), so `debug`/`info` are free to a
       developer and silent in production. Key flows SHOULD emit them, not just
       `warn`/`error`: `info` on provider init and successful mutations (`X created
-      id=…`); `debug` on API calls in hooks (`fetching X` / `X loaded {count}`),
+  id=…`); `debug` on API calls in hooks (`fetching X` / `X loaded {count}`),
       query-key invalidations, and gating/branching decisions. A domain
       `react-{module}` whose only logs are `error`/`warn` (no `debug`/`info` on its
       hooks/providers) is a GAP — a developer running the app sees nothing of the
@@ -419,8 +419,7 @@ expressible as an import-boundary test.
 ### 7d. Direction & boundaries (arch-test territory)
 
 - [ ] **One-way deps only**: core imports nothing React; `react-{module}` imports
-      core (not `react-ui-*`); `react-ui-{module}` imports `react-{module}` + core
-      + `@granit/react-ui`. Flag any back-edge (core → react, react → react-ui) as
+      core (not `react-ui-*`); `react-ui-{module}` imports `react-{module}` + core + `@granit/react-ui`. Flag any back-edge (core → react, react → react-ui) as
       BREAKING
 - [ ] **Trio completeness**: a domain with a `react-ui-{module}` should have the
       full trio — core `@granit/{module}` + headless `@granit/react-{module}` +
@@ -465,7 +464,7 @@ packages. Confine each layer:
       with icons is presentation that belongs in the UI tier (INCONSISTENCY).
 - [ ] **Compose, don't re-vendor**: a domain `react-ui-{module}` imports primitives
       FROM `@granit/react-ui` (`import { Button, Dialog, Select } from
-      '@granit/react-ui'`). A local re-implementation of a primitive the foundation
+  '@granit/react-ui'`). A local re-implementation of a primitive the foundation
       already exports — a hand-rolled `button.tsx`/`dialog.tsx`, or a direct
       `radix-ui` import rebuilding a wrapped primitive — is an INCONSISTENCY
       (`Fix: import from @granit/react-ui`). Direct `radix-ui` is acceptable ONLY
@@ -509,7 +508,7 @@ foundation. Verify against the established patterns in `@granit/react-ui-parties
       smart-filter-bar. A domain page calling `useReactTable` / `flexRender`
       directly to rebuild a paginated list is an INCONSISTENCY
       (`Fix: compose QueryEndpointDataTable from @granit/react-ui-kit`).
-      `@tanstack/react-table` as a dep is fine for the `ColumnDef<T>` *type* only —
+      `@tanstack/react-table` as a dep is fine for the `ColumnDef<T>` _type_ only —
       column definitions live in a `*-columns.tsx` file, the rendering goes through
       admin-kit.
 - [ ] **Component placement under `src/components/`**: presentational components
@@ -544,21 +543,21 @@ build other adapters now (YAGNI) — just keep the seam clean so a port stays ch
       (`framework-agnostic packages do not import the React ecosystem`); current
       allowlisted debt: `@granit/shell-core` (`src/query-client.ts` imports
       `@tanstack/react-query` — migrate to `@tanstack/query-core`). BREAKING.
-- [ ] **R2 — no platform globals in a portable core**: a *domain* core that should be
+- [ ] **R2 — no platform globals in a portable core**: a _domain_ core that should be
       portable avoids direct `window` / `document` / `localStorage` / `sessionStorage`
       / `navigator` access; platform concerns (persistence, navigation, redirect) go
       behind an injected port (web → `localStorage`, RN → `AsyncStorage`). **Audit
       manually — there is no arch-test**: a regex can't separate runtime use from
-      JSDoc/string mentions without an AST, and several cores are *legitimately* web
+      JSDoc/string mentions without an AST, and several cores are _legitimately_ web
       platform abstractions, NOT violations — `@granit/cookies` (`document.cookie`),
       WebAuthn passkeys (`navigator.credentials`), OAuth redirect (`window.location`).
       Flag only a domain core reaching for a global it could have injected.
       INCONSISTENCY.
 - [ ] **R3 — UI does not hard-bind a web router**: a `react-ui-{module}` page should
-      receive navigation via a thin port/props, not `import … from 'react-router-dom'`
+      receive navigation via a thin port/props, not `import … from 'react-router'`
       / `'react-router'` directly, so React Native (react-navigation) or Angular Router
       can substitute. Enforced as a **ratchet** by the `imports` arch-test (`react-ui
-      packages do not add NEW direct web-router imports`): the current offenders are
+  packages do not add NEW direct web-router imports`): the current offenders are
       baselined (`UI_ROUTER_BASELINE`); no NEW `react-ui-*` may add a direct router
       import, and the baseline should SHRINK as pages migrate. INCONSISTENCY.
 

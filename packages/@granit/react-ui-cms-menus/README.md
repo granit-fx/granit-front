@@ -37,7 +37,7 @@ for app consumption through a public registry. A consumer must declare these pee
 - `@granit/utils` — shared helpers.
 - `react` (`^19`), `react-dom` (`^19`).
 - `react-hook-form` (`^7.80`) — the create / edit form.
-- `react-router-dom` (`^7.18`) — `useParams` / `useNavigate` / `Link` route wiring.
+- `react-router` (`^7.18`) — `useParams` / `useNavigate` / `Link` route wiring.
 - `lucide-react` (`^1.21`) — page icons.
 
 The Axios client is not a direct peer here: it is resolved by `@granit/react-cms`
@@ -50,12 +50,8 @@ the i18n bundles. The list expects an `:id` route param (the site id); the form 
 reads an `:menuId` param to switch between create and edit.
 
 ```tsx
-import {
-  MenusListPage,
-  MenuFormPage,
-  cmsMenusTranslationsEn,
-} from '@granit/react-ui-cms-menus';
-import { Route, Routes } from 'react-router-dom';
+import { MenusListPage, MenuFormPage, cmsMenusTranslationsEn } from '@granit/react-ui-cms-menus';
+import { Route, Routes } from 'react-router';
 
 // Flat keys keep the literal `cms:` prefix; register into the "translation" ns.
 i18n.addResourceBundle('en', 'translation', cmsMenusTranslationsEn, true, true);
@@ -81,13 +77,13 @@ only `title` + `items`).
 
 ## Public API
 
-| Symbol                   | Kind      | Purpose                                                          |
-| ------------------------ | --------- | ---------------------------------------------------------------- |
-| `MenusListPage`          | component | Site-scoped menu table + per-row edit link and delete dialog     |
-| `MenuFormPage`           | component | Create / edit form (key, title, items-as-JSON); spec-driven      |
-| `cmsMenusTranslationsEn` | const     | English i18next bundle of `cms:Menus.*` flat keys                |
-| `cmsMenusTranslationsFr` | const     | French i18next bundle of `cms:Menus.*` flat keys                 |
-| `CmsMenusTranslations`   | type      | Shape of the bundle (`typeof cmsMenusTranslationsEn`)            |
+| Symbol                   | Kind      | Purpose                                                      |
+| ------------------------ | --------- | ------------------------------------------------------------ |
+| `MenusListPage`          | component | Site-scoped menu table + per-row edit link and delete dialog |
+| `MenuFormPage`           | component | Create / edit form (key, title, items-as-JSON); spec-driven  |
+| `cmsMenusTranslationsEn` | const     | English i18next bundle of `cms:Menus.*` flat keys            |
+| `cmsMenusTranslationsFr` | const     | French i18next bundle of `cms:Menus.*` flat keys             |
+| `CmsMenusTranslations`   | type      | Shape of the bundle (`typeof cmsMenusTranslationsEn`)        |
 
 ## Out of scope / caveats
 

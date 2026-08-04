@@ -4,7 +4,7 @@ import { I18nextProvider } from '@granit/react-localization';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { notificationsTranslationsEn } from '../locales';
 

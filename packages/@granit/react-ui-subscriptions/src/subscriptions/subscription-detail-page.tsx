@@ -20,7 +20,7 @@ import { EmptyState } from '@granit/react-ui-kit';
 import { toEntityId } from '@granit/types';
 import { AlertCircle, ArrowLeft, Ban, RefreshCw, ArrowRightLeft, UserPlus } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 
 import { AssignSeatDialog } from '../seats/components/assign-seat-dialog';
 import { RevokeSeatDialog } from '../seats/components/revoke-seat-dialog';

@@ -26,7 +26,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 
 import { createTenantColumns } from './components/tenant-columns';
 import { TenantStatusDialog } from './components/tenant-status-dialog';

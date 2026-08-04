@@ -4,7 +4,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle, Spinner } from '@gran
 import { toEntityId } from '@granit/types';
 import { formatCurrency } from '@granit/utils';
 import { ArrowLeft } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { DownloadPdfButton } from './download-pdf-button';
 import { InvoiceLineItems } from './invoice-line-items';

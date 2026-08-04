@@ -25,7 +25,7 @@ import { toEntityId } from '@granit/types';
 import { cn } from '@granit/utils';
 import { ArrowLeft, Archive, Pencil, Send, Upload } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { ArchiveMeterDialog } from './archive-meter-dialog';
 import { MeterForm } from './meter-form';

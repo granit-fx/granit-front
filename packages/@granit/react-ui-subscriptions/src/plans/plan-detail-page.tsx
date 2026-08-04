@@ -14,7 +14,7 @@ import { toEntityId } from '@granit/types';
 import { formatCurrency } from '@granit/utils';
 import { AlertCircle, Archive, ArrowLeft, Pencil, PlusCircle, Rocket } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 
 import { ArchivePlanDialog } from './components/archive-plan-dialog';
 import { CreatePriceDialog } from './components/create-price-dialog';

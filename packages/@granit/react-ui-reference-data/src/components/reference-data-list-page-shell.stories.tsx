@@ -2,7 +2,7 @@ import { createApiClient } from '@granit/api-client';
 import { GranitClientProvider } from '@granit/react-api-client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { ReferenceDataListPageShell } from './reference-data-list-page-shell';
 

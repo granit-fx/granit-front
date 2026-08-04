@@ -9,7 +9,7 @@ import {
 } from '@granit/react-ui';
 import { useCreateSubscription } from '@granit/react-webhooks';
 import { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { WebhookSecretDisplay } from './components/webhook-secret-display';
 import { WebhookSubscriptionForm } from './components/webhook-subscription-form';

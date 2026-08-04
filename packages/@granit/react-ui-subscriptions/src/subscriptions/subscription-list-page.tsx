@@ -5,7 +5,7 @@ import { Button } from '@granit/react-ui';
 import { QueryControlBar, QueryEndpointDataTable } from '@granit/react-ui-kit';
 import { Plus } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { CreateSubscriptionDialog } from './components/create-subscription-dialog';
 import { createSubscriptionColumns } from './components/subscription-columns';

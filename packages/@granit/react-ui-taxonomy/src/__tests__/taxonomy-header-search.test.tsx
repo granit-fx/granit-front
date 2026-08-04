@@ -9,7 +9,7 @@ import type { TaxonomySearchResultItem } from '@granit/taxonomy';
 
 const { mockNavigate } = vi.hoisted(() => ({ mockNavigate: vi.fn() }));
 
-vi.mock('react-router-dom', async (importOriginal) => ({
+vi.mock('react-router', async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
   useNavigate: () => mockNavigate,
 }));

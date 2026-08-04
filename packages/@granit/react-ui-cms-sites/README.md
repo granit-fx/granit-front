@@ -42,7 +42,7 @@ these peers:
 - `@granit/react-validation` — `createConstraintsResolver` for the form.
 - `react` (`^19`), `react-dom` (`^19`).
 - `react-hook-form` (`^7.80`) — the site form is built on it.
-- `react-router-dom` (`^7.18`) — row actions navigate via `Link` / `useNavigate`.
+- `react-router` (`^7.18`) — row actions navigate via `Link` / `useNavigate`.
 - `lucide-react` (`^1.21`) — row-action icons.
 
 ## Quick start
@@ -55,7 +55,7 @@ the hooks. Register the i18n bundles, then route the two pages.
 import { CmsProvider } from '@granit/react-cms';
 import { SitesListPage, SiteFormPage } from '@granit/react-ui-cms-sites';
 import { useGranitClient } from '@granit/react-api-client';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 function CmsAdmin() {
   return (
@@ -110,7 +110,7 @@ i18n.addResourceBundle('fr', 'translation', cmsSitesTranslationsFr, true, true);
 
 Both pages are headless of provider concerns: they call the
 [`@granit/react-cms`](../react-cms) sites hooks and therefore must render inside
-a `CmsProvider` (and a `react-router-dom` router).
+a `CmsProvider` (and a `react-router` router).
 
 ## i18n
 

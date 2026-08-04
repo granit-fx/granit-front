@@ -7,11 +7,11 @@ import { renderAudit } from './test-utils';
 
 import type { AuditEntryDetailResponse } from '@granit/auditing';
 
-// Mock react-router-dom useParams (the test router does not bind `:id`).
+// Mock react-router useParams (the test router does not bind `:id`).
 const { mockUseParams } = vi.hoisted(() => ({ mockUseParams: vi.fn() }));
-vi.mock('react-router-dom', async (importOriginal) => {
+vi.mock('react-router', async (importOriginal) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-  const actual = await importOriginal<typeof import('react-router-dom')>();
+  const actual = await importOriginal<typeof import('react-router')>();
   return { ...actual, useParams: mockUseParams };
 });
 

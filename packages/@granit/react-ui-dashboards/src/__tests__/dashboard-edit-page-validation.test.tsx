@@ -7,10 +7,10 @@ import { DashboardEditPage } from '../components/dashboard-edit-page';
 import { renderDashboards } from './test-utils';
 
 import type * as ReactDashboards from '@granit/react-dashboards';
-import type * as ReactRouterDom from 'react-router-dom';
+import type * as ReactRouterDom from 'react-router';
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<typeof ReactRouterDom>('react-router-dom');
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual<typeof ReactRouterDom>('react-router');
   return {
     ...actual,
     useParams: () => ({ id: '8c6b1e10-0000-4000-8000-000000000002' }),

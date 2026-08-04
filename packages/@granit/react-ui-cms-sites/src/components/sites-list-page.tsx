@@ -5,7 +5,7 @@ import { Alert, AlertDescription, Button, toast } from '@granit/react-ui';
 import { ConfirmActionDialog, QueryEndpointDataTable } from '@granit/react-ui-kit';
 import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 
 import { createSitesColumns } from './sites-columns';
 

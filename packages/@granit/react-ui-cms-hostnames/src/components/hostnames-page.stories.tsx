@@ -2,7 +2,7 @@ import { createApiClient } from '@granit/api-client';
 import { CmsHostnamesProvider } from '@granit/react-cms-hostnames';
 import { CORPORATE_SITE_ID, createCmsHostnamesHandlers } from '@granit/react-cms-hostnames/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { HostnamesPage } from './hostnames-page';
 

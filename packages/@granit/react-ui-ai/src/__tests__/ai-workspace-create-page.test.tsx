@@ -21,7 +21,7 @@ const formMock = vi.hoisted(() => ({
   } as CreateWorkspaceFormValues,
 }));
 
-vi.mock('react-router-dom', async (importOriginal) => ({
+vi.mock('react-router', async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
   useNavigate: () => navigateMock,
 }));

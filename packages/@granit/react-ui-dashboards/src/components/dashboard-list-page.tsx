@@ -25,7 +25,7 @@ import {
   Send,
 } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { DriftBadge } from './dashboard-drift-badge';
 import { DashboardImportFromCatalog } from './dashboard-import-from-catalog';

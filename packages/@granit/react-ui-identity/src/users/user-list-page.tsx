@@ -11,7 +11,7 @@ import {
 } from '@granit/react-ui-data-exchange';
 import { Plus, Search } from 'lucide-react';
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { UserCreateDialog } from './components/user-create-dialog';
 import { UserTable } from './components/user-table';

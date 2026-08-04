@@ -47,7 +47,7 @@ L.Icon.Default.mergeOptions({
  * Marker click-through: when both `snapshot.detailRoute` and `point.id`
  * are set, the marker handler navigates via `window.location.href`. Apps
  * wanting React Router integration register their own snapshot renderer
- * with `useNavigate()` from `react-router-dom`.
+ * with `useNavigate()` from `react-router`.
  */
 export function MapSnapshotWidget({ widget }: { readonly widget: DashboardRenderedWidget }) {
   if (!isMapSnapshotEnvelope(widget) || !widget.snapshot) return null;

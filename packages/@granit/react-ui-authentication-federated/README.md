@@ -29,7 +29,7 @@ app consumption through a public registry. A consumer must declare these peers:
 
 - `@granit/react-ui` — `Alert` / `AlertTitle` / `AlertDescription` / `Button` primitives.
 - `@granit/react-localization` — `useTranslation` for the flat `Auth.*` keys.
-- `react-router-dom` (`^7.18`) — `useSearchParams` (reads `?error=`) and `Navigate`
+- `react-router` (`^7.18`) — `useSearchParams` (reads `?error=`) and `Navigate`
   (the authenticated redirect); the page must render inside a router.
 - `lucide-react` (`^1.21`) — the `AlertCircle` error icon.
 - `react` / `react-dom` (`^19`).
@@ -106,7 +106,7 @@ message.
   IdP. For self-hosted credentials, passkey, and two-factor screens use
   [`@granit/react-ui-authentication-local`](../react-ui-authentication-local).
 - **Router-bound.** It calls `useSearchParams` and renders `Navigate`, so it must mount
-  inside a `react-router-dom` router; outside one it throws.
+  inside a `react-router` router; outside one it throws.
 - **Error display is a hint.** The `?error=` alert is purely informational; the IdP and
   BFF remain the authority on whether a session is valid. Do not treat the absence of an
   error param as proof of an authenticated session — gate on the `authenticated` prop.

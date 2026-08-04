@@ -8,7 +8,7 @@ import {
 import { resolveLabel, useDateFormatter, useTranslation } from '@granit/react-localization';
 import { Skeleton } from '@granit/react-ui';
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { CollectionSectionCard } from './collection-section-card';
 import { EntityActionButton } from './entity-action-button';

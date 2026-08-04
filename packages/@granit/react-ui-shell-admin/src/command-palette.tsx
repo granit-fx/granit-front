@@ -11,7 +11,7 @@ import {
 import { useFeatureRouteTable, useWorkspaces } from '@granit/react-workspaces';
 import { buildWorkspaceUrl, type WorkspaceItemResponse } from '@granit/workspaces';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { OPEN_COMMAND_PALETTE_EVENT } from './command-palette-events';
 import { useActiveWorkspace } from './use-active-workspace';

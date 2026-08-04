@@ -4,7 +4,7 @@ import { createAIChatHandlers } from '@granit/react-ai-chat/testing';
 import { GranitClientProvider } from '@granit/react-api-client';
 import { SettingsProvider } from '@granit/react-settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { ChatSettingsPage } from './chat-settings-page';
 

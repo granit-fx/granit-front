@@ -2,14 +2,14 @@ import { TooltipProvider } from '@granit/react-ui';
 import { render } from '@testing-library/react';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { cmsMenusTranslationsEn } from '../locales';
 
 import type { ReactElement, ReactNode } from 'react';
 
 // Local UI render helper. The page tests stub the data layer (vi.mock
-// @granit/react-cms + react-router-dom's useParams in-workspace), so only i18n
+// @granit/react-cms + react-router's useParams in-workspace), so only i18n
 // (the package's own flat `cms:` bundle plus the few inline `cms:Common.*` keys
 // the pages reference) and a router (Link/useNavigate) are needed.
 const testI18n = i18next.createInstance();

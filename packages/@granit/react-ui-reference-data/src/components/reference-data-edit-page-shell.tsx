@@ -2,7 +2,7 @@ import { useTranslation } from '@granit/react-localization';
 import { Badge, Button, Separator, Spinner } from '@granit/react-ui';
 import { EmptyState } from '@granit/react-ui-kit';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import type { ReferenceDataEntry } from './types';
 import type { ReactNode } from 'react';

@@ -4,7 +4,7 @@ import { createPartiesHandlers, sampleParties } from '@granit/react-parties/test
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { PartyDuplicatesBadge } from './party-duplicates-badge';
 

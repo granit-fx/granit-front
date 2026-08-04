@@ -52,7 +52,7 @@ these peers (all `workspace:*` unless noted):
   `@granit/types` · `@granit/utils` — supporting types and helpers.
 - `lucide-react` (`^1.21`) — icons, incl. the dynamic-by-name `WorkspaceIcon`.
 - `next-themes` (`^0.4.6`) — light/dark/system mode behind `NavUserThemeMenu`.
-- `react` / `react-dom` (`^19`) and `react-router-dom` (`^7.18`) — routing context
+- `react` / `react-dom` (`^19`) and `react-router` (`^7.18`) — routing context
   (`useLocation`, `useNavigate`, `NavLink`) is required: mount the shell inside a
   Router.
 
@@ -72,7 +72,7 @@ import {
   type ShellChromeValue,
 } from '@granit/react-ui-shell-admin';
 import { LayoutDashboard, Users } from 'lucide-react';
-import { BrowserRouter, Outlet } from 'react-router-dom';
+import { BrowserRouter, Outlet } from 'react-router';
 
 // App-owned: the static nav model used until the user picks a workspace.
 const chrome: ShellChromeValue = {
@@ -123,7 +123,7 @@ workspace resolves to a tree node with at least one item, and falls back to
 
 ```tsx
 import { HostHomePage } from '@granit/react-ui-shell-admin';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 <Routes>
   <Route path="/" element={<HostHomePage />} />
@@ -183,7 +183,7 @@ import { Route, Routes } from 'react-router-dom';
   the only authority. Do not treat a hidden item as a security guarantee — see
   [`@granit/react-authorization`](../react-authorization) for the full model.
 - **Router required.** `AppShell`, `Header`, the switcher, and the palette use
-  `react-router-dom` (`useLocation` / `useNavigate` / `NavLink`); mount inside a
+  `react-router` (`useLocation` / `useNavigate` / `NavLink`); mount inside a
   Router or they throw.
 - **Right-rail content is a placeholder.** `AppRightSidebar` currently renders a
   built-in placeholder body (timeline-to-be); it is not yet a composition slot.

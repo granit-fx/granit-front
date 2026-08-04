@@ -3,7 +3,7 @@ import { useTranslation } from '@granit/react-localization';
 import { Alert, AlertDescription, AlertTitle, Button } from '@granit/react-ui';
 import { ChevronDown, ChevronRight, Folder, FolderOpen, Info } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import type { IdentityGroup } from '@granit/identity';
 

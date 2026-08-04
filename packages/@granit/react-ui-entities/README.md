@@ -54,12 +54,12 @@ these peers (all `workspace:*` unless a version range is given):
   list page and side-peek drawer share.
 - `@granit/logger` (`createLogger`) and `@granit/utils` (`cn`).
 - `@tanstack/react-query` (`^5`), `@tanstack/react-table` (`^8.21`),
-  `react` / `react-dom` (`^19`), `react-router-dom` (`^7.18`),
+  `react` / `react-dom` (`^19`), `react-router` (`^7.18`),
   `date-fns` (`^4`), `lucide-react` (`^1.21`), `sonner` (`^2`).
 
 ## Quick start
 
-Mount the workspace entity routes against `react-router-dom`, inject the image
+Mount the workspace entity routes against `react-router`, inject the image
 slot, and mount the global overlay hosts once in the app shell. `renderImage`
 keeps the kit storage-agnostic (e.g. `<BlobImage>` from
 [`@granit/react-blob-storage`](../react-blob-storage)); `activeWorkspaceName`
@@ -75,11 +75,10 @@ import {
   ActionModal,
   SidePeekDrawer,
 } from '@granit/react-ui-entities';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Card / gallery images are injected — the kit never imports a storage layer.
-const renderImage = (blobId: string | null) =>
-  blobId ? <BlobImage blobId={blobId} /> : null;
+const renderImage = (blobId: string | null) => (blobId ? <BlobImage blobId={blobId} /> : null);
 
 function AppShell({ activeWorkspaceName }: { activeWorkspaceName: string | null }) {
   return (
@@ -87,10 +86,19 @@ function AppShell({ activeWorkspaceName }: { activeWorkspaceName: string | null 
     // active entity name set by the list page on mount.
     <EntityActionScopeProvider>
       <Routes>
-        <Route path="/w/:workspace/:entity" element={<WorkspaceEntityPage renderImage={renderImage} />} />
-        <Route path="/w/:workspace/:entity/new" element={<WorkspaceEntityFormPage mode="create" />} />
+        <Route
+          path="/w/:workspace/:entity"
+          element={<WorkspaceEntityPage renderImage={renderImage} />}
+        />
+        <Route
+          path="/w/:workspace/:entity/new"
+          element={<WorkspaceEntityFormPage mode="create" />}
+        />
         <Route path="/w/:workspace/:entity/:id" element={<WorkspaceEntityDetailPage />} />
-        <Route path="/w/:workspace/:entity/:id/edit" element={<WorkspaceEntityFormPage mode="edit" />} />
+        <Route
+          path="/w/:workspace/:entity/:id/edit"
+          element={<WorkspaceEntityFormPage mode="edit" />}
+        />
       </Routes>
 
       {/* Mount the overlay hosts + side peek once, above the routes. */}
@@ -118,9 +126,9 @@ function CustomBoard({ manifest, layout, rows }: BoardProps) {
       <EntityKanbanView
         entityName="Granit.Crm.Lead"
         manifest={manifest}
-        layout={layout}      // manifest.collections.listLayouts[].kanban
-        rows={rows}          // from the parent's useQueryEndpoint (filter-aware)
-        canUpdate            // enables drag-and-drop column transitions (PATCH)
+        layout={layout} // manifest.collections.listLayouts[].kanban
+        rows={rows} // from the parent's useQueryEndpoint (filter-aware)
+        canUpdate // enables drag-and-drop column transitions (PATCH)
         locale="en"
         onCardClick={(id) => openDetail(id)}
       />
@@ -185,7 +193,7 @@ function CustomBoard({ manifest, layout, rows }: BoardProps) {
 
 - **URL action overlays are sandboxed.** `ActionDrawer` and `ActionModal` render
   a server-supplied `urlTemplate` inside a `sandbox="allow-forms
-  allow-same-origin allow-scripts"` `<iframe>` rather than injecting the response
+allow-same-origin allow-scripts"` `<iframe>` rather than injecting the response
   as HTML — untrusted markup is never parsed as the host's DOM (XSS avoidance).
   Apps needing richer wiring (postMessage handshake, custom auth headers) replace
   the component via a `dispatch` override on `useEntityActionDispatcher`.

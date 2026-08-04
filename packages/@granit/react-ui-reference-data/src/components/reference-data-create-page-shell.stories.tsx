@@ -1,4 +1,4 @@
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { ReferenceDataCreatePageShell } from './reference-data-create-page-shell';
 

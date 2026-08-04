@@ -2,7 +2,7 @@ import { createApiClient } from '@granit/api-client';
 import { GranitClientProvider } from '@granit/react-api-client';
 import { createAuditHandlers, mockAuditEntries } from '@granit/react-auditing/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { AuditDetailPage } from './audit-detail-page';
 import { DEFAULT_AUDIT_BASE_PATH } from './constants';

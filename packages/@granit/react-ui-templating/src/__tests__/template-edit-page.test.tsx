@@ -5,8 +5,8 @@ import { TemplateEditPage } from '../components/template-edit-page';
 
 import { renderWithProviders } from './test-utils';
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router');
   return { ...actual, useParams: () => ({ name: 'Email.Welcome' }), useNavigate: () => vi.fn() };
 });
 

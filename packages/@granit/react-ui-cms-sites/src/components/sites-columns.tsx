@@ -1,11 +1,11 @@
 import { Badge, Button } from '@granit/react-ui';
 import { FileText, Menu, Network, Pencil, Search, Tag, Trash2, Waypoints } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import type { SiteResponse } from '@granit/cms';
 import type { useTranslation } from '@granit/react-localization';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { NavigateFunction } from 'react-router-dom';
+import type { NavigateFunction } from 'react-router';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 

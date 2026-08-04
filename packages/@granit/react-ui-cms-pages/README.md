@@ -40,7 +40,7 @@ these peers:
 - `@granit/react-localization` — `useTranslation` for the `cms:*` flat keys.
 - `@granit/utils` — shared helpers.
 - `react` / `react-dom` (`^19`), `react-hook-form` (`^7.80`), and
-  `react-router-dom` (`^7.18`) — the pages read route params and render `<Link>`.
+  `react-router` (`^7.18`) — the pages read route params and render `<Link>`.
 - `lucide-react` (`^1.21`) — the action icons.
 
 ## Quick start
@@ -51,13 +51,9 @@ the headless config + Axios client from the host tree (which falls back to a
 `GranitClientProvider`). Register the i18n bundles once at startup.
 
 ```tsx
-import {
-  PageTreePage,
-  PageFormPage,
-  cmsPagesTranslationsEn,
-} from '@granit/react-ui-cms-pages';
+import { PageTreePage, PageFormPage, cmsPagesTranslationsEn } from '@granit/react-ui-cms-pages';
 import { CmsProvider } from '@granit/react-cms';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 i18n.addResourceBundle('en', 'translation', cmsPagesTranslationsEn, true, true);
 
@@ -126,7 +122,7 @@ In edit mode the form surfaces an "Edit content" button built with
 ## Out of scope / caveats
 
 - **Page content (blocks)** — authored in the granit-cms-renderer Puck editor, not
-  here. This admin manages page *structure* only (tree, slug, parent, layout key);
+  here. This admin manages page _structure_ only (tree, slug, parent, layout key);
   `PageFormPage` only links out to the renderer for content.
 - **HTTP transport & DTOs** — owned by [`@granit/cms`](../cms) (mirror of
   `Granit.Cms`); React Query hooks and query keys by [`@granit/react-cms`](../react-cms).

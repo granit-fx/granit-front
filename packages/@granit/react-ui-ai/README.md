@@ -43,7 +43,7 @@ these peers:
 - `@granit/react-query-engine` + `@granit/query-engine` — the query surface the
   usage page drives.
 - `@granit/logger` — `createLogger` for the page-level error logging.
-- `react` / `react-dom` (`^19`), `react-router-dom` (`^7.18`) — `Link` /
+- `react` / `react-dom` (`^19`), `react-router` (`^7.18`) — `Link` /
   `useNavigate` / `useParams` power the list-to-detail navigation.
 - `react-hook-form` (`^7.80`) + `@hookform/resolvers` (`^5.4`) + `zod` (`^4.4`) —
   the workspace forms.
@@ -67,7 +67,7 @@ import {
 } from '@granit/react-ui-ai';
 import { AIProvider } from '@granit/react-ai';
 import { useGranitClient } from '@granit/react-api-client';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 i18n.addResourceBundle('en', 'translation', aiTranslationsEn, true, true);
 
@@ -113,7 +113,9 @@ function NewWorkspace() {
       maxOutputTokens: values.maxOutputTokens ? Number(values.maxOutputTokens) : null,
     });
   };
-  return <WorkspaceForm mode="create" onSubmit={onSubmit} onCancel={() => {}} isPending={isPending} />;
+  return (
+    <WorkspaceForm mode="create" onSubmit={onSubmit} onCancel={() => {}} isPending={isPending} />
+  );
 }
 ```
 
@@ -149,7 +151,7 @@ function NewWorkspace() {
   create / edit / delete actions and the test panel (`AIPermissions.Workspaces.Manage`,
   `.Chat.Execute`, `.Embeddings.Execute`). System workspaces are configuration-defined
   and always render read-only.
-- **Routing** — `react-router-dom` (`Link` / `useNavigate` / `useParams`) for the
+- **Routing** — `react-router` (`Link` / `useNavigate` / `useParams`) for the
   list-to-detail navigation and the back links. The detail route param is `:name`,
   but the workspace is keyed by its `key` slug throughout.
 - **i18n** — ships its `AI.*` strings (`aiTranslationsEn` / `aiTranslationsFr`); the

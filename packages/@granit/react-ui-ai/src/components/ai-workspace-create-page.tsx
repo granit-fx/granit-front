@@ -2,7 +2,7 @@ import { useCreateAIWorkspace } from '@granit/react-ai';
 import { useTranslation } from '@granit/react-localization';
 import { toast, Button, Separator } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 
 import { logger } from '../logger';
 

@@ -15,7 +15,7 @@ import { Button, Spinner } from '@granit/react-ui';
 import { EmptyState } from '@granit/react-ui-kit';
 import { ArrowLeft, LayoutDashboard, Pencil } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { DashboardComposer } from './dashboard-composer';
 import { DashboardRefreshControl } from './dashboard-refresh-control';

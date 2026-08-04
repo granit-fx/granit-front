@@ -3,7 +3,7 @@ import { useDeviceVerification } from '@granit/react-openiddict-admin';
 import { Alert, AlertDescription, AlertTitle, Button, Input, Label } from '@granit/react-ui';
 import { CheckCircle, Loader2, Monitor } from 'lucide-react';
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 
 import type { ComponentType, ReactNode } from 'react';
 

@@ -1,7 +1,7 @@
 import { Button } from '@granit/react-ui';
 import { formatCurrency } from '@granit/utils';
 import { Eye } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { TransactionStatusBadge } from './transaction-status-badge';
 

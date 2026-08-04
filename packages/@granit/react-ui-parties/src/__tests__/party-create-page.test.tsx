@@ -12,7 +12,7 @@ import type { PartyId } from '@granit/parties';
 // ---------------------------------------------------------------------------
 
 const mockNavigate = vi.fn();
-vi.mock('react-router-dom', async (importOriginal) => {
+vi.mock('react-router', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return { ...actual, useNavigate: () => mockNavigate };
 });

@@ -19,7 +19,7 @@ import {
   type WorkspaceResponse,
 } from '@granit/workspaces';
 import { ChevronRight } from 'lucide-react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router';
 
 import { useActiveWorkspace } from './use-active-workspace';
 import { WorkspaceIcon } from './workspace-icon';

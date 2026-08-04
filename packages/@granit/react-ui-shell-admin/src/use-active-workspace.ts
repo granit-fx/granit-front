@@ -1,6 +1,6 @@
 import { parseWorkspaceUrl } from '@granit/workspaces';
 import { useCallback, useEffect, useSyncExternalStore } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 const STORAGE_KEY = 'granit:host:active-workspace';
 const CHANGE_EVENT = 'granit:active-workspace-changed';

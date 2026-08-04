@@ -7,12 +7,12 @@ import { renderWithProviders } from './test-utils';
 
 import type { ProductId, ProductResponse } from '@granit/catalog';
 
-// Mock react-router-dom useParams so the page resolves a product id.
+// Mock react-router useParams so the page resolves a product id.
 const { mockUseParams } = vi.hoisted(() => ({
   mockUseParams: vi.fn(),
 }));
 
-vi.mock('react-router-dom', async (importOriginal) => {
+vi.mock('react-router', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return {
     ...actual,

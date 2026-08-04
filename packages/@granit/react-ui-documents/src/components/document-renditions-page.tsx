@@ -5,7 +5,7 @@ import {
 } from '@granit/react-documents';
 import { useTranslation } from '@granit/react-localization';
 import { Alert, AlertDescription, Button } from '@granit/react-ui';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import type { RenditionResponse, RenditionType } from '@granit/documents';
 

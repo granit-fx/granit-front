@@ -187,9 +187,9 @@ importers:
       react-i18next:
         specifier: ^17.0.11
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -3798,9 +3798,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -3870,9 +3870,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -3954,9 +3954,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -4023,9 +4023,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
   packages/@granit/react-ui-analytics:
     dependencies:
@@ -4081,9 +4081,9 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4142,9 +4142,9 @@ importers:
       react-hook-form:
         specifier: ^7.81.0
         version: 7.84.0(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4253,9 +4253,9 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/react-localization':
         specifier: workspace:*
@@ -4337,9 +4337,9 @@ importers:
       react-hook-form:
         specifier: ^7.81.0
         version: 7.84.0(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/account':
         specifier: workspace:*
@@ -4724,9 +4724,9 @@ importers:
       react-hook-form:
         specifier: ^7.81.0
         version: 7.84.0(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4800,9 +4800,9 @@ importers:
       react-hook-form:
         specifier: ^7.81.0
         version: 7.84.0(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4858,9 +4858,9 @@ importers:
       react-hook-form:
         specifier: ^7.81.0
         version: 7.84.0(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4928,9 +4928,9 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -4992,9 +4992,9 @@ importers:
       react-hook-form:
         specifier: ^7.81.0
         version: 7.84.0(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -5047,9 +5047,9 @@ importers:
       react-hook-form:
         specifier: ^7.81.0
         version: 7.84.0(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -5160,9 +5160,9 @@ importers:
       react-hook-form:
         specifier: ^7.81.0
         version: 7.84.0(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -5181,9 +5181,9 @@ importers:
       react-hook-form:
         specifier: ^7.81.0
         version: 7.84.0(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -5312,9 +5312,9 @@ importers:
       react-markdown:
         specifier: ^10.1.0
         version: 10.1.0(@types/react@19.2.18)(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       remark-gfm:
         specifier: ^4.0.1
         version: 4.0.1
@@ -5507,9 +5507,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -5600,9 +5600,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -5675,9 +5675,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -5736,9 +5736,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -5754,9 +5754,9 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -5834,9 +5834,9 @@ importers:
       react-hook-form:
         specifier: ^7.81.0
         version: 7.84.0(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -5883,9 +5883,9 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -6013,9 +6013,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -6034,9 +6034,9 @@ importers:
       react-hook-form:
         specifier: ^7.81.0
         version: 7.84.0(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -6302,9 +6302,9 @@ importers:
       react-hook-form:
         specifier: ^7.81.0
         version: 7.84.0(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -6420,9 +6420,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -6438,9 +6438,9 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -6544,9 +6544,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -6643,9 +6643,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -6664,9 +6664,9 @@ importers:
       react-hook-form:
         specifier: ^7.81.0
         version: 7.84.0(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -6782,9 +6782,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -6872,9 +6872,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -7001,9 +7001,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -7111,9 +7111,9 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
   packages/@granit/react-ui-subscriptions:
     dependencies:
@@ -7184,9 +7184,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -7205,9 +7205,9 @@ importers:
       react-hook-form:
         specifier: ^7.81.0
         version: 7.84.0(react@19.2.8)
-      react-router-dom:
-        specifier: ^7.18.0
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -7320,9 +7320,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -7425,9 +7425,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -7500,9 +7500,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -7581,9 +7581,9 @@ importers:
       react-i18next:
         specifier: ^17.0.9
         version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
-      react-router-dom:
-        specifier: ^7.18.2
-        version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-router:
+        specifier: ^8.3.0
+        version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -11490,6 +11490,9 @@ packages:
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
+  cookie-es@3.1.1:
+    resolution: {integrity: sha512-UaXxwISYJPTr9hwQxMFYZ7kNhSXboMXP+Z3TRX6f1/NyaGPfuNUZOWP1pUEb75B2HjfklIYLVRfWiFZJyC6Npg==}
+
   cookie@1.1.1:
     resolution: {integrity: sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==}
     engines: {node: '>=18'}
@@ -13035,16 +13038,9 @@ packages:
       react: ^19.0.0
       react-dom: ^19.0.0
 
-  react-router-dom@7.18.2:
-    resolution: {integrity: sha512-AIKJ/jgGlFb3EbfCXk5Gzshiwt+l3mqbCrNjmEWMMjqQxNJ3svBa6bgzFyCC2Sw3RA0VWF1kg3uQf2OFhxb8hw==}
-    engines: {node: '>=20.0.0'}
-    peerDependencies:
-      react: ^19.0.0
-      react-dom: ^19.0.0
-
-  react-router@7.18.2:
-    resolution: {integrity: sha512-aUVMjFm3GAPTTZL7oYr5E7ETiqfQCHRLH+B+5afnICvf0r7kkK4eR6SMuwbSTJw/7t+12khT/Kahij49fqOCIg==}
-    engines: {node: '>=20.0.0'}
+  react-router@8.3.0:
+    resolution: {integrity: sha512-qyPMvW83jGIct3yiieisxdk9M745anqhpIMKN5m1t6yBMfgVPpt77aHOqs5fUlEJRMCGffg9BaQLH9oPVOL7xQ==}
+    engines: {node: '>=22.22.0'}
     peerDependencies:
       react: ^19.0.0
       react-dom: ^19.0.0
@@ -17361,6 +17357,8 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
+  cookie-es@3.1.1: {}
+
   cookie@1.1.1: {}
 
   cosmiconfig-typescript-loader@6.3.0(@types/node@26.1.2)(cosmiconfig@9.0.2(typescript@6.0.3))(typescript@6.0.3):
@@ -19230,17 +19228,10 @@ snapshots:
       react-dom: 19.2.8(react@19.2.8)
       react-draggable: 4.7.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
-  react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  react-router@8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
+      cookie-es: 3.1.1
       react: 19.2.8
-      react-dom: 19.2.8(react@19.2.8)
-      react-router: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-
-  react-router@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
-    dependencies:
-      cookie: 1.1.1
-      react: 19.2.8
-      set-cookie-parser: 2.7.2
     optionalDependencies:
       react-dom: 19.2.8(react@19.2.8)
 

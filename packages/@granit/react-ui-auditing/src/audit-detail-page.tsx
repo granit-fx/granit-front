@@ -12,7 +12,7 @@ import {
 import { EmptyState } from '@granit/react-ui-kit';
 import { toEntityId } from '@granit/types';
 import { ArrowLeft } from 'lucide-react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 
 import { AuditCategoryBadge } from './components/audit-category-badge';
 import { AuditEntityChangeCard } from './components/audit-entity-change-card';

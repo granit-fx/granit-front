@@ -37,7 +37,7 @@ AI providers above these pages and declare the peers below:
 - `@granit/react-ui` — the shadcn/ui foundation (buttons, dialogs, selects, `toast`).
 - `@granit/react-localization` — `useTranslation`; this kit ships `AiChat.*` strings.
 - `@granit/logger` — `createLogger`, for the copy/report failure paths.
-- `react` / `react-dom` (`^19`) and `react-router-dom` (`^7`) — `useNavigate` /
+- `react` / `react-dom` (`^19`) and `react-router` (`^8`) — `useNavigate` /
   `useParams` drive conversation selection (`/ai/chat/:id`) and "new chat".
 - `dompurify` (`^3`), `marked` (`^18`), `lucide-react` (`^1`) — Markdown→clipboard
   sanitisation and icons.
@@ -49,7 +49,7 @@ client from a `GranitClientProvider` higher in the tree), then route the pages.
 
 ```tsx
 import { ChatPage, ChatSettingsPage, aiChatAdminTranslationsEn } from '@granit/react-ui-ai-chat';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 i18n.addResourceBundle('en', 'translation', aiChatAdminTranslationsEn, true, true);
 
@@ -94,28 +94,28 @@ await copyMessage(assistantMarkdown, 'html');
 
 ## Public API
 
-| Symbol                      | Kind      | Purpose                                                                  |
-| --------------------------- | --------- | ------------------------------------------------------------------------ |
-| `ChatPage`                  | component | Full chat workspace: sidebar + streamed thread + `/` `@` composer        |
-| `ChatSettingsPage`          | component | Per-user chat preferences (default workspace, web-search, context)       |
-| `ChatMessageActions`        | component | Per-message row: copy / regenerate / report (with a report dialog)       |
-| `ChatMessageActionsProps`   | type      | Props for `ChatMessageActions` (content, isAssistant, onReport, ...)     |
-| `ConversationListItem`      | component | Sidebar row: open + kebab to pin / rename / delete (with dialogs)        |
-| `ConversationListItemProps` | type      | Props for `ConversationListItem` (title, isPinned, onRename, ...)        |
-| `ProviderIcon`              | component | Monochrome AI-vendor brand glyph; unknown provider gets a generic mark   |
-| `buildWorkspaceOptions`     | fn        | Decorate flat workspace names into rich `WorkspaceOption[]` for picker   |
-| `copyMessage`               | fn        | Write a Markdown message to the clipboard in a `CopyFormat` (sanitised)  |
-| `markdownToClipboard`       | fn        | Markdown to html / markdown / plain string (HTML run through DOMPurify)  |
-| `CopyFormat`                | type      | `'html'`, `'markdown'`, or `'plain'`                                     |
-| `aiChatAdminTranslationsEn` | const     | English `AiChat.*` bundle for this admin kit                             |
-| `aiChatAdminTranslationsFr` | const     | French `AiChat.*` bundle for this admin kit                              |
+| Symbol                      | Kind      | Purpose                                                                 |
+| --------------------------- | --------- | ----------------------------------------------------------------------- |
+| `ChatPage`                  | component | Full chat workspace: sidebar + streamed thread + `/` `@` composer       |
+| `ChatSettingsPage`          | component | Per-user chat preferences (default workspace, web-search, context)      |
+| `ChatMessageActions`        | component | Per-message row: copy / regenerate / report (with a report dialog)      |
+| `ChatMessageActionsProps`   | type      | Props for `ChatMessageActions` (content, isAssistant, onReport, ...)    |
+| `ConversationListItem`      | component | Sidebar row: open + kebab to pin / rename / delete (with dialogs)       |
+| `ConversationListItemProps` | type      | Props for `ConversationListItem` (title, isPinned, onRename, ...)       |
+| `ProviderIcon`              | component | Monochrome AI-vendor brand glyph; unknown provider gets a generic mark  |
+| `buildWorkspaceOptions`     | fn        | Decorate flat workspace names into rich `WorkspaceOption[]` for picker  |
+| `copyMessage`               | fn        | Write a Markdown message to the clipboard in a `CopyFormat` (sanitised) |
+| `markdownToClipboard`       | fn        | Markdown to html / markdown / plain string (HTML run through DOMPurify) |
+| `CopyFormat`                | type      | `'html'`, `'markdown'`, or `'plain'`                                    |
+| `aiChatAdminTranslationsEn` | const     | English `AiChat.*` bundle for this admin kit                            |
+| `aiChatAdminTranslationsFr` | const     | French `AiChat.*` bundle for this admin kit                             |
 
 ## Injection
 
 - **API client** — the host wraps `AIProvider` / `AIChatProvider` /
   `AIPromptsProvider` / `BlobStorageProvider`, each resolving the Axios client from
   a `GranitClientProvider` (via `@granit/react-api-client`). No client is baked in.
-- **Routing** — `react-router-dom` (`useNavigate` / `useParams`) drives conversation
+- **Routing** — `react-router` (`useNavigate` / `useParams`) drives conversation
   selection (`/ai/chat/:id`) and the "new chat" navigation; a brand-new chat is
   promoted to its `:id` URL once the stream announces the conversation id.
 - **Settings** — `@granit/react-settings` (`useSettings` / `useUpdateSetting`)
@@ -157,7 +157,7 @@ await copyMessage(assistantMarkdown, 'html');
   `ClarificationPrompt`, `SuggestedActions`, `ScrollToBottomButton` come from
   [`@granit/react-ai-chat`](../react-ai-chat); this kit only wires them together.
 - **Web search execution** — the preferences page captures the per-user web-search
-  *intent* (`Deny` / `Allow` / `AlwaysAsk`); enforcement is a backend concern.
+  _intent_ (`Deny` / `Allow` / `AlwaysAsk`); enforcement is a backend concern.
 
 ## License
 

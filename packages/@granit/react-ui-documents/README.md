@@ -40,7 +40,7 @@ higher in the tree and declare these peers:
 - `@granit/react-taxonomy` + `@granit/react-ui-taxonomy` — the tag-chip strip and
   category selector on the detail page.
 - `@granit/react-ui` — the foundation `Button` and design tokens.
-- `react` / `react-dom` (`^19`) and `react-router-dom` (`^7.18`) — the pages use
+- `react` / `react-dom` (`^19`) and `react-router` (`^7.18`) — the pages use
   `Link` / `useParams` / `useNavigate` for explorer-to-detail navigation.
 
 ## Quick start
@@ -61,7 +61,7 @@ import {
   DOCUMENTS_PERMISSIONS,
   documentsAdminTranslationsEn,
 } from '@granit/react-ui-documents';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Flat `documents:*` admin strings — host owns registration (merge, deep-merge).
 i18n.addResourceBundle('en', 'translation', documentsAdminTranslationsEn, true, true);
@@ -126,7 +126,7 @@ controls.
   `TAXONOMY_PERMISSIONS.*`). The explorer requires **both** the document- and
   folder-level `TransferOwnership` grants before it shows that action, since one
   control targets both kinds.
-- **Routing** — `react-router-dom` (`Link` / `useParams` / `useNavigate`) drives the
+- **Routing** — `react-router` (`Link` / `useParams` / `useNavigate`) drives the
   explorer-to-detail navigation and the document sub-pages.
 - **i18n** — ships its flat `documents:*` admin strings
   (`documentsAdminTranslationsEn` / `Fr`); the host registers them. These are
@@ -141,7 +141,7 @@ controls.
   enforcement. See [`@granit/react-authorization`](../react-authorization) for the
   full client-side security posture.
 - **Public links are unauthenticated by design.** `DocumentPublicLinksPage` mints
-  links that grant scoped, time-limited access *without* a session. Treat the create
+  links that grant scoped, time-limited access _without_ a session. Treat the create
   control as privileged (`Documents.Manage`-gated here) and prefer short TTLs and a
   bounded `maxUses`; a blank `maxUses` means unlimited until expiry.
 - **Headless rendering, hooks and DTOs live one layer down.** Components such as

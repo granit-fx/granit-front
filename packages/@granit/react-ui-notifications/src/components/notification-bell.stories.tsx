@@ -1,7 +1,7 @@
 import { createApiClient } from '@granit/api-client';
 import { NotificationsProvider } from '@granit/react-notifications';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { NotificationBell } from './notification-bell';
 

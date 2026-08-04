@@ -15,7 +15,7 @@ import axios from 'axios';
 import i18next from 'i18next';
 import { http, HttpResponse } from 'msw';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { EntityActionScopeProvider } from './entity-action-scope';

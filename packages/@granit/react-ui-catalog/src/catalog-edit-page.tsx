@@ -22,7 +22,7 @@ import { toEntityId } from '@granit/types';
 import { AlertTriangle, Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { capitalize } from './lib/capitalize';
 

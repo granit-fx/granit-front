@@ -5,7 +5,7 @@ import { useTranslation } from '@granit/react-localization';
 import { toast, Badge, Button, Separator, Spinner } from '@granit/react-ui';
 import { EmptyState } from '@granit/react-ui-kit';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router';
 
 import { logger } from '../logger';
 

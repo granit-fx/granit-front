@@ -48,7 +48,7 @@ these peers:
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/react-ui` — foundation components (`Card`, `Popover`, `Badge`, `toast`, …).
 - `@granit/utils` — `cn` class merge helper.
-- `react` (`^19`), `react-dom` (`^19`), `react-router-dom` (`^7`) — routing of
+- `react` (`^19`), `react-dom` (`^19`), `react-router` (`^8`) — routing of
   internal notification actions and page wiring.
 - `lucide-react` (`^1.21`) — icons.
 - `zod` (`^4`) — payload validation in the built-in test-notification view.
@@ -70,7 +70,7 @@ import {
   NotificationToastHandler,
   notificationsTranslationsEn,
 } from '@granit/react-ui-notifications';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 i18n.addResourceBundle('en', 'translation', notificationsTranslationsEn, true, true);
 

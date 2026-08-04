@@ -43,7 +43,7 @@ these peers:
   returns.
 - `i18next` (`^26`) — runtime for the shipped resource bundles.
 - `lucide-react` (`^1.21`) — page icons.
-- `react` / `react-dom` (`^19`) and `react-router-dom` (`^7.18`) — routing and
+- `react` / `react-dom` (`^19`) and `react-router` (`^7.18`) — routing and
   the detail links (`useParams`, `Link`).
 
 The Axios client is **not** a peer of this package: the pages resolve it from a
@@ -57,7 +57,7 @@ provider wiring is needed beyond the host's `GranitClientProvider`.
 
 ```tsx
 import { AuditListPage, AuditDetailPage, auditingTranslationsEn } from '@granit/react-ui-auditing';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Flat keys in the "translation" namespace; the host owns registration.
 i18n.addResourceBundle('en', 'translation', auditingTranslationsEn, true, true);

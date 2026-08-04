@@ -1,7 +1,7 @@
 import { useTranslation } from '@granit/react-localization';
 import { Button, Separator } from '@granit/react-ui';
 import { ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import type { ReactNode } from 'react';
 

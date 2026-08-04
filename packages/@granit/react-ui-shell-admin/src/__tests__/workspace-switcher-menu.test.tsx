@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { makeT, makeTree, makeWorkspace, renderShell } from './test-utils';
 
 import type { WorkspaceTreeResponse } from '@granit/workspaces';
-import type * as ReactRouter from 'react-router-dom';
+import type * as ReactRouter from 'react-router';
 
 // resolveLabel is a real (pure) export of @granit/react-localization (#770);
 // keep it via importOriginal and override only useTranslation for the test.
@@ -18,7 +18,7 @@ vi.mock('./workspace-icon', () => ({
 }));
 
 const navigate = vi.fn();
-vi.mock('react-router-dom', async (importOriginal) => {
+vi.mock('react-router', async (importOriginal) => {
   const actual = await importOriginal<typeof ReactRouter>();
   return { ...actual, useNavigate: () => navigate };
 });

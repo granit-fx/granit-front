@@ -17,7 +17,7 @@ import {
 import { TAXONOMY_PERMISSIONS, TAXONOMY_TARGET_TYPES } from '@granit/react-ui-taxonomy';
 import { toEntityId } from '@granit/types';
 import { ArrowLeft } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { AddressesTab } from './addresses-tab';
 import { DownloadVCardButton } from './download-vcard-button';

@@ -15,7 +15,7 @@ import { EmptyState } from '@granit/react-ui-kit';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { Loader2, Plus, X } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 
 import { useLegalDocumentColumns } from './components/legal-document-columns';
 import { LegalDocumentPublishDialog } from './components/legal-document-publish-dialog';

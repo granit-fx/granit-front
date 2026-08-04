@@ -1,6 +1,6 @@
 import { SidebarInset, SidebarProvider } from '@granit/react-ui';
 import { type ReactNode, useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 import { AppRightSidebar } from './app-right-sidebar';
 import { AppSidebar } from './app-sidebar';

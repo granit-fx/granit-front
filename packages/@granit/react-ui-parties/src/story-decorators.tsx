@@ -2,7 +2,7 @@ import { createApiClient } from '@granit/api-client';
 import { PartiesProvider } from '@granit/react-parties';
 import { createPartiesHandlers } from '@granit/react-parties/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import type { Decorator } from '@storybook/react-vite';
 

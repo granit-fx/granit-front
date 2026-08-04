@@ -5,7 +5,7 @@ import {
   SAMPLE_FINANCE_DASHBOARD_ID,
 } from '@granit/react-dashboards/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { fn } from 'storybook/test';
 
 import { DashboardComposer } from './dashboard-composer';

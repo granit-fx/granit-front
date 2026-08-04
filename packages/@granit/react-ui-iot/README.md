@@ -17,7 +17,7 @@ pnpm add @granit/react-ui-iot
 ```tsx
 import { IotProvider } from '@granit/react-iot';
 import { DeviceListPage, DeviceDetailPage, TelemetryPage } from '@granit/react-ui-iot';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 <IotProvider config={{ client, basePath: '/api/v1/iot' }}>
   <Routes>

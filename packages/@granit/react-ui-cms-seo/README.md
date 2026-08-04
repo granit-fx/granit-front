@@ -39,7 +39,7 @@ for app consumption through a public registry. A consumer must declare these pee
 - `@granit/react-validation` — `createConstraintsResolver` for the defaults form.
 - `@granit/react-localization` — `useTranslation` for the `cms:Seo.*` strings.
 - `react-hook-form` (`^7.80`) — the defaults form.
-- `react-router-dom` (`^7.18`) — the page reads `:id` (site id) from the route via
+- `react-router` (`^7.18`) — the page reads `:id` (site id) from the route via
   `useParams`.
 - `lucide-react` (`^1.21`) — the apply / reject action icons.
 - `react` / `react-dom` (`^19`).
@@ -54,7 +54,7 @@ provider. Register the i18n bundles once, mount the provider, route to the page.
 import { CmsSeoProvider } from '@granit/react-cms-seo';
 import { SeoDashboardPage, cmsSeoTranslationsEn } from '@granit/react-ui-cms-seo';
 import { useGranitClient } from '@granit/react-api-client';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 // Flat keys with the literal `cms:` prefix, registered into the "translation" ns.
 i18n.addResourceBundle('en', 'translation', cmsSeoTranslationsEn, true, true);

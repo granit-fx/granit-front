@@ -45,7 +45,7 @@ these peers:
 - `@granit/types` — `toEntityId` for the route-param → branded id cast.
 - `@tanstack/react-table` (`^8.21`) — column model for the grid.
 - `react` / `react-dom` (`^19`), `react-hook-form` (`^7.80`),
-  `react-router-dom` (`^7.18`), `lucide-react` (`^1.21`).
+  `react-router` (`^7.18`), `lucide-react` (`^1.21`).
 
 ## Quick start
 
@@ -63,7 +63,7 @@ import {
   catalogTranslationsEn,
   catalogTranslationsFr,
 } from '@granit/react-ui-catalog';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import i18n from './i18n';
 
 // Owns the Catalog.* feature keys; the host root supplies Common.* / Operators.*.
