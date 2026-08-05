@@ -11,7 +11,6 @@ type FormatDateFn = ReturnType<typeof useDateFormatter>['formatDate'];
 interface ReleasesColumnOptions {
   readonly t: TranslateFn;
   readonly formatDate: FormatDateFn;
-  readonly siteId: string;
   readonly onView: (release: ReleaseResponse) => void;
   readonly onPublish: (release: ReleaseResponse) => void;
 }

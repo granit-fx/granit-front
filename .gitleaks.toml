@@ -10,3 +10,9 @@ useDefault = true
     # Fixture data in testing/ dirs is always mock — never real secrets.
     '''.*\/testing\/.*''',
   ]
+
+  regexes = [
+    # Synthetic JWT example baked into the backend-generated cms.json spec
+    # (preview-token response example; payload is {"page":"7c9e6679"}).
+    '''eyJhbGciOiJIUzI1NiJ9\.eyJwYWdlIjoiN2M5ZTY2NzkifQ\.Xy7cQd0m1a2b3c4d5e6f7g8h9i0j''',
+  ]

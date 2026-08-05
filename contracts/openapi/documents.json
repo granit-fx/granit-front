@@ -2725,10 +2725,27 @@
           },
           "format": {
             "type": ["null", "string"]
+          },
+          "valueKind": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ValueKind"
+              }
+            ]
+          },
+          "currencyCode": {
+            "type": ["null", "string"]
+          },
+          "currencyCodeField": {
+            "type": ["null", "string"]
           }
         }
       },
       "ContentType": {
+        "type": "string",
         "description": "MIME content type (e.g. `text/html`, `application/pdf`).\nValidates the `type/subtype` format per RFC 6838."
       },
       "CreateFolderRequest": {
@@ -3120,7 +3137,10 @@
           "Lt",
           "Lte",
           "In",
-          "Between"
+          "Between",
+          "Ne",
+          "IsNull",
+          "IsNotNull"
         ]
       },
       "FinalizeUploadRequest": {
@@ -3508,6 +3528,7 @@
                   "format": "int64"
                 },
                 "currentVersionContentType": {
+                  "type": "string",
                   "description": "MIME content type (e.g. `text/html`, `application/pdf`).\nValidates the `type/subtype` format per RFC 6838."
                 },
                 "status": {
@@ -3716,6 +3737,7 @@
         "type": "object",
         "properties": {
           "concurrencyStamp": {
+            "maxLength": 64,
             "type": "string"
           },
           "name": {
@@ -3858,6 +3880,7 @@
         "type": "object",
         "properties": {
           "concurrencyStamp": {
+            "maxLength": 64,
             "type": "string"
           },
           "newOwnerId": {
@@ -3949,6 +3972,33 @@
             }
           }
         }
+      },
+      "ValueKind": {
+        "enum": [
+          "Count",
+          "Number",
+          "Currency",
+          "Percentage",
+          "Duration",
+          "Date",
+          "Url",
+          "Email",
+          "Phone",
+          "Bytes",
+          "DateTime",
+          "Boolean",
+          "Enum",
+          "RelativeTime",
+          "Time",
+          "Color",
+          "Image",
+          "Json",
+          "Markdown",
+          "Tags",
+          "Rating",
+          "Identifier",
+          null
+        ]
       }
     }
   },

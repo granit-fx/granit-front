@@ -158,8 +158,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -170,16 +170,6 @@
           },
           "409": {
             "description": "Conflict",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -340,22 +330,12 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
-                }
-              }
-            }
-          },
           "422": {
             "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -675,11 +655,11 @@
         }
       }
     },
-    "/api/cms/redirects/grid": {
+    "/api/cms/redirects": {
       "get": {
         "tags": ["CMS - Redirects"],
-        "summary": "Returns a filtered, sorted, and paginated list of Redirect entries.",
-        "description": "Executes a dynamic query against Redirect using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
+        "summary": "Returns a paged, filterable list of RedirectListItemResponse from Redirect.",
+        "description": "Executes a dynamic query against Redirect using the Granit query engine and projects each row to RedirectListItemResponse. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult<RedirectListItemResponse> by default. When the groupBy query parameter is specified, returns a GroupedResult<RedirectListItemResponse> with the same projection applied to the items inside each group.",
         "operationId": "QueryRedirect",
         "parameters": [
           {
@@ -786,10 +766,10 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/PagedResultOfRedirect"
+                      "$ref": "#/components/schemas/PagedResultOfRedirectListItemResponse"
                     },
                     {
-                      "$ref": "#/components/schemas/GroupedResultOfRedirect"
+                      "$ref": "#/components/schemas/GroupedResultOfRedirectListItemResponse"
                     }
                   ],
                   "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
@@ -840,7 +820,7 @@
         }
       }
     },
-    "/api/cms/redirects/grid/meta": {
+    "/api/cms/redirects/meta": {
       "get": {
         "tags": ["CMS - Redirects"],
         "summary": "Returns query metadata for Redirect (columns, filters, sorts, presets).",
@@ -930,6 +910,22 @@
           },
           "format": {
             "type": ["null", "string"]
+          },
+          "valueKind": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ValueKind"
+              }
+            ]
+          },
+          "currencyCode": {
+            "type": ["null", "string"]
+          },
+          "currencyCodeField": {
+            "type": ["null", "string"]
           }
         }
       },
@@ -1017,7 +1013,10 @@
           "Lt",
           "Lte",
           "In",
-          "Between"
+          "Between",
+          "Ne",
+          "IsNull",
+          "IsNotNull"
         ]
       },
       "GroupByField": {
@@ -1032,14 +1031,14 @@
           }
         }
       },
-      "GroupedResultOfRedirect": {
+      "GroupedResultOfRedirectListItemResponse": {
         "required": ["groups", "totalCount"],
         "type": "object",
         "properties": {
           "groups": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GroupEntryOfRedirect"
+              "$ref": "#/components/schemas/GroupEntryOfRedirectListItemResponse"
             }
           },
           "totalCount": {
@@ -1048,7 +1047,7 @@
           }
         }
       },
-      "GroupEntryOfRedirect": {
+      "GroupEntryOfRedirectListItemResponse": {
         "required": ["field", "value", "label", "count"],
         "type": "object",
         "properties": {
@@ -1069,7 +1068,7 @@
           "items": {
             "type": ["null", "array"],
             "items": {
-              "$ref": "#/components/schemas/Redirect"
+              "$ref": "#/components/schemas/RedirectListItemResponse"
             }
           }
         }
@@ -1104,14 +1103,6 @@
           }
         }
       },
-      "IDomainEvent": {
-        "type": "object",
-        "description": "Marker interface for domain events."
-      },
-      "IIntegrationEvent": {
-        "type": "object",
-        "description": "Marker interface for integration events (ETO — Event Transfer Object)."
-      },
       "LookupDescriptor": {
         "type": "object",
         "properties": {
@@ -1143,24 +1134,41 @@
         "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
         "default": "QueryEngine"
       },
-      "PagedResultOfRedirect": {
+      "PagedResultOfRedirectListItemResponse": {
         "required": ["items", "totalCount", "hasMore"],
         "type": "object",
         "properties": {
           "items": {
             "type": "array",
             "items": {
+              "required": [
+                "id",
+                "source",
+                "target",
+                "matchType",
+                "type",
+                "isActive",
+                "culture",
+                "origin",
+                "hitCount",
+                "createdAt",
+                "modifiedAt"
+              ],
               "type": "object",
               "properties": {
-                "siteId": {
+                "id": {
                   "type": "string",
                   "format": "uuid"
                 },
-                "source": {},
+                "source": {
+                  "type": "string"
+                },
+                "target": {
+                  "type": "string"
+                },
                 "matchType": {
                   "enum": ["Exact", "Prefix"]
                 },
-                "target": {},
                 "type": {
                   "enum": ["MovedPermanently", "Found", "TemporaryRedirect", "PermanentRedirect"]
                 },
@@ -1178,67 +1186,13 @@
                   "type": ["integer", "string"],
                   "format": "int64"
                 },
-                "lastHitAt": {
-                  "type": ["null", "string"],
+                "createdAt": {
+                  "type": "string",
                   "format": "date-time"
-                },
-                "tenantId": {
-                  "type": ["null", "string"],
-                  "format": "uuid"
-                },
-                "statusCode": {
-                  "type": "integer",
-                  "format": "int32"
-                },
-                "isDeleted": {
-                  "type": "boolean",
-                  "description": "Indicates whether the entity has been soft-deleted."
-                },
-                "deletedAt": {
-                  "type": ["null", "string"],
-                  "description": "Soft deletion timestamp (UTC).",
-                  "format": "date-time"
-                },
-                "deletedBy": {
-                  "type": ["null", "string"],
-                  "description": "Identifier of the user who deleted the entity."
                 },
                 "modifiedAt": {
                   "type": ["null", "string"],
-                  "description": "Last modification timestamp (UTC).",
                   "format": "date-time"
-                },
-                "modifiedBy": {
-                  "type": ["null", "string"],
-                  "description": "Identifier of the user who last modified the entity."
-                },
-                "domainEvents": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "description": "Marker interface for domain events."
-                  }
-                },
-                "integrationEvents": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "description": "Marker interface for integration events (ETO — Event Transfer Object)."
-                  }
-                },
-                "createdAt": {
-                  "type": "string",
-                  "description": "Creation timestamp (UTC).",
-                  "format": "date-time"
-                },
-                "createdBy": {
-                  "type": "string",
-                  "description": "Identifier of the user who created the entity."
-                },
-                "id": {
-                  "type": "string",
-                  "description": "Unique identifier of the entity.",
-                  "format": "uuid"
                 }
               }
             }
@@ -1394,101 +1348,6 @@
           }
         }
       },
-      "Redirect": {
-        "type": "object",
-        "properties": {
-          "siteId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "source": {
-            "$ref": "#/components/schemas/RedirectSource"
-          },
-          "matchType": {
-            "$ref": "#/components/schemas/RedirectMatchType"
-          },
-          "target": {
-            "$ref": "#/components/schemas/RedirectTarget"
-          },
-          "type": {
-            "$ref": "#/components/schemas/RedirectType"
-          },
-          "isActive": {
-            "type": "boolean"
-          },
-          "culture": {
-            "type": ["null", "string"]
-          },
-          "origin": {
-            "$ref": "#/components/schemas/RedirectOrigin"
-          },
-          "hitCount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
-            "format": "int64"
-          },
-          "lastHitAt": {
-            "type": ["null", "string"],
-            "format": "date-time"
-          },
-          "tenantId": {
-            "type": ["null", "string"],
-            "format": "uuid"
-          },
-          "statusCode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "isDeleted": {
-            "type": "boolean",
-            "description": "Indicates whether the entity has been soft-deleted."
-          },
-          "deletedAt": {
-            "type": ["null", "string"],
-            "description": "Soft deletion timestamp (UTC).",
-            "format": "date-time"
-          },
-          "deletedBy": {
-            "type": ["null", "string"],
-            "description": "Identifier of the user who deleted the entity."
-          },
-          "modifiedAt": {
-            "type": ["null", "string"],
-            "description": "Last modification timestamp (UTC).",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": ["null", "string"],
-            "description": "Identifier of the user who last modified the entity."
-          },
-          "domainEvents": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/IDomainEvent"
-            }
-          },
-          "integrationEvents": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/IIntegrationEvent"
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Creation timestamp (UTC).",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "string",
-            "description": "Identifier of the user who created the entity."
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the entity.",
-            "format": "uuid"
-          }
-        }
-      },
       "RedirectCreateRequest": {
         "required": ["source", "target"],
         "type": "object",
@@ -1517,6 +1376,70 @@
             "type": "boolean",
             "default": true
           }
+        },
+        "example": {
+          "source": "/old-blog/2024/launch",
+          "target": "/blog/launch",
+          "type": "MovedPermanently",
+          "matchType": "Exact",
+          "culture": "en",
+          "isActive": true
+        }
+      },
+      "RedirectListItemResponse": {
+        "required": [
+          "id",
+          "source",
+          "target",
+          "matchType",
+          "type",
+          "isActive",
+          "culture",
+          "origin",
+          "hitCount",
+          "createdAt",
+          "modifiedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "matchType": {
+            "$ref": "#/components/schemas/RedirectMatchType"
+          },
+          "type": {
+            "$ref": "#/components/schemas/RedirectType"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "culture": {
+            "type": ["null", "string"]
+          },
+          "origin": {
+            "$ref": "#/components/schemas/RedirectOrigin"
+          },
+          "hitCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "format": "int64"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
         }
       },
       "RedirectMatchType": {
@@ -1532,6 +1455,25 @@
           "conflictWarning": {
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "redirect": {
+            "id": "9f1c8b2e-6d34-4a71-9e2f-1b7c5a0d3e88",
+            "siteId": "3a5e7c91-2f48-4b6d-8c1a-9d0e4f6b2c73",
+            "source": "/old-blog/2024/launch",
+            "matchType": "Exact",
+            "target": "/blog/launch",
+            "type": "MovedPermanently",
+            "statusCode": 301,
+            "isActive": true,
+            "culture": "en",
+            "origin": "Manual",
+            "hitCount": 4287,
+            "lastHitAt": "2026-06-30T14:12:05+00:00",
+            "createdAt": "2026-01-15T09:30:00+00:00",
+            "modifiedAt": "2026-05-20T11:45:30+00:00"
+          },
+          "conflictWarning": "A published page already resolves at '/blog/launch'; the redirect is shadowed until that page is unpublished."
         }
       },
       "RedirectOrigin": {
@@ -1551,6 +1493,11 @@
             "type": ["null", "integer"],
             "format": "int32"
           }
+        },
+        "example": {
+          "matched": true,
+          "target": "/blog/launch",
+          "statusCode": 308
         }
       },
       "RedirectResponse": {
@@ -1622,10 +1569,24 @@
             "type": ["null", "string"],
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "9f1c8b2e-6d34-4a71-9e2f-1b7c5a0d3e88",
+          "siteId": "3a5e7c91-2f48-4b6d-8c1a-9d0e4f6b2c73",
+          "source": "/old-blog/2024/launch",
+          "matchType": "Exact",
+          "target": "/blog/launch",
+          "type": "MovedPermanently",
+          "statusCode": 301,
+          "isActive": true,
+          "culture": "en",
+          "origin": "Manual",
+          "hitCount": 4287,
+          "lastHitAt": "2026-06-30T14:12:05+00:00",
+          "createdAt": "2026-01-15T09:30:00+00:00",
+          "modifiedAt": "2026-05-20T11:45:30+00:00"
         }
       },
-      "RedirectSource": {},
-      "RedirectTarget": {},
       "RedirectType": {
         "enum": ["MovedPermanently", "Found", "TemporaryRedirect", "PermanentRedirect"]
       },
@@ -1648,6 +1609,12 @@
             "type": "boolean",
             "default": true
           }
+        },
+        "example": {
+          "target": "/blog/2024/launch-day",
+          "type": "Found",
+          "matchType": "Prefix",
+          "isActive": true
         }
       },
       "ResolveResponse": {
@@ -1661,6 +1628,10 @@
             "type": "integer",
             "format": "int32"
           }
+        },
+        "example": {
+          "target": "/blog/launch",
+          "statusCode": 301
         }
       },
       "SiteRedirectSettingsRequest": {
@@ -1670,6 +1641,9 @@
           "autoRedirectOnMove": {
             "type": "boolean"
           }
+        },
+        "example": {
+          "autoRedirectOnMove": true
         }
       },
       "SiteRedirectSettingsResponse": {
@@ -1683,6 +1657,10 @@
           "autoRedirectOnMove": {
             "type": "boolean"
           }
+        },
+        "example": {
+          "siteId": "3a5e7c91-2f48-4b6d-8c1a-9d0e4f6b2c73",
+          "autoRedirectOnMove": true
         }
       },
       "SortableField": {
@@ -1693,6 +1671,33 @@
             "type": "string"
           }
         }
+      },
+      "ValueKind": {
+        "enum": [
+          "Count",
+          "Number",
+          "Currency",
+          "Percentage",
+          "Duration",
+          "Date",
+          "Url",
+          "Email",
+          "Phone",
+          "Bytes",
+          "DateTime",
+          "Boolean",
+          "Enum",
+          "RelativeTime",
+          "Time",
+          "Color",
+          "Image",
+          "Json",
+          "Markdown",
+          "Tags",
+          "Rating",
+          "Identifier",
+          null
+        ]
       }
     }
   },

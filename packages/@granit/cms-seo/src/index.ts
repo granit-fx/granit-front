@@ -36,7 +36,7 @@ export type {
   SeoSuggestResponse,
   SeoSuggestionResponse,
   SeoGenerationOutcome,
-  SeoSuggestionDiff,
+  SeoSuggestionDiffResponse,
   SeoSuggestionFieldDiff,
   SeoSuggestionListResponse,
   SuggestionScope,

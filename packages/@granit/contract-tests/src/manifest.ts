@@ -765,7 +765,7 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'WebManifestIcon',
       'SerpPreviewResponse',
       'SeoSuggestionListResponse',
-      'SeoSuggestionDiff',
+      'SeoSuggestionDiffResponse',
       'SeoSuggestionFieldDiff',
     ],
   },

@@ -8,8 +8,8 @@
     "/parties": {
       "get": {
         "tags": ["Parties"],
-        "summary": "Returns a filtered, sorted, and paginated list of Party entries.",
-        "description": "Executes a dynamic query against Party using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
+        "summary": "Returns a paged, filterable list of PartySummaryResponse from Party.",
+        "description": "Executes a dynamic query against Party using the Granit query engine and projects each row to PartySummaryResponse. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult<PartySummaryResponse> by default. When the groupBy query parameter is specified, returns a GroupedResult<PartySummaryResponse> with the same projection applied to the items inside each group.",
         "operationId": "QueryParty",
         "parameters": [
           {
@@ -116,10 +116,10 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/PagedResultOfParty"
+                      "$ref": "#/components/schemas/PagedResultOfPartySummaryResponse"
                     },
                     {
-                      "$ref": "#/components/schemas/GroupedResultOfParty"
+                      "$ref": "#/components/schemas/GroupedResultOfPartySummaryResponse"
                     }
                   ],
                   "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
@@ -2354,6 +2354,221 @@
         }
       }
     },
+    "/parties/addresses": {
+      "get": {
+        "tags": ["Parties - Addresses"],
+        "summary": "Returns a filtered, sorted, and paginated list of PartyAddress entries.",
+        "description": "Executes a dynamic query against PartyAddress using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
+        "operationId": "QueryPartyAddress",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "1-based page index. Ignored when cursor is supplied.",
+            "schema": {
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page (1-500). Server-side cap applies.",
+            "schema": {
+              "maximum": 500,
+              "minimum": 1,
+              "type": ["null", "integer"],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor for keyset pagination. When supplied, overrides page.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Free-text search across searchable columns declared in the query definition.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Comma-separated sort directives. Prefix a field with '-' for descending (e.g. '-createdAt,lastName').",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "groupBy",
+            "in": "query",
+            "description": "Field to group results by. When set, the response shape becomes GroupedResult instead of PagedResult.",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "quickFilters",
+            "in": "query",
+            "description": "Comma-separated quick-filter names (declared in the query definition).",
+            "schema": {
+              "type": ["null", "string"]
+            }
+          },
+          {
+            "name": "skipTotalCount",
+            "in": "query",
+            "description": "Skip the total row count for faster pagination when the client doesn't need it.",
+            "schema": {
+              "type": ["null", "boolean"]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Bracketed filter expressions: 'filter[field.op]=value'. Example: 'filter[name.contains]=alice&filter[age.gt]=18'.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "presets",
+            "in": "query",
+            "description": "Bracketed preset selectors: 'presets[group]=name'. Applies preset filter groups declared in the query definition.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": ["null", "object"],
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/PagedResultOfPartyAddress"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GroupedResultOfPartyAddress"
+                    }
+                  ],
+                  "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/parties/addresses/meta": {
+      "get": {
+        "tags": ["Parties - Addresses"],
+        "summary": "Returns query metadata for PartyAddress (columns, filters, sorts, presets).",
+        "description": "Returns the query definition metadata for PartyAddress: available columns with display labels and data types, supported filter operators, default sort order, presets, and quick filters. Use this to dynamically build query UIs without hardcoding column definitions.",
+        "operationId": "GetPartyAddressMeta",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryMetadata"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/parties/duplicates": {
       "get": {
         "tags": ["Parties - Duplicates"],
@@ -2896,6 +3111,7 @@
         "description": "Deliverability / existence of an address — the \"is it real?\" signal, independent of\nAddressGeocodingStatus. A rural address can be AddressGeocodingStatus.Failed\n(a gap in OpenStreetMap) yet AddressVerificationStatus.DeliveryConfirmed because mail actually arrived there."
       },
       "BlobReference": {
+        "type": "string",
         "description": "An opaque identifier for a blob produced by a `Granit.BlobStorage`\nprovider (S3 key, Azure Blob name, file-system path, …). Carried across\nmodule boundaries — domain aggregates, distributed events, HTTP DTOs — as\na typed value rather than a bare string so the contract is\nself-documenting and primitive-obsession is avoided."
       },
       "ColumnDefinition": {
@@ -2934,6 +3150,22 @@
             "type": "boolean"
           },
           "format": {
+            "type": ["null", "string"]
+          },
+          "valueKind": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ValueKind"
+              }
+            ]
+          },
+          "currencyCode": {
+            "type": ["null", "string"]
+          },
+          "currencyCodeField": {
             "type": ["null", "string"]
           }
         }
@@ -3054,7 +3286,10 @@
           "Lt",
           "Lte",
           "In",
-          "Between"
+          "Between",
+          "Ne",
+          "IsNull",
+          "IsNotNull"
         ]
       },
       "GeocodeMatchPrecision": {
@@ -3072,14 +3307,14 @@
           }
         }
       },
-      "GroupedResultOfParty": {
+      "GroupedResultOfPartyAddress": {
         "required": ["groups", "totalCount"],
         "type": "object",
         "properties": {
           "groups": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GroupEntryOfParty"
+              "$ref": "#/components/schemas/GroupEntryOfPartyAddress"
             }
           },
           "totalCount": {
@@ -3104,7 +3339,23 @@
           }
         }
       },
-      "GroupEntryOfParty": {
+      "GroupedResultOfPartySummaryResponse": {
+        "required": ["groups", "totalCount"],
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupEntryOfPartySummaryResponse"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GroupEntryOfPartyAddress": {
         "required": ["field", "value", "label", "count"],
         "type": "object",
         "properties": {
@@ -3125,7 +3376,7 @@
           "items": {
             "type": ["null", "array"],
             "items": {
-              "$ref": "#/components/schemas/Party"
+              "$ref": "#/components/schemas/PartyAddress"
             }
           }
         }
@@ -3152,6 +3403,32 @@
             "type": ["null", "array"],
             "items": {
               "$ref": "#/components/schemas/PartyDuplicateCandidate"
+            }
+          }
+        }
+      },
+      "GroupEntryOfPartySummaryResponse": {
+        "required": ["field", "value", "label", "count"],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "value": {},
+          "label": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "aggregates": {
+            "type": ["null", "object"]
+          },
+          "items": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/PartySummaryResponse"
             }
           }
         }
@@ -3186,14 +3463,6 @@
           }
         }
       },
-      "IDomainEvent": {
-        "type": "object",
-        "description": "Marker interface for domain events."
-      },
-      "IIntegrationEvent": {
-        "type": "object",
-        "description": "Marker interface for integration events (ETO — Event Transfer Object)."
-      },
       "LookupDescriptor": {
         "type": "object",
         "properties": {
@@ -3225,7 +3494,7 @@
         "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
         "default": "QueryEngine"
       },
-      "PagedResultOfParty": {
+      "PagedResultOfPartyAddress": {
         "required": ["items", "totalCount", "hasMore"],
         "type": "object",
         "properties": {
@@ -3235,486 +3504,89 @@
               "type": "object",
               "properties": {
                 "kind": {
-                  "enum": ["Individual", "Company", "Department"]
+                  "enum": ["Billing", "Shipping", "Other"]
                 },
-                "name": {
-                  "type": "string"
-                },
-                "emails": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "address": {
-                        "type": "string"
-                      },
-                      "canonicalEmail": {
-                        "type": ["null", "string"]
-                      },
-                      "canonicalEmailHash": {
-                        "type": ["null", "string"]
-                      },
-                      "isPrimary": {
-                        "type": "boolean"
-                      },
-                      "label": {
-                        "type": ["null", "string"]
-                      },
-                      "id": {
-                        "type": "string",
-                        "description": "Unique identifier of the entity.",
-                        "format": "uuid"
-                      }
-                    }
-                  }
-                },
-                "primaryEmail": {
+                "value": {
                   "type": "object",
                   "properties": {
-                    "address": {
-                      "type": "string"
-                    },
-                    "canonicalEmail": {
-                      "type": ["null", "string"]
-                    },
-                    "canonicalEmailHash": {
-                      "type": ["null", "string"]
-                    },
-                    "isPrimary": {
-                      "type": "boolean"
-                    },
-                    "label": {
-                      "type": ["null", "string"]
-                    },
-                    "id": {
+                    "street1": {
                       "type": "string",
-                      "description": "Unique identifier of the entity.",
-                      "format": "uuid"
-                    }
-                  }
-                },
-                "phones": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "kind": {
-                        "enum": ["Mobile", "Work", "Home", "Other"]
-                      },
-                      "number": {
-                        "type": "string"
-                      },
-                      "canonicalNumber": {
-                        "type": ["null", "string"]
-                      },
-                      "canonicalNumberHash": {
-                        "type": ["null", "string"]
-                      },
-                      "isPrimary": {
-                        "type": "boolean"
-                      },
-                      "label": {
-                        "type": ["null", "string"]
-                      },
-                      "id": {
-                        "type": "string",
-                        "description": "Unique identifier of the entity.",
-                        "format": "uuid"
-                      }
-                    }
-                  }
-                },
-                "primaryPhone": {
-                  "type": "object",
-                  "properties": {
-                    "kind": {
-                      "enum": ["Mobile", "Work", "Home", "Other"]
+                      "description": "Street address line 1 (required)."
                     },
-                    "number": {
-                      "type": "string"
-                    },
-                    "canonicalNumber": {
-                      "type": ["null", "string"]
-                    },
-                    "canonicalNumberHash": {
-                      "type": ["null", "string"]
-                    },
-                    "isPrimary": {
-                      "type": "boolean"
-                    },
-                    "label": {
-                      "type": ["null", "string"]
-                    },
-                    "id": {
-                      "type": "string",
-                      "description": "Unique identifier of the entity.",
-                      "format": "uuid"
-                    }
-                  }
-                },
-                "website": {
-                  "type": ["null", "string"]
-                },
-                "language": {
-                  "type": ["null", "string"]
-                },
-                "timezone": {
-                  "type": "string"
-                },
-                "defaultCurrency": {
-                  "type": "string"
-                },
-                "taxId": {
-                  "type": ["null", "string"]
-                },
-                "registrationNumber": {
-                  "type": ["null", "string"]
-                },
-                "taxStatus": {
-                  "type": "object",
-                  "properties": {
-                    "isExempt": {
-                      "type": "boolean"
-                    },
-                    "reverseCharge": {
-                      "type": "boolean"
-                    },
-                    "vatin": {
-                      "type": ["null", "string"]
-                    },
-                    "evidenceBlobId": {
+                    "street2": {
                       "type": ["null", "string"],
-                      "format": "uuid"
+                      "description": "Optional second street line."
                     },
-                    "yieldsZeroRate": {
-                      "type": "boolean"
+                    "city": {
+                      "type": "string",
+                      "description": "City (required)."
+                    },
+                    "postalCode": {
+                      "type": "string",
+                      "description": "Postal / ZIP code (required)."
+                    },
+                    "state": {
+                      "type": ["null", "string"],
+                      "description": "Optional administrative subdivision (e.g., a US state)."
+                    },
+                    "country": {
+                      "type": "string",
+                      "description": "ISO 3166-1 alpha-2 country code (always upper-case after construction)."
+                    },
+                    "deliveryPointType": {
+                      "enum": ["Street", "PoBox", "Other", null]
                     }
-                  }
+                  },
+                  "description": "Postal address value object."
                 },
-                "metadataJson": {
+                "isDefault": {
+                  "type": "boolean"
+                },
+                "label": {
                   "type": ["null", "string"]
                 },
-                "internalNotes": {
-                  "type": ["null", "string"]
-                },
-                "mergedIntoId": {
-                  "type": ["null", "string"],
-                  "format": "uuid"
-                },
-                "mergedAt": {
-                  "type": ["null", "string"],
-                  "format": "date-time"
-                },
-                "addresses": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "kind": {
-                        "enum": ["Billing", "Shipping", "Other"]
-                      },
-                      "value": {
-                        "type": "object",
-                        "properties": {
-                          "street1": {
-                            "type": "string",
-                            "description": "Street address line 1 (required)."
-                          },
-                          "street2": {
-                            "type": ["null", "string"],
-                            "description": "Optional second street line."
-                          },
-                          "city": {
-                            "type": "string",
-                            "description": "City (required)."
-                          },
-                          "postalCode": {
-                            "type": "string",
-                            "description": "Postal / ZIP code (required)."
-                          },
-                          "state": {
-                            "type": ["null", "string"],
-                            "description": "Optional administrative subdivision (e.g., a US state)."
-                          },
-                          "country": {
-                            "type": "string",
-                            "description": "ISO 3166-1 alpha-2 country code (always upper-case after construction)."
-                          },
-                          "deliveryPointType": {
-                            "enum": ["Street", "PoBox", "Other", null]
-                          }
-                        },
-                        "description": "Postal address value object."
-                      },
-                      "isDefault": {
-                        "type": "boolean"
-                      },
-                      "label": {
-                        "type": ["null", "string"]
-                      },
-                      "geocoding": {
-                        "type": "object",
-                        "properties": {
-                          "latitude": {
-                            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-                            "type": ["null", "number", "string"],
-                            "description": "Latitude in decimal degrees, or `null` until resolved. Portable source of truth.",
-                            "format": "double"
-                          },
-                          "longitude": {
-                            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-                            "type": ["null", "number", "string"],
-                            "description": "Longitude in decimal degrees, or `null` until resolved. Portable source of truth.",
-                            "format": "double"
-                          },
-                          "status": {
-                            "enum": ["Pending", "Resolved", "Approximate", "Failed", "Stale"],
-                            "description": "Lifecycle of an address geocoding attempt — the \"can we place it on a map?\" signal, distinct from\nAddressVerificationStatus (deliverability). The two axes are independent: an address may\nbe AddressGeocodingStatus.Failed here yet AddressVerificationStatus.DeliveryConfirmed."
-                          },
-                          "matchPrecision": {
-                            "enum": ["Rooftop", "Street", "Locality", null]
-                          },
-                          "geocodedAt": {
-                            "type": ["null", "string"],
-                            "description": "When the last geocoding attempt ran, or `null` if never attempted.",
-                            "format": "date-time"
-                          },
-                          "houseNumber": {
-                            "type": ["null", "string"],
-                            "description": "House / building number parsed by the geocoding provider (axis-2 enrichment), or `null`."
-                          },
-                          "poBox": {
-                            "type": ["null", "string"],
-                            "description": "PO box parsed by the geocoding provider, or `null`."
-                          }
-                        },
-                        "description": "Materialized geocoding outcome for a postal address — the \"can we place it on a map?\" axis, independent\nof AddressVerification (the \"is it real / deliverable?\" axis). A reusable owned value\nobject embedded by any address-holding entity."
-                      },
-                      "verification": {
-                        "type": "object",
-                        "properties": {
-                          "status": {
-                            "enum": [
-                              "Unverified",
-                              "ProviderVerified",
-                              "Corrected",
-                              "ManuallyConfirmed",
-                              "DeliveryConfirmed",
-                              "Invalid"
-                            ],
-                            "description": "Deliverability / existence of an address — the \"is it real?\" signal, independent of\nAddressGeocodingStatus. A rural address can be AddressGeocodingStatus.Failed\n(a gap in OpenStreetMap) yet AddressVerificationStatus.DeliveryConfirmed because mail actually arrived there."
-                          },
-                          "source": {
-                            "enum": [
-                              "None",
-                              "Geocoding",
-                              "VerificationProvider",
-                              "Manual",
-                              "Delivery",
-                              "PostalMail"
-                            ],
-                            "description": "Provenance of an AddressVerification verdict — which evidence asserted it. Recorded\nalongside the verdict so a confirmation is attributable (anti-repudiation), never just a bare status."
-                          },
-                          "verifiedAt": {
-                            "type": ["null", "string"],
-                            "description": "When the verdict was recorded, or `null` when unverified.",
-                            "format": "date-time"
-                          },
-                          "verifiedBy": {
-                            "type": ["null", "string"],
-                            "description": "The asserting principal / module, or `null`. Provenance for anti-repudiation."
-                          },
-                          "evidence": {
-                            "type": ["null", "string"],
-                            "description": "Optional evidence reference (e.g. shipment / correspondence id), or `null`."
-                          }
-                        },
-                        "description": "Deliverability verdict for a postal address — the \"is it real / deliverable?\" axis, independent of\nAddressGeocoding (the \"can we place it on a map?\" axis). A reusable owned value object\nembedded by any address-holding entity."
-                      },
-                      "latitude": {
-                        "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-                        "type": ["null", "number", "string"],
-                        "format": "double"
-                      },
-                      "longitude": {
-                        "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-                        "type": ["null", "number", "string"],
-                        "format": "double"
-                      },
-                      "city": {
-                        "type": ["null", "string"]
-                      },
-                      "country": {
-                        "type": ["null", "string"]
-                      },
-                      "geocodingStatus": {
-                        "enum": ["Pending", "Resolved", "Approximate", "Failed", "Stale"],
-                        "description": "Lifecycle of an address geocoding attempt — the \"can we place it on a map?\" signal, distinct from\nAddressVerificationStatus (deliverability). The two axes are independent: an address may\nbe AddressGeocodingStatus.Failed here yet AddressVerificationStatus.DeliveryConfirmed."
-                      },
-                      "verificationStatus": {
-                        "enum": [
-                          "Unverified",
-                          "ProviderVerified",
-                          "Corrected",
-                          "ManuallyConfirmed",
-                          "DeliveryConfirmed",
-                          "Invalid"
-                        ],
-                        "description": "Deliverability / existence of an address — the \"is it real?\" signal, independent of\nAddressGeocodingStatus. A rural address can be AddressGeocodingStatus.Failed\n(a gap in OpenStreetMap) yet AddressVerificationStatus.DeliveryConfirmed because mail actually arrived there."
-                      },
-                      "id": {
-                        "type": "string",
-                        "description": "Unique identifier of the entity.",
-                        "format": "uuid"
-                      }
-                    }
-                  }
-                },
-                "defaultBillingAddress": {
+                "geocoding": {
                   "type": "object",
                   "properties": {
-                    "kind": {
-                      "enum": ["Billing", "Shipping", "Other"]
-                    },
-                    "value": {
-                      "type": "object",
-                      "properties": {
-                        "street1": {
-                          "type": "string",
-                          "description": "Street address line 1 (required)."
-                        },
-                        "street2": {
-                          "type": ["null", "string"],
-                          "description": "Optional second street line."
-                        },
-                        "city": {
-                          "type": "string",
-                          "description": "City (required)."
-                        },
-                        "postalCode": {
-                          "type": "string",
-                          "description": "Postal / ZIP code (required)."
-                        },
-                        "state": {
-                          "type": ["null", "string"],
-                          "description": "Optional administrative subdivision (e.g., a US state)."
-                        },
-                        "country": {
-                          "type": "string",
-                          "description": "ISO 3166-1 alpha-2 country code (always upper-case after construction)."
-                        },
-                        "deliveryPointType": {
-                          "enum": ["Street", "PoBox", "Other", null]
-                        }
-                      },
-                      "description": "Postal address value object."
-                    },
-                    "isDefault": {
-                      "type": "boolean"
-                    },
-                    "label": {
-                      "type": ["null", "string"]
-                    },
-                    "geocoding": {
-                      "type": "object",
-                      "properties": {
-                        "latitude": {
-                          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-                          "type": ["null", "number", "string"],
-                          "description": "Latitude in decimal degrees, or `null` until resolved. Portable source of truth.",
-                          "format": "double"
-                        },
-                        "longitude": {
-                          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-                          "type": ["null", "number", "string"],
-                          "description": "Longitude in decimal degrees, or `null` until resolved. Portable source of truth.",
-                          "format": "double"
-                        },
-                        "status": {
-                          "enum": ["Pending", "Resolved", "Approximate", "Failed", "Stale"],
-                          "description": "Lifecycle of an address geocoding attempt — the \"can we place it on a map?\" signal, distinct from\nAddressVerificationStatus (deliverability). The two axes are independent: an address may\nbe AddressGeocodingStatus.Failed here yet AddressVerificationStatus.DeliveryConfirmed."
-                        },
-                        "matchPrecision": {
-                          "enum": ["Rooftop", "Street", "Locality", null]
-                        },
-                        "geocodedAt": {
-                          "type": ["null", "string"],
-                          "description": "When the last geocoding attempt ran, or `null` if never attempted.",
-                          "format": "date-time"
-                        },
-                        "houseNumber": {
-                          "type": ["null", "string"],
-                          "description": "House / building number parsed by the geocoding provider (axis-2 enrichment), or `null`."
-                        },
-                        "poBox": {
-                          "type": ["null", "string"],
-                          "description": "PO box parsed by the geocoding provider, or `null`."
-                        }
-                      },
-                      "description": "Materialized geocoding outcome for a postal address — the \"can we place it on a map?\" axis, independent\nof AddressVerification (the \"is it real / deliverable?\" axis). A reusable owned value\nobject embedded by any address-holding entity."
-                    },
-                    "verification": {
-                      "type": "object",
-                      "properties": {
-                        "status": {
-                          "enum": [
-                            "Unverified",
-                            "ProviderVerified",
-                            "Corrected",
-                            "ManuallyConfirmed",
-                            "DeliveryConfirmed",
-                            "Invalid"
-                          ],
-                          "description": "Deliverability / existence of an address — the \"is it real?\" signal, independent of\nAddressGeocodingStatus. A rural address can be AddressGeocodingStatus.Failed\n(a gap in OpenStreetMap) yet AddressVerificationStatus.DeliveryConfirmed because mail actually arrived there."
-                        },
-                        "source": {
-                          "enum": [
-                            "None",
-                            "Geocoding",
-                            "VerificationProvider",
-                            "Manual",
-                            "Delivery",
-                            "PostalMail"
-                          ],
-                          "description": "Provenance of an AddressVerification verdict — which evidence asserted it. Recorded\nalongside the verdict so a confirmation is attributable (anti-repudiation), never just a bare status."
-                        },
-                        "verifiedAt": {
-                          "type": ["null", "string"],
-                          "description": "When the verdict was recorded, or `null` when unverified.",
-                          "format": "date-time"
-                        },
-                        "verifiedBy": {
-                          "type": ["null", "string"],
-                          "description": "The asserting principal / module, or `null`. Provenance for anti-repudiation."
-                        },
-                        "evidence": {
-                          "type": ["null", "string"],
-                          "description": "Optional evidence reference (e.g. shipment / correspondence id), or `null`."
-                        }
-                      },
-                      "description": "Deliverability verdict for a postal address — the \"is it real / deliverable?\" axis, independent of\nAddressGeocoding (the \"can we place it on a map?\" axis). A reusable owned value object\nembedded by any address-holding entity."
-                    },
                     "latitude": {
                       "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
                       "type": ["null", "number", "string"],
+                      "description": "Latitude in decimal degrees, or `null` until resolved. Portable source of truth.",
                       "format": "double"
                     },
                     "longitude": {
                       "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
                       "type": ["null", "number", "string"],
+                      "description": "Longitude in decimal degrees, or `null` until resolved. Portable source of truth.",
                       "format": "double"
                     },
-                    "city": {
-                      "type": ["null", "string"]
-                    },
-                    "country": {
-                      "type": ["null", "string"]
-                    },
-                    "geocodingStatus": {
+                    "status": {
                       "enum": ["Pending", "Resolved", "Approximate", "Failed", "Stale"],
                       "description": "Lifecycle of an address geocoding attempt — the \"can we place it on a map?\" signal, distinct from\nAddressVerificationStatus (deliverability). The two axes are independent: an address may\nbe AddressGeocodingStatus.Failed here yet AddressVerificationStatus.DeliveryConfirmed."
                     },
-                    "verificationStatus": {
+                    "matchPrecision": {
+                      "enum": ["Rooftop", "Street", "Locality", null]
+                    },
+                    "geocodedAt": {
+                      "type": ["null", "string"],
+                      "description": "When the last geocoding attempt ran, or `null` if never attempted.",
+                      "format": "date-time"
+                    },
+                    "houseNumber": {
+                      "type": ["null", "string"],
+                      "description": "House / building number parsed by the geocoding provider (axis-2 enrichment), or `null`."
+                    },
+                    "poBox": {
+                      "type": ["null", "string"],
+                      "description": "PO box parsed by the geocoding provider, or `null`."
+                    }
+                  },
+                  "description": "Materialized geocoding outcome for a postal address — the \"can we place it on a map?\" axis, independent\nof AddressVerification (the \"is it real / deliverable?\" axis). A reusable owned value\nobject embedded by any address-holding entity."
+                },
+                "verification": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
                       "enum": [
                         "Unverified",
                         "ProviderVerified",
@@ -3725,243 +3597,57 @@
                       ],
                       "description": "Deliverability / existence of an address — the \"is it real?\" signal, independent of\nAddressGeocodingStatus. A rural address can be AddressGeocodingStatus.Failed\n(a gap in OpenStreetMap) yet AddressVerificationStatus.DeliveryConfirmed because mail actually arrived there."
                     },
-                    "id": {
-                      "type": "string",
-                      "description": "Unique identifier of the entity.",
-                      "format": "uuid"
-                    }
-                  }
-                },
-                "defaultShippingAddress": {
-                  "type": "object",
-                  "properties": {
-                    "kind": {
-                      "enum": ["Billing", "Shipping", "Other"]
-                    },
-                    "value": {
-                      "type": "object",
-                      "properties": {
-                        "street1": {
-                          "type": "string",
-                          "description": "Street address line 1 (required)."
-                        },
-                        "street2": {
-                          "type": ["null", "string"],
-                          "description": "Optional second street line."
-                        },
-                        "city": {
-                          "type": "string",
-                          "description": "City (required)."
-                        },
-                        "postalCode": {
-                          "type": "string",
-                          "description": "Postal / ZIP code (required)."
-                        },
-                        "state": {
-                          "type": ["null", "string"],
-                          "description": "Optional administrative subdivision (e.g., a US state)."
-                        },
-                        "country": {
-                          "type": "string",
-                          "description": "ISO 3166-1 alpha-2 country code (always upper-case after construction)."
-                        },
-                        "deliveryPointType": {
-                          "enum": ["Street", "PoBox", "Other", null]
-                        }
-                      },
-                      "description": "Postal address value object."
-                    },
-                    "isDefault": {
-                      "type": "boolean"
-                    },
-                    "label": {
-                      "type": ["null", "string"]
-                    },
-                    "geocoding": {
-                      "type": "object",
-                      "properties": {
-                        "latitude": {
-                          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-                          "type": ["null", "number", "string"],
-                          "description": "Latitude in decimal degrees, or `null` until resolved. Portable source of truth.",
-                          "format": "double"
-                        },
-                        "longitude": {
-                          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-                          "type": ["null", "number", "string"],
-                          "description": "Longitude in decimal degrees, or `null` until resolved. Portable source of truth.",
-                          "format": "double"
-                        },
-                        "status": {
-                          "enum": ["Pending", "Resolved", "Approximate", "Failed", "Stale"],
-                          "description": "Lifecycle of an address geocoding attempt — the \"can we place it on a map?\" signal, distinct from\nAddressVerificationStatus (deliverability). The two axes are independent: an address may\nbe AddressGeocodingStatus.Failed here yet AddressVerificationStatus.DeliveryConfirmed."
-                        },
-                        "matchPrecision": {
-                          "enum": ["Rooftop", "Street", "Locality", null]
-                        },
-                        "geocodedAt": {
-                          "type": ["null", "string"],
-                          "description": "When the last geocoding attempt ran, or `null` if never attempted.",
-                          "format": "date-time"
-                        },
-                        "houseNumber": {
-                          "type": ["null", "string"],
-                          "description": "House / building number parsed by the geocoding provider (axis-2 enrichment), or `null`."
-                        },
-                        "poBox": {
-                          "type": ["null", "string"],
-                          "description": "PO box parsed by the geocoding provider, or `null`."
-                        }
-                      },
-                      "description": "Materialized geocoding outcome for a postal address — the \"can we place it on a map?\" axis, independent\nof AddressVerification (the \"is it real / deliverable?\" axis). A reusable owned value\nobject embedded by any address-holding entity."
-                    },
-                    "verification": {
-                      "type": "object",
-                      "properties": {
-                        "status": {
-                          "enum": [
-                            "Unverified",
-                            "ProviderVerified",
-                            "Corrected",
-                            "ManuallyConfirmed",
-                            "DeliveryConfirmed",
-                            "Invalid"
-                          ],
-                          "description": "Deliverability / existence of an address — the \"is it real?\" signal, independent of\nAddressGeocodingStatus. A rural address can be AddressGeocodingStatus.Failed\n(a gap in OpenStreetMap) yet AddressVerificationStatus.DeliveryConfirmed because mail actually arrived there."
-                        },
-                        "source": {
-                          "enum": [
-                            "None",
-                            "Geocoding",
-                            "VerificationProvider",
-                            "Manual",
-                            "Delivery",
-                            "PostalMail"
-                          ],
-                          "description": "Provenance of an AddressVerification verdict — which evidence asserted it. Recorded\nalongside the verdict so a confirmation is attributable (anti-repudiation), never just a bare status."
-                        },
-                        "verifiedAt": {
-                          "type": ["null", "string"],
-                          "description": "When the verdict was recorded, or `null` when unverified.",
-                          "format": "date-time"
-                        },
-                        "verifiedBy": {
-                          "type": ["null", "string"],
-                          "description": "The asserting principal / module, or `null`. Provenance for anti-repudiation."
-                        },
-                        "evidence": {
-                          "type": ["null", "string"],
-                          "description": "Optional evidence reference (e.g. shipment / correspondence id), or `null`."
-                        }
-                      },
-                      "description": "Deliverability verdict for a postal address — the \"is it real / deliverable?\" axis, independent of\nAddressGeocoding (the \"can we place it on a map?\" axis). A reusable owned value object\nembedded by any address-holding entity."
-                    },
-                    "latitude": {
-                      "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-                      "type": ["null", "number", "string"],
-                      "format": "double"
-                    },
-                    "longitude": {
-                      "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
-                      "type": ["null", "number", "string"],
-                      "format": "double"
-                    },
-                    "city": {
-                      "type": ["null", "string"]
-                    },
-                    "country": {
-                      "type": ["null", "string"]
-                    },
-                    "geocodingStatus": {
-                      "enum": ["Pending", "Resolved", "Approximate", "Failed", "Stale"],
-                      "description": "Lifecycle of an address geocoding attempt — the \"can we place it on a map?\" signal, distinct from\nAddressVerificationStatus (deliverability). The two axes are independent: an address may\nbe AddressGeocodingStatus.Failed here yet AddressVerificationStatus.DeliveryConfirmed."
-                    },
-                    "verificationStatus": {
+                    "source": {
                       "enum": [
-                        "Unverified",
-                        "ProviderVerified",
-                        "Corrected",
-                        "ManuallyConfirmed",
-                        "DeliveryConfirmed",
-                        "Invalid"
+                        "None",
+                        "Geocoding",
+                        "VerificationProvider",
+                        "Manual",
+                        "Delivery",
+                        "PostalMail"
                       ],
-                      "description": "Deliverability / existence of an address — the \"is it real?\" signal, independent of\nAddressGeocodingStatus. A rural address can be AddressGeocodingStatus.Failed\n(a gap in OpenStreetMap) yet AddressVerificationStatus.DeliveryConfirmed because mail actually arrived there."
+                      "description": "Provenance of an AddressVerification verdict — which evidence asserted it. Recorded\nalongside the verdict so a confirmation is attributable (anti-repudiation), never just a bare status."
                     },
-                    "id": {
-                      "type": "string",
-                      "description": "Unique identifier of the entity.",
-                      "format": "uuid"
+                    "verifiedAt": {
+                      "type": ["null", "string"],
+                      "description": "When the verdict was recorded, or `null` when unverified.",
+                      "format": "date-time"
+                    },
+                    "verifiedBy": {
+                      "type": ["null", "string"],
+                      "description": "The asserting principal / module, or `null`. Provenance for anti-repudiation."
+                    },
+                    "evidence": {
+                      "type": ["null", "string"],
+                      "description": "Optional evidence reference (e.g. shipment / correspondence id), or `null`."
                     }
-                  }
+                  },
+                  "description": "Deliverability verdict for a postal address — the \"is it real / deliverable?\" axis, independent of\nAddressGeocoding (the \"can we place it on a map?\" axis). A reusable owned value object\nembedded by any address-holding entity."
                 },
-                "avatar": {
-                  "description": "An opaque identifier for a blob produced by a `Granit.BlobStorage`\nprovider (S3 key, Azure Blob name, file-system path, …). Carried across\nmodule boundaries — domain aggregates, distributed events, HTTP DTOs — as\na typed value rather than a bare string so the contract is\nself-documenting and primitive-obsession is avoided."
+                "latitude": {
+                  "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+                  "type": ["null", "number", "string"],
+                  "format": "double"
                 },
-                "parentPartyId": {},
-                "userId": {
-                  "type": ["null", "string"],
-                  "format": "uuid"
+                "longitude": {
+                  "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+                  "type": ["null", "number", "string"],
+                  "format": "double"
                 },
-                "roles": {
-                  "type": "string"
+                "geocodingStatus": {
+                  "enum": ["Pending", "Resolved", "Approximate", "Failed", "Stale"],
+                  "description": "Lifecycle of an address geocoding attempt — the \"can we place it on a map?\" signal, distinct from\nAddressVerificationStatus (deliverability). The two axes are independent: an address may\nbe AddressGeocodingStatus.Failed here yet AddressVerificationStatus.DeliveryConfirmed."
                 },
-                "status": {
-                  "enum": ["Active", "Suspended", "Archived"]
-                },
-                "externalMappings": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "providerName": {
-                        "type": "string"
-                      },
-                      "externalId": {
-                        "type": "string"
-                      },
-                      "id": {
-                        "type": "string",
-                        "description": "Unique identifier of the entity.",
-                        "format": "uuid"
-                      }
-                    }
-                  }
-                },
-                "tenantId": {
-                  "type": ["null", "string"],
-                  "format": "uuid"
-                },
-                "modifiedAt": {
-                  "type": ["null", "string"],
-                  "description": "Last modification timestamp (UTC).",
-                  "format": "date-time"
-                },
-                "modifiedBy": {
-                  "type": ["null", "string"],
-                  "description": "Identifier of the user who last modified the entity."
-                },
-                "domainEvents": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "description": "Marker interface for domain events."
-                  }
-                },
-                "integrationEvents": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "description": "Marker interface for integration events (ETO — Event Transfer Object)."
-                  }
-                },
-                "createdAt": {
-                  "type": "string",
-                  "description": "Creation timestamp (UTC).",
-                  "format": "date-time"
-                },
-                "createdBy": {
-                  "type": "string",
-                  "description": "Identifier of the user who created the entity."
+                "verificationStatus": {
+                  "enum": [
+                    "Unverified",
+                    "ProviderVerified",
+                    "Corrected",
+                    "ManuallyConfirmed",
+                    "DeliveryConfirmed",
+                    "Invalid"
+                  ],
+                  "description": "Deliverability / existence of an address — the \"is it real?\" signal, independent of\nAddressGeocodingStatus. A rural address can be AddressGeocodingStatus.Failed\n(a gap in OpenStreetMap) yet AddressVerificationStatus.DeliveryConfirmed because mail actually arrived there."
                 },
                 "id": {
                   "type": "string",
@@ -4048,6 +3734,147 @@
           }
         }
       },
+      "PagedResultOfPartySummaryResponse": {
+        "required": ["items", "totalCount", "hasMore"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id",
+                "tenantId",
+                "kind",
+                "name",
+                "roles",
+                "status",
+                "website",
+                "primaryEmail",
+                "primaryPhone",
+                "avatar",
+                "defaultCurrency",
+                "language",
+                "timezone",
+                "taxId",
+                "registrationNumber",
+                "taxStatus",
+                "parentPartyId",
+                "userId",
+                "mergedIntoId",
+                "mergedAt",
+                "createdAt",
+                "modifiedAt"
+              ],
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "tenantId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                },
+                "kind": {
+                  "enum": ["Individual", "Company", "Department"]
+                },
+                "name": {
+                  "type": "string"
+                },
+                "roles": {
+                  "type": "string"
+                },
+                "status": {
+                  "enum": ["Active", "Suspended", "Archived"]
+                },
+                "website": {
+                  "type": ["null", "string"]
+                },
+                "primaryEmail": {
+                  "type": ["null", "string"]
+                },
+                "primaryPhone": {
+                  "type": ["null", "string"]
+                },
+                "avatar": {
+                  "type": "string",
+                  "description": "An opaque identifier for a blob produced by a `Granit.BlobStorage`\nprovider (S3 key, Azure Blob name, file-system path, …). Carried across\nmodule boundaries — domain aggregates, distributed events, HTTP DTOs — as\na typed value rather than a bare string so the contract is\nself-documenting and primitive-obsession is avoided."
+                },
+                "defaultCurrency": {
+                  "type": "string"
+                },
+                "language": {
+                  "type": ["null", "string"]
+                },
+                "timezone": {
+                  "type": "string"
+                },
+                "taxId": {
+                  "type": ["null", "string"]
+                },
+                "registrationNumber": {
+                  "type": ["null", "string"]
+                },
+                "taxStatus": {
+                  "type": "object",
+                  "properties": {
+                    "isExempt": {
+                      "type": "boolean"
+                    },
+                    "reverseCharge": {
+                      "type": "boolean"
+                    },
+                    "vatin": {
+                      "type": ["null", "string"]
+                    },
+                    "evidenceBlobId": {
+                      "type": ["null", "string"],
+                      "format": "uuid"
+                    },
+                    "yieldsZeroRate": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "parentPartyId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "userId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                },
+                "mergedIntoId": {
+                  "type": ["null", "string"],
+                  "format": "uuid"
+                },
+                "mergedAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "modifiedAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "totalCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": ["null", "string"]
+          }
+        }
+      },
       "PaginationMeta": {
         "required": ["defaultPageSize", "maxPageSize", "maxStreamSize", "supportsCursor"],
         "type": "object",
@@ -4066,157 +3893,6 @@
           },
           "supportsCursor": {
             "type": "boolean"
-          }
-        }
-      },
-      "Party": {
-        "type": "object",
-        "properties": {
-          "kind": {
-            "$ref": "#/components/schemas/PartyKind"
-          },
-          "name": {
-            "type": "string"
-          },
-          "emails": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/PartyEmail"
-            }
-          },
-          "primaryEmail": {
-            "$ref": "#/components/schemas/PartyEmail"
-          },
-          "phones": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/PartyPhone"
-            }
-          },
-          "primaryPhone": {
-            "$ref": "#/components/schemas/PartyPhone"
-          },
-          "website": {
-            "type": ["null", "string"]
-          },
-          "language": {
-            "type": ["null", "string"]
-          },
-          "timezone": {
-            "type": "string"
-          },
-          "defaultCurrency": {
-            "type": "string"
-          },
-          "taxId": {
-            "type": ["null", "string"]
-          },
-          "registrationNumber": {
-            "type": ["null", "string"]
-          },
-          "taxStatus": {
-            "$ref": "#/components/schemas/TaxStatus"
-          },
-          "metadataJson": {
-            "type": ["null", "string"]
-          },
-          "internalNotes": {
-            "type": ["null", "string"]
-          },
-          "mergedIntoId": {
-            "type": ["null", "string"],
-            "format": "uuid"
-          },
-          "mergedAt": {
-            "type": ["null", "string"],
-            "format": "date-time"
-          },
-          "addresses": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/PartyAddress"
-            }
-          },
-          "defaultBillingAddress": {
-            "$ref": "#/components/schemas/PartyAddress"
-          },
-          "defaultShippingAddress": {
-            "$ref": "#/components/schemas/PartyAddress"
-          },
-          "avatar": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/BlobReference"
-              }
-            ]
-          },
-          "parentPartyId": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/PartyId"
-              }
-            ]
-          },
-          "userId": {
-            "type": ["null", "string"],
-            "format": "uuid"
-          },
-          "roles": {
-            "$ref": "#/components/schemas/PartyRoles"
-          },
-          "status": {
-            "$ref": "#/components/schemas/PartyStatus"
-          },
-          "externalMappings": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/PartyExternalMapping"
-            }
-          },
-          "tenantId": {
-            "type": ["null", "string"],
-            "format": "uuid"
-          },
-          "modifiedAt": {
-            "type": ["null", "string"],
-            "description": "Last modification timestamp (UTC).",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": ["null", "string"],
-            "description": "Identifier of the user who last modified the entity."
-          },
-          "domainEvents": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/IDomainEvent"
-            }
-          },
-          "integrationEvents": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/IIntegrationEvent"
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Creation timestamp (UTC).",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "string",
-            "description": "Identifier of the user who created the entity."
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the entity.",
-            "format": "uuid"
           }
         }
       },
@@ -4250,12 +3926,6 @@
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
             "type": ["null", "number", "string"],
             "format": "double"
-          },
-          "city": {
-            "type": ["null", "string"]
-          },
-          "country": {
-            "type": ["null", "string"]
           },
           "geocodingStatus": {
             "$ref": "#/components/schemas/AddressGeocodingStatus"
@@ -4580,31 +4250,6 @@
           }
         }
       },
-      "PartyEmail": {
-        "type": "object",
-        "properties": {
-          "address": {
-            "type": "string"
-          },
-          "canonicalEmail": {
-            "type": ["null", "string"]
-          },
-          "canonicalEmailHash": {
-            "type": ["null", "string"]
-          },
-          "isPrimary": {
-            "type": "boolean"
-          },
-          "label": {
-            "type": ["null", "string"]
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the entity.",
-            "format": "uuid"
-          }
-        }
-      },
       "PartyEmailRequest": {
         "required": ["address"],
         "type": "object",
@@ -4643,22 +4288,6 @@
           }
         }
       },
-      "PartyExternalMapping": {
-        "type": "object",
-        "properties": {
-          "providerName": {
-            "type": "string"
-          },
-          "externalId": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the entity.",
-            "format": "uuid"
-          }
-        }
-      },
       "PartyExternalMappingRequest": {
         "required": ["providerName", "externalId"],
         "type": "object",
@@ -4689,7 +4318,10 @@
           }
         }
       },
-      "PartyId": {},
+      "PartyId": {
+        "type": "string",
+        "format": "uuid"
+      },
       "PartyKind": {
         "enum": ["Individual", "Company", "Department"]
       },
@@ -4756,34 +4388,6 @@
             "additionalProperties": {
               "type": "string"
             }
-          }
-        }
-      },
-      "PartyPhone": {
-        "type": "object",
-        "properties": {
-          "kind": {
-            "$ref": "#/components/schemas/PhoneKind"
-          },
-          "number": {
-            "type": "string"
-          },
-          "canonicalNumber": {
-            "type": ["null", "string"]
-          },
-          "canonicalNumberHash": {
-            "type": ["null", "string"]
-          },
-          "isPrimary": {
-            "type": "boolean"
-          },
-          "label": {
-            "type": ["null", "string"]
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the entity.",
-            "format": "uuid"
           }
         }
       },
@@ -4968,6 +4572,122 @@
       },
       "PartyStatus": {
         "enum": ["Active", "Suspended", "Archived"]
+      },
+      "PartySummaryResponse": {
+        "required": [
+          "id",
+          "tenantId",
+          "kind",
+          "name",
+          "roles",
+          "status",
+          "website",
+          "primaryEmail",
+          "primaryPhone",
+          "avatar",
+          "defaultCurrency",
+          "language",
+          "timezone",
+          "taxId",
+          "registrationNumber",
+          "taxStatus",
+          "parentPartyId",
+          "userId",
+          "mergedIntoId",
+          "mergedAt",
+          "createdAt",
+          "modifiedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PartyKind"
+          },
+          "name": {
+            "type": "string"
+          },
+          "roles": {
+            "$ref": "#/components/schemas/PartyRoles"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PartyStatus"
+          },
+          "website": {
+            "type": ["null", "string"]
+          },
+          "primaryEmail": {
+            "type": ["null", "string"]
+          },
+          "primaryPhone": {
+            "type": ["null", "string"]
+          },
+          "avatar": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/BlobReference"
+              }
+            ]
+          },
+          "defaultCurrency": {
+            "type": "string"
+          },
+          "language": {
+            "type": ["null", "string"]
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "taxId": {
+            "type": ["null", "string"]
+          },
+          "registrationNumber": {
+            "type": ["null", "string"]
+          },
+          "taxStatus": {
+            "$ref": "#/components/schemas/TaxStatus"
+          },
+          "parentPartyId": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/PartyId"
+              }
+            ]
+          },
+          "userId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "mergedIntoId": {
+            "type": ["null", "string"],
+            "format": "uuid"
+          },
+          "mergedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        }
       },
       "PartySuspendRequest": {
         "type": "object",
@@ -5193,12 +4913,42 @@
             "type": "boolean"
           }
         }
+      },
+      "ValueKind": {
+        "enum": [
+          "Count",
+          "Number",
+          "Currency",
+          "Percentage",
+          "Duration",
+          "Date",
+          "Url",
+          "Email",
+          "Phone",
+          "Bytes",
+          "DateTime",
+          "Boolean",
+          "Enum",
+          "RelativeTime",
+          "Time",
+          "Color",
+          "Image",
+          "Json",
+          "Markdown",
+          "Tags",
+          "Rating",
+          "Identifier",
+          null
+        ]
       }
     }
   },
   "tags": [
     {
       "name": "Parties"
+    },
+    {
+      "name": "Parties - Addresses"
     },
     {
       "name": "Parties - Classification"

@@ -1,6 +1,6 @@
 import { createApiClient } from '@granit/api-client';
 import { CmsProvider } from '@granit/react-cms';
-import { mockReleases } from '@granit/react-cms/testing';
+import { CORPORATE_SITE_ID, mockReleases } from '@granit/react-cms/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
 import { MemoryRouter, Route, Routes } from 'react-router';
@@ -14,7 +14,7 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
 });
 
-const siteId = mockReleases[0]!.siteId;
+const siteId = CORPORATE_SITE_ID;
 
 const paged = (items: typeof mockReleases) => ({
   items,

@@ -1,6 +1,5 @@
 import { createApiClient } from '@granit/api-client';
 import { CmsProvider } from '@granit/react-cms';
-import { mockReleases } from '@granit/react-cms/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fn } from 'storybook/test';
 
@@ -30,7 +29,6 @@ const meta: Meta<typeof ReleaseFormDialog> = {
   ],
   args: {
     open: true,
-    siteId: mockReleases[0]!.siteId,
     onOpenChange: fn(),
   },
   argTypes: {

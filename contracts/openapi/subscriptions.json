@@ -2058,6 +2058,22 @@
           },
           "format": {
             "type": ["null", "string"]
+          },
+          "valueKind": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ValueKind"
+              }
+            ]
+          },
+          "currencyCode": {
+            "type": ["null", "string"]
+          },
+          "currencyCodeField": {
+            "type": ["null", "string"]
           }
         }
       },
@@ -2076,6 +2092,7 @@
             "type": "string"
           },
           "interval": {
+            "maxLength": 64,
             "type": "string"
           },
           "productId": {
@@ -2168,7 +2185,10 @@
           "Lt",
           "Lte",
           "In",
-          "Between"
+          "Between",
+          "Ne",
+          "IsNull",
+          "IsNotNull"
         ]
       },
       "GroupByField": {
@@ -2563,7 +2583,10 @@
             "items": {
               "type": "object",
               "properties": {
-                "planId": {},
+                "planId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
                 "status": {
                   "enum": ["Trial", "Active", "PastDue", "Suspended", "Cancelled", "Expired"]
                 },
@@ -2661,7 +2684,10 @@
                         "type": ["null", "string"],
                         "format": "date-time"
                       },
-                      "planId": {},
+                      "planId": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
                       "overridePriceId": {
                         "type": ["null", "string"],
                         "format": "uuid"
@@ -2683,7 +2709,10 @@
                   "type": ["null", "string"],
                   "format": "uuid"
                 },
-                "partyId": {},
+                "partyId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
                 "modifiedAt": {
                   "type": ["null", "string"],
                   "description": "Last modification timestamp (UTC).",
@@ -2757,7 +2786,10 @@
           }
         }
       },
-      "PartyId": {},
+      "PartyId": {
+        "type": "string",
+        "format": "uuid"
+      },
       "Plan": {
         "type": "object",
         "properties": {
@@ -2852,9 +2884,11 @@
             "type": "string"
           },
           "pricingModel": {
+            "maxLength": 64,
             "type": "string"
           },
           "defaultInterval": {
+            "maxLength": 64,
             "type": "string"
           },
           "description": {
@@ -2905,7 +2939,10 @@
           }
         }
       },
-      "PlanId": {},
+      "PlanId": {
+        "type": "string",
+        "format": "uuid"
+      },
       "PlanPrice": {
         "type": "object",
         "properties": {
@@ -3569,6 +3606,33 @@
       },
       "TieringMode": {
         "enum": ["Volume", "Graduated", null]
+      },
+      "ValueKind": {
+        "enum": [
+          "Count",
+          "Number",
+          "Currency",
+          "Percentage",
+          "Duration",
+          "Date",
+          "Url",
+          "Email",
+          "Phone",
+          "Bytes",
+          "DateTime",
+          "Boolean",
+          "Enum",
+          "RelativeTime",
+          "Time",
+          "Color",
+          "Image",
+          "Json",
+          "Markdown",
+          "Tags",
+          "Rating",
+          "Identifier",
+          null
+        ]
       },
       "WorkflowLifecycleStatus": {
         "enum": ["Draft", "PendingReview", "Published", "Archived"]

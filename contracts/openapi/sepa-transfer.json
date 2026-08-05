@@ -215,6 +215,7 @@
             "x-granit-validator": "Validation:Format:BicSwift"
           },
           "concurrencyStamp": {
+            "maxLength": 64,
             "type": "string",
             "default": ""
           }

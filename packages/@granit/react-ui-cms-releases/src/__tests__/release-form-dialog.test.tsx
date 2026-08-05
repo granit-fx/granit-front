@@ -23,29 +23,25 @@ describe('ReleaseFormDialog', () => {
   });
 
   it('renders name, schedule and timezone fields when open', () => {
-    renderCmsReleases(<ReleaseFormDialog open onOpenChange={vi.fn()} siteId="site-1" />);
+    renderCmsReleases(<ReleaseFormDialog open onOpenChange={vi.fn()} />);
     expect(screen.getByRole('heading', { name: 'New release' })).toBeInTheDocument();
     expect(screen.getByLabelText('Name')).toBeInTheDocument();
     expect(screen.getByLabelText('Schedule at')).toBeInTheDocument();
   });
 
   it('creates with the trimmed name and no schedule when no date is set', async () => {
-    const { user } = renderCmsReleases(
-      <ReleaseFormDialog open onOpenChange={vi.fn()} siteId="site-1" />
-    );
+    const { user } = renderCmsReleases(<ReleaseFormDialog open onOpenChange={vi.fn()} />);
 
     await user.type(screen.getByLabelText('Name'), '  Spring relaunch  ');
     await user.click(screen.getByRole('button', { name: 'Save' }));
 
     await waitFor(() => expect(createMutate).toHaveBeenCalledTimes(1));
-    expect(createMutate.mock.calls[0]![0]).toEqual({ siteId: 'site-1', name: 'Spring relaunch' });
+    expect(createMutate.mock.calls[0]![0]).toEqual({ name: 'Spring relaunch' });
     expect(scheduleMutate).not.toHaveBeenCalled();
   });
 
   it('schedules after create when a date is provided', async () => {
-    const { user } = renderCmsReleases(
-      <ReleaseFormDialog open onOpenChange={vi.fn()} siteId="site-1" />
-    );
+    const { user } = renderCmsReleases(<ReleaseFormDialog open onOpenChange={vi.fn()} />);
 
     await user.type(screen.getByLabelText('Name'), 'Scheduled release');
     fireEvent.change(screen.getByLabelText('Schedule at'), {
@@ -63,9 +59,7 @@ describe('ReleaseFormDialog', () => {
   });
 
   it('does not submit when the name is empty', async () => {
-    const { user } = renderCmsReleases(
-      <ReleaseFormDialog open onOpenChange={vi.fn()} siteId="site-1" />
-    );
+    const { user } = renderCmsReleases(<ReleaseFormDialog open onOpenChange={vi.fn()} />);
     await user.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => expect(createMutate).not.toHaveBeenCalled());
   });

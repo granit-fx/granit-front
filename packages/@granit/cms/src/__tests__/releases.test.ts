@@ -21,7 +21,6 @@ const BASE = 'https://cms.example.com';
 
 const release: ReleaseResponse = {
   id: 'rel-1',
-  siteId: 'site-1',
   name: 'Sprint 42',
   status: 'Draft',
   schedule: null,
@@ -78,7 +77,7 @@ describe('createRelease', () => {
     const client = createMockClient();
     vi.mocked(client.post).mockResolvedValue(axiosResponse(release));
 
-    const request = { siteId: 'site-1', name: 'Sprint 42' };
+    const request = { name: 'Sprint 42' };
     const result = await createRelease(client, BASE, request);
 
     expect(client.post).toHaveBeenCalledWith(`${BASE}/releases`, request);

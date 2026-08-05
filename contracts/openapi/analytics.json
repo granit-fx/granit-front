@@ -752,6 +752,7 @@
             "type": ["null", "string"]
           },
           "color": {
+            "type": "string",
             "description": "A colour expressed as a hex code with a leading `#` and 3, 4, 6 or 8 hex digits\n(`#RGB`, `#RGBA`, `#RRGGBB`, `#RRGGBBAA`). Trimmed and normalised to\nupper-case. The accepted set matches the framework `Validation:Format:ColorHex` server\nvalidator, so a value that passes endpoint validation is always constructible here. EF Core and\nJSON conversions are applied automatically (`ApplyGranitConventions` /\nSingleValueObjectJsonConverterFactory)."
           },
           "unit": {

@@ -27,7 +27,8 @@ export const catalogConstraints = {
       "maxLength": 200
     },
     "type": {
-      "required": true
+      "required": true,
+      "maxLength": 64
     },
     "unit": {
       "required": true,

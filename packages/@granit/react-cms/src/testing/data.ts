@@ -168,11 +168,10 @@ export const mockMenus: MenuResponse[] = [
   },
 ];
 
-/** Mock releases for the corporate site (one draft, one scheduled). */
+/** Mock releases (one draft, one scheduled). */
 export const mockReleases: ReleaseResponse[] = [
   {
     id: '30000000-0000-4000-8000-000000000001',
-    siteId: CORPORATE_SITE_ID,
     name: 'Spring relaunch',
     status: 'Draft',
     schedule: null,
@@ -194,7 +193,6 @@ export const mockReleases: ReleaseResponse[] = [
   },
   {
     id: '30000000-0000-4000-8000-000000000002',
-    siteId: CORPORATE_SITE_ID,
     name: 'Q1 scheduled push',
     status: 'Ready',
     schedule: {

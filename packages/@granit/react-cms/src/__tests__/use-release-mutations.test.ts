@@ -64,11 +64,10 @@ describe('useCreateRelease', () => {
     vi.mocked(createRelease).mockResolvedValue(release);
 
     const { result } = renderHook(() => useCreateRelease(), { wrapper: createWrapper(client) });
-    result.current.mutate({ siteId: 'site-1', name: 'Sprint 1' });
+    result.current.mutate({ name: 'Sprint 1' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(createRelease).toHaveBeenCalledWith(client, '/api/cms', {
-      siteId: 'site-1',
       name: 'Sprint 1',
     });
   });

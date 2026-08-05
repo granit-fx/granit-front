@@ -366,8 +366,8 @@ export interface SeoSuggestionFieldDiff {
   readonly proposed: string | null;
 }
 
-/** Per-field current-vs-proposed diff for a suggestion. Maps `SeoSuggestionDiff`. */
-export interface SeoSuggestionDiff {
+/** Per-field current-vs-proposed diff for a suggestion. Maps `SeoSuggestionDiffResponse`. */
+export interface SeoSuggestionDiffResponse {
   readonly suggestionId: string;
   readonly scope: SuggestionScope;
   readonly fields: readonly SeoSuggestionFieldDiff[];

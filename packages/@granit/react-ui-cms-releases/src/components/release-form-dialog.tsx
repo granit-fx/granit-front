@@ -37,18 +37,16 @@ interface ReleaseFormValues {
 interface ReleaseFormDialogProps {
   readonly open: boolean;
   readonly onOpenChange: (open: boolean) => void;
-  readonly siteId: string;
 }
 
 /**
  * Create dialog for CMS releases. Validation is spec-driven via
- * {@link createConstraintsResolver} against `CreateReleaseRequest` (only the
- * registered `name` field is checked here — `siteId` is supplied by the caller).
+ * {@link createConstraintsResolver} against `CreateReleaseRequest`.
  * Scheduling is optional: when a date/time is provided the release is created and
  * then scheduled (two API calls, matching the backend's create-then-schedule model).
  * The timezone defaults to the user's preferred zone via {@link TimezonePicker}.
  */
-export function ReleaseFormDialog({ open, onOpenChange, siteId }: ReleaseFormDialogProps) {
+export function ReleaseFormDialog({ open, onOpenChange }: ReleaseFormDialogProps) {
   const { t } = useTranslation();
   const createRelease = useCreateRelease();
   const scheduleRelease = useScheduleRelease();
@@ -80,7 +78,7 @@ export function ReleaseFormDialog({ open, onOpenChange, siteId }: ReleaseFormDia
     // `mutate` (not `mutateAsync`) routes failures to the global mutation-cache
     // error toast — no local catch needed.
     createRelease.mutate(
-      { siteId, name: values.name.trim() },
+      { name: values.name.trim() },
       {
         onSuccess: (created) => {
           if (localDateTime && timeZoneId) {

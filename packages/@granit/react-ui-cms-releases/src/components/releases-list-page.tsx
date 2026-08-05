@@ -44,7 +44,6 @@ function ReleasesGrid({ siteId }: { readonly siteId: string }) {
 
   const queryEndpoint = useQueryEndpoint<ReleaseResponse>({
     initialParams: {
-      filters: [{ field: 'siteId', operator: 'Eq', value: siteId }],
       // Prefer the backend-advertised default sort; fall back to newest-first
       // until `/releases/meta` resolves.
       sort: parseSort(meta?.defaultSort ?? RELEASES_DEFAULT_SORT),
@@ -72,7 +71,6 @@ function ReleasesGrid({ siteId }: { readonly siteId: string }) {
       createReleasesColumns({
         t,
         formatDate,
-        siteId,
         onView: (release) => navigate(`/cms/sites/${siteId}/releases/${release.id}`),
         onPublish: handlePublish,
       }),
@@ -101,7 +99,7 @@ function ReleasesGrid({ siteId }: { readonly siteId: string }) {
         </Button>
       </div>
 
-      <ReleaseFormDialog open={createOpen} onOpenChange={setCreateOpen} siteId={siteId} />
+      <ReleaseFormDialog open={createOpen} onOpenChange={setCreateOpen} />
 
       {isError && (
         <Alert variant="destructive">

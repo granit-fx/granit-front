@@ -911,7 +911,14 @@
             ]
           },
           "valueKind": {
-            "type": ["null", "string"]
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ValueKind"
+              }
+            ]
           }
         }
       },
@@ -1667,6 +1674,33 @@
       },
       "SidePanelKind": {
         "enum": ["Audit", "Timeline", "Comments", "Documents", "Activities"]
+      },
+      "ValueKind": {
+        "enum": [
+          "Count",
+          "Number",
+          "Currency",
+          "Percentage",
+          "Duration",
+          "Date",
+          "Url",
+          "Email",
+          "Phone",
+          "Bytes",
+          "DateTime",
+          "Boolean",
+          "Enum",
+          "RelativeTime",
+          "Time",
+          "Color",
+          "Image",
+          "Json",
+          "Markdown",
+          "Tags",
+          "Rating",
+          "Identifier",
+          null
+        ]
       },
       "VisibilityCondition": {
         "required": ["field", "op", "value"],

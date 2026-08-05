@@ -1,6 +1,6 @@
 import { createApiClient } from '@granit/api-client';
 import { CmsProvider } from '@granit/react-cms';
-import { mockReleases } from '@granit/react-cms/testing';
+import { CORPORATE_SITE_ID, mockReleases } from '@granit/react-cms/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
 import { MemoryRouter, Route, Routes } from 'react-router';
@@ -40,7 +40,7 @@ const meta: Meta<typeof ReleaseDetailPage> = {
         <CmsProvider config={{ client, basePath: '/api/cms' }}>
           <MemoryRouter
             initialEntries={[
-              `/cms/sites/${draftRelease.siteId}/releases/${ctx.parameters.releaseId}`,
+              `/cms/sites/${CORPORATE_SITE_ID}/releases/${ctx.parameters.releaseId}`,
             ]}
           >
             <Routes>

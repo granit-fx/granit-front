@@ -67,7 +67,8 @@ export const taxonomyConstraints = {
   },
   "UpdateCategoryRequest": {
     "concurrencyStamp": {
-      "required": true
+      "required": true,
+      "maxLength": 64
     },
     "name": {
       "maxLength": 100,
@@ -80,7 +81,8 @@ export const taxonomyConstraints = {
   },
   "UpdateTagRequest": {
     "concurrencyStamp": {
-      "required": true
+      "required": true,
+      "maxLength": 64
     },
     "name": {
       "maxLength": 50

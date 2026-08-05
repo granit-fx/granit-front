@@ -68,7 +68,7 @@ export type {
   SeoMetadataRequest,
   SeoMetadataResponse,
   SeoReviewStatus,
-  SeoSuggestionDiff,
+  SeoSuggestionDiffResponse,
   SeoSuggestionFieldDiff,
   SeoSuggestionListResponse,
   SerpPreviewResponse,

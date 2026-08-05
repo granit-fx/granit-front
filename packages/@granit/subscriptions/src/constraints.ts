@@ -32,7 +32,8 @@ export const subscriptionsConstraints = {
       "maxLength": 3
     },
     "interval": {
-      "required": true
+      "required": true,
+      "maxLength": 64
     },
     "productId": {
       "format": "uuid"
@@ -50,10 +51,12 @@ export const subscriptionsConstraints = {
       "maxLength": 200
     },
     "pricingModel": {
-      "required": true
+      "required": true,
+      "maxLength": 64
     },
     "defaultInterval": {
-      "required": true
+      "required": true,
+      "maxLength": 64
     },
     "description": {
       "maxLength": 2000

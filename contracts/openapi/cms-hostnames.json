@@ -122,7 +122,7 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -133,6 +133,16 @@
               "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
@@ -149,16 +159,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -485,6 +485,10 @@
           "available": {
             "type": "boolean"
           }
+        },
+        "example": {
+          "host": "blog.granit.example",
+          "available": false
         }
       },
       "SiteHostnameCreateRequest": {
@@ -499,6 +503,10 @@
             "type": "boolean",
             "default": false
           }
+        },
+        "example": {
+          "host": "www.granit.example",
+          "isPrimary": true
         }
       },
       "SiteHostnameDnsRecordResponse": {
@@ -514,6 +522,11 @@
           "value": {
             "type": "string"
           }
+        },
+        "example": {
+          "recordType": "Txt",
+          "name": "_granit-challenge.www.granit.example",
+          "value": "granit-verify=7f3a9c1e4b2d8f60"
         }
       },
       "SiteHostnameResponse": {
@@ -554,6 +567,26 @@
           "certificateStatus": {
             "type": "string"
           }
+        },
+        "example": {
+          "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          "host": "www.granit.example",
+          "status": "Active",
+          "isPrimary": true,
+          "expectedDnsRecords": [
+            {
+              "recordType": "Cname",
+              "name": "www.granit.example",
+              "value": "edge.granit.example"
+            },
+            {
+              "recordType": "Txt",
+              "name": "_granit-challenge.www.granit.example",
+              "value": "granit-verify=7f3a9c1e4b2d8f60"
+            }
+          ],
+          "lastCheckedAt": "2026-07-05T09:30:00+00:00",
+          "certificateStatus": "Issued"
         }
       }
     }

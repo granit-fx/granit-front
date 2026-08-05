@@ -62,10 +62,6 @@ export const cmsConstraints = {
     }
   },
   "CreateReleaseRequest": {
-    "siteId": {
-      "required": true,
-      "format": "uuid"
-    },
     "name": {
       "required": true,
       "maxLength": 200

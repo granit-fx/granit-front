@@ -5,7 +5,7 @@ import type {
   SeoSuggestRequest,
   SeoSuggestResponse,
   SeoSuggestionResponse,
-  SeoSuggestionDiff,
+  SeoSuggestionDiffResponse,
   SeoSuggestionListResponse,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
@@ -39,8 +39,8 @@ export async function getSeoSuggestionDiff(
   client: AxiosInstance,
   basePath: string,
   id: string
-): Promise<SeoSuggestionDiff> {
-  const res = await client.get<SeoSuggestionDiff>(
+): Promise<SeoSuggestionDiffResponse> {
+  const res = await client.get<SeoSuggestionDiffResponse>(
     `${basePath}/ai/suggestions/${encodeURIComponent(id)}/diff`
   );
   return res.data;

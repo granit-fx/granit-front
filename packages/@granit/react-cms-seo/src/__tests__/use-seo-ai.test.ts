@@ -28,7 +28,7 @@ import { CmsSeoProvider } from '../providers/cms-seo-provider';
 import type {
   SeoSuggestRequest,
   SeoSuggestResponse,
-  SeoSuggestionDiff,
+  SeoSuggestionDiffResponse,
   SeoSuggestionListResponse,
 } from '@granit/cms-seo';
 import type { AxiosInstance } from 'axios';
@@ -82,7 +82,7 @@ describe('useSeoSuggestionDiff', () => {
 
   it('fetches diff for a suggestion', async () => {
     const client = createMockClient();
-    const diff: SeoSuggestionDiff = {
+    const diff: SeoSuggestionDiffResponse = {
       suggestionId: suggestion.id,
       scope: 'Title, Description',
       fields: [{ field: 'Title', inScope: true, current: null, proposed: 'New' }],

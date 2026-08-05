@@ -124,8 +124,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -146,16 +146,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -267,8 +257,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -297,16 +287,6 @@
               }
             }
           },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -321,8 +301,8 @@
       },
       "get": {
         "tags": ["CMS - Sites"],
-        "summary": "Returns a filtered, sorted, and paginated list of Site entries.",
-        "description": "Executes a dynamic query against Site using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
+        "summary": "Returns a paged, filterable list of SiteListItemResponse from Site.",
+        "description": "Executes a dynamic query against Site using the Granit query engine and projects each row to SiteListItemResponse. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult<SiteListItemResponse> by default. When the groupBy query parameter is specified, returns a GroupedResult<SiteListItemResponse> with the same projection applied to the items inside each group.",
         "operationId": "QuerySite",
         "parameters": [
           {
@@ -429,10 +409,10 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/PagedResultOfSite"
+                      "$ref": "#/components/schemas/PagedResultOfSiteListItemResponse"
                     },
                     {
-                      "$ref": "#/components/schemas/GroupedResultOfSite"
+                      "$ref": "#/components/schemas/GroupedResultOfSiteListItemResponse"
                     }
                   ],
                   "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
@@ -532,6 +512,16 @@
               }
             }
           },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -554,16 +544,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -708,8 +688,8 @@
     "/api/cms/pages": {
       "get": {
         "tags": ["CMS - Pages"],
-        "summary": "Returns a filtered, sorted, and paginated list of Page entries.",
-        "description": "Executes a dynamic query against Page using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
+        "summary": "Returns a paged, filterable list of PageListItemResponse from Page.",
+        "description": "Executes a dynamic query against Page using the Granit query engine and projects each row to PageListItemResponse. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult<PageListItemResponse> by default. When the groupBy query parameter is specified, returns a GroupedResult<PageListItemResponse> with the same projection applied to the items inside each group.",
         "operationId": "QueryPage",
         "parameters": [
           {
@@ -816,10 +796,10 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/PagedResultOfPage"
+                      "$ref": "#/components/schemas/PagedResultOfPageListItemResponse"
                     },
                     {
-                      "$ref": "#/components/schemas/GroupedResultOfPage"
+                      "$ref": "#/components/schemas/GroupedResultOfPageListItemResponse"
                     }
                   ],
                   "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
@@ -915,18 +895,18 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
                 }
               }
             }
           },
-          "422": {
-            "description": "Unprocessable Entity",
+          "403": {
+            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1259,6 +1239,16 @@
               }
             }
           },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -1271,16 +1261,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1414,6 +1394,16 @@
               }
             }
           },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -1446,16 +1436,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1544,6 +1524,16 @@
               }
             }
           },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -1556,16 +1546,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1654,8 +1634,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1676,16 +1656,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -2076,6 +2046,16 @@
               }
             }
           },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -2088,16 +2068,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -2744,6 +2714,16 @@
               }
             }
           },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -2766,16 +2746,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -2887,6 +2857,16 @@
               }
             }
           },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -2917,16 +2897,6 @@
               }
             }
           },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -2941,8 +2911,8 @@
       },
       "get": {
         "tags": ["CMS - Menus"],
-        "summary": "Returns a filtered, sorted, and paginated list of Menu entries.",
-        "description": "Executes a dynamic query against Menu using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
+        "summary": "Returns a paged, filterable list of MenuListItemResponse from Menu.",
+        "description": "Executes a dynamic query against Menu using the Granit query engine and projects each row to MenuListItemResponse. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult<MenuListItemResponse> by default. When the groupBy query parameter is specified, returns a GroupedResult<MenuListItemResponse> with the same projection applied to the items inside each group.",
         "operationId": "QueryMenu",
         "parameters": [
           {
@@ -3049,10 +3019,10 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/PagedResultOfMenu"
+                      "$ref": "#/components/schemas/PagedResultOfMenuListItemResponse"
                     },
                     {
-                      "$ref": "#/components/schemas/GroupedResultOfMenu"
+                      "$ref": "#/components/schemas/GroupedResultOfMenuListItemResponse"
                     }
                   ],
                   "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
@@ -3342,8 +3312,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -3364,16 +3334,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -3422,8 +3382,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -3452,16 +3412,6 @@
               }
             }
           },
-          "422": {
-            "description": "Unprocessable Entity",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -3476,8 +3426,8 @@
       },
       "get": {
         "tags": ["CMS - Releases"],
-        "summary": "Returns a filtered, sorted, and paginated list of Release entries.",
-        "description": "Executes a dynamic query against Release using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
+        "summary": "Returns a paged, filterable list of ReleaseListItemResponse from Release.",
+        "description": "Executes a dynamic query against Release using the Granit query engine and projects each row to ReleaseListItemResponse. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult<ReleaseListItemResponse> by default. When the groupBy query parameter is specified, returns a GroupedResult<ReleaseListItemResponse> with the same projection applied to the items inside each group.",
         "operationId": "QueryRelease",
         "parameters": [
           {
@@ -3584,10 +3534,10 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/PagedResultOfRelease"
+                      "$ref": "#/components/schemas/PagedResultOfReleaseListItemResponse"
                     },
                     {
-                      "$ref": "#/components/schemas/GroupedResultOfRelease"
+                      "$ref": "#/components/schemas/GroupedResultOfReleaseListItemResponse"
                     }
                   ],
                   "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
@@ -3697,8 +3647,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -3719,16 +3669,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -3901,8 +3841,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -3923,16 +3863,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -4335,6 +4265,13 @@
           "concurrencyStamp": {
             "type": "string"
           }
+        },
+        "example": {
+          "contentType": "cms.page",
+          "contentId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+          "culture": "en",
+          "type": "Publish",
+          "concurrencyStamp": "c9b8a7d6-5e4f-4a3b-8c2d-1e0f9a8b7c6d"
         }
       },
       "BlockCatalogEntry": {
@@ -4368,6 +4305,38 @@
               "type": "string"
             }
           }
+        },
+        "example": {
+          "name": "hero",
+          "version": "1.0.0",
+          "sourceModule": "Granit.Cms.Blocks",
+          "renderSide": "Server",
+          "dataSourceKey": null,
+          "fields": {
+            "heading": {
+              "kind": "Text"
+            },
+            "body": {
+              "kind": "RichText"
+            },
+            "alignment": {
+              "kind": "Choice",
+              "options": [
+                {
+                  "label": "Left",
+                  "value": "left"
+                },
+                {
+                  "label": "Center",
+                  "value": "center"
+                }
+              ]
+            },
+            "backgroundImage": {
+              "kind": "DocumentReference"
+            }
+          },
+          "subscribedContentTypes": null
         }
       },
       "BlockCatalogResponse": {
@@ -4380,6 +4349,47 @@
               "$ref": "#/components/schemas/BlockCategoryGroup"
             }
           }
+        },
+        "example": {
+          "categories": [
+            {
+              "category": "Marketing",
+              "blocks": [
+                {
+                  "name": "hero",
+                  "version": "1.0.0",
+                  "sourceModule": "Granit.Cms.Blocks",
+                  "renderSide": "Server",
+                  "dataSourceKey": null,
+                  "fields": {
+                    "heading": {
+                      "kind": "Text"
+                    },
+                    "body": {
+                      "kind": "RichText"
+                    },
+                    "alignment": {
+                      "kind": "Choice",
+                      "options": [
+                        {
+                          "label": "Left",
+                          "value": "left"
+                        },
+                        {
+                          "label": "Center",
+                          "value": "center"
+                        }
+                      ]
+                    },
+                    "backgroundImage": {
+                      "kind": "DocumentReference"
+                    }
+                  },
+                  "subscribedContentTypes": null
+                }
+              ]
+            }
+          ]
         }
       },
       "BlockCategoryGroup": {
@@ -4395,6 +4405,43 @@
               "$ref": "#/components/schemas/BlockCatalogEntry"
             }
           }
+        },
+        "example": {
+          "category": "Marketing",
+          "blocks": [
+            {
+              "name": "hero",
+              "version": "1.0.0",
+              "sourceModule": "Granit.Cms.Blocks",
+              "renderSide": "Server",
+              "dataSourceKey": null,
+              "fields": {
+                "heading": {
+                  "kind": "Text"
+                },
+                "body": {
+                  "kind": "RichText"
+                },
+                "alignment": {
+                  "kind": "Choice",
+                  "options": [
+                    {
+                      "label": "Left",
+                      "value": "left"
+                    },
+                    {
+                      "label": "Center",
+                      "value": "center"
+                    }
+                  ]
+                },
+                "backgroundImage": {
+                  "kind": "DocumentReference"
+                }
+              },
+              "subscribedContentTypes": null
+            }
+          ]
         }
       },
       "BlockDataResolveRequest": {
@@ -4417,6 +4464,12 @@
             "maxLength": 20,
             "type": "string"
           }
+        },
+        "example": {
+          "dataSourceKey": "blog.recent-posts",
+          "query": "{\"filter\":{\"category\":\"news\"},\"limit\":3,\"sort\":\"-publishedAt\"}",
+          "siteId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "culture": "en"
         }
       },
       "BlockDataResponse": {
@@ -4430,6 +4483,17 @@
               "type": "string"
             }
           }
+        },
+        "example": {
+          "data": [
+            {
+              "id": "d7c3b1a9-4e2f-4c8b-9a10-3b2c1d0e9f8a",
+              "title": "Announcing the 2026 roadmap",
+              "slug": "announcing-the-2026-roadmap",
+              "publishedAt": "2026-04-20T08:00:00+00:00"
+            }
+          ],
+          "consumedContentKeys": ["blog.post:d7c3b1a9-4e2f-4c8b-9a10-3b2c1d0e9f8a"]
         }
       },
       "BlockFieldDescriptor": {
@@ -4536,21 +4600,21 @@
           },
           "format": {
             "type": ["null", "string"]
-          }
-        }
-      },
-      "ContentKey": {
-        "required": ["contentType", "contentId"],
-        "type": "object",
-        "properties": {
-          "contentType": {
-            "type": "string"
           },
-          "contentId": {
-            "type": "string",
-            "format": "uuid"
+          "valueKind": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ValueKind"
+              }
+            ]
           },
-          "culture": {
+          "currencyCode": {
+            "type": ["null", "string"]
+          },
+          "currencyCodeField": {
             "type": ["null", "string"]
           }
         }
@@ -4573,20 +4637,24 @@
             "pattern": "^[a-z0-9]+([._-][a-z0-9]+)*$",
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "parentId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "slugSegment": "about-us",
+          "layoutKey": "default"
         }
       },
       "CreateReleaseRequest": {
-        "required": ["siteId", "name"],
+        "required": ["name"],
         "type": "object",
         "properties": {
-          "siteId": {
-            "type": "string",
-            "format": "uuid"
-          },
           "name": {
             "maxLength": 200,
             "type": "string"
           }
+        },
+        "example": {
+          "name": "Spring campaign launch"
         }
       },
       "CreateSiteRequest": {
@@ -4617,6 +4685,13 @@
           "defaultTheme": {
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "slug": "acme-marketing",
+          "defaultCulture": "en",
+          "allowedCultures": ["en", "fr", "nl"],
+          "domains": ["www.acme.example", "acme.example"],
+          "defaultTheme": "aurora"
         }
       },
       "DateFilterMeta": {
@@ -4664,6 +4739,14 @@
           "contentJson": {
             "type": "string"
           }
+        },
+        "example": {
+          "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+          "siteId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "culture": "en",
+          "title": "About us (draft)",
+          "layoutKey": "default",
+          "contentJson": "{\"root\":{},\"content\":[{\"type\":\"hero\",\"props\":{\"heading\":\"We build durable software\"}}]}"
         }
       },
       "FilterableField": {
@@ -4729,7 +4812,10 @@
           "Lt",
           "Lte",
           "In",
-          "Between"
+          "Between",
+          "Ne",
+          "IsNull",
+          "IsNotNull"
         ]
       },
       "GroupByField": {
@@ -4744,14 +4830,14 @@
           }
         }
       },
-      "GroupedResultOfMenu": {
+      "GroupedResultOfMenuListItemResponse": {
         "required": ["groups", "totalCount"],
         "type": "object",
         "properties": {
           "groups": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GroupEntryOfMenu"
+              "$ref": "#/components/schemas/GroupEntryOfMenuListItemResponse"
             }
           },
           "totalCount": {
@@ -4760,14 +4846,14 @@
           }
         }
       },
-      "GroupedResultOfPage": {
+      "GroupedResultOfPageListItemResponse": {
         "required": ["groups", "totalCount"],
         "type": "object",
         "properties": {
           "groups": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GroupEntryOfPage"
+              "$ref": "#/components/schemas/GroupEntryOfPageListItemResponse"
             }
           },
           "totalCount": {
@@ -4776,14 +4862,14 @@
           }
         }
       },
-      "GroupedResultOfRelease": {
+      "GroupedResultOfReleaseListItemResponse": {
         "required": ["groups", "totalCount"],
         "type": "object",
         "properties": {
           "groups": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GroupEntryOfRelease"
+              "$ref": "#/components/schemas/GroupEntryOfReleaseListItemResponse"
             }
           },
           "totalCount": {
@@ -4792,14 +4878,14 @@
           }
         }
       },
-      "GroupedResultOfSite": {
+      "GroupedResultOfSiteListItemResponse": {
         "required": ["groups", "totalCount"],
         "type": "object",
         "properties": {
           "groups": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GroupEntryOfSite"
+              "$ref": "#/components/schemas/GroupEntryOfSiteListItemResponse"
             }
           },
           "totalCount": {
@@ -4808,7 +4894,7 @@
           }
         }
       },
-      "GroupEntryOfMenu": {
+      "GroupEntryOfMenuListItemResponse": {
         "required": ["field", "value", "label", "count"],
         "type": "object",
         "properties": {
@@ -4829,12 +4915,12 @@
           "items": {
             "type": ["null", "array"],
             "items": {
-              "$ref": "#/components/schemas/Menu"
+              "$ref": "#/components/schemas/MenuListItemResponse"
             }
           }
         }
       },
-      "GroupEntryOfPage": {
+      "GroupEntryOfPageListItemResponse": {
         "required": ["field", "value", "label", "count"],
         "type": "object",
         "properties": {
@@ -4855,12 +4941,12 @@
           "items": {
             "type": ["null", "array"],
             "items": {
-              "$ref": "#/components/schemas/Page"
+              "$ref": "#/components/schemas/PageListItemResponse"
             }
           }
         }
       },
-      "GroupEntryOfRelease": {
+      "GroupEntryOfReleaseListItemResponse": {
         "required": ["field", "value", "label", "count"],
         "type": "object",
         "properties": {
@@ -4881,12 +4967,12 @@
           "items": {
             "type": ["null", "array"],
             "items": {
-              "$ref": "#/components/schemas/Release"
+              "$ref": "#/components/schemas/ReleaseListItemResponse"
             }
           }
         }
       },
-      "GroupEntryOfSite": {
+      "GroupEntryOfSiteListItemResponse": {
         "required": ["field", "value", "label", "count"],
         "type": "object",
         "properties": {
@@ -4907,7 +4993,7 @@
           "items": {
             "type": ["null", "array"],
             "items": {
-              "$ref": "#/components/schemas/Site"
+              "$ref": "#/components/schemas/SiteListItemResponse"
             }
           }
         }
@@ -4942,14 +5028,6 @@
           }
         }
       },
-      "IDomainEvent": {
-        "type": "object",
-        "description": "Marker interface for domain events."
-      },
-      "IIntegrationEvent": {
-        "type": "object",
-        "description": "Marker interface for integration events (ETO — Event Transfer Object)."
-      },
       "LookupDescriptor": {
         "type": "object",
         "properties": {
@@ -4981,79 +5059,6 @@
         "enum": ["QueryEngine", "Simple", "ReferenceData", "Enum"],
         "default": "QueryEngine"
       },
-      "Menu": {
-        "type": "object",
-        "properties": {
-          "siteId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "key": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "items": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/MenuItem"
-            }
-          },
-          "tenantId": {
-            "type": ["null", "string"],
-            "format": "uuid"
-          },
-          "isDeleted": {
-            "type": "boolean",
-            "description": "Indicates whether the entity has been soft-deleted."
-          },
-          "deletedAt": {
-            "type": ["null", "string"],
-            "description": "Soft deletion timestamp (UTC).",
-            "format": "date-time"
-          },
-          "deletedBy": {
-            "type": ["null", "string"],
-            "description": "Identifier of the user who deleted the entity."
-          },
-          "modifiedAt": {
-            "type": ["null", "string"],
-            "description": "Last modification timestamp (UTC).",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": ["null", "string"],
-            "description": "Identifier of the user who last modified the entity."
-          },
-          "domainEvents": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/IDomainEvent"
-            }
-          },
-          "integrationEvents": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/IIntegrationEvent"
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Creation timestamp (UTC).",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "string",
-            "description": "Identifier of the user who created the entity."
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the entity.",
-            "format": "uuid"
-          }
-        }
-      },
       "MenuCreateRequest": {
         "required": ["siteId", "key", "title"],
         "type": "object",
@@ -5077,34 +5082,19 @@
               "$ref": "#/components/schemas/MenuItemRequest"
             }
           }
-        }
-      },
-      "MenuItem": {
-        "required": ["label", "target"],
-        "type": "object",
-        "properties": {
-          "label": {
-            "type": "string"
-          },
-          "target": {
-            "$ref": "#/components/schemas/MenuItemTarget"
-          },
-          "children": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/MenuItem"
+        },
+        "example": {
+          "siteId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "key": "main-navigation",
+          "title": "Main navigation",
+          "items": [
+            {
+              "label": "Home",
+              "kind": "Page",
+              "pageId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+              "isVisible": true
             }
-          },
-          "isVisible": {
-            "type": "boolean",
-            "default": true
-          },
-          "icon": {
-            "type": ["null", "string"]
-          },
-          "cssClass": {
-            "type": ["null", "string"]
-          }
+          ]
         }
       },
       "MenuItemRequest": {
@@ -5144,6 +5134,24 @@
               "$ref": "#/components/schemas/MenuItemRequest"
             }
           }
+        },
+        "example": {
+          "label": "Products",
+          "kind": "Page",
+          "pageId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+          "url": null,
+          "anchor": null,
+          "isVisible": true,
+          "icon": "grid",
+          "cssClass": "nav-primary",
+          "children": [
+            {
+              "label": "Documentation",
+              "kind": "ExternalUrl",
+              "url": "https://docs.acme.example",
+              "isVisible": true
+            }
+          ]
         }
       },
       "MenuItemResponse": {
@@ -5191,24 +5199,44 @@
               "$ref": "#/components/schemas/MenuItemResponse"
             }
           }
+        },
+        "example": {
+          "label": "Products",
+          "kind": "Page",
+          "pageId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+          "url": null,
+          "anchor": null,
+          "isVisible": true,
+          "icon": "grid",
+          "cssClass": "nav-primary",
+          "children": []
         }
       },
-      "MenuItemTarget": {
-        "required": ["kind"],
+      "MenuListItemResponse": {
+        "required": ["id", "siteId", "key", "title", "createdAt", "modifiedAt"],
         "type": "object",
         "properties": {
-          "kind": {
-            "$ref": "#/components/schemas/MenuTargetKind"
-          },
-          "pageId": {
-            "type": ["null", "string"],
+          "id": {
+            "type": "string",
             "format": "uuid"
           },
-          "url": {
-            "type": ["null", "string"]
+          "siteId": {
+            "type": "string",
+            "format": "uuid"
           },
-          "anchor": {
-            "type": ["null", "string"]
+          "key": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
           }
         }
       },
@@ -5244,6 +5272,27 @@
             "type": ["null", "string"],
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "b4e6d2a1-8c3f-4b7e-9a05-6d1c2e3f4a5b",
+          "siteId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "key": "main-navigation",
+          "title": "Main navigation",
+          "items": [
+            {
+              "label": "Products",
+              "kind": "Page",
+              "pageId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+              "url": null,
+              "anchor": null,
+              "isVisible": true,
+              "icon": "grid",
+              "cssClass": "nav-primary",
+              "children": []
+            }
+          ],
+          "createdAt": "2026-03-14T09:30:00+00:00",
+          "modifiedAt": "2026-05-02T16:45:00+00:00"
         }
       },
       "MenuTargetKind": {
@@ -5263,6 +5312,23 @@
               "$ref": "#/components/schemas/MenuItemRequest"
             }
           }
+        },
+        "example": {
+          "title": "Main navigation",
+          "items": [
+            {
+              "label": "Home",
+              "kind": "Page",
+              "pageId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+              "isVisible": true
+            },
+            {
+              "label": "Contact",
+              "kind": "Anchor",
+              "anchor": "#contact",
+              "isVisible": true
+            }
+          ]
         }
       },
       "MintPreviewTokenRequest": {
@@ -5276,6 +5342,10 @@
             "type": "integer",
             "format": "int32"
           }
+        },
+        "example": {
+          "culture": "en",
+          "lifetimeSeconds": 900
         }
       },
       "MintPreviewTokenResponse": {
@@ -5289,6 +5359,10 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "token": "eyJhbGciOiJIUzI1NiJ9.eyJwYWdlIjoiN2M5ZTY2NzkifQ.Xy7cQd0m1a2b3c4d5e6f7g8h9i0j",
+          "expiresAt": "2026-05-02T17:00:00+00:00"
         }
       },
       "MovePageRequest": {
@@ -5302,99 +5376,10 @@
           "concurrencyStamp": {
             "type": "string"
           }
-        }
-      },
-      "Page": {
-        "type": "object",
-        "properties": {
-          "siteId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "parentId": {
-            "type": ["null", "string"],
-            "format": "uuid"
-          },
-          "slugSegment": {
-            "type": "string"
-          },
-          "structurePath": {
-            "type": "string"
-          },
-          "depth": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "kind": {
-            "$ref": "#/components/schemas/PageKind"
-          },
-          "isSiteRoot": {
-            "type": "boolean"
-          },
-          "layoutKey": {
-            "type": ["null", "string"]
-          },
-          "tenantId": {
-            "type": ["null", "string"],
-            "format": "uuid"
-          },
-          "concurrencyStamp": {
-            "type": "string"
-          },
-          "translations": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/PageTranslation"
-            }
-          },
-          "isDeleted": {
-            "type": "boolean",
-            "description": "Indicates whether the entity has been soft-deleted."
-          },
-          "deletedAt": {
-            "type": ["null", "string"],
-            "description": "Soft deletion timestamp (UTC).",
-            "format": "date-time"
-          },
-          "deletedBy": {
-            "type": ["null", "string"],
-            "description": "Identifier of the user who deleted the entity."
-          },
-          "modifiedAt": {
-            "type": ["null", "string"],
-            "description": "Last modification timestamp (UTC).",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": ["null", "string"],
-            "description": "Identifier of the user who last modified the entity."
-          },
-          "domainEvents": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/IDomainEvent"
-            }
-          },
-          "integrationEvents": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/IIntegrationEvent"
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Creation timestamp (UTC).",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "string",
-            "description": "Identifier of the user who created the entity."
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the entity.",
-            "format": "uuid"
-          }
+        },
+        "example": {
+          "newParentId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "concurrencyStamp": "a3d1f5c8-2b47-4e9a-8c60-1f2e3d4c5b6a"
         }
       },
       "PageDraftConflictResponse": {
@@ -5410,15 +5395,20 @@
           }
         }
       },
-      "PagedResultOfMenu": {
+      "PagedResultOfMenuListItemResponse": {
         "required": ["items", "totalCount", "hasMore"],
         "type": "object",
         "properties": {
           "items": {
             "type": "array",
             "items": {
+              "required": ["id", "siteId", "key", "title", "createdAt", "modifiedAt"],
               "type": "object",
               "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
                 "siteId": {
                   "type": "string",
                   "format": "uuid"
@@ -5429,145 +5419,13 @@
                 "title": {
                   "type": "string"
                 },
-                "items": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "required": ["label", "target"],
-                    "type": "object",
-                    "properties": {
-                      "label": {
-                        "type": "string"
-                      },
-                      "target": {
-                        "required": ["kind"],
-                        "type": "object",
-                        "properties": {
-                          "kind": {
-                            "enum": ["Page", "ExternalUrl", "Anchor", "None"]
-                          },
-                          "pageId": {
-                            "type": ["null", "string"],
-                            "format": "uuid"
-                          },
-                          "url": {
-                            "type": ["null", "string"]
-                          },
-                          "anchor": {
-                            "type": ["null", "string"]
-                          }
-                        }
-                      },
-                      "children": {
-                        "type": ["null", "array"],
-                        "items": {
-                          "required": ["label", "target"],
-                          "type": "object",
-                          "properties": {
-                            "label": {
-                              "type": "string"
-                            },
-                            "target": {
-                              "required": ["kind"],
-                              "type": "object",
-                              "properties": {
-                                "kind": {
-                                  "enum": ["Page", "ExternalUrl", "Anchor", "None"]
-                                },
-                                "pageId": {
-                                  "type": ["null", "string"],
-                                  "format": "uuid"
-                                },
-                                "url": {
-                                  "type": ["null", "string"]
-                                },
-                                "anchor": {
-                                  "type": ["null", "string"]
-                                }
-                              }
-                            },
-                            "children": {
-                              "type": ["null", "array"],
-                              "items": {}
-                            },
-                            "isVisible": {
-                              "type": "boolean",
-                              "default": true
-                            },
-                            "icon": {
-                              "type": ["null", "string"]
-                            },
-                            "cssClass": {
-                              "type": ["null", "string"]
-                            }
-                          }
-                        }
-                      },
-                      "isVisible": {
-                        "type": "boolean",
-                        "default": true
-                      },
-                      "icon": {
-                        "type": ["null", "string"]
-                      },
-                      "cssClass": {
-                        "type": ["null", "string"]
-                      }
-                    }
-                  }
-                },
-                "tenantId": {
-                  "type": ["null", "string"],
-                  "format": "uuid"
-                },
-                "isDeleted": {
-                  "type": "boolean",
-                  "description": "Indicates whether the entity has been soft-deleted."
-                },
-                "deletedAt": {
-                  "type": ["null", "string"],
-                  "description": "Soft deletion timestamp (UTC).",
+                "createdAt": {
+                  "type": "string",
                   "format": "date-time"
-                },
-                "deletedBy": {
-                  "type": ["null", "string"],
-                  "description": "Identifier of the user who deleted the entity."
                 },
                 "modifiedAt": {
                   "type": ["null", "string"],
-                  "description": "Last modification timestamp (UTC).",
                   "format": "date-time"
-                },
-                "modifiedBy": {
-                  "type": ["null", "string"],
-                  "description": "Identifier of the user who last modified the entity."
-                },
-                "domainEvents": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "description": "Marker interface for domain events."
-                  }
-                },
-                "integrationEvents": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "description": "Marker interface for integration events (ETO — Event Transfer Object)."
-                  }
-                },
-                "createdAt": {
-                  "type": "string",
-                  "description": "Creation timestamp (UTC).",
-                  "format": "date-time"
-                },
-                "createdBy": {
-                  "type": "string",
-                  "description": "Identifier of the user who created the entity."
-                },
-                "id": {
-                  "type": "string",
-                  "description": "Unique identifier of the entity.",
-                  "format": "uuid"
                 }
               }
             }
@@ -5584,21 +5442,28 @@
           }
         }
       },
-      "PagedResultOfPage": {
+      "PagedResultOfPageListItemResponse": {
         "required": ["items", "totalCount", "hasMore"],
         "type": "object",
         "properties": {
           "items": {
             "type": "array",
             "items": {
+              "required": [
+                "id",
+                "slugSegment",
+                "structurePath",
+                "depth",
+                "kind",
+                "isSiteRoot",
+                "layoutKey",
+                "createdAt",
+                "modifiedAt"
+              ],
               "type": "object",
               "properties": {
-                "siteId": {
+                "id": {
                   "type": "string",
-                  "format": "uuid"
-                },
-                "parentId": {
-                  "type": ["null", "string"],
                   "format": "uuid"
                 },
                 "slugSegment": {
@@ -5620,343 +5485,13 @@
                 "layoutKey": {
                   "type": ["null", "string"]
                 },
-                "tenantId": {
-                  "type": ["null", "string"],
-                  "format": "uuid"
-                },
-                "concurrencyStamp": {
-                  "type": "string"
-                },
-                "translations": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "urlSlug": {
-                        "type": "string"
-                      },
-                      "title": {
-                        "type": "string"
-                      },
-                      "path": {
-                        "type": "string"
-                      },
-                      "siteId": {
-                        "type": "string",
-                        "format": "uuid"
-                      },
-                      "parentId": {
-                        "type": "string",
-                        "format": "uuid"
-                      },
-                      "culture": {
-                        "type": "string"
-                      },
-                      "parent": {
-                        "type": "object",
-                        "properties": {
-                          "siteId": {
-                            "type": "string",
-                            "format": "uuid"
-                          },
-                          "parentId": {
-                            "type": ["null", "string"],
-                            "format": "uuid"
-                          },
-                          "slugSegment": {
-                            "type": "string"
-                          },
-                          "structurePath": {
-                            "type": "string"
-                          },
-                          "depth": {
-                            "type": "integer",
-                            "format": "int32"
-                          },
-                          "kind": {
-                            "enum": ["Page", "SiteRoot"]
-                          },
-                          "isSiteRoot": {
-                            "type": "boolean"
-                          },
-                          "layoutKey": {
-                            "type": ["null", "string"]
-                          },
-                          "tenantId": {
-                            "type": ["null", "string"],
-                            "format": "uuid"
-                          },
-                          "concurrencyStamp": {
-                            "type": "string"
-                          },
-                          "translations": {
-                            "type": ["null", "array"],
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "urlSlug": {
-                                  "type": "string"
-                                },
-                                "title": {
-                                  "type": "string"
-                                },
-                                "path": {
-                                  "type": "string"
-                                },
-                                "siteId": {
-                                  "type": "string",
-                                  "format": "uuid"
-                                },
-                                "parentId": {
-                                  "type": "string",
-                                  "format": "uuid"
-                                },
-                                "culture": {
-                                  "type": "string"
-                                },
-                                "parent": {
-                                  "type": "object",
-                                  "properties": {
-                                    "siteId": {
-                                      "type": "string",
-                                      "format": "uuid"
-                                    },
-                                    "parentId": {
-                                      "type": ["null", "string"],
-                                      "format": "uuid"
-                                    },
-                                    "slugSegment": {
-                                      "type": "string"
-                                    },
-                                    "structurePath": {
-                                      "type": "string"
-                                    },
-                                    "depth": {
-                                      "type": "integer",
-                                      "format": "int32"
-                                    },
-                                    "kind": {
-                                      "enum": ["Page", "SiteRoot"]
-                                    },
-                                    "isSiteRoot": {
-                                      "type": "boolean"
-                                    },
-                                    "layoutKey": {
-                                      "type": ["null", "string"]
-                                    },
-                                    "tenantId": {
-                                      "type": ["null", "string"],
-                                      "format": "uuid"
-                                    },
-                                    "concurrencyStamp": {
-                                      "type": "string"
-                                    },
-                                    "translations": {},
-                                    "isDeleted": {
-                                      "type": "boolean",
-                                      "description": "Indicates whether the entity has been soft-deleted."
-                                    },
-                                    "deletedAt": {
-                                      "type": ["null", "string"],
-                                      "description": "Soft deletion timestamp (UTC).",
-                                      "format": "date-time"
-                                    },
-                                    "deletedBy": {
-                                      "type": ["null", "string"],
-                                      "description": "Identifier of the user who deleted the entity."
-                                    },
-                                    "modifiedAt": {
-                                      "type": ["null", "string"],
-                                      "description": "Last modification timestamp (UTC).",
-                                      "format": "date-time"
-                                    },
-                                    "modifiedBy": {
-                                      "type": ["null", "string"],
-                                      "description": "Identifier of the user who last modified the entity."
-                                    },
-                                    "domainEvents": {
-                                      "type": ["null", "array"],
-                                      "items": {
-                                        "type": "object",
-                                        "description": "Marker interface for domain events."
-                                      }
-                                    },
-                                    "integrationEvents": {
-                                      "type": ["null", "array"],
-                                      "items": {
-                                        "type": "object",
-                                        "description": "Marker interface for integration events (ETO — Event Transfer Object)."
-                                      }
-                                    },
-                                    "createdAt": {
-                                      "type": "string",
-                                      "description": "Creation timestamp (UTC).",
-                                      "format": "date-time"
-                                    },
-                                    "createdBy": {
-                                      "type": "string",
-                                      "description": "Identifier of the user who created the entity."
-                                    },
-                                    "id": {
-                                      "type": "string",
-                                      "description": "Unique identifier of the entity.",
-                                      "format": "uuid"
-                                    }
-                                  }
-                                },
-                                "modifiedAt": {
-                                  "type": ["null", "string"],
-                                  "description": "Last modification timestamp (UTC).",
-                                  "format": "date-time"
-                                },
-                                "modifiedBy": {
-                                  "type": ["null", "string"],
-                                  "description": "Identifier of the user who last modified the entity."
-                                },
-                                "createdAt": {
-                                  "type": "string",
-                                  "description": "Creation timestamp (UTC).",
-                                  "format": "date-time"
-                                },
-                                "createdBy": {
-                                  "type": "string",
-                                  "description": "Identifier of the user who created the entity."
-                                },
-                                "id": {
-                                  "type": "string",
-                                  "description": "Unique identifier of the entity.",
-                                  "format": "uuid"
-                                }
-                              }
-                            }
-                          },
-                          "isDeleted": {
-                            "type": "boolean",
-                            "description": "Indicates whether the entity has been soft-deleted."
-                          },
-                          "deletedAt": {
-                            "type": ["null", "string"],
-                            "description": "Soft deletion timestamp (UTC).",
-                            "format": "date-time"
-                          },
-                          "deletedBy": {
-                            "type": ["null", "string"],
-                            "description": "Identifier of the user who deleted the entity."
-                          },
-                          "modifiedAt": {
-                            "type": ["null", "string"],
-                            "description": "Last modification timestamp (UTC).",
-                            "format": "date-time"
-                          },
-                          "modifiedBy": {
-                            "type": ["null", "string"],
-                            "description": "Identifier of the user who last modified the entity."
-                          },
-                          "domainEvents": {
-                            "type": ["null", "array"],
-                            "items": {
-                              "type": "object",
-                              "description": "Marker interface for domain events."
-                            }
-                          },
-                          "integrationEvents": {
-                            "type": ["null", "array"],
-                            "items": {
-                              "type": "object",
-                              "description": "Marker interface for integration events (ETO — Event Transfer Object)."
-                            }
-                          },
-                          "createdAt": {
-                            "type": "string",
-                            "description": "Creation timestamp (UTC).",
-                            "format": "date-time"
-                          },
-                          "createdBy": {
-                            "type": "string",
-                            "description": "Identifier of the user who created the entity."
-                          },
-                          "id": {
-                            "type": "string",
-                            "description": "Unique identifier of the entity.",
-                            "format": "uuid"
-                          }
-                        }
-                      },
-                      "modifiedAt": {
-                        "type": ["null", "string"],
-                        "description": "Last modification timestamp (UTC).",
-                        "format": "date-time"
-                      },
-                      "modifiedBy": {
-                        "type": ["null", "string"],
-                        "description": "Identifier of the user who last modified the entity."
-                      },
-                      "createdAt": {
-                        "type": "string",
-                        "description": "Creation timestamp (UTC).",
-                        "format": "date-time"
-                      },
-                      "createdBy": {
-                        "type": "string",
-                        "description": "Identifier of the user who created the entity."
-                      },
-                      "id": {
-                        "type": "string",
-                        "description": "Unique identifier of the entity.",
-                        "format": "uuid"
-                      }
-                    }
-                  }
-                },
-                "isDeleted": {
-                  "type": "boolean",
-                  "description": "Indicates whether the entity has been soft-deleted."
-                },
-                "deletedAt": {
-                  "type": ["null", "string"],
-                  "description": "Soft deletion timestamp (UTC).",
+                "createdAt": {
+                  "type": "string",
                   "format": "date-time"
-                },
-                "deletedBy": {
-                  "type": ["null", "string"],
-                  "description": "Identifier of the user who deleted the entity."
                 },
                 "modifiedAt": {
                   "type": ["null", "string"],
-                  "description": "Last modification timestamp (UTC).",
                   "format": "date-time"
-                },
-                "modifiedBy": {
-                  "type": ["null", "string"],
-                  "description": "Identifier of the user who last modified the entity."
-                },
-                "domainEvents": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "description": "Marker interface for domain events."
-                  }
-                },
-                "integrationEvents": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "description": "Marker interface for integration events (ETO — Event Transfer Object)."
-                  }
-                },
-                "createdAt": {
-                  "type": "string",
-                  "description": "Creation timestamp (UTC).",
-                  "format": "date-time"
-                },
-                "createdBy": {
-                  "type": "string",
-                  "description": "Identifier of the user who created the entity."
-                },
-                "id": {
-                  "type": "string",
-                  "description": "Unique identifier of the entity.",
-                  "format": "uuid"
                 }
               }
             }
@@ -5973,16 +5508,17 @@
           }
         }
       },
-      "PagedResultOfRelease": {
+      "PagedResultOfReleaseListItemResponse": {
         "required": ["items", "totalCount", "hasMore"],
         "type": "object",
         "properties": {
           "items": {
             "type": "array",
             "items": {
+              "required": ["id", "name", "status", "createdAt", "modifiedAt"],
               "type": "object",
               "properties": {
-                "siteId": {
+                "id": {
                   "type": "string",
                   "format": "uuid"
                 },
@@ -5992,130 +5528,13 @@
                 "status": {
                   "enum": ["Draft", "Ready", "Running", "Done", "Failed"]
                 },
-                "schedule": {
-                  "type": "object",
-                  "properties": {
-                    "localDateTime": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "timeZoneId": {
-                      "type": ["null", "string"]
-                    },
-                    "scheduledAtUtc": {
-                      "type": "string",
-                      "format": "date-time"
-                    }
-                  }
-                },
-                "tenantId": {
-                  "type": ["null", "string"],
-                  "format": "uuid"
-                },
-                "concurrencyStamp": {
-                  "type": "string"
-                },
-                "actions": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "releaseId": {
-                        "type": "string",
-                        "format": "uuid"
-                      },
-                      "contentType": {
-                        "type": "string"
-                      },
-                      "contentId": {
-                        "type": "string",
-                        "format": "uuid"
-                      },
-                      "culture": {
-                        "type": ["null", "string"]
-                      },
-                      "type": {
-                        "enum": ["Publish", "Unpublish"]
-                      },
-                      "status": {
-                        "enum": ["Pending", "Succeeded", "Failed"]
-                      },
-                      "error": {
-                        "type": ["null", "string"]
-                      },
-                      "contentKey": {
-                        "required": ["contentType", "contentId"],
-                        "type": "object",
-                        "properties": {
-                          "contentType": {
-                            "type": "string"
-                          },
-                          "contentId": {
-                            "type": "string",
-                            "format": "uuid"
-                          },
-                          "culture": {
-                            "type": ["null", "string"]
-                          }
-                        }
-                      },
-                      "id": {
-                        "type": "string",
-                        "description": "Unique identifier of the entity.",
-                        "format": "uuid"
-                      }
-                    }
-                  }
-                },
-                "isDeleted": {
-                  "type": "boolean",
-                  "description": "Indicates whether the entity has been soft-deleted."
-                },
-                "deletedAt": {
-                  "type": ["null", "string"],
-                  "description": "Soft deletion timestamp (UTC).",
+                "createdAt": {
+                  "type": "string",
                   "format": "date-time"
-                },
-                "deletedBy": {
-                  "type": ["null", "string"],
-                  "description": "Identifier of the user who deleted the entity."
                 },
                 "modifiedAt": {
                   "type": ["null", "string"],
-                  "description": "Last modification timestamp (UTC).",
                   "format": "date-time"
-                },
-                "modifiedBy": {
-                  "type": ["null", "string"],
-                  "description": "Identifier of the user who last modified the entity."
-                },
-                "domainEvents": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "description": "Marker interface for domain events."
-                  }
-                },
-                "integrationEvents": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "description": "Marker interface for integration events (ETO — Event Transfer Object)."
-                  }
-                },
-                "createdAt": {
-                  "type": "string",
-                  "description": "Creation timestamp (UTC).",
-                  "format": "date-time"
-                },
-                "createdBy": {
-                  "type": "string",
-                  "description": "Identifier of the user who created the entity."
-                },
-                "id": {
-                  "type": "string",
-                  "description": "Unique identifier of the entity.",
-                  "format": "uuid"
                 }
               }
             }
@@ -6132,32 +5551,33 @@
           }
         }
       },
-      "PagedResultOfSite": {
+      "PagedResultOfSiteListItemResponse": {
         "required": ["items", "totalCount", "hasMore"],
         "type": "object",
         "properties": {
           "items": {
             "type": "array",
             "items": {
+              "required": [
+                "id",
+                "slug",
+                "defaultCulture",
+                "defaultTheme",
+                "activated",
+                "createdAt",
+                "modifiedAt"
+              ],
               "type": "object",
               "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
                 "slug": {
                   "type": "string"
                 },
                 "defaultCulture": {
                   "type": "string"
-                },
-                "allowedCultures": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "domains": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "string"
-                  }
                 },
                 "defaultTheme": {
                   "type": "string"
@@ -6165,310 +5585,13 @@
                 "activated": {
                   "type": "boolean"
                 },
-                "homePageId": {
-                  "type": ["null", "string"],
-                  "format": "uuid"
-                },
-                "tenantId": {
-                  "type": ["null", "string"],
-                  "format": "uuid"
-                },
-                "translations": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "displayName": {
-                        "type": "string"
-                      },
-                      "parentId": {
-                        "type": "string",
-                        "format": "uuid"
-                      },
-                      "culture": {
-                        "type": "string"
-                      },
-                      "parent": {
-                        "type": "object",
-                        "properties": {
-                          "slug": {
-                            "type": "string"
-                          },
-                          "defaultCulture": {
-                            "type": "string"
-                          },
-                          "allowedCultures": {
-                            "type": ["null", "array"],
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          "domains": {
-                            "type": ["null", "array"],
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          "defaultTheme": {
-                            "type": "string"
-                          },
-                          "activated": {
-                            "type": "boolean"
-                          },
-                          "homePageId": {
-                            "type": ["null", "string"],
-                            "format": "uuid"
-                          },
-                          "tenantId": {
-                            "type": ["null", "string"],
-                            "format": "uuid"
-                          },
-                          "translations": {
-                            "type": ["null", "array"],
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "displayName": {
-                                  "type": "string"
-                                },
-                                "parentId": {
-                                  "type": "string",
-                                  "format": "uuid"
-                                },
-                                "culture": {
-                                  "type": "string"
-                                },
-                                "parent": {
-                                  "type": "object",
-                                  "properties": {
-                                    "slug": {
-                                      "type": "string"
-                                    },
-                                    "defaultCulture": {
-                                      "type": "string"
-                                    },
-                                    "allowedCultures": {},
-                                    "domains": {},
-                                    "defaultTheme": {
-                                      "type": "string"
-                                    },
-                                    "activated": {
-                                      "type": "boolean"
-                                    },
-                                    "homePageId": {
-                                      "type": ["null", "string"],
-                                      "format": "uuid"
-                                    },
-                                    "tenantId": {
-                                      "type": ["null", "string"],
-                                      "format": "uuid"
-                                    },
-                                    "translations": {},
-                                    "isDeleted": {
-                                      "type": "boolean",
-                                      "description": "Indicates whether the entity has been soft-deleted."
-                                    },
-                                    "deletedAt": {
-                                      "type": ["null", "string"],
-                                      "description": "Soft deletion timestamp (UTC).",
-                                      "format": "date-time"
-                                    },
-                                    "deletedBy": {
-                                      "type": ["null", "string"],
-                                      "description": "Identifier of the user who deleted the entity."
-                                    },
-                                    "modifiedAt": {
-                                      "type": ["null", "string"],
-                                      "description": "Last modification timestamp (UTC).",
-                                      "format": "date-time"
-                                    },
-                                    "modifiedBy": {
-                                      "type": ["null", "string"],
-                                      "description": "Identifier of the user who last modified the entity."
-                                    },
-                                    "domainEvents": {
-                                      "type": ["null", "array"],
-                                      "items": {
-                                        "type": "object",
-                                        "description": "Marker interface for domain events."
-                                      }
-                                    },
-                                    "integrationEvents": {
-                                      "type": ["null", "array"],
-                                      "items": {
-                                        "type": "object",
-                                        "description": "Marker interface for integration events (ETO — Event Transfer Object)."
-                                      }
-                                    },
-                                    "createdAt": {
-                                      "type": "string",
-                                      "description": "Creation timestamp (UTC).",
-                                      "format": "date-time"
-                                    },
-                                    "createdBy": {
-                                      "type": "string",
-                                      "description": "Identifier of the user who created the entity."
-                                    },
-                                    "id": {
-                                      "type": "string",
-                                      "description": "Unique identifier of the entity.",
-                                      "format": "uuid"
-                                    }
-                                  }
-                                },
-                                "modifiedAt": {
-                                  "type": ["null", "string"],
-                                  "description": "Last modification timestamp (UTC).",
-                                  "format": "date-time"
-                                },
-                                "modifiedBy": {
-                                  "type": ["null", "string"],
-                                  "description": "Identifier of the user who last modified the entity."
-                                },
-                                "createdAt": {
-                                  "type": "string",
-                                  "description": "Creation timestamp (UTC).",
-                                  "format": "date-time"
-                                },
-                                "createdBy": {
-                                  "type": "string",
-                                  "description": "Identifier of the user who created the entity."
-                                },
-                                "id": {
-                                  "type": "string",
-                                  "description": "Unique identifier of the entity.",
-                                  "format": "uuid"
-                                }
-                              }
-                            }
-                          },
-                          "isDeleted": {
-                            "type": "boolean",
-                            "description": "Indicates whether the entity has been soft-deleted."
-                          },
-                          "deletedAt": {
-                            "type": ["null", "string"],
-                            "description": "Soft deletion timestamp (UTC).",
-                            "format": "date-time"
-                          },
-                          "deletedBy": {
-                            "type": ["null", "string"],
-                            "description": "Identifier of the user who deleted the entity."
-                          },
-                          "modifiedAt": {
-                            "type": ["null", "string"],
-                            "description": "Last modification timestamp (UTC).",
-                            "format": "date-time"
-                          },
-                          "modifiedBy": {
-                            "type": ["null", "string"],
-                            "description": "Identifier of the user who last modified the entity."
-                          },
-                          "domainEvents": {
-                            "type": ["null", "array"],
-                            "items": {
-                              "type": "object",
-                              "description": "Marker interface for domain events."
-                            }
-                          },
-                          "integrationEvents": {
-                            "type": ["null", "array"],
-                            "items": {
-                              "type": "object",
-                              "description": "Marker interface for integration events (ETO — Event Transfer Object)."
-                            }
-                          },
-                          "createdAt": {
-                            "type": "string",
-                            "description": "Creation timestamp (UTC).",
-                            "format": "date-time"
-                          },
-                          "createdBy": {
-                            "type": "string",
-                            "description": "Identifier of the user who created the entity."
-                          },
-                          "id": {
-                            "type": "string",
-                            "description": "Unique identifier of the entity.",
-                            "format": "uuid"
-                          }
-                        }
-                      },
-                      "modifiedAt": {
-                        "type": ["null", "string"],
-                        "description": "Last modification timestamp (UTC).",
-                        "format": "date-time"
-                      },
-                      "modifiedBy": {
-                        "type": ["null", "string"],
-                        "description": "Identifier of the user who last modified the entity."
-                      },
-                      "createdAt": {
-                        "type": "string",
-                        "description": "Creation timestamp (UTC).",
-                        "format": "date-time"
-                      },
-                      "createdBy": {
-                        "type": "string",
-                        "description": "Identifier of the user who created the entity."
-                      },
-                      "id": {
-                        "type": "string",
-                        "description": "Unique identifier of the entity.",
-                        "format": "uuid"
-                      }
-                    }
-                  }
-                },
-                "isDeleted": {
-                  "type": "boolean",
-                  "description": "Indicates whether the entity has been soft-deleted."
-                },
-                "deletedAt": {
-                  "type": ["null", "string"],
-                  "description": "Soft deletion timestamp (UTC).",
+                "createdAt": {
+                  "type": "string",
                   "format": "date-time"
-                },
-                "deletedBy": {
-                  "type": ["null", "string"],
-                  "description": "Identifier of the user who deleted the entity."
                 },
                 "modifiedAt": {
                   "type": ["null", "string"],
-                  "description": "Last modification timestamp (UTC).",
                   "format": "date-time"
-                },
-                "modifiedBy": {
-                  "type": ["null", "string"],
-                  "description": "Identifier of the user who last modified the entity."
-                },
-                "domainEvents": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "description": "Marker interface for domain events."
-                  }
-                },
-                "integrationEvents": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "description": "Marker interface for integration events (ETO — Event Transfer Object)."
-                  }
-                },
-                "createdAt": {
-                  "type": "string",
-                  "description": "Creation timestamp (UTC).",
-                  "format": "date-time"
-                },
-                "createdBy": {
-                  "type": "string",
-                  "description": "Identifier of the user who created the entity."
-                },
-                "id": {
-                  "type": "string",
-                  "description": "Unique identifier of the entity.",
-                  "format": "uuid"
                 }
               }
             }
@@ -6513,6 +5636,53 @@
       },
       "PageKind": {
         "enum": ["Page", "SiteRoot"]
+      },
+      "PageListItemResponse": {
+        "required": [
+          "id",
+          "slugSegment",
+          "structurePath",
+          "depth",
+          "kind",
+          "isSiteRoot",
+          "layoutKey",
+          "createdAt",
+          "modifiedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slugSegment": {
+            "type": "string"
+          },
+          "structurePath": {
+            "type": "string"
+          },
+          "depth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PageKind"
+          },
+          "isSiteRoot": {
+            "type": "boolean"
+          },
+          "layoutKey": {
+            "type": ["null", "string"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        }
       },
       "PageResponse": {
         "required": [
@@ -6580,6 +5750,34 @@
           "concurrencyStamp": {
             "type": "string"
           }
+        },
+        "example": {
+          "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+          "siteId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "parentId": "5d8a1b3c-6e2f-4a7b-9c0d-1e2f3a4b5c6d",
+          "slugSegment": "about-us",
+          "structurePath": "/about-us",
+          "depth": 1,
+          "kind": "Page",
+          "isSiteRoot": false,
+          "layoutKey": "default",
+          "translations": [
+            {
+              "culture": "en",
+              "urlSlug": "about-us",
+              "title": "About us",
+              "path": "/about-us"
+            },
+            {
+              "culture": "fr",
+              "urlSlug": "a-propos",
+              "title": "À propos",
+              "path": "/a-propos"
+            }
+          ],
+          "createdAt": "2026-03-14T09:30:00+00:00",
+          "modifiedAt": "2026-05-02T16:45:00+00:00",
+          "concurrencyStamp": "a3d1f5c8-2b47-4e9a-8c60-1f2e3d4c5b6a"
         }
       },
       "PageSearchHitResponse": {
@@ -6632,64 +5830,6 @@
           }
         }
       },
-      "PageTranslation": {
-        "type": "object",
-        "properties": {
-          "urlSlug": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
-          },
-          "siteId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "parentId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "culture": {
-            "type": "string"
-          },
-          "parent": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/Page"
-              }
-            ]
-          },
-          "modifiedAt": {
-            "type": ["null", "string"],
-            "description": "Last modification timestamp (UTC).",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": ["null", "string"],
-            "description": "Identifier of the user who last modified the entity."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Creation timestamp (UTC).",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "string",
-            "description": "Identifier of the user who created the entity."
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the entity.",
-            "format": "uuid"
-          }
-        }
-      },
       "PageTranslationResponse": {
         "required": ["culture", "urlSlug", "title", "path"],
         "type": "object",
@@ -6706,6 +5846,12 @@
           "path": {
             "type": "string"
           }
+        },
+        "example": {
+          "culture": "en",
+          "urlSlug": "about-us",
+          "title": "About us",
+          "path": "/about-us"
         }
       },
       "PageTreeNodeResponse": {
@@ -6847,6 +5993,15 @@
           "contentJson": {
             "type": "string"
           }
+        },
+        "example": {
+          "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+          "siteId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "culture": "fr",
+          "path": "/à-propos/équipe",
+          "title": "Notre équipe",
+          "layoutKey": "default",
+          "contentJson": "{\"root\":{},\"content\":[{\"type\":\"hero\",\"props\":{\"heading\":\"Notre équipe\"}}]}"
         }
       },
       "QueryMetadata": {
@@ -6927,128 +6082,6 @@
           }
         }
       },
-      "Release": {
-        "type": "object",
-        "properties": {
-          "siteId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "status": {
-            "$ref": "#/components/schemas/ReleaseStatus"
-          },
-          "schedule": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/ReleaseSchedule"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": ["null", "string"],
-            "format": "uuid"
-          },
-          "concurrencyStamp": {
-            "type": "string"
-          },
-          "actions": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/ReleaseAction"
-            }
-          },
-          "isDeleted": {
-            "type": "boolean",
-            "description": "Indicates whether the entity has been soft-deleted."
-          },
-          "deletedAt": {
-            "type": ["null", "string"],
-            "description": "Soft deletion timestamp (UTC).",
-            "format": "date-time"
-          },
-          "deletedBy": {
-            "type": ["null", "string"],
-            "description": "Identifier of the user who deleted the entity."
-          },
-          "modifiedAt": {
-            "type": ["null", "string"],
-            "description": "Last modification timestamp (UTC).",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": ["null", "string"],
-            "description": "Identifier of the user who last modified the entity."
-          },
-          "domainEvents": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/IDomainEvent"
-            }
-          },
-          "integrationEvents": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/IIntegrationEvent"
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Creation timestamp (UTC).",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "string",
-            "description": "Identifier of the user who created the entity."
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the entity.",
-            "format": "uuid"
-          }
-        }
-      },
-      "ReleaseAction": {
-        "type": "object",
-        "properties": {
-          "releaseId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "contentType": {
-            "type": "string"
-          },
-          "contentId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "culture": {
-            "type": ["null", "string"]
-          },
-          "type": {
-            "$ref": "#/components/schemas/ReleaseActionType"
-          },
-          "status": {
-            "$ref": "#/components/schemas/ReleaseActionStatus"
-          },
-          "error": {
-            "type": ["null", "string"]
-          },
-          "contentKey": {
-            "$ref": "#/components/schemas/ContentKey"
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the entity.",
-            "format": "uuid"
-          }
-        }
-      },
       "ReleaseActionResponse": {
         "required": ["id", "contentType", "contentId", "culture", "type", "status", "error"],
         "type": "object",
@@ -7076,18 +6109,47 @@
           "error": {
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "id": "f6a5b4c3-d2e1-4f0a-9b8c-7d6e5f4a3b2c",
+          "contentType": "cms.page",
+          "contentId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+          "culture": "en",
+          "type": "Publish",
+          "status": "Pending",
+          "error": null
         }
-      },
-      "ReleaseActionStatus": {
-        "enum": ["Pending", "Succeeded", "Failed"]
       },
       "ReleaseActionType": {
         "enum": ["Publish", "Unpublish"]
       },
+      "ReleaseListItemResponse": {
+        "required": ["id", "name", "status", "createdAt", "modifiedAt"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ReleaseStatus"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        }
+      },
       "ReleaseResponse": {
         "required": [
           "id",
-          "siteId",
           "name",
           "status",
           "schedule",
@@ -7100,10 +6162,6 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "siteId": {
             "type": "string",
             "format": "uuid"
           },
@@ -7144,22 +6202,31 @@
           "concurrencyStamp": {
             "type": "string"
           }
-        }
-      },
-      "ReleaseSchedule": {
-        "type": "object",
-        "properties": {
-          "localDateTime": {
-            "type": "string",
-            "format": "date-time"
+        },
+        "example": {
+          "id": "e1f2a3b4-c5d6-4e7f-8a9b-0c1d2e3f4a5b",
+          "name": "Spring campaign launch",
+          "status": "Ready",
+          "schedule": {
+            "localDateTime": "2026-06-01T09:00:00",
+            "timeZoneId": "Europe/Brussels",
+            "scheduledAtUtc": "2026-06-01T07:00:00+00:00"
           },
-          "timeZoneId": {
-            "type": ["null", "string"]
-          },
-          "scheduledAtUtc": {
-            "type": "string",
-            "format": "date-time"
-          }
+          "tenantId": "9b2f7c14-5d3a-4e8b-9f01-2a3b4c5d6e7f",
+          "actions": [
+            {
+              "id": "f6a5b4c3-d2e1-4f0a-9b8c-7d6e5f4a3b2c",
+              "contentType": "cms.page",
+              "contentId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+              "culture": "en",
+              "type": "Publish",
+              "status": "Pending",
+              "error": null
+            }
+          ],
+          "createdAt": "2026-03-14T09:30:00+00:00",
+          "modifiedAt": "2026-05-02T16:45:00+00:00",
+          "concurrencyStamp": "c9b8a7d6-5e4f-4a3b-8c2d-1e0f9a8b7c6d"
         }
       },
       "ReleaseScheduleResponse": {
@@ -7177,6 +6244,11 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "localDateTime": "2026-06-01T09:00:00",
+          "timeZoneId": "Europe/Brussels",
+          "scheduledAtUtc": "2026-06-01T07:00:00+00:00"
         }
       },
       "ReleaseStatus": {
@@ -7194,6 +6266,10 @@
           "concurrencyStamp": {
             "type": "string"
           }
+        },
+        "example": {
+          "slugSegment": "about-us",
+          "concurrencyStamp": "a3d1f5c8-2b47-4e9a-8c60-1f2e3d4c5b6a"
         }
       },
       "RenameReleaseRequest": {
@@ -7207,6 +6283,10 @@
           "concurrencyStamp": {
             "type": "string"
           }
+        },
+        "example": {
+          "name": "Spring campaign launch (revised)",
+          "concurrencyStamp": "c9b8a7d6-5e4f-4a3b-8c2d-1e0f9a8b7c6d"
         }
       },
       "ResolvedMenu": {
@@ -7269,6 +6349,10 @@
             "maxLength": 500,
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "contentJson": "{\"root\":{\"props\":{\"title\":\"About us\"}},\"content\":[{\"type\":\"hero\",\"props\":{\"heading\":\"We build durable software\"}}]}",
+          "title": "About us (draft)"
         }
       },
       "ScheduleReleaseRequest": {
@@ -7286,6 +6370,11 @@
           "concurrencyStamp": {
             "type": "string"
           }
+        },
+        "example": {
+          "localDateTime": "2026-06-01T09:00:00",
+          "timeZoneId": "Europe/Brussels",
+          "concurrencyStamp": "c9b8a7d6-5e4f-4a3b-8c2d-1e0f9a8b7c6d"
         }
       },
       "SetPageTranslationRequest": {
@@ -7299,6 +6388,10 @@
             "maxLength": 500,
             "type": "string"
           }
+        },
+        "example": {
+          "urlSlug": "a-propos",
+          "title": "À propos"
         }
       },
       "SetSiteHomePageRequest": {
@@ -7309,28 +6402,32 @@
             "type": "string",
             "format": "uuid"
           }
+        },
+        "example": {
+          "pageId": "7c9e6679-7425-40de-944b-e07fc1f90ae7"
         }
       },
-      "Site": {
+      "SiteListItemResponse": {
+        "required": [
+          "id",
+          "slug",
+          "defaultCulture",
+          "defaultTheme",
+          "activated",
+          "createdAt",
+          "modifiedAt"
+        ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
           "slug": {
             "type": "string"
           },
           "defaultCulture": {
             "type": "string"
-          },
-          "allowedCultures": {
-            "type": ["null", "array"],
-            "items": {
-              "type": "string"
-            }
-          },
-          "domains": {
-            "type": ["null", "array"],
-            "items": {
-              "type": "string"
-            }
           },
           "defaultTheme": {
             "type": "string"
@@ -7338,67 +6435,13 @@
           "activated": {
             "type": "boolean"
           },
-          "homePageId": {
-            "type": ["null", "string"],
-            "format": "uuid"
-          },
-          "tenantId": {
-            "type": ["null", "string"],
-            "format": "uuid"
-          },
-          "translations": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/SiteTranslation"
-            }
-          },
-          "isDeleted": {
-            "type": "boolean",
-            "description": "Indicates whether the entity has been soft-deleted."
-          },
-          "deletedAt": {
-            "type": ["null", "string"],
-            "description": "Soft deletion timestamp (UTC).",
+          "createdAt": {
+            "type": "string",
             "format": "date-time"
-          },
-          "deletedBy": {
-            "type": ["null", "string"],
-            "description": "Identifier of the user who deleted the entity."
           },
           "modifiedAt": {
             "type": ["null", "string"],
-            "description": "Last modification timestamp (UTC).",
             "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": ["null", "string"],
-            "description": "Identifier of the user who last modified the entity."
-          },
-          "domainEvents": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/IDomainEvent"
-            }
-          },
-          "integrationEvents": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/IIntegrationEvent"
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Creation timestamp (UTC).",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "string",
-            "description": "Identifier of the user who created the entity."
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the entity.",
-            "format": "uuid"
           }
         }
       },
@@ -7469,54 +6512,23 @@
             "type": ["null", "string"],
             "format": "date-time"
           }
-        }
-      },
-      "SiteTranslation": {
-        "type": "object",
-        "properties": {
-          "displayName": {
-            "type": "string"
+        },
+        "example": {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "slug": "acme-marketing",
+          "defaultCulture": "en",
+          "allowedCultures": ["en", "fr", "nl"],
+          "domains": ["www.acme.example", "acme.example"],
+          "defaultTheme": "aurora",
+          "activated": true,
+          "tenantId": "9b2f7c14-5d3a-4e8b-9f01-2a3b4c5d6e7f",
+          "displayNames": {
+            "en": "Acme Marketing",
+            "fr": "Marketing Acme"
           },
-          "parentId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "culture": {
-            "type": "string"
-          },
-          "parent": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/Site"
-              }
-            ]
-          },
-          "modifiedAt": {
-            "type": ["null", "string"],
-            "description": "Last modification timestamp (UTC).",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": ["null", "string"],
-            "description": "Identifier of the user who last modified the entity."
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Creation timestamp (UTC).",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "string",
-            "description": "Identifier of the user who created the entity."
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the entity.",
-            "format": "uuid"
-          }
+          "homePageId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+          "createdAt": "2026-03-14T09:30:00+00:00",
+          "modifiedAt": "2026-05-02T16:45:00+00:00"
         }
       },
       "SortableField": {
@@ -7555,7 +6567,41 @@
           "activated": {
             "type": "boolean"
           }
+        },
+        "example": {
+          "defaultCulture": "en",
+          "allowedCultures": ["en", "fr", "nl"],
+          "domains": ["www.acme.example", "acme.example"],
+          "defaultTheme": "aurora",
+          "activated": true
         }
+      },
+      "ValueKind": {
+        "enum": [
+          "Count",
+          "Number",
+          "Currency",
+          "Percentage",
+          "Duration",
+          "Date",
+          "Url",
+          "Email",
+          "Phone",
+          "Bytes",
+          "DateTime",
+          "Boolean",
+          "Enum",
+          "RelativeTime",
+          "Time",
+          "Color",
+          "Image",
+          "Json",
+          "Markdown",
+          "Tags",
+          "Rating",
+          "Identifier",
+          null
+        ]
       }
     }
   },

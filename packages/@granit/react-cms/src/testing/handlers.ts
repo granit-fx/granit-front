@@ -281,11 +281,9 @@ export function createReleasesHandlers(baseUrl = '/api/cms/releases'): RequestHa
   return [
     http.get(baseUrl, ({ request }) => {
       const url = new URL(request.url);
-      const siteId = url.searchParams.get('siteId');
       const page = Number(url.searchParams.get('page') ?? '1');
       const pageSize = Number(url.searchParams.get('pageSize') ?? '20');
-      const filtered = siteId ? releases.filter((release) => release.siteId === siteId) : releases;
-      return HttpResponse.json(paged(filtered, page, pageSize));
+      return HttpResponse.json(paged(releases, page, pageSize));
     }),
 
     http.get(`${baseUrl}/:id`, ({ params }) => {
@@ -297,7 +295,6 @@ export function createReleasesHandlers(baseUrl = '/api/cms/releases'): RequestHa
       const dto = (await request.json()) as CreateReleaseRequest;
       const release: ReleaseResponse = {
         id: crypto.randomUUID(),
-        siteId: dto.siteId,
         name: dto.name,
         status: 'Draft',
         schedule: null,

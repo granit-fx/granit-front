@@ -15,7 +15,7 @@ import type {
   SeoSuggestRequest,
   SeoSuggestResponse,
   SeoSuggestionResponse,
-  SeoSuggestionDiff,
+  SeoSuggestionDiffResponse,
   SeoSuggestionListResponse,
 } from '../types/index';
 
@@ -84,7 +84,7 @@ describe('listSeoSuggestions', () => {
 describe('getSeoSuggestionDiff', () => {
   it('GET /api/cms/seo/ai/suggestions/{id}/diff', async () => {
     const client = createMockClient();
-    const diff: SeoSuggestionDiff = {
+    const diff: SeoSuggestionDiffResponse = {
       suggestionId: 'sug-1',
       scope: 'Title, Description',
       fields: [

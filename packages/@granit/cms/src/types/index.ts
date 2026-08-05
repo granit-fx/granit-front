@@ -387,7 +387,6 @@ export interface ReleaseActionResponse {
 /** Full release record. Returned by `GET /api/cms/releases/{id}`. */
 export interface ReleaseResponse {
   readonly id: string;
-  readonly siteId: string;
   readonly name: string;
   readonly status: ReleaseStatus;
   readonly schedule: ReleaseScheduleResponse | null;
@@ -400,7 +399,6 @@ export interface ReleaseResponse {
 
 /** Request body for `POST /api/cms/releases`. */
 export interface CreateReleaseRequest {
-  readonly siteId: string;
   readonly name: string;
 }
 

@@ -20,7 +20,7 @@ import type {
   SeoSuggestRequest,
   SeoSuggestResponse,
   SeoSuggestionResponse,
-  SeoSuggestionDiff,
+  SeoSuggestionDiffResponse,
   SeoSuggestionListResponse,
 } from '@granit/cms-seo';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
@@ -40,7 +40,7 @@ export function useSeoSuggestions(
 export function useSeoSuggestionDiff(
   id: string,
   options?: { readonly enabled?: boolean }
-): UseQueryResult<SeoSuggestionDiff> {
+): UseQueryResult<SeoSuggestionDiffResponse> {
   const { client, basePath, queryKeyPrefix } = useCmsSeoConfig();
   return useQuery({
     queryKey: cmsSeoKeys.suggestions.diff(queryKeyPrefix, id),

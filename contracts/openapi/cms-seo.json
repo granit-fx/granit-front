@@ -309,8 +309,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -341,16 +341,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -590,8 +580,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -622,16 +612,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1162,8 +1142,8 @@
     "/api/cms/seo/metadata": {
       "get": {
         "tags": ["CMS - SEO"],
-        "summary": "Returns a filtered, sorted, and paginated list of SeoMetadata entries.",
-        "description": "Executes a dynamic query against SeoMetadata using the Granit query engine. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult by default. When the groupBy query parameter is specified, returns a GroupedResult instead (same status code, different shape).",
+        "summary": "Returns a paged, filterable list of SeoMetadataListItemResponse from SeoMetadata.",
+        "description": "Executes a dynamic query against SeoMetadata using the Granit query engine and projects each row to SeoMetadataListItemResponse. Accepts filter expressions, sort directives, column selection, pagination, and free-text search via query parameters. Returns a PagedResult<SeoMetadataListItemResponse> by default. When the groupBy query parameter is specified, returns a GroupedResult<SeoMetadataListItemResponse> with the same projection applied to the items inside each group.",
         "operationId": "QuerySeoMetadata",
         "parameters": [
           {
@@ -1270,10 +1250,10 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/PagedResultOfSeoMetadata"
+                      "$ref": "#/components/schemas/PagedResultOfSeoMetadataListItemResponse"
                     },
                     {
-                      "$ref": "#/components/schemas/GroupedResultOfSeoMetadata"
+                      "$ref": "#/components/schemas/GroupedResultOfSeoMetadataListItemResponse"
                     }
                   ],
                   "description": "PagedResult when groupBy is absent; GroupedResult otherwise."
@@ -1401,8 +1381,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1423,16 +1403,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1596,6 +1566,16 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "409": {
             "description": "Conflict",
             "content": {
@@ -1606,8 +1586,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "422": {
+            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1628,16 +1608,6 @@
           },
           "403": {
             "description": "Forbidden",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1785,7 +1755,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SeoSuggestionDiff"
+                  "$ref": "#/components/schemas/SeoSuggestionDiffResponse"
                 }
               }
             }
@@ -1892,6 +1862,7 @@
   "components": {
     "schemas": {
       "AbsoluteUrl": {
+        "type": "string",
         "description": "An absolute HTTP or HTTPS URL. Maximum 2048 characters."
       },
       "ColumnDefinition": {
@@ -1931,21 +1902,21 @@
           },
           "format": {
             "type": ["null", "string"]
-          }
-        }
-      },
-      "ContentKey": {
-        "required": ["contentType", "contentId"],
-        "type": "object",
-        "properties": {
-          "contentType": {
-            "type": "string"
           },
-          "contentId": {
-            "type": "string",
-            "format": "uuid"
+          "valueKind": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ValueKind"
+              }
+            ]
           },
-          "culture": {
+          "currencyCode": {
+            "type": ["null", "string"]
+          },
+          "currencyCodeField": {
             "type": ["null", "string"]
           }
         }
@@ -2014,6 +1985,57 @@
               "$ref": "#/components/schemas/Hreflang"
             }
           }
+        },
+        "example": {
+          "title": "Granit CMS — headless, multi-site, GDPR-first · Granit",
+          "description": "Ship SSR/ISR sites on a modular .NET backend with jsonb content and per-site SEO cascades.",
+          "canonicalUrl": "https://www.granit.example/features/seo",
+          "robots": {
+            "index": true,
+            "follow": true,
+            "noArchive": false,
+            "noSnippet": false,
+            "maxSnippet": 160,
+            "maxImagePreview": "large"
+          },
+          "keywords": ["headless cms", "dotnet cms", "ssr", "multi-site"],
+          "openGraph": {
+            "type": "article",
+            "title": "Granit CMS — headless, multi-site, GDPR-first",
+            "description": "Per-site SEO cascades, jsonb content, and SSR-ready blocks on a modular .NET backend.",
+            "url": "https://www.granit.example/features/seo",
+            "siteName": "Granit",
+            "locale": "en_US",
+            "alternateLocales": ["fr_FR"],
+            "image": {
+              "url": "https://cdn.granit.example/og/features-seo-1200x630.webp",
+              "dimensions": {
+                "width": 1200,
+                "height": 630
+              },
+              "mimeType": "image/webp",
+              "altText": "Granit CMS SEO cascade diagram"
+            }
+          },
+          "twitterCard": {
+            "card": "summary_large_image",
+            "site": "@granit_dev",
+            "creator": "@alice_martin"
+          },
+          "alternates": [
+            {
+              "culture": "en",
+              "href": "https://www.granit.example/en/features/seo"
+            },
+            {
+              "culture": "fr",
+              "href": "https://www.granit.example/fr/fonctionnalites/seo"
+            },
+            {
+              "culture": "x-default",
+              "href": "https://www.granit.example/features/seo"
+            }
+          ]
         }
       },
       "FilterableField": {
@@ -2079,7 +2101,10 @@
           "Lt",
           "Lte",
           "In",
-          "Between"
+          "Between",
+          "Ne",
+          "IsNull",
+          "IsNotNull"
         ]
       },
       "GroupByField": {
@@ -2094,14 +2119,14 @@
           }
         }
       },
-      "GroupedResultOfSeoMetadata": {
+      "GroupedResultOfSeoMetadataListItemResponse": {
         "required": ["groups", "totalCount"],
         "type": "object",
         "properties": {
           "groups": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GroupEntryOfSeoMetadata"
+              "$ref": "#/components/schemas/GroupEntryOfSeoMetadataListItemResponse"
             }
           },
           "totalCount": {
@@ -2110,7 +2135,7 @@
           }
         }
       },
-      "GroupEntryOfSeoMetadata": {
+      "GroupEntryOfSeoMetadataListItemResponse": {
         "required": ["field", "value", "label", "count"],
         "type": "object",
         "properties": {
@@ -2131,7 +2156,7 @@
           "items": {
             "type": ["null", "array"],
             "items": {
-              "$ref": "#/components/schemas/SeoMetadata"
+              "$ref": "#/components/schemas/SeoMetadataListItemResponse"
             }
           }
         }
@@ -2177,14 +2202,6 @@
             }
           }
         }
-      },
-      "IDomainEvent": {
-        "type": "object",
-        "description": "Marker interface for domain events."
-      },
-      "IIntegrationEvent": {
-        "type": "object",
-        "description": "Marker interface for integration events (ETO — Event Transfer Object)."
       },
       "ImageDimensions": {
         "required": ["width", "height"],
@@ -2300,6 +2317,13 @@
           "siteName": {
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "type": "article",
+          "title": "Granit CMS — headless, multi-site, GDPR-first",
+          "description": "Per-site SEO cascades, jsonb content, and SSR-ready blocks on a modular .NET backend.",
+          "imageUrl": "https://cdn.granit.example/og/features-seo-1200x630.webp",
+          "siteName": "Granit"
         }
       },
       "OpenGraph": {
@@ -2383,15 +2407,31 @@
           }
         }
       },
-      "PagedResultOfSeoMetadata": {
+      "PagedResultOfSeoMetadataListItemResponse": {
         "required": ["items", "totalCount", "hasMore"],
         "type": "object",
         "properties": {
           "items": {
             "type": "array",
             "items": {
+              "required": [
+                "id",
+                "siteId",
+                "contentType",
+                "contentId",
+                "culture",
+                "title",
+                "description",
+                "canonicalUrl",
+                "createdAt",
+                "modifiedAt"
+              ],
               "type": "object",
               "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
                 "siteId": {
                   "type": "string",
                   "format": "uuid"
@@ -2406,332 +2446,22 @@
                 "culture": {
                   "type": ["null", "string"]
                 },
-                "contentKey": {
-                  "required": ["contentType", "contentId"],
-                  "type": "object",
-                  "properties": {
-                    "contentType": {
-                      "type": "string"
-                    },
-                    "contentId": {
-                      "type": "string",
-                      "format": "uuid"
-                    },
-                    "culture": {
-                      "type": ["null", "string"]
-                    }
-                  }
-                },
                 "title": {
-                  "type": ["null", "string"]
-                },
-                "titleTemplate": {
                   "type": ["null", "string"]
                 },
                 "description": {
                   "type": ["null", "string"]
                 },
-                "keywords": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "string"
-                  }
-                },
                 "canonicalUrl": {
-                  "description": "An absolute HTTP or HTTPS URL. Maximum 2048 characters."
-                },
-                "robots": {
-                  "type": "object",
-                  "properties": {
-                    "index": {
-                      "type": "boolean"
-                    },
-                    "follow": {
-                      "type": "boolean"
-                    },
-                    "noArchive": {
-                      "type": "boolean"
-                    },
-                    "noSnippet": {
-                      "type": "boolean"
-                    },
-                    "maxSnippet": {
-                      "type": ["null", "integer"],
-                      "format": "int32"
-                    },
-                    "maxImagePreview": {
-                      "type": ["null", "string"]
-                    }
-                  }
-                },
-                "noIndex": {
-                  "type": "boolean"
-                },
-                "noFollow": {
-                  "type": "boolean"
-                },
-                "openGraph": {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string"
-                    },
-                    "title": {
-                      "type": ["null", "string"]
-                    },
-                    "description": {
-                      "type": ["null", "string"]
-                    },
-                    "url": {
-                      "description": "An absolute HTTP or HTTPS URL. Maximum 2048 characters."
-                    },
-                    "siteName": {
-                      "type": ["null", "string"]
-                    },
-                    "locale": {
-                      "type": ["null", "string"]
-                    },
-                    "alternateLocales": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    "image": {
-                      "type": "object",
-                      "properties": {
-                        "documentId": {
-                          "type": ["null", "string"],
-                          "format": "uuid"
-                        },
-                        "versionId": {
-                          "type": ["null", "string"],
-                          "format": "uuid"
-                        },
-                        "renditionId": {
-                          "type": ["null", "string"],
-                          "format": "uuid"
-                        },
-                        "publicLinkId": {
-                          "type": ["null", "string"],
-                          "format": "uuid"
-                        },
-                        "url": {
-                          "description": "An absolute HTTP or HTTPS URL. Maximum 2048 characters."
-                        },
-                        "dimensions": {
-                          "required": ["width", "height"],
-                          "type": "object",
-                          "properties": {
-                            "width": {
-                              "type": "integer",
-                              "description": "Width in pixels (non-negative).",
-                              "format": "int32"
-                            },
-                            "height": {
-                              "type": "integer",
-                              "description": "Height in pixels (non-negative).",
-                              "format": "int32"
-                            }
-                          },
-                          "description": "Pixel dimensions of a raster image — width and height. A reusable value object\nfor any domain that records image size: media libraries, document renditions,\nOpen Graph / social cards, thumbnails, avatars."
-                        },
-                        "mimeType": {
-                          "type": ["null", "string"]
-                        },
-                        "altText": {
-                          "type": ["null", "string"]
-                        }
-                      }
-                    },
-                    "article": {
-                      "type": "object",
-                      "properties": {
-                        "author": {
-                          "type": ["null", "string"]
-                        },
-                        "section": {
-                          "type": ["null", "string"]
-                        },
-                        "tags": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        },
-                        "publishedTime": {
-                          "type": ["null", "string"],
-                          "format": "date-time"
-                        },
-                        "modifiedTime": {
-                          "type": ["null", "string"],
-                          "format": "date-time"
-                        }
-                      }
-                    }
-                  }
-                },
-                "twitterCard": {
-                  "type": "object",
-                  "properties": {
-                    "card": {
-                      "type": "string"
-                    },
-                    "title": {
-                      "type": ["null", "string"]
-                    },
-                    "description": {
-                      "type": ["null", "string"]
-                    },
-                    "image": {
-                      "type": "object",
-                      "properties": {
-                        "documentId": {
-                          "type": ["null", "string"],
-                          "format": "uuid"
-                        },
-                        "versionId": {
-                          "type": ["null", "string"],
-                          "format": "uuid"
-                        },
-                        "renditionId": {
-                          "type": ["null", "string"],
-                          "format": "uuid"
-                        },
-                        "publicLinkId": {
-                          "type": ["null", "string"],
-                          "format": "uuid"
-                        },
-                        "url": {
-                          "description": "An absolute HTTP or HTTPS URL. Maximum 2048 characters."
-                        },
-                        "dimensions": {
-                          "required": ["width", "height"],
-                          "type": "object",
-                          "properties": {
-                            "width": {
-                              "type": "integer",
-                              "description": "Width in pixels (non-negative).",
-                              "format": "int32"
-                            },
-                            "height": {
-                              "type": "integer",
-                              "description": "Height in pixels (non-negative).",
-                              "format": "int32"
-                            }
-                          },
-                          "description": "Pixel dimensions of a raster image — width and height. A reusable value object\nfor any domain that records image size: media libraries, document renditions,\nOpen Graph / social cards, thumbnails, avatars."
-                        },
-                        "mimeType": {
-                          "type": ["null", "string"]
-                        },
-                        "altText": {
-                          "type": ["null", "string"]
-                        }
-                      }
-                    },
-                    "site": {
-                      "type": ["null", "string"]
-                    },
-                    "creator": {
-                      "type": ["null", "string"]
-                    }
-                  }
-                },
-                "structuredDataExtras": {
                   "type": ["null", "string"]
-                },
-                "disableAutoJsonLd": {
-                  "type": "boolean"
-                },
-                "alternateOverrides": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "required": ["culture", "href"],
-                    "type": "object",
-                    "properties": {
-                      "culture": {
-                        "type": "string"
-                      },
-                      "href": {
-                        "type": "string"
-                      }
-                    }
-                  }
-                },
-                "xDefaultCulture": {
-                  "type": ["null", "string"]
-                },
-                "statusAtLastReview": {
-                  "enum": ["Reviewed", "NeedsReview", "AutoGenerated"]
-                },
-                "lastReviewedAt": {
-                  "type": ["null", "string"],
-                  "format": "date-time"
-                },
-                "appliedSuggestionId": {
-                  "type": ["null", "string"],
-                  "format": "uuid"
-                },
-                "metadataJson": {
-                  "type": ["null", "string"]
-                },
-                "concurrencyStamp": {
-                  "type": "string"
-                },
-                "tenantId": {
-                  "type": ["null", "string"],
-                  "format": "uuid"
-                },
-                "isDeleted": {
-                  "type": "boolean",
-                  "description": "Indicates whether the entity has been soft-deleted."
-                },
-                "deletedAt": {
-                  "type": ["null", "string"],
-                  "description": "Soft deletion timestamp (UTC).",
-                  "format": "date-time"
-                },
-                "deletedBy": {
-                  "type": ["null", "string"],
-                  "description": "Identifier of the user who deleted the entity."
-                },
-                "modifiedAt": {
-                  "type": ["null", "string"],
-                  "description": "Last modification timestamp (UTC).",
-                  "format": "date-time"
-                },
-                "modifiedBy": {
-                  "type": ["null", "string"],
-                  "description": "Identifier of the user who last modified the entity."
-                },
-                "domainEvents": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "description": "Marker interface for domain events."
-                  }
-                },
-                "integrationEvents": {
-                  "type": ["null", "array"],
-                  "items": {
-                    "type": "object",
-                    "description": "Marker interface for integration events (ETO — Event Transfer Object)."
-                  }
                 },
                 "createdAt": {
                   "type": "string",
-                  "description": "Creation timestamp (UTC).",
                   "format": "date-time"
                 },
-                "createdBy": {
-                  "type": "string",
-                  "description": "Identifier of the user who created the entity."
-                },
-                "id": {
-                  "type": "string",
-                  "description": "Unique identifier of the entity.",
-                  "format": "uuid"
+                "modifiedAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
                 }
               }
             }
@@ -2938,9 +2668,25 @@
       "SeoGenerationOutcome": {
         "enum": ["Succeeded", "Refused", "SchemaViolation", "TransportFailure"]
       },
-      "SeoMetadata": {
+      "SeoMetadataListItemResponse": {
+        "required": [
+          "id",
+          "siteId",
+          "contentType",
+          "contentId",
+          "culture",
+          "title",
+          "description",
+          "canonicalUrl",
+          "createdAt",
+          "modifiedAt"
+        ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
           "siteId": {
             "type": "string",
             "format": "uuid"
@@ -2955,146 +2701,22 @@
           "culture": {
             "type": ["null", "string"]
           },
-          "contentKey": {
-            "$ref": "#/components/schemas/ContentKey"
-          },
           "title": {
-            "type": ["null", "string"]
-          },
-          "titleTemplate": {
             "type": ["null", "string"]
           },
           "description": {
             "type": ["null", "string"]
           },
-          "keywords": {
-            "type": ["null", "array"],
-            "items": {
-              "type": "string"
-            }
-          },
           "canonicalUrl": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/AbsoluteUrl"
-              }
-            ]
-          },
-          "robots": {
-            "$ref": "#/components/schemas/RobotsDirective"
-          },
-          "noIndex": {
-            "type": "boolean"
-          },
-          "noFollow": {
-            "type": "boolean"
-          },
-          "openGraph": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/OpenGraph"
-              }
-            ]
-          },
-          "twitterCard": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/TwitterCard"
-              }
-            ]
-          },
-          "structuredDataExtras": {
             "type": ["null", "string"]
-          },
-          "disableAutoJsonLd": {
-            "type": "boolean"
-          },
-          "alternateOverrides": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/Hreflang"
-            }
-          },
-          "xDefaultCulture": {
-            "type": ["null", "string"]
-          },
-          "statusAtLastReview": {
-            "$ref": "#/components/schemas/SeoReviewStatus"
-          },
-          "lastReviewedAt": {
-            "type": ["null", "string"],
-            "format": "date-time"
-          },
-          "appliedSuggestionId": {
-            "type": ["null", "string"],
-            "format": "uuid"
-          },
-          "metadataJson": {
-            "type": ["null", "string"]
-          },
-          "concurrencyStamp": {
-            "type": "string"
-          },
-          "tenantId": {
-            "type": ["null", "string"],
-            "format": "uuid"
-          },
-          "isDeleted": {
-            "type": "boolean",
-            "description": "Indicates whether the entity has been soft-deleted."
-          },
-          "deletedAt": {
-            "type": ["null", "string"],
-            "description": "Soft deletion timestamp (UTC).",
-            "format": "date-time"
-          },
-          "deletedBy": {
-            "type": ["null", "string"],
-            "description": "Identifier of the user who deleted the entity."
-          },
-          "modifiedAt": {
-            "type": ["null", "string"],
-            "description": "Last modification timestamp (UTC).",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": ["null", "string"],
-            "description": "Identifier of the user who last modified the entity."
-          },
-          "domainEvents": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/IDomainEvent"
-            }
-          },
-          "integrationEvents": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/IIntegrationEvent"
-            }
           },
           "createdAt": {
             "type": "string",
-            "description": "Creation timestamp (UTC).",
             "format": "date-time"
           },
-          "createdBy": {
-            "type": "string",
-            "description": "Identifier of the user who created the entity."
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the entity.",
-            "format": "uuid"
+          "modifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
           }
         }
       },
@@ -3175,6 +2797,79 @@
           "concurrencyStamp": {
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "title": "Granit CMS — headless, multi-site, GDPR-first",
+          "titleTemplate": "{title} · Granit",
+          "description": "Ship SSR/ISR sites on a modular .NET backend with jsonb content and per-site SEO cascades.",
+          "keywords": ["headless cms", "dotnet cms", "ssr", "multi-site"],
+          "canonicalUrl": "https://www.granit.example/features/seo",
+          "robots": {
+            "index": true,
+            "follow": true,
+            "noArchive": false,
+            "noSnippet": false,
+            "maxSnippet": 160,
+            "maxImagePreview": "large"
+          },
+          "openGraph": {
+            "type": "article",
+            "title": "Granit CMS — headless, multi-site, GDPR-first",
+            "description": "Per-site SEO cascades, jsonb content, and SSR-ready blocks on a modular .NET backend.",
+            "url": "https://www.granit.example/features/seo",
+            "siteName": "Granit",
+            "locale": "en_US",
+            "alternateLocales": ["fr_FR", "nl_NL"],
+            "image": {
+              "documentId": "3f2a9c14-8b6e-4d21-9a03-7e5c1f4b2d88",
+              "renditionId": "b1c7e2d4-5a63-4f18-9c02-1d7e6a3b4f59",
+              "publicLinkId": "9d4f6a21-3c8b-4e57-8f19-2a6b7c0d5e34",
+              "url": "https://cdn.granit.example/og/features-seo-1200x630.webp",
+              "dimensions": {
+                "width": 1200,
+                "height": 630
+              },
+              "mimeType": "image/webp",
+              "altText": "Granit CMS SEO cascade diagram"
+            },
+            "article": {
+              "author": "Alice Martin",
+              "section": "Product",
+              "tags": ["seo", "cms", "dotnet"],
+              "publishedTime": "2026-06-15T09:30:00+00:00",
+              "modifiedTime": "2026-06-28T14:05:00+00:00"
+            }
+          },
+          "twitterCard": {
+            "card": "summary_large_image",
+            "title": "Granit CMS — headless, multi-site, GDPR-first",
+            "description": "Per-site SEO cascades, jsonb content, and SSR-ready blocks on a modular .NET backend.",
+            "image": {
+              "url": "https://cdn.granit.example/og/features-seo-1200x630.webp",
+              "mimeType": "image/webp",
+              "altText": "Granit CMS SEO cascade diagram"
+            },
+            "site": "@granit_dev",
+            "creator": "@alice_martin"
+          },
+          "structuredDataExtras": "{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\"}",
+          "disableAutoJsonLd": false,
+          "alternateOverrides": [
+            {
+              "culture": "en",
+              "href": "https://www.granit.example/en/features/seo"
+            },
+            {
+              "culture": "fr",
+              "href": "https://www.granit.example/fr/fonctionnalites/seo"
+            },
+            {
+              "culture": "x-default",
+              "href": "https://www.granit.example/features/seo"
+            }
+          ],
+          "xDefaultCulture": "en",
+          "concurrencyStamp": "b3d9f0c2-7a41-4e8d-9f16-5c2a1b0d8e7f"
         }
       },
       "SeoMetadataResponse": {
@@ -3296,6 +2991,67 @@
           "concurrencyStamp": {
             "type": "string"
           }
+        },
+        "example": {
+          "id": "7c4e1a90-2f83-4d16-9b57-0e6a3c8d1f42",
+          "siteId": "1a2b3c4d-5e6f-4701-8293-a4b5c6d7e8f9",
+          "contentType": "Page",
+          "contentId": "a9f3c2d1-6b48-4e75-8c19-3d7e0a2b5f61",
+          "culture": "en",
+          "title": "Granit CMS — headless, multi-site, GDPR-first",
+          "titleTemplate": "{title} · Granit",
+          "description": "Ship SSR/ISR sites on a modular .NET backend with jsonb content and per-site SEO cascades.",
+          "keywords": ["headless cms", "dotnet cms", "ssr", "multi-site"],
+          "canonicalUrl": "https://www.granit.example/features/seo",
+          "robots": {
+            "index": true,
+            "follow": true,
+            "noArchive": false,
+            "noSnippet": false,
+            "maxSnippet": 160,
+            "maxImagePreview": "large"
+          },
+          "openGraph": {
+            "type": "article",
+            "title": "Granit CMS — headless, multi-site, GDPR-first",
+            "description": "Per-site SEO cascades, jsonb content, and SSR-ready blocks on a modular .NET backend.",
+            "url": "https://www.granit.example/features/seo",
+            "siteName": "Granit",
+            "locale": "en_US",
+            "alternateLocales": ["fr_FR"],
+            "image": {
+              "url": "https://cdn.granit.example/og/features-seo-1200x630.webp",
+              "dimensions": {
+                "width": 1200,
+                "height": 630
+              },
+              "mimeType": "image/webp",
+              "altText": "Granit CMS SEO cascade diagram"
+            }
+          },
+          "twitterCard": {
+            "card": "summary_large_image",
+            "site": "@granit_dev",
+            "creator": "@alice_martin"
+          },
+          "structuredDataExtras": "{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\"}",
+          "disableAutoJsonLd": false,
+          "alternateOverrides": [
+            {
+              "culture": "en",
+              "href": "https://www.granit.example/en/features/seo"
+            },
+            {
+              "culture": "fr",
+              "href": "https://www.granit.example/fr/fonctionnalites/seo"
+            }
+          ],
+          "xDefaultCulture": "en",
+          "statusAtLastReview": "Reviewed",
+          "lastReviewedAt": "2026-06-28T14:05:00+00:00",
+          "createdAt": "2026-06-15T09:30:00+00:00",
+          "modifiedAt": "2026-06-28T14:05:00+00:00",
+          "concurrencyStamp": "b3d9f0c2-7a41-4e8d-9f16-5c2a1b0d8e7f"
         }
       },
       "SeoReviewStatus": {
@@ -3308,9 +3064,12 @@
           "fields": {
             "$ref": "#/components/schemas/SuggestionScopes"
           }
+        },
+        "example": {
+          "fields": "Title, Description"
         }
       },
-      "SeoSuggestionDiff": {
+      "SeoSuggestionDiffResponse": {
         "required": ["suggestionId", "scope", "fields"],
         "type": "object",
         "properties": {
@@ -3361,6 +3120,38 @@
             "type": "integer",
             "format": "int32"
           }
+        },
+        "example": {
+          "items": [
+            {
+              "id": "c7d4e0a2-9b13-4e6f-8a25-0d3f1b6c9e78",
+              "siteId": "3f9a1c72-4d5e-4b8a-9f21-7c0e6d2b1a44",
+              "contentType": "cms.page",
+              "contentId": "b21e8d90-6c34-4f17-a5d2-1e9f0a7c3b56",
+              "culture": "en",
+              "status": "Pending",
+              "scope": "Title, Description, Keywords",
+              "appliedFields": "None",
+              "title": "Sustainable Packaging Solutions | Acme Corp",
+              "description": "Discover Acme's compostable packaging made from 100% recycled fibre. Cut landfill waste and shipping carbon with certified eco-friendly designs.",
+              "keywords": [
+                "sustainable packaging",
+                "recycled materials",
+                "compostable packaging",
+                "eco-friendly shipping"
+              ],
+              "ogImageAltText": "Stack of recycled kraft-paper boxes on a warehouse pallet",
+              "structuredDataJson": "{\"@context\":\"https://schema.org\",\"@type\":\"Product\",\"name\":\"Compostable Shipping Box\"}",
+              "modelId": "claude-sonnet-4-5",
+              "promptTemplateVersion": "seo-suggest/v3",
+              "createdAt": "2026-06-14T09:32:17+00:00",
+              "reviewedBy": null,
+              "reviewedAt": null,
+              "failureReason": null,
+              "rejectionReason": null
+            }
+          ],
+          "total": 1
         }
       },
       "SeoSuggestionRejectRequest": {
@@ -3370,6 +3161,9 @@
             "maxLength": 1000,
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "reason": "Title overlaps an existing evergreen landing page; keeping the current copy."
         }
       },
       "SeoSuggestionResponse": {
@@ -3466,6 +3260,33 @@
           "rejectionReason": {
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "id": "c7d4e0a2-9b13-4e6f-8a25-0d3f1b6c9e78",
+          "siteId": "3f9a1c72-4d5e-4b8a-9f21-7c0e6d2b1a44",
+          "contentType": "cms.page",
+          "contentId": "b21e8d90-6c34-4f17-a5d2-1e9f0a7c3b56",
+          "culture": "en",
+          "status": "Pending",
+          "scope": "Title, Description, Keywords",
+          "appliedFields": "None",
+          "title": "Sustainable Packaging Solutions | Acme Corp",
+          "description": "Discover Acme's compostable packaging made from 100% recycled fibre. Cut landfill waste and shipping carbon with certified eco-friendly designs.",
+          "keywords": [
+            "sustainable packaging",
+            "recycled materials",
+            "compostable packaging",
+            "eco-friendly shipping"
+          ],
+          "ogImageAltText": "Stack of recycled kraft-paper boxes on a warehouse pallet",
+          "structuredDataJson": "{\"@context\":\"https://schema.org\",\"@type\":\"Product\",\"name\":\"Compostable Shipping Box\"}",
+          "modelId": "claude-sonnet-4-5",
+          "promptTemplateVersion": "seo-suggest/v3",
+          "createdAt": "2026-06-14T09:32:17+00:00",
+          "reviewedBy": null,
+          "reviewedAt": null,
+          "failureReason": null,
+          "rejectionReason": null
         }
       },
       "SeoSuggestRequest": {
@@ -3499,6 +3320,15 @@
             "maxLength": 50000,
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "siteId": "3f9a1c72-4d5e-4b8a-9f21-7c0e6d2b1a44",
+          "contentType": "cms.page",
+          "contentId": "b21e8d90-6c34-4f17-a5d2-1e9f0a7c3b56",
+          "contentTitle": "Sustainable Packaging Solutions",
+          "scope": "Title, Description, Keywords",
+          "culture": "en",
+          "contentBody": "Acme's compostable packaging is manufactured from 100% post-consumer recycled fibre, cutting landfill waste and shipping carbon for growing e-commerce brands."
         }
       },
       "SeoSuggestResponse": {
@@ -3518,6 +3348,36 @@
               }
             ]
           }
+        },
+        "example": {
+          "outcome": "Succeeded",
+          "suggestion": {
+            "id": "c7d4e0a2-9b13-4e6f-8a25-0d3f1b6c9e78",
+            "siteId": "3f9a1c72-4d5e-4b8a-9f21-7c0e6d2b1a44",
+            "contentType": "cms.page",
+            "contentId": "b21e8d90-6c34-4f17-a5d2-1e9f0a7c3b56",
+            "culture": "en",
+            "status": "Pending",
+            "scope": "Title, Description, Keywords",
+            "appliedFields": "None",
+            "title": "Sustainable Packaging Solutions | Acme Corp",
+            "description": "Discover Acme's compostable packaging made from 100% recycled fibre. Cut landfill waste and shipping carbon with certified eco-friendly designs.",
+            "keywords": [
+              "sustainable packaging",
+              "recycled materials",
+              "compostable packaging",
+              "eco-friendly shipping"
+            ],
+            "ogImageAltText": "Stack of recycled kraft-paper boxes on a warehouse pallet",
+            "structuredDataJson": "{\"@context\":\"https://schema.org\",\"@type\":\"Product\",\"name\":\"Compostable Shipping Box\"}",
+            "modelId": "claude-sonnet-4-5",
+            "promptTemplateVersion": "seo-suggest/v3",
+            "createdAt": "2026-06-14T09:32:17+00:00",
+            "reviewedBy": null,
+            "reviewedAt": null,
+            "failureReason": null,
+            "rejectionReason": null
+          }
         }
       },
       "SerpPreviewResponse": {
@@ -3533,6 +3393,11 @@
           "displayUrl": {
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "title": "Granit CMS — headless, multi-site, GDPR-first · Granit",
+          "description": "Ship SSR/ISR sites on a modular .NET backend with jsonb content and per-site SEO cascades.",
+          "displayUrl": "www.granit.example › features › seo"
         }
       },
       "SiteSeoDefaultsRequest": {
@@ -3633,6 +3498,70 @@
           "concurrencyStamp": {
             "type": ["null", "string"]
           }
+        },
+        "example": {
+          "titleTemplate": "{title} · Granit",
+          "siteName": "Granit",
+          "defaultDescription": "Granit is a modular, GDPR-first headless CMS for building SSR/ISR sites on .NET.",
+          "defaultRobots": {
+            "index": true,
+            "follow": true,
+            "noArchive": false,
+            "noSnippet": false,
+            "maxImagePreview": "large"
+          },
+          "canonicalHost": "www.granit.example",
+          "sitemapMaxUrlsPerFile": 45000,
+          "inheritFromParentPage": true,
+          "defaultOpenGraph": {
+            "type": "website",
+            "siteName": "Granit",
+            "locale": "en_US",
+            "alternateLocales": ["fr_FR", "nl_NL"]
+          },
+          "defaultTwitterCard": {
+            "card": "summary_large_image",
+            "site": "@granit_dev"
+          },
+          "defaultOgImage": {
+            "url": "https://cdn.granit.example/og/default-1200x630.webp",
+            "dimensions": {
+              "width": 1200,
+              "height": 630
+            },
+            "mimeType": "image/webp",
+            "altText": "Granit brand card"
+          },
+          "robotsTxtRules": [
+            {
+              "userAgent": "*",
+              "allow": ["/"],
+              "disallow": ["/admin", "/api"],
+              "crawlDelay": 10
+            }
+          ],
+          "robotsTxtExtra": "Sitemap: https://www.granit.example/sitemap.xml",
+          "manifest": {
+            "name": "Granit",
+            "shortName": "Granit",
+            "description": "Headless, multi-site, GDPR-first CMS.",
+            "themeColor": "#0d1117",
+            "backgroundColor": "#ffffff",
+            "display": "standalone",
+            "startUrl": "/",
+            "scope": "/",
+            "lang": "en",
+            "icons": [
+              {
+                "src": "https://cdn.granit.example/icons/icon-512.png",
+                "sizes": "512x512",
+                "type": "image/png",
+                "purpose": "any maskable"
+              }
+            ]
+          },
+          "enableAutomaticSeoGeneration": true,
+          "concurrencyStamp": "c7e2a1b0-9d4f-4a63-8f18-2c6b7d0e5a34"
         }
       },
       "SiteSeoDefaultsResponse": {
@@ -3742,6 +3671,72 @@
           "concurrencyStamp": {
             "type": "string"
           }
+        },
+        "example": {
+          "id": "5b8d3f21-4c76-4e19-9a02-6f1e7c3d0b48",
+          "siteId": "1a2b3c4d-5e6f-4701-8293-a4b5c6d7e8f9",
+          "titleTemplate": "{title} · Granit",
+          "siteName": "Granit",
+          "defaultDescription": "Granit is a modular, GDPR-first headless CMS for building SSR/ISR sites on .NET.",
+          "defaultRobots": {
+            "index": true,
+            "follow": true,
+            "noArchive": false,
+            "noSnippet": false,
+            "maxImagePreview": "large"
+          },
+          "canonicalHost": "www.granit.example",
+          "sitemapMaxUrlsPerFile": 45000,
+          "inheritFromParentPage": true,
+          "defaultOpenGraph": {
+            "type": "website",
+            "siteName": "Granit",
+            "locale": "en_US",
+            "alternateLocales": ["fr_FR", "nl_NL"]
+          },
+          "defaultTwitterCard": {
+            "card": "summary_large_image",
+            "site": "@granit_dev"
+          },
+          "defaultOgImage": {
+            "url": "https://cdn.granit.example/og/default-1200x630.webp",
+            "dimensions": {
+              "width": 1200,
+              "height": 630
+            },
+            "mimeType": "image/webp",
+            "altText": "Granit brand card"
+          },
+          "robotsTxtRules": [
+            {
+              "userAgent": "*",
+              "allow": ["/"],
+              "disallow": ["/admin", "/api"],
+              "crawlDelay": 10
+            }
+          ],
+          "robotsTxtExtra": "Sitemap: https://www.granit.example/sitemap.xml",
+          "manifest": {
+            "name": "Granit",
+            "shortName": "Granit",
+            "description": "Headless, multi-site, GDPR-first CMS.",
+            "themeColor": "#0d1117",
+            "backgroundColor": "#ffffff",
+            "display": "standalone",
+            "startUrl": "/",
+            "scope": "/",
+            "lang": "en",
+            "icons": [
+              {
+                "src": "https://cdn.granit.example/icons/icon-512.png",
+                "sizes": "512x512",
+                "type": "image/png",
+                "purpose": "any maskable"
+              }
+            ]
+          },
+          "enableAutomaticSeoGeneration": true,
+          "concurrencyStamp": "c7e2a1b0-9d4f-4a63-8f18-2c6b7d0e5a34"
         }
       },
       "SortableField": {
@@ -3788,6 +3783,33 @@
             "type": ["null", "string"]
           }
         }
+      },
+      "ValueKind": {
+        "enum": [
+          "Count",
+          "Number",
+          "Currency",
+          "Percentage",
+          "Duration",
+          "Date",
+          "Url",
+          "Email",
+          "Phone",
+          "Bytes",
+          "DateTime",
+          "Boolean",
+          "Enum",
+          "RelativeTime",
+          "Time",
+          "Color",
+          "Image",
+          "Json",
+          "Markdown",
+          "Tags",
+          "Rating",
+          "Identifier",
+          null
+        ]
       },
       "WebManifest": {
         "type": "object",

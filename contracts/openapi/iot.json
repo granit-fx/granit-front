@@ -1196,7 +1196,9 @@
           }
         }
       },
-      "DeviceSerialNumber": {},
+      "DeviceSerialNumber": {
+        "type": "string"
+      },
       "DeviceStatus": {
         "enum": ["Provisioning", "Active", "Suspended", "Decommissioned"]
       },
@@ -1280,10 +1282,15 @@
           "Lt",
           "Lte",
           "In",
-          "Between"
+          "Between",
+          "Ne",
+          "IsNull",
+          "IsNotNull"
         ]
       },
-      "FirmwareVersion": {},
+      "FirmwareVersion": {
+        "type": "string"
+      },
       "GroupByField": {
         "required": ["name", "type"],
         "type": "object",
@@ -1380,7 +1387,9 @@
           }
         }
       },
-      "HardwareModel": {},
+      "HardwareModel": {
+        "type": "string"
+      },
       "HttpValidationProblemDetails": {
         "type": "object",
         "properties": {
@@ -1462,9 +1471,15 @@
                 "concurrencyStamp": {
                   "type": "string"
                 },
-                "serialNumber": {},
-                "model": {},
-                "firmware": {},
+                "serialNumber": {
+                  "type": "string"
+                },
+                "model": {
+                  "type": "string"
+                },
+                "firmware": {
+                  "type": "string"
+                },
                 "status": {
                   "enum": ["Provisioning", "Active", "Suspended", "Decommissioned"]
                 },

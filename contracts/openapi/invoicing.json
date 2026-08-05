@@ -1041,10 +1041,27 @@
           },
           "format": {
             "type": ["null", "string"]
+          },
+          "valueKind": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ValueKind"
+              }
+            ]
+          },
+          "currencyCode": {
+            "type": ["null", "string"]
+          },
+          "currencyCodeField": {
+            "type": ["null", "string"]
           }
         }
       },
       "ContentType": {
+        "type": "string",
         "description": "MIME content type (e.g. `text/html`, `application/pdf`).\nValidates the `type/subtype` format per RFC 6838."
       },
       "DateFilterMeta": {
@@ -1069,6 +1086,7 @@
         "enum": ["Today", "ThisWeek", "ThisMonth", "LastMonth", "ThisQuarter", "ThisYear", "Custom"]
       },
       "FileName": {
+        "type": "string",
         "description": "A file name validated for safety: non-empty, max 260 characters, no path traversal."
       },
       "FilterableField": {
@@ -1134,7 +1152,10 @@
           "Lt",
           "Lte",
           "In",
-          "Between"
+          "Between",
+          "Ne",
+          "IsNull",
+          "IsNotNull"
         ]
       },
       "FinalizeInvoiceRequest": {
@@ -1504,7 +1525,10 @@
           }
         }
       },
-      "InvoiceId": {},
+      "InvoiceId": {
+        "type": "string",
+        "format": "uuid"
+      },
       "InvoiceLineItem": {
         "type": "object",
         "properties": {
@@ -1836,7 +1860,10 @@
             "items": {
               "type": "object",
               "properties": {
-                "partyId": {},
+                "partyId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
                 "documentType": {
                   "enum": ["Invoice", "CreditNote"]
                 },
@@ -1904,7 +1931,10 @@
                     }
                   }
                 },
-                "parentInvoiceId": {},
+                "parentInvoiceId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
                 "creditNoteReason": {
                   "type": ["null", "string"]
                 },
@@ -2051,9 +2081,11 @@
                         "format": "uuid"
                       },
                       "fileName": {
+                        "type": "string",
                         "description": "A file name validated for safety: non-empty, max 260 characters, no path traversal."
                       },
                       "contentType": {
+                        "type": "string",
                         "description": "MIME content type (e.g. `text/html`, `application/pdf`).\nValidates the `type/subtype` format per RFC 6838."
                       },
                       "generatedAt": {
@@ -2148,7 +2180,10 @@
           }
         }
       },
-      "PartyId": {},
+      "PartyId": {
+        "type": "string",
+        "format": "uuid"
+      },
       "PresetMeta": {
         "required": ["name", "label", "isDefault"],
         "type": "object",
@@ -2275,6 +2310,33 @@
             "type": "string"
           }
         }
+      },
+      "ValueKind": {
+        "enum": [
+          "Count",
+          "Number",
+          "Currency",
+          "Percentage",
+          "Duration",
+          "Date",
+          "Url",
+          "Email",
+          "Phone",
+          "Bytes",
+          "DateTime",
+          "Boolean",
+          "Enum",
+          "RelativeTime",
+          "Time",
+          "Color",
+          "Image",
+          "Json",
+          "Markdown",
+          "Tags",
+          "Rating",
+          "Identifier",
+          null
+        ]
       },
       "WorkflowStatusResponse": {
         "required": ["currentState", "availableTransitions"],

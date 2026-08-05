@@ -1883,7 +1883,7 @@
       "post": {
         "tags": ["Payments - Webhooks"],
         "summary": "Receives an inbound webhook from a payment provider.",
-        "description": "Verifies the webhook signature, deduplicates the event using the processed event store, and dispatches a ProcessWebhookCommand for asynchronous handling. This endpoint is anonymous — authentication relies on the provider's signature verification.",
+        "description": "Verifies the webhook signature and dispatches a durable ProcessWebhookCommand for asynchronous handling. Deduplication is performed idempotently inside the command handler, in the same transaction as the state change, so a retry is always safe. This endpoint is anonymous — authentication relies on the provider's signature verification.",
         "operationId": "HandlePaymentWebhook",
         "parameters": [
           {
@@ -1901,16 +1901,6 @@
           },
           "400": {
             "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1972,6 +1962,22 @@
             "type": "boolean"
           },
           "format": {
+            "type": ["null", "string"]
+          },
+          "valueKind": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ValueKind"
+              }
+            ]
+          },
+          "currencyCode": {
+            "type": ["null", "string"]
+          },
+          "currencyCodeField": {
             "type": ["null", "string"]
           }
         }
@@ -2098,7 +2104,10 @@
           "Lt",
           "Lte",
           "In",
-          "Between"
+          "Between",
+          "Ne",
+          "IsNull",
+          "IsNotNull"
         ]
       },
       "GroupByField": {
@@ -2448,6 +2457,10 @@
                   "type": ["null", "string"],
                   "format": "date-time"
                 },
+                "lastExpirationNotifiedAt": {
+                  "type": ["null", "string"],
+                  "format": "date-time"
+                },
                 "tenantId": {
                   "type": ["null", "string"],
                   "format": "uuid"
@@ -2514,6 +2527,10 @@
               "type": "object",
               "properties": {
                 "invoiceId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "partyId": {
                   "type": "string",
                   "format": "uuid"
                 },
@@ -3020,6 +3037,10 @@
             "type": ["null", "string"],
             "format": "date-time"
           },
+          "lastExpirationNotifiedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
           "tenantId": {
             "type": ["null", "string"],
             "format": "uuid"
@@ -3299,6 +3320,10 @@
         "type": "object",
         "properties": {
           "invoiceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "partyId": {
             "type": "string",
             "format": "uuid"
           },
@@ -3655,6 +3680,33 @@
             "type": "string"
           }
         }
+      },
+      "ValueKind": {
+        "enum": [
+          "Count",
+          "Number",
+          "Currency",
+          "Percentage",
+          "Duration",
+          "Date",
+          "Url",
+          "Email",
+          "Phone",
+          "Bytes",
+          "DateTime",
+          "Boolean",
+          "Enum",
+          "RelativeTime",
+          "Time",
+          "Color",
+          "Image",
+          "Json",
+          "Markdown",
+          "Tags",
+          "Rating",
+          "Identifier",
+          null
+        ]
       }
     }
   },
