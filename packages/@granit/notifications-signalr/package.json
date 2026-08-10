@@ -30,6 +30,6 @@
     "@granit/notifications": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/types": "workspace:*",
-    "@microsoft/signalr": "10.0.0"
+    "@microsoft/signalr": "10.0.11"
   }
 }
