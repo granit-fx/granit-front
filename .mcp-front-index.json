@@ -12112,7 +12112,7 @@
             {
               "name": "history",
               "kind": "property",
-              "signature": "history: readonly TransitionHistory[]"
+              "signature": "history: readonly WorkflowTransitionHistoryResponse[]"
             },
             {
               "name": "loading",

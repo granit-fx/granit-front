@@ -1,9 +1,9 @@
 import { Spinner, Table, TableBody, TableCell, TableRow } from '@granit/react-ui';
 
-import type { TransitionHistory } from '@granit/workflow';
+import type { WorkflowTransitionHistoryResponse } from '@granit/workflow';
 
 export interface WorkflowHistoryProps {
-  history: readonly TransitionHistory[];
+  history: readonly WorkflowTransitionHistoryResponse[];
   loading?: boolean;
   emptyMessage?: string;
   className?: string;

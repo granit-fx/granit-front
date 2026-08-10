@@ -6,6 +6,7 @@ export type { WorkflowLifecycleStatusValue } from './lifecycle-status';
 
 export type {
   WorkflowTransition,
+  WorkflowTransitionHistoryResponse,
   TransitionHistory,
   WorkflowTransitionRequest,
   WorkflowTransitionResult,

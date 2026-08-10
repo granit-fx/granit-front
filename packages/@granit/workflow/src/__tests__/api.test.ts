@@ -4,7 +4,11 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { executeStateMachineTransition, getHistory, listTransitions } from '../api/workflow-api';
 
-import type { TransitionHistory, WorkflowTransitionResult, WorkflowStatus } from '../types/index';
+import type {
+  WorkflowTransitionHistoryResponse,
+  WorkflowTransitionResult,
+  WorkflowStatus,
+} from '../types/index';
 
 describe('workflow api', () => {
   const basePath = '/api/v1/workflow';
@@ -13,7 +17,7 @@ describe('workflow api', () => {
 
   it('should call GET with correct URL for getHistory', async () => {
     const client = createMockClient();
-    const historyItems: TransitionHistory[] = [
+    const historyItems: WorkflowTransitionHistoryResponse[] = [
       {
         previousState: 'Draft',
         newState: 'Published',
@@ -82,7 +86,7 @@ describe('workflow api', () => {
 
   it('should pass pagination params to getHistory when provided', async () => {
     const client = createMockClient();
-    const historyItems: TransitionHistory[] = [
+    const historyItems: WorkflowTransitionHistoryResponse[] = [
       {
         previousState: 'Draft',
         newState: 'Published',

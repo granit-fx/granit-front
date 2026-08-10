@@ -8,6 +8,7 @@ export { WorkflowLifecycleStatus } from './types/index';
 
 export type {
   WorkflowTransition,
+  WorkflowTransitionHistoryResponse,
   TransitionHistory,
   TransitionOutcomeValue,
   WorkflowTransitionRequest,

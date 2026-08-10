@@ -1,5 +1,37 @@
 # Guide de migration
 
+## `TransitionHistory` → `WorkflowTransitionHistoryResponse`
+
+**Date** : 2026-08-10
+**Packages affectés** : `@granit/workflow` (et ses consommateurs
+`@granit/react-workflow`, `@granit/react-ui-workflow`).
+
+### Contexte
+
+L'oracle de conformité (`@granit/contract-tests`) résout les schémas backend
+**par leur nom** : le type front doit s'appeler exactement comme le schéma
+OpenAPI. `TransitionHistory` était champ pour champ le
+`WorkflowTransitionHistoryResponse` de `contracts/openapi/workflow.json` — mêmes
+propriétés, même ordre, `comment` correctement modélisé en clé requise à valeur
+nullable — mais son nom divergeait, ce qui rendait le DTO **inassertable** : le
+module `workflow` ne pouvait pas figurer au manifest.
+
+### Impact sur les consommateurs
+
+Aucun changement cassant : `TransitionHistory` reste exporté comme alias
+déprécié, le package étant publié sur `npm.pkg.github.com`. Migration mécanique :
+
+```diff
+- import type { TransitionHistory } from '@granit/workflow';
++ import type { WorkflowTransitionHistoryResponse } from '@granit/workflow';
+```
+
+`WorkflowHistoryPage` est **inchangé** : c'est un alias du wrapper partagé
+`PagedResult<T>`, que le manifest exclut délibérément (comme les autres
+génériques `*Of*`).
+
+L'alias sera retiré au prochain major.
+
 ## TanStack Table v8 → v9 (`ColumnDef` → `DataTableColumnDef`)
 
 **Date** : 2026-08-10

@@ -23,10 +23,19 @@ export interface WorkflowTransitionRequest {
 }
 
 /** Single entry in the workflow transition history (HDS audit trail). */
-export interface TransitionHistory {
+export interface WorkflowTransitionHistoryResponse {
   readonly previousState: string;
   readonly newState: string;
   readonly transitionedAt: ISODateString;
   readonly transitionedBy: string;
   readonly comment: string | null;
 }
+
+/**
+ * @deprecated Renamed to {@link WorkflowTransitionHistoryResponse} so the front
+ * type name matches the backend schema name, which is what lets the conformance
+ * oracle assert this DTO (`@granit/contract-tests` resolves schemas by name, so
+ * a divergent name is unassertable). Kept as an alias because the package is
+ * published; drop it in the next major.
+ */
+export type TransitionHistory = WorkflowTransitionHistoryResponse;

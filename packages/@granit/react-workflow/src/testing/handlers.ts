@@ -6,7 +6,7 @@ import { DEFAULT_BASE_PATH } from '../constants';
 import { mockWorkflowHistory, mockWorkflowStatus } from './data';
 
 import type {
-  TransitionHistory,
+  WorkflowTransitionHistoryResponse,
   WorkflowStatus,
   WorkflowTransition,
   WorkflowTransitionRequest,
@@ -47,7 +47,7 @@ function resolveOutcome(
  */
 export function createWorkflowHandlers(baseUrl = DEFAULT_BASE_PATH) {
   let currentStatus: WorkflowStatus = { ...mockWorkflowStatus };
-  let history: TransitionHistory[] = [...mockWorkflowHistory];
+  let history: WorkflowTransitionHistoryResponse[] = [...mockWorkflowHistory];
 
   return [
     // GET /transitions — get current state and available transitions
@@ -77,7 +77,7 @@ export function createWorkflowHandlers(baseUrl = DEFAULT_BASE_PATH) {
       );
 
       if (result.outcome === 'Completed') {
-        const historyEntry: TransitionHistory = {
+        const historyEntry: WorkflowTransitionHistoryResponse = {
           previousState: currentState,
           newState: body.targetState,
           transitionedAt: toISODateString(new Date().toISOString()),

@@ -1,7 +1,7 @@
 import { toISODateString } from '@granit/types';
 
 import type { Mutable } from '@granit/testing';
-import type { TransitionHistory, WorkflowStatus } from '@granit/workflow';
+import type { WorkflowTransitionHistoryResponse, WorkflowStatus } from '@granit/workflow';
 
 export const USER_WORKFLOW_STATES = [
   'PendingValidation',
@@ -28,7 +28,7 @@ export const mockWorkflowStatus: WorkflowStatus = {
   ],
 };
 
-export const mockWorkflowHistory: Mutable<TransitionHistory>[] = [
+export const mockWorkflowHistory: Mutable<WorkflowTransitionHistoryResponse>[] = [
   {
     previousState: 'PendingValidation',
     newState: 'Active',

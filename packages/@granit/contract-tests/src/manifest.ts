@@ -356,6 +356,7 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'UpdateWidgetRequest',
       'WidgetAction',
     ],
+    checkEndpoints: true,
   },
   {
     slug: 'documents',
@@ -559,6 +560,7 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'ThirdPartyServiceResponse',
       'ConsentDecisionRequest',
     ],
+    checkEndpoints: true,
   },
   {
     slug: 'diagnostics',
@@ -589,11 +591,13 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'DnsConflict',
       'ExpectedDnsRecord',
     ],
+    checkEndpoints: true,
   },
   {
     slug: 'multi-tenancy',
     package: 'multi-tenancy',
     types: ['TenantResponse', 'CreateTenantRequest', 'UpdateTenantRequest'],
+    checkEndpoints: true,
   },
   {
     slug: 'presence',
@@ -655,6 +659,7 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'ValidationFieldValidateBatchRequest',
       'ValidationFieldValidateBatchResponse',
     ],
+    checkEndpoints: true,
   },
   // ─── CMS bounded context (granit-website / Granit.Cms.*.Endpoints) ──────────
   // Specs vendored from Granit.Website.OpenApi.Generator. Object DTOs only — the
@@ -874,6 +879,7 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'AdminCreditRequest',
       'AdminDebitRequest',
     ],
+    checkEndpoints: true,
   },
   {
     slug: 'documents-properties',
@@ -956,6 +962,17 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'LandingRouteResponse',
       'SetPinnedLandingRouteRequest',
     ],
+    checkEndpoints: true,
+  },
+  {
+    slug: 'workflow',
+    package: 'workflow',
+    // `WorkflowHistoryPage` is an alias of the shared `PagedResult<T>` wrapper,
+    // excluded per the header note. Route conformance stays off: the spec only
+    // documents the entity-history route, while the front also calls the
+    // state-machine `/transitions` pair — a backend generator gap, not a front
+    // one, so enabling the check here would fail on two orphan endpoints.
+    types: ['WorkflowTransitionHistoryResponse'],
   },
   // ─── Analytics + data-exchange (granit-business / granit-dotnet) ────────────
   {
@@ -991,5 +1008,6 @@ export const CONTRACTS: readonly ModuleContract[] = [
       'ConfirmMappingsRequest',
       'ImportReportResponse',
     ],
+    checkEndpoints: true,
   },
 ];

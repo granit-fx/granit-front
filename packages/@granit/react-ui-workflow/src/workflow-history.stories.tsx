@@ -2,7 +2,7 @@ import { mockWorkflowHistory } from '@granit/react-workflow/testing';
 
 import { WorkflowHistory } from './workflow-history';
 
-import type { TransitionHistory } from '@granit/workflow';
+import type { WorkflowTransitionHistoryResponse } from '@granit/workflow';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof WorkflowHistory> = {
@@ -29,13 +29,13 @@ export const MultipleEntries: Story = {
         transitionedAt: '2026-01-10T14:20:00Z',
         transitionedBy: 'Jane Doe',
         comment: 'Temporary suspension pending review.',
-      } satisfies TransitionHistory,
+      } satisfies WorkflowTransitionHistoryResponse,
       {
         previousState: 'Suspended',
         newState: 'Active',
         transitionedAt: '2026-01-15T08:00:00Z',
         transitionedBy: 'John Smith',
-      } satisfies TransitionHistory,
+      } satisfies WorkflowTransitionHistoryResponse,
     ],
   },
 };

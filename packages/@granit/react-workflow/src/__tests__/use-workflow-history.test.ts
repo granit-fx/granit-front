@@ -6,9 +6,9 @@ import { useWorkflowHistory } from '../hooks/use-workflow-history';
 
 import { axiosResponse, createMockClient, createWrapper } from './test-utils.tsx';
 
-import type { TransitionHistory } from '@granit/workflow';
+import type { WorkflowTransitionHistoryResponse } from '@granit/workflow';
 
-const sampleHistory: TransitionHistory[] = [
+const sampleHistory: WorkflowTransitionHistoryResponse[] = [
   {
     previousState: 'Draft',
     newState: 'PendingReview',
