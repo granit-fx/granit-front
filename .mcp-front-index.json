@@ -7595,7 +7595,7 @@
         {
           "name": "createReferenceDataHooks",
           "kind": "function",
-          "signature": "function createReferenceDataHooks<T extends ReferenceDataEntry>( /** Plural, kebab-cased entity name matching the backend route segment (e.g. `'countries'`, `'product-categories'`). */ entityName: string, factoryOptions?: CreateReferenceDataHooksOptions )"
+          "signature": "function createReferenceDataHooks<T extends ReferenceDataResponse>( /** Plural, kebab-cased entity name matching the backend route segment (e.g. `'countries'`, `'product-categories'`). */ entityName: string, factoryOptions?: CreateReferenceDataHooksOptions )"
         }
       ]
     },
@@ -11162,7 +11162,7 @@
         {
           "name": "ReferenceDataListPageShell",
           "kind": "function",
-          "signature": "function ReferenceDataListPageShell<T extends ReferenceDataEntry = ReferenceDataEntry>("
+          "signature": "function ReferenceDataListPageShell< T extends ReferenceDataResponse = ReferenceDataResponse, >("
         },
         {
           "name": "ReferenceDataListPageShellProps",

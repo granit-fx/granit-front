@@ -989,15 +989,10 @@ export const CONTRACTS: readonly ModuleContract[] = [
   {
     slug: 'reference-data',
     package: 'reference-data',
-    // The spec's response schema is `ReferenceDataResponse`; the front calls it
-    // `ReferenceDataEntry`. Suffix-aligning it (see the section above) reaches 15
-    // files in granit-showcase-react, so it needs a coordinated change and is
-    // deferred — only the two request DTOs are name-aligned today.
-    //
     // Route conformance stays off: the generator materialises the routes under
     // its stub type's segment (`/reference-data/samples`), while real callers
     // mount them per application entity (`/reference-data/countries`, …).
-    types: ['ReferenceDataCreateRequest', 'ReferenceDataUpdateRequest'],
+    types: ['ReferenceDataResponse', 'ReferenceDataCreateRequest', 'ReferenceDataUpdateRequest'],
   },
   // ─── Analytics + data-exchange (granit-business / granit-dotnet) ────────────
   {

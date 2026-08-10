@@ -7,15 +7,15 @@ import { ReferenceDataListPageShell } from '../components/reference-data-list-pa
 
 import { renderWithProviders, testI18n } from './test-utils';
 
-import type { ReferenceDataEntry } from '../components/types';
+import type { ReferenceDataResponse } from '../components/types';
 
 // ---------------------------------------------------------------------------
 // Mock data
 // ---------------------------------------------------------------------------
 
-function makeEntry(overrides: Partial<ReferenceDataEntry> = {}): ReferenceDataEntry {
+function makeEntry(overrides: Partial<ReferenceDataResponse> = {}): ReferenceDataResponse {
   return {
-    id: 'rd-1' as ReferenceDataEntry['id'],
+    id: 'rd-1' as ReferenceDataResponse['id'],
     code: 'BE',
     label: 'Belgium',
     labelEn: 'Belgium',
@@ -32,6 +32,7 @@ function makeEntry(overrides: Partial<ReferenceDataEntry> = {}): ReferenceDataEn
     labelKo: '',
     labelSv: '',
     labelCs: '',
+    labelHi: '',
     activated: true,
     sortOrder: 0,
     validFrom: null,
@@ -101,7 +102,7 @@ vi.mock('@granit/react-ui-kit', async (importOriginal) => ({
 
 const t = testI18n.t.bind(testI18n);
 
-function endpointWith(items: ReferenceDataEntry[], extra: { isLoading?: boolean } = {}) {
+function endpointWith(items: ReferenceDataResponse[], extra: { isLoading?: boolean } = {}) {
   return {
     query: {
       data: { items, totalCount: items.length },

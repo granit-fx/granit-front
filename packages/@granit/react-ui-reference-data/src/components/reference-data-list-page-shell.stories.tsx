@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router';
 
 import { ReferenceDataListPageShell } from './reference-data-list-page-shell';
 
-import type { ReferenceDataEntry } from './types';
+import type { ReferenceDataResponse } from './types';
 import type { QueryConfig, QueryMetadata } from '@granit/query-engine';
 import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -42,7 +42,7 @@ const QUERY_CONFIG: QueryConfig = {
   basePath: STORYBOOK_BASE,
 };
 
-const columns: DataTableColumnDef<ReferenceDataEntry, unknown>[] = [
+const columns: DataTableColumnDef<ReferenceDataResponse, unknown>[] = [
   { accessorKey: 'code', header: 'Code' },
   { accessorKey: 'labelEn', header: 'Label' },
 ];

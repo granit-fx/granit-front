@@ -6,14 +6,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createReferenceDataHooks } from '../hooks/create-reference-data-hooks';
 
-import type { ReferenceDataEntry } from '@granit/reference-data';
+import type { ReferenceDataResponse } from '@granit/reference-data';
 
-interface TestEntity extends ReferenceDataEntry {
+interface TestEntity extends ReferenceDataResponse {
   readonly extra: string;
 }
 
 const mockEntry: TestEntity = {
-  id: toEntityId<'ReferenceDataEntry'>('a1b2c3d4-e5f6-7890-abcd-ef1234567890'),
+  id: toEntityId<'ReferenceDataResponse'>('a1b2c3d4-e5f6-7890-abcd-ef1234567890'),
   code: 'BE',
   labelEn: 'Belgium',
   labelFr: 'Belgique',
@@ -29,6 +29,7 @@ const mockEntry: TestEntity = {
   labelKo: '벨기에',
   labelSv: 'Belgien',
   labelCs: 'Belgie',
+  labelHi: 'Belgie',
   label: 'Belgium',
   activated: true,
   sortOrder: 1,
@@ -74,7 +75,7 @@ describe('keys', () => {
   });
 
   it('isolates keys between entity types', () => {
-    const other = createReferenceDataHooks<ReferenceDataEntry>('other-entity');
+    const other = createReferenceDataHooks<ReferenceDataResponse>('other-entity');
     expect(keys.all).not.toEqual(other.keys.all);
   });
 });

@@ -1,7 +1,15 @@
 import type { PaginationParams } from '@granit/query-engine';
 import type { EntityId, ISODateString } from '@granit/types';
 
-/** The 14 multilingual labels supported by Granit reference data. */
+/**
+ * The 15 multilingual labels supported by Granit reference data.
+ *
+ * Kept as a standalone interface because the create/update requests take it as
+ * `Partial<ReferenceDataLabels>`. {@link ReferenceDataResponse} does **not**
+ * extend it: the spec interleaves the labels between `label` and `activated`,
+ * and an `extends` clause would place them after the own fields, which the
+ * conformance oracle reports as a `field-order` violation.
+ */
 export interface ReferenceDataLabels {
   readonly labelEn: string;
   readonly labelFr: string;
@@ -17,6 +25,7 @@ export interface ReferenceDataLabels {
   readonly labelKo: string;
   readonly labelSv: string;
   readonly labelCs: string;
+  readonly labelHi: string;
 }
 
 /**
@@ -27,13 +36,28 @@ export interface ReferenceDataLabels {
  * interface with domain-specific fields in the consuming application.
  */
 /** Branded reference data entry identifier. */
-export type ReferenceDataEntryId = EntityId<'ReferenceDataEntry'>;
+export type ReferenceDataEntryId = EntityId<'ReferenceDataResponse'>;
 
-export interface ReferenceDataEntry extends ReferenceDataLabels {
+export interface ReferenceDataResponse {
   readonly id: ReferenceDataEntryId;
   readonly code: string;
   /** Resolved label for the current UI culture (server-computed, not persisted). */
   readonly label: string;
+  readonly labelEn: string;
+  readonly labelFr: string;
+  readonly labelNl: string;
+  readonly labelDe: string;
+  readonly labelEs: string;
+  readonly labelIt: string;
+  readonly labelPt: string;
+  readonly labelZh: string;
+  readonly labelJa: string;
+  readonly labelPl: string;
+  readonly labelTr: string;
+  readonly labelKo: string;
+  readonly labelSv: string;
+  readonly labelCs: string;
+  readonly labelHi: string;
   readonly activated: boolean;
   readonly sortOrder: number;
   readonly validFrom: ISODateString | null;

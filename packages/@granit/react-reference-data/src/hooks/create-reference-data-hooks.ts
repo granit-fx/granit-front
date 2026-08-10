@@ -12,7 +12,7 @@ import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult } from '@granit/query-engine';
 import type {
   ReferenceDataCreateRequest,
-  ReferenceDataEntry,
+  ReferenceDataResponse,
   ReferenceDataQuery,
   ReferenceDataUpdateRequest,
 } from '@granit/reference-data';
@@ -97,9 +97,9 @@ export interface ReferenceDataKeys {
  * @example
  * ```tsx
  * import { createReferenceDataHooks } from '@granit/react-reference-data';
- * import type { ReferenceDataEntry } from '@granit/reference-data';
+ * import type { ReferenceDataResponse } from '@granit/reference-data';
  *
- * interface Country extends ReferenceDataEntry {
+ * interface Country extends ReferenceDataResponse {
  *   readonly alpha3: string;
  *   readonly region: string;
  * }
@@ -114,7 +114,7 @@ export interface ReferenceDataKeys {
  * } = createReferenceDataHooks<Country>('countries');
  * ```
  */
-export function createReferenceDataHooks<T extends ReferenceDataEntry>(
+export function createReferenceDataHooks<T extends ReferenceDataResponse>(
   /** Plural, kebab-cased entity name matching the backend route segment (e.g. `'countries'`, `'product-categories'`). */
   entityName: string,
   factoryOptions?: CreateReferenceDataHooksOptions

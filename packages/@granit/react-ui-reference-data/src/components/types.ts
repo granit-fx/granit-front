@@ -1,5 +1,5 @@
 /** Re-export the base entry type for convenience. */
-export type { ReferenceDataEntry } from '@granit/reference-data';
+export type { ReferenceDataResponse } from '@granit/reference-data';
 
 /** Shared form values — superset with optional create-only code field. */
 export interface ReferenceDataFormValues {

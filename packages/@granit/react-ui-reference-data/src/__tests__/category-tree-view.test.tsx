@@ -4,12 +4,12 @@ import { CategoryTreeView } from '../components/category-tree-view';
 
 import { renderWithProviders } from './test-utils';
 
-import type { ReferenceDataEntry } from '../components/types';
+import type { ReferenceDataResponse } from '../components/types';
 import type { UseQueryResult } from '@tanstack/react-query';
 
-function makeEntry(overrides: Partial<ReferenceDataEntry> = {}): ReferenceDataEntry {
+function makeEntry(overrides: Partial<ReferenceDataResponse> = {}): ReferenceDataResponse {
   return {
-    id: 'rd-1' as ReferenceDataEntry['id'],
+    id: 'rd-1' as ReferenceDataResponse['id'],
     code: 'EUR',
     label: 'Europe',
     labelEn: 'Europe',
@@ -26,6 +26,7 @@ function makeEntry(overrides: Partial<ReferenceDataEntry> = {}): ReferenceDataEn
     labelKo: '',
     labelSv: '',
     labelCs: '',
+    labelHi: '',
     activated: true,
     sortOrder: 0,
     validFrom: null,
@@ -36,10 +37,10 @@ function makeEntry(overrides: Partial<ReferenceDataEntry> = {}): ReferenceDataEn
   };
 }
 
-type QueryStub = Pick<UseQueryResult<ReferenceDataEntry[]>, 'data' | 'isLoading'>;
+type QueryStub = Pick<UseQueryResult<ReferenceDataResponse[]>, 'data' | 'isLoading'>;
 
 function queryResult(stub: QueryStub) {
-  return stub as unknown as UseQueryResult<ReferenceDataEntry[]>;
+  return stub as unknown as UseQueryResult<ReferenceDataResponse[]>;
 }
 
 describe('CategoryTreeView', () => {

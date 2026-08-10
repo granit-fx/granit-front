@@ -13,12 +13,12 @@ import { toEntityId } from '@granit/types';
 import { http, HttpResponse } from 'msw';
 
 import type { GroupedResult, PagedResult, QueryMetadata } from '@granit/query-engine';
-import type { ReferenceDataEntry } from '@granit/reference-data';
+import type { ReferenceDataResponse } from '@granit/reference-data';
 
 type ParsedFilter = { field: string; operator: string; value: string };
 type ParsedSort = { field: string; desc: boolean };
 
-export interface ReferenceDataHandlersConfig<T extends ReferenceDataEntry> {
+export interface ReferenceDataHandlersConfig<T extends ReferenceDataResponse> {
   /** Full base path for the resource, e.g. `/api/v1/reference-data/countries`. */
   readonly basePath: string;
   readonly meta: () => QueryMetadata;
@@ -131,7 +131,7 @@ export function applyStatusPreset<T extends { activated: boolean }>(items: T[], 
  * Create stateful MSW handlers for a reference-data resource. The store mutates
  * per invocation, so each call yields an isolated mock backend.
  */
-export function createReferenceDataHandlers<T extends ReferenceDataEntry>(
+export function createReferenceDataHandlers<T extends ReferenceDataResponse>(
   config: ReferenceDataHandlersConfig<T>
 ) {
   const BASE = config.basePath;
@@ -212,7 +212,7 @@ export function createReferenceDataHandlers<T extends ReferenceDataEntry>(
   ];
 }
 
-/** Defaults for the 14 localized label fields on a `ReferenceDataEntry`. */
+/** Defaults for the 14 localized label fields on a `ReferenceDataResponse`. */
 export const emptyLabels = {
   labelEn: '',
   labelFr: '',
@@ -228,12 +228,13 @@ export const emptyLabels = {
   labelKo: '',
   labelSv: '',
   labelCs: '',
+  labelHi: '',
 } as const;
 
-/** Build a `ReferenceDataEntry` from a `Partial<T>` body (for POST handlers). */
-export function buildBaseEntry(body: Partial<ReferenceDataEntry>): ReferenceDataEntry {
+/** Build a `ReferenceDataResponse` from a `Partial<T>` body (for POST handlers). */
+export function buildBaseEntry(body: Partial<ReferenceDataResponse>): ReferenceDataResponse {
   return {
-    id: toEntityId<'ReferenceDataEntry'>(crypto.randomUUID()),
+    id: toEntityId<'ReferenceDataResponse'>(crypto.randomUUID()),
     code: body.code ?? '',
     label: body.labelEn ?? '',
     ...emptyLabels,
@@ -251,6 +252,7 @@ export function buildBaseEntry(body: Partial<ReferenceDataEntry>): ReferenceData
     labelKo: body.labelKo ?? '',
     labelSv: body.labelSv ?? '',
     labelCs: body.labelCs ?? '',
+    labelHi: body.labelCs ?? '',
     sortOrder: body.sortOrder ?? 0,
     activated: body.activated ?? true,
     validFrom: body.validFrom ?? null,

@@ -9,7 +9,7 @@ import {
 import { cn } from '@granit/utils';
 import { MoreHorizontal } from 'lucide-react';
 
-import type { ReferenceDataEntry } from './types';
+import type { ReferenceDataResponse } from './types';
 import type { useTranslation } from '@granit/react-localization';
 import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
@@ -19,8 +19,8 @@ interface ReferenceDataColumnOptions {
   readonly t: TranslateFn;
   readonly i18nPrefix?: string;
   readonly onEdit: (code: string) => void;
-  readonly onDeactivate: (entry: ReferenceDataEntry) => void;
-  readonly onReactivate: (entry: ReferenceDataEntry) => void;
+  readonly onDeactivate: (entry: ReferenceDataResponse) => void;
+  readonly onReactivate: (entry: ReferenceDataResponse) => void;
 }
 
 export function createReferenceDataColumns({
@@ -29,7 +29,7 @@ export function createReferenceDataColumns({
   onEdit,
   onDeactivate,
   onReactivate,
-}: ReferenceDataColumnOptions): DataTableColumnDef<ReferenceDataEntry, unknown>[] {
+}: ReferenceDataColumnOptions): DataTableColumnDef<ReferenceDataResponse, unknown>[] {
   return [
     {
       id: 'code',

@@ -2,68 +2,71 @@ import { describe, expectTypeOf, it } from 'vitest';
 
 import type {
   ReferenceDataCreateRequest,
-  ReferenceDataEntry,
+  ReferenceDataResponse,
   ReferenceDataQuery,
   ReferenceDataUpdateRequest,
 } from '../index';
 import type { ISODateString } from '@granit/types';
 
 describe('@granit/reference-data types', () => {
-  describe('ReferenceDataEntry', () => {
+  describe('ReferenceDataResponse', () => {
     it('should have a code business key', () => {
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('code');
-      expectTypeOf<ReferenceDataEntry['code']>().toBeString();
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('code');
+      expectTypeOf<ReferenceDataResponse['code']>().toBeString();
     });
 
     it('should have all 14 multilingual labels', () => {
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('labelEn');
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('labelFr');
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('labelNl');
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('labelDe');
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('labelEs');
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('labelIt');
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('labelPt');
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('labelZh');
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('labelJa');
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('labelPl');
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('labelTr');
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('labelKo');
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('labelSv');
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('labelCs');
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('labelEn');
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('labelFr');
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('labelNl');
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('labelDe');
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('labelEs');
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('labelIt');
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('labelPt');
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('labelZh');
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('labelJa');
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('labelPl');
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('labelTr');
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('labelKo');
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('labelSv');
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('labelCs');
     });
 
     it('should have a server-computed label', () => {
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('label');
-      expectTypeOf<ReferenceDataEntry['label']>().toBeString();
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('label');
+      expectTypeOf<ReferenceDataResponse['label']>().toBeString();
     });
 
     it('should have active status, sort order, and validity period', () => {
-      expectTypeOf<ReferenceDataEntry['activated']>().toBeBoolean();
-      expectTypeOf<ReferenceDataEntry['sortOrder']>().toBeNumber();
-      expectTypeOf<ReferenceDataEntry['validFrom']>().toEqualTypeOf<ISODateString | null>();
-      expectTypeOf<ReferenceDataEntry['validTo']>().toEqualTypeOf<ISODateString | null>();
+      expectTypeOf<ReferenceDataResponse['activated']>().toBeBoolean();
+      expectTypeOf<ReferenceDataResponse['sortOrder']>().toBeNumber();
+      expectTypeOf<ReferenceDataResponse['validFrom']>().toEqualTypeOf<ISODateString | null>();
+      expectTypeOf<ReferenceDataResponse['validTo']>().toEqualTypeOf<ISODateString | null>();
     });
 
     it('should have hierarchical parent code', () => {
-      expectTypeOf<ReferenceDataEntry['parentCode']>().toEqualTypeOf<string | null>();
+      expectTypeOf<ReferenceDataResponse['parentCode']>().toEqualTypeOf<string | null>();
     });
 
     it('should have extra properties bag', () => {
-      expectTypeOf<ReferenceDataEntry['metadata']>().toEqualTypeOf<Record<string, string> | null>();
+      expectTypeOf<ReferenceDataResponse['metadata']>().toEqualTypeOf<Record<
+        string,
+        string
+      > | null>();
     });
 
     it('should have a unique id', () => {
-      expectTypeOf<ReferenceDataEntry>().toHaveProperty('id');
-      expectTypeOf<ReferenceDataEntry['id']>().toBeString();
+      expectTypeOf<ReferenceDataResponse>().toHaveProperty('id');
+      expectTypeOf<ReferenceDataResponse['id']>().toBeString();
     });
 
     it('should be extensible by concrete entity types', () => {
-      interface Country extends ReferenceDataEntry {
+      interface Country extends ReferenceDataResponse {
         readonly alpha3: string;
         readonly region: string;
       }
 
-      expectTypeOf<Country>().toMatchTypeOf<ReferenceDataEntry>();
+      expectTypeOf<Country>().toMatchTypeOf<ReferenceDataResponse>();
       expectTypeOf<Country>().toHaveProperty('alpha3');
       expectTypeOf<Country>().toHaveProperty('code');
     });

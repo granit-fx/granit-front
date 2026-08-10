@@ -4,19 +4,19 @@ import { EmptyState } from '@granit/react-ui-kit';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router';
 
-import type { ReferenceDataEntry } from './types';
+import type { ReferenceDataResponse } from './types';
 import type { ReactNode } from 'react';
 
 interface ReferenceDataEditPageShellProps {
   readonly i18nPrefix: string;
   readonly basePath: string;
-  readonly entry: ReferenceDataEntry | undefined;
+  readonly entry: ReferenceDataResponse | undefined;
   readonly isLoading: boolean;
   readonly error: Error | null;
   readonly onDeactivate: () => void;
   readonly onReactivate: () => void;
   /** Optional subtitle content rendered after the entry name (e.g., extra codes). */
-  readonly renderSubtitle?: (entry: ReferenceDataEntry) => ReactNode;
+  readonly renderSubtitle?: (entry: ReferenceDataResponse) => ReactNode;
   /** The form and any dialogs to render. */
   readonly children: ReactNode;
 }

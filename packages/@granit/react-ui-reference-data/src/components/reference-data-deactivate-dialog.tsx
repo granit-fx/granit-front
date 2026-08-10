@@ -9,10 +9,10 @@ import {
   DialogTitle,
 } from '@granit/react-ui';
 
-import type { ReferenceDataEntry } from './types';
+import type { ReferenceDataResponse } from './types';
 
 interface ReferenceDataDeactivateDialogProps {
-  readonly entry: ReferenceDataEntry | null;
+  readonly entry: ReferenceDataResponse | null;
   readonly action: 'deactivate' | 'reactivate';
   readonly open: boolean;
   readonly onOpenChange: (open: boolean) => void;

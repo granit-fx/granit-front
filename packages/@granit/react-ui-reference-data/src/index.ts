@@ -1,6 +1,6 @@
 // Types
 export type {
-  ReferenceDataEntry,
+  ReferenceDataResponse,
   ReferenceDataFormValues,
   CreateReferenceDataFormValues,
   EditReferenceDataFormValues,

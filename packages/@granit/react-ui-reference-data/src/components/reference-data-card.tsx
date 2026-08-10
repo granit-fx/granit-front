@@ -14,14 +14,14 @@ import {
 import { cn } from '@granit/utils';
 import { MoreHorizontal } from 'lucide-react';
 
-import type { ReferenceDataEntry } from './types';
+import type { ReferenceDataResponse } from './types';
 import type { ReactNode } from 'react';
 
 interface ReferenceDataCardProps {
-  readonly entry: ReferenceDataEntry;
+  readonly entry: ReferenceDataResponse;
   readonly onEdit: (code: string) => void;
-  readonly onDeactivate: (entry: ReferenceDataEntry) => void;
-  readonly onReactivate: (entry: ReferenceDataEntry) => void;
+  readonly onDeactivate: (entry: ReferenceDataResponse) => void;
+  readonly onReactivate: (entry: ReferenceDataResponse) => void;
   readonly i18nPrefix?: string;
   /** Slot for app-specific content rendered after base fields. */
   readonly children?: ReactNode;

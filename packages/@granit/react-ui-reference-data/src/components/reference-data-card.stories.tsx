@@ -3,10 +3,10 @@ import { fn } from 'storybook/test';
 
 import { ReferenceDataCard } from './reference-data-card';
 
-import type { ReferenceDataEntry } from './types';
+import type { ReferenceDataResponse } from './types';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-const baseEntry: ReferenceDataEntry = {
+const baseEntry: ReferenceDataResponse = {
   id: toEntityId('rd-001'),
   code: 'FR',
   label: 'France',
@@ -24,6 +24,7 @@ const baseEntry: ReferenceDataEntry = {
   labelKo: '프랑스',
   labelSv: 'Frankrike',
   labelCs: 'Francie',
+  labelHi: 'Francie',
   activated: true,
   sortOrder: 10,
   validFrom: null,

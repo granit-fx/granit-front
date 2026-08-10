@@ -31,7 +31,7 @@ import { logger } from '../logger';
 
 import { ReferenceDataDeactivateDialog } from './reference-data-deactivate-dialog';
 
-import type { ReferenceDataEntry } from './types';
+import type { ReferenceDataResponse } from './types';
 import type { QueryConfig } from '@granit/query-engine';
 import type { DataExchangeConfig } from '@granit/react-data-exchange';
 import type { ViewMode } from '@granit/react-ui-kit';
@@ -52,7 +52,7 @@ interface ReferenceDataUpdatePayload {
 }
 
 export interface ReferenceDataListPageShellProps<
-  T extends ReferenceDataEntry = ReferenceDataEntry,
+  T extends ReferenceDataResponse = ReferenceDataResponse,
 > {
   readonly i18nPrefix: string;
   readonly basePath: string;
@@ -86,11 +86,9 @@ export interface ReferenceDataListPageShellProps<
   readonly renderExtraView?: () => ReactNode;
 }
 
-export function ReferenceDataListPageShell<T extends ReferenceDataEntry = ReferenceDataEntry>({
-  queryConfig,
-  dataExchangeConfig,
-  ...rest
-}: ReferenceDataListPageShellProps<T>) {
+export function ReferenceDataListPageShell<
+  T extends ReferenceDataResponse = ReferenceDataResponse,
+>({ queryConfig, dataExchangeConfig, ...rest }: ReferenceDataListPageShellProps<T>) {
   return (
     <QueryProvider config={queryConfig}>
       <DataExchangeProvider {...(dataExchangeConfig ? { config: dataExchangeConfig } : {})}>
@@ -100,7 +98,7 @@ export function ReferenceDataListPageShell<T extends ReferenceDataEntry = Refere
   );
 }
 
-function ListPageContent<T extends ReferenceDataEntry>({
+function ListPageContent<T extends ReferenceDataResponse>({
   i18nPrefix,
   basePath,
   exportDefinition,
@@ -116,7 +114,7 @@ function ListPageContent<T extends ReferenceDataEntry>({
   const navigate = useNavigate();
 
   const [view, setView] = useState<ViewMode>('list');
-  const [dialogEntry, setDialogEntry] = useState<ReferenceDataEntry | null>(null);
+  const [dialogEntry, setDialogEntry] = useState<ReferenceDataResponse | null>(null);
   const [dialogAction, setDialogAction] = useState<'deactivate' | 'reactivate'>('deactivate');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
@@ -146,13 +144,13 @@ function ListPageContent<T extends ReferenceDataEntry>({
     [navigate, basePath]
   );
 
-  const handleOpenDeactivate = useCallback((entry: ReferenceDataEntry) => {
+  const handleOpenDeactivate = useCallback((entry: ReferenceDataResponse) => {
     setDialogEntry(entry);
     setDialogAction('deactivate');
     setDialogOpen(true);
   }, []);
 
-  const handleOpenReactivate = useCallback((entry: ReferenceDataEntry) => {
+  const handleOpenReactivate = useCallback((entry: ReferenceDataResponse) => {
     setDialogEntry(entry);
     setDialogAction('reactivate');
     setDialogOpen(true);

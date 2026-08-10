@@ -4,11 +4,11 @@ import { ReferenceDataDeactivateDialog } from '../components/reference-data-deac
 
 import { renderWithProviders } from './test-utils';
 
-import type { ReferenceDataEntry } from '../components/types';
+import type { ReferenceDataResponse } from '../components/types';
 
-function makeEntry(overrides: Partial<ReferenceDataEntry> = {}): ReferenceDataEntry {
+function makeEntry(overrides: Partial<ReferenceDataResponse> = {}): ReferenceDataResponse {
   return {
-    id: 'rd-1' as ReferenceDataEntry['id'],
+    id: 'rd-1' as ReferenceDataResponse['id'],
     code: 'BE',
     label: 'Belgium',
     labelEn: 'Belgium',
@@ -25,6 +25,7 @@ function makeEntry(overrides: Partial<ReferenceDataEntry> = {}): ReferenceDataEn
     labelKo: '',
     labelSv: '',
     labelCs: '',
+    labelHi: '',
     activated: true,
     sortOrder: 0,
     validFrom: null,

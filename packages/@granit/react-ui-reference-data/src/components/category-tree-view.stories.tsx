@@ -4,13 +4,13 @@ import { fn } from 'storybook/test';
 
 import { CategoryTreeView } from './category-tree-view';
 
-import type { ReferenceDataEntry } from './types';
+import type { ReferenceDataResponse } from './types';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 const api = createApiClient({ baseURL: '' });
 
-function makeEntry(code: string, labelEn: string, activated = true): ReferenceDataEntry {
+function makeEntry(code: string, labelEn: string, activated = true): ReferenceDataResponse {
   return {
     id: toEntityId(code),
     code,
@@ -29,6 +29,7 @@ function makeEntry(code: string, labelEn: string, activated = true): ReferenceDa
     labelKo: labelEn,
     labelSv: labelEn,
     labelCs: labelEn,
+    labelHi: labelEn,
     activated,
     sortOrder: 0,
     validFrom: null,
@@ -38,7 +39,7 @@ function makeEntry(code: string, labelEn: string, activated = true): ReferenceDa
   };
 }
 
-const roots: ReferenceDataEntry[] = [
+const roots: ReferenceDataResponse[] = [
   makeEntry('ELECTRONICS', 'Electronics'),
   makeEntry('CLOTHING', 'Clothing'),
   makeEntry('LEGACY', 'Legacy category', false),
@@ -46,7 +47,7 @@ const roots: ReferenceDataEntry[] = [
 
 // Stub the children hook so the tree renders without a live API.
 const useChildren = (() =>
-  ({ data: [], isLoading: false }) as unknown as UseQueryResult<ReferenceDataEntry[]>) as never;
+  ({ data: [], isLoading: false }) as unknown as UseQueryResult<ReferenceDataResponse[]>) as never;
 
 const meta: Meta<typeof CategoryTreeView> = {
   title: 'Features/ReferenceData/CategoryTreeView',

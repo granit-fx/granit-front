@@ -1,6 +1,6 @@
 import type {
   ReferenceDataCreateRequest,
-  ReferenceDataEntry,
+  ReferenceDataResponse,
   ReferenceDataQuery,
   ReferenceDataUpdateRequest,
 } from '../types/index';
@@ -12,7 +12,7 @@ import type { PagedResult } from '@granit/query-engine';
  *
  * `GET {basePath}?activeOnly=&search=&sortBy=&descending=&page=&pageSize=`
  */
-export async function listReferenceData<T extends ReferenceDataEntry>(
+export async function listReferenceData<T extends ReferenceDataResponse>(
   client: AxiosInstance,
   basePath: string,
   params?: ReferenceDataQuery
@@ -26,7 +26,7 @@ export async function listReferenceData<T extends ReferenceDataEntry>(
  *
  * `GET {basePath}/{code}`
  */
-export async function getReferenceDataEntry<T extends ReferenceDataEntry>(
+export async function getReferenceDataEntry<T extends ReferenceDataResponse>(
   client: AxiosInstance,
   basePath: string,
   code: string
@@ -70,7 +70,7 @@ export async function updateReferenceDataEntry(
  * Returns active children ordered by sortOrder, then code.
  * Throws 404 if the parent code does not exist.
  */
-export async function listReferenceDataChildren<T extends ReferenceDataEntry>(
+export async function listReferenceDataChildren<T extends ReferenceDataResponse>(
   client: AxiosInstance,
   basePath: string,
   code: string

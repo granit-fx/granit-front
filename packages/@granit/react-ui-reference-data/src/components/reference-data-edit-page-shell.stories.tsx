@@ -4,10 +4,10 @@ import { fn } from 'storybook/test';
 
 import { ReferenceDataEditPageShell } from './reference-data-edit-page-shell';
 
-import type { ReferenceDataEntry } from './types';
+import type { ReferenceDataResponse } from './types';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-const entry: ReferenceDataEntry = {
+const entry: ReferenceDataResponse = {
   id: toEntityId('rd-001'),
   code: 'FR',
   label: 'France',
@@ -25,6 +25,7 @@ const entry: ReferenceDataEntry = {
   labelKo: '프랑스',
   labelSv: 'Frankrike',
   labelCs: 'Francie',
+  labelHi: 'Francie',
   activated: true,
   sortOrder: 10,
   validFrom: null,

@@ -5,16 +5,19 @@ import { cn } from '@granit/utils';
 import { ChevronRight } from 'lucide-react';
 import * as React from 'react';
 
-import type { ReferenceDataEntry } from './types';
+import type { ReferenceDataResponse } from './types';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 interface CategoryTreeViewProps {
   /** Root entries (parentCode === null). */
-  readonly roots: ReferenceDataEntry[];
+  readonly roots: ReferenceDataResponse[];
   readonly isLoading?: boolean;
   /** Hook to fetch children for a given parent code. */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly useChildren: (parentCode: string, options: any) => UseQueryResult<ReferenceDataEntry[]>;
+  readonly useChildren: (
+    parentCode: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- each caller passes its own React Query options shape
+    options: any
+  ) => UseQueryResult<ReferenceDataResponse[]>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly apiClient: any;
   readonly onSelect: (code: string) => void;
@@ -59,7 +62,7 @@ export function CategoryTreeView({
 }
 
 interface TreeNodeProps {
-  readonly entry: ReferenceDataEntry;
+  readonly entry: ReferenceDataResponse;
   readonly depth: number;
   readonly useChildren: CategoryTreeViewProps['useChildren'];
   readonly apiClient: unknown;

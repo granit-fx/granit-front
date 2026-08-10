@@ -48,14 +48,60 @@ aucun de ces quatre types, donc aucune coordination applicative n'est requise.
 `WorkflowHistoryPage` aussi : c'est un alias du wrapper partagé `PagedResult<T>`,
 que le manifest exclut avec les autres génériques `*Of*`.
 
-### Reste à faire — `reference-data`
+## `@granit/reference-data` : `ReferenceDataEntry` → `ReferenceDataResponse`
 
-Le spec expose `ReferenceDataResponse` là où le front nomme le type
-`ReferenceDataEntry`. Le même alignement s'impose, mais il touche **15 fichiers
-de `granit-showcase-react`** (écrans countries / document-types /
-product-categories) : il demande donc une MR coordonnée et reste à faire. Seuls
-`ReferenceDataCreateRequest` et `ReferenceDataUpdateRequest`, dont les noms
-correspondent déjà, sont asserté aujourd'hui.
+**Date** : 2026-08-10
+**Packages affectés** : `@granit/reference-data`, `@granit/react-reference-data`,
+`@granit/react-ui-reference-data`. **Nécessite une MR coordonnée sur
+`granit-showcase-react`.**
+
+### Contexte
+
+Même alignement de suffixe que pour `@granit/workflow` ci-dessus : le spec nomme
+ce schéma `ReferenceDataResponse`, le front l'appelait `ReferenceDataEntry`, ce
+qui le rendait inassertable.
+
+Contrairement à `workflow`, l'assertion a révélé **deux dérives de contrat
+réelles** une fois le nom résolu.
+
+### 1. Champ backend manquant : `labelHi`
+
+Le backend expose **15** labels ; le front n'en déclarait que 14. `labelHi`
+(hindi) est **requis** dans `ReferenceDataResponse`, donc tout objet construit
+côté applicatif doit le fournir :
+
+```diff
+   labelSv: 'Sverige',
+   labelCs: 'Česko',
++  labelHi: 'भारत',
+```
+
+Le formulaire de `@granit/react-ui-reference-data` ne saisit que `labelEn`, donc
+aucun champ d'UI n'est ajouté — l'impact se limite aux fixtures, mocks MSW et
+données de test qui énumèrent le jeu complet.
+
+### 2. Ordre des champs
+
+Le spec intercale les labels entre `label` et `activated`.
+`ReferenceDataResponse` n'**étend** donc plus `ReferenceDataLabels` : une clause
+`extends` place les champs hérités après les champs propres, ce que l'oracle
+signale en `field-order`. Les 15 labels sont désormais déclarés en ligne dans
+l'ordre du spec. `ReferenceDataLabels` reste exporté — les requêtes de
+création/mise à jour le consomment en `Partial<ReferenceDataLabels>`.
+
+### Impact sur les consommateurs
+
+```bash
+git ls-files '*.ts' '*.tsx' | xargs sed -i \
+  -e 's/\bReferenceDataEntry\b/ReferenceDataResponse/g'
+```
+
+`ReferenceDataEntryId` est **inchangé** : c'est un `EntityId` brandé propre au
+front, absent du spec. Aucun alias de rétrocompatibilité, conformément aux
+packages déjà alignés.
+
+Puis ajouter `labelHi` partout où le jeu complet de labels est énuméré (14
+fichiers côté framework, 1 côté showcase).
 
 ## TanStack Table v8 → v9 (`ColumnDef` → `DataTableColumnDef`)
 

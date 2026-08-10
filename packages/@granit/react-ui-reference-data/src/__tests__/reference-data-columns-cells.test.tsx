@@ -4,15 +4,15 @@ import { createReferenceDataColumns } from '../components/reference-data-columns
 
 import { renderWithProviders, testI18n } from './test-utils';
 
-import type { ReferenceDataEntry } from '../components/types';
+import type { ReferenceDataResponse } from '../components/types';
 import type { DataTableCellContext, DataTableColumnDef } from '@granit/react-ui-kit';
 import type { ReactElement } from 'react';
 
 const t = testI18n.t.bind(testI18n);
 
-function makeEntry(overrides: Partial<ReferenceDataEntry> = {}): ReferenceDataEntry {
+function makeEntry(overrides: Partial<ReferenceDataResponse> = {}): ReferenceDataResponse {
   return {
-    id: 'rd-1' as ReferenceDataEntry['id'],
+    id: 'rd-1' as ReferenceDataResponse['id'],
     code: 'BE',
     label: 'Belgium',
     labelEn: 'Belgium',
@@ -29,6 +29,7 @@ function makeEntry(overrides: Partial<ReferenceDataEntry> = {}): ReferenceDataEn
     labelKo: '',
     labelSv: '',
     labelCs: '',
+    labelHi: '',
     activated: true,
     sortOrder: 1,
     validFrom: null,
@@ -40,13 +41,13 @@ function makeEntry(overrides: Partial<ReferenceDataEntry> = {}): ReferenceDataEn
 }
 
 function renderCell(
-  column: DataTableColumnDef<ReferenceDataEntry, unknown> | undefined,
-  entry: ReferenceDataEntry
+  column: DataTableColumnDef<ReferenceDataResponse, unknown> | undefined,
+  entry: ReferenceDataResponse
 ) {
   const cell = column?.cell;
   if (typeof cell !== 'function') throw new Error('cell renderer expected');
   const ctx = { row: { original: entry } } as unknown as DataTableCellContext<
-    ReferenceDataEntry,
+    ReferenceDataResponse,
     unknown
   >;
   return renderWithProviders(cell(ctx) as ReactElement);

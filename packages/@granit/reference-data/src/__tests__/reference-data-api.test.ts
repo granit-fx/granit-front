@@ -11,12 +11,12 @@ import {
   updateReferenceDataEntry,
 } from '../api/reference-data-api';
 
-import type { ReferenceDataEntry } from '../types/index';
+import type { ReferenceDataResponse } from '../types/index';
 
 const BASE_PATH = '/api/v1/reference-data/countries';
 
-const mockEntry: ReferenceDataEntry = {
-  id: toEntityId<'ReferenceDataEntry'>('a1b2c3d4-e5f6-7890-abcd-ef1234567890'),
+const mockEntry: ReferenceDataResponse = {
+  id: toEntityId<'ReferenceDataResponse'>('a1b2c3d4-e5f6-7890-abcd-ef1234567890'),
   code: 'BE',
   labelEn: 'Belgium',
   labelFr: 'Belgique',
@@ -32,6 +32,7 @@ const mockEntry: ReferenceDataEntry = {
   labelKo: '벨기에',
   labelSv: 'Belgien',
   labelCs: 'Belgie',
+  labelHi: 'Belgie',
   label: 'Belgium',
   activated: true,
   sortOrder: 1,

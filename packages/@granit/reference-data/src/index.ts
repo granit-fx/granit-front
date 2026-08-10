@@ -1,7 +1,7 @@
 // Types
 export type {
   ReferenceDataCreateRequest,
-  ReferenceDataEntry,
+  ReferenceDataResponse,
   ReferenceDataEntryId,
   ReferenceDataLabels,
   ReferenceDataQuery,
