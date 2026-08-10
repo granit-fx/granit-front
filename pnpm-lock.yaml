@@ -92,8 +92,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tanstack/react-virtual':
         specifier: ^3.14.9
         version: 3.14.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -3850,8 +3850,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -4119,8 +4119,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       msw:
         specifier: ^2.15.0
         version: 2.15.0(@types/node@26.1.2)(typescript@6.0.3)
@@ -4442,8 +4442,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -4494,8 +4494,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       cronstrue:
         specifier: ^3.24.0
         version: 3.24.0
@@ -4598,8 +4598,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -4695,8 +4695,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -4774,8 +4774,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -4908,8 +4908,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       msw:
         specifier: ^2.15.0
         version: 2.15.0(@types/node@26.1.2)(typescript@6.0.3)
@@ -5091,8 +5091,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       msw:
         specifier: ^2.15.0
         version: 2.15.0(@types/node@26.1.2)(typescript@6.0.3)
@@ -5152,8 +5152,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -5228,8 +5228,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -5292,8 +5292,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -5414,8 +5414,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -5577,8 +5577,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       date-fns:
         specifier: ^4.0.0
         version: 4.4.0
@@ -5993,8 +5993,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -6078,8 +6078,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -6145,8 +6145,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       cmdk:
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6218,8 +6218,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -6349,8 +6349,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -6400,8 +6400,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -6617,8 +6617,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -6705,8 +6705,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -6759,8 +6759,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -6849,8 +6849,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -6984,8 +6984,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -7176,8 +7176,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@6.0.3)
@@ -7252,8 +7252,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       storybook:
         specifier: ^10.5.6
         version: 10.5.6(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -7393,8 +7393,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -7555,8 +7555,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: ^9.0.0
+        version: 9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -10621,12 +10621,17 @@ packages:
     peerDependencies:
       react: ^19.0.0
 
-  '@tanstack/react-table@8.21.3':
-    resolution: {integrity: sha512-5nNMTSETP4ykGegmVkhjcS8tTLW6Vl4axfEGQN3v0zdHYbK4UfoqfPChclTrJ4EoK9QynqAu9oUf8VEmrpZ5Ww==}
-    engines: {node: '>=12'}
+  '@tanstack/react-store@0.11.1':
+    resolution: {integrity: sha512-HaIGKI3YLmjBYIvy5DFDY23oNaYZIsTZfngey07Uh5iLVJgM3bIGCnZeOFOqzjFld9JHWcaHJnasD/bKoGKwJQ==}
     peerDependencies:
       react: ^19.0.0
       react-dom: ^19.0.0
+
+  '@tanstack/react-table@9.0.0':
+    resolution: {integrity: sha512-Q/Z49MQcdMwge67U+LTjSEQJCnQE9/tNWK5IpiYex9JFDzfjNkLIi7yzGA4dfW4UpuMBrtqbSnSzn7oPr60T+w==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      react: ^19.0.0
 
   '@tanstack/react-virtual@3.14.9':
     resolution: {integrity: sha512-qZyr0FZDP8rDC4WBhsryIZmAd9bveJvFGUJJtskWaew6/0dTRS6wZxnR6VQ5bY2KwL3LjerrHqQLk3a0GKcPXQ==}
@@ -10634,9 +10639,12 @@ packages:
       react: ^19.0.0
       react-dom: ^19.0.0
 
-  '@tanstack/table-core@8.21.3':
-    resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
-    engines: {node: '>=12'}
+  '@tanstack/store@0.11.1':
+    resolution: {integrity: sha512-mzTOBhypOuDJAy/D8n2MfUZ1HFkXnmSETviRyhqEC8LUE7/IZQExOTxMANj3KjTofYTkFNpBY67qaVrT41YccA==}
+
+  '@tanstack/table-core@9.0.0':
+    resolution: {integrity: sha512-IyKCc4D7d/+I9euQntlVDQ7lnilmFRKpIROBeI5/866adFy+65xWvCFPz76NZ5j2lXe/RFDvFVV7bfETmwHEMA==}
+    engines: {node: '>=20'}
 
   '@tanstack/virtual-core@3.17.7':
     resolution: {integrity: sha512-bp+v10y65sp2H7WpWfIMyxTNfl8ZVfxFTLRjPIFRryi6FV/J33z4IS53WO4pTk36KlvJ4iLiQz+oaydDC1xbcA==}
@@ -16467,11 +16475,20 @@ snapshots:
       '@tanstack/query-core': 5.101.4
       react: 19.2.8
 
-  '@tanstack/react-table@8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@tanstack/react-store@0.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
-      '@tanstack/table-core': 8.21.3
+      '@tanstack/store': 0.11.1
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
+      use-sync-external-store: 1.6.0(react@19.2.8)
+
+  '@tanstack/react-table@9.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+    dependencies:
+      '@tanstack/react-store': 0.11.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tanstack/table-core': 9.0.0
+      react: 19.2.8
+    transitivePeerDependencies:
+      - react-dom
 
   '@tanstack/react-virtual@3.14.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
@@ -16479,7 +16496,11 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
 
-  '@tanstack/table-core@8.21.3': {}
+  '@tanstack/store@0.11.1': {}
+
+  '@tanstack/table-core@9.0.0':
+    dependencies:
+      '@tanstack/store': 0.11.1
 
   '@tanstack/virtual-core@3.17.7': {}
 
