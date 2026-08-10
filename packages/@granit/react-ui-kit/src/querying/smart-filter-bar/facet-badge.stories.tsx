@@ -25,7 +25,7 @@ const filterToken: FilterToken = {
   type: 'filter',
   label: 'Status = Active',
   field: 'status',
-  operator: 'eq',
+  operator: 'Eq',
   value: 'active',
   labelParts: {
     field: 'Status',
@@ -39,7 +39,7 @@ const filterTokenSimple: FilterToken = {
   type: 'filter',
   label: 'Name contains John',
   field: 'name',
-  operator: 'contains',
+  operator: 'Contains',
   value: 'John',
   labelParts: {
     field: 'Name',

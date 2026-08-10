@@ -108,11 +108,18 @@ function Harness({ meta }: { readonly meta: QueryMetadata }) {
 
 const meta = {
   title: 'Admin Kit/Querying/QueryControlBar',
-  component: QueryControlBar,
+  // The stories render `Harness`, not `QueryControlBar` directly: the bar needs
+  // a live `useQueryEndpoint` return, which cannot be expressed as a static arg.
+  // The harness still requires `meta`, so a default lives here and each story
+  // passes the fixture it wants through `render`.
+  component: Harness,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
     msw: { handlers: [metaHandler, pageHandler] },
+  },
+  args: {
+    meta: META,
   },
   decorators: [
     (Story) => (
@@ -127,7 +134,7 @@ const meta = {
       </QueryClientProvider>
     ),
   ],
-} satisfies Meta<typeof QueryControlBar>;
+} satisfies Meta<typeof Harness>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

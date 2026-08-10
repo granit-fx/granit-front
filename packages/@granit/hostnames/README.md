@@ -74,7 +74,7 @@ const secured = checked.certificateStatus === CertificateStatus.Secured;
 All API functions take an `AxiosInstance` (from `@granit/api-client`) and a
 `basePath` string (the default deployment is `/api/hostnames`).
 
-| Symbol                           | Kind  | Purpose                                                         |
+| Symbol                           | Kind  | Purpose                                                        |
 | -------------------------------- | ----- | -------------------------------------------------------------- |
 | `ManagedHostnameResponse`        | type  | Full hostname descriptor (status, DNS records, TLS, conflicts) |
 | `HostnameStatus`                 | const | `Pending` / `Verifying` / `Active` / `Error` (value + type)    |
@@ -85,14 +85,14 @@ All API functions take an `AxiosInstance` (from `@granit/api-client`) and a
 | `DnsConflict`                    | type  | A conflict blocking activation (`conflictType` + `details`)    |
 | `CreateManagedHostnameRequest`   | type  | `POST {basePath}` body (host, owner, optional primary)         |
 | `ListHostnamesParams`            | type  | `GET {basePath}` query (`ownerType`, `ownerId`, `maxResults`)  |
-| `HostnameAvailabilityResponse`   | type  | `{ host, isAvailable }`                                         |
+| `HostnameAvailabilityResponse`   | type  | `{ host, isAvailable }`                                        |
 | `ReportCertificateStatusRequest` | type  | `POST .../certificate-status` body (provider webhook)          |
 | `listHostnames`                  | fn    | `GET {basePath}` — owner-scoped, capped at `maxResults`        |
-| `getHostname`                    | fn    | `GET {basePath}/{id}`                                           |
-| `createHostname`                 | fn    | `POST {basePath}`                                               |
+| `getHostname`                    | fn    | `GET {basePath}/{id}`                                          |
+| `createHostname`                 | fn    | `POST {basePath}`                                              |
 | `setPrimary`                     | fn    | `POST {basePath}/{id}/primary` (204)                           |
 | `clearPrimary`                   | fn    | `DELETE {basePath}/{id}/primary` (204)                         |
-| `deleteHostname`                 | fn    | `DELETE {basePath}/{id}`                                        |
+| `deleteHostname`                 | fn    | `DELETE {basePath}/{id}`                                       |
 | `checkAvailability`              | fn    | `GET {basePath}/availability?host=`                            |
 | `verifyNow`                      | fn    | `POST {basePath}/{id}/verify-now` (202, updated row)           |
 | `reportCertificateStatus`        | fn    | `POST {basePath}/{id}/certificate-status` — host-level webhook |

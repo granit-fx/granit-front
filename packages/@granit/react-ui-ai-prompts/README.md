@@ -50,10 +50,7 @@ baked in.
 ```tsx
 import { AIPromptsProvider } from '@granit/react-ai-prompts';
 import { useGranitClient } from '@granit/react-api-client';
-import {
-  PromptCataloguePage,
-  aiPromptsAdminTranslationsEn,
-} from '@granit/react-ui-ai-prompts';
+import { PromptCataloguePage, aiPromptsAdminTranslationsEn } from '@granit/react-ui-ai-prompts';
 import { Route } from 'react-router';
 
 // Flat `AiPrompts.*` keys — register with key/namespace separators disabled so the
@@ -79,8 +76,8 @@ user prompt); own prompts surface **Edit** / **Delete**.
 ## Public API
 
 | Symbol                         | Kind      | Purpose                                                            |
-| ------------------------------ | --------- | ----------------------------------------------------------------- |
-| `PromptCataloguePage`          | component | The prompt-catalogue management page (props-less; reads context)  |
+| ------------------------------ | --------- | ------------------------------------------------------------------ |
+| `PromptCataloguePage`          | component | The prompt-catalogue management page (props-less; reads context)   |
 | `aiPromptsAdminTranslationsEn` | const     | English `AiPrompts.*` strings (flat dotted keys, `translation` ns) |
 | `aiPromptsAdminTranslationsFr` | const     | French `AiPrompts.*` strings                                       |
 

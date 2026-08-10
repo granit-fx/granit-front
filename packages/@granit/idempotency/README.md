@@ -73,7 +73,7 @@ if (isIdempotentReplay(response)) {
 | `enableIdempotency`            | fn   | Register the key generator on the shared client (call once)               |
 | `disableIdempotency`           | fn   | Unregister the generator (testing / feature flags)                        |
 | `shouldRetryIgnoringTombstone` | fn   | TanStack Query `retry` predicate; `false` on tombstone                    |
-| `IdempotencyClientOptions`     | type | `{ methods?, keyGenerator? }` for `enableIdempotency`                      |
+| `IdempotencyClientOptions`     | type | `{ methods?, keyGenerator? }` for `enableIdempotency`                     |
 | `isIdempotencyTombstoned`      | fn   | `true` when the error is a non-replayable tombstone (re-export)           |
 | `readIdempotencyTombstone`     | fn   | Tombstone `{ reason }` from an error, else `undefined` (re-export)        |
 | `isIdempotentReplay`           | fn   | `true` when a response/error was served from the replay cache (re-export) |
@@ -87,19 +87,19 @@ for a given request).
 ## Caveats
 
 - **Random keys do not make retries safe.** A fresh UUID per attempt is a
-  *distinct* operation to the backend. Only a single stable key reused across
+  _distinct_ operation to the backend. Only a single stable key reused across
   attempts triggers replay — carry it in the request header (e.g. in the React
   Query mutation variables), not in `enableIdempotency`.
 - **Tombstones are terminal.** When the original response could not be cached
   (exceeds the backend `MaxResponseSizeBytes`), the entry is tombstoned and every
   retry with that key returns HTTP 413 (`X-Idempotency-Tombstone`). Recovering
-  requires a *new* key; `shouldRetryIgnoringTombstone` stops the retry loop, and
+  requires a _new_ key; `shouldRetryIgnoringTombstone` stops the retry loop, and
   unknown tombstone `reason` values should be treated as generic "not replayable".
 - **Key length bound.** The backend rejects keys longer than its `MaxKeyLength`
   (default 256 characters) with HTTP 400 before any processing — keep custom
   `keyGenerator` output well under that bound (a UUIDv4 is 36 characters).
 - **Replay covers cached errors too.** `isIdempotentReplay` returns `true` for a
-  replayed success *or* a replayed error (e.g. a cached 409/422), since a replay
+  replayed success _or_ a replayed error (e.g. a cached 409/422), since a replay
   reproduces the original status; pass it the response or the error accordingly.
 - **Single registration.** `setIdempotencyKeyGenerator` warns when a generator is
   already set; call `enableIdempotency()` once, not per component.

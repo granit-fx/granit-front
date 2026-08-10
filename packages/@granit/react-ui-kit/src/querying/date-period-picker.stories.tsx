@@ -6,6 +6,7 @@ import type { DateFilterMeta, DatePeriod } from '@granit/query-engine';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const allPeriodsMeta: DateFilterMeta = {
+  name: 'createdAt',
   defaultPeriod: 'ThisMonth',
   availablePeriods: [
     'Today',
@@ -19,6 +20,7 @@ const allPeriodsMeta: DateFilterMeta = {
 };
 
 const limitedPeriodsMeta: DateFilterMeta = {
+  name: 'createdAt',
   defaultPeriod: 'Today',
   availablePeriods: ['Today', 'ThisWeek', 'ThisMonth'],
 };

@@ -61,11 +61,7 @@ function ChatView() {
 
   return (
     <div>
-      <button
-        onClick={() =>
-          send('default', { messages: [{ role: 'user', content: 'Hello' }] })
-        }
-      >
+      <button onClick={() => send('default', { messages: [{ role: 'user', content: 'Hello' }] })}>
         {isStreaming ? 'Streaming…' : 'Send'}
       </button>
       {isStreaming && <button onClick={abort}>Stop</button>}
@@ -101,13 +97,13 @@ function UsageTable() {
 
 Entry point `@granit/react-ai`:
 
-| Symbol                 | Kind     | Purpose                                                            |
+| Symbol                 | Kind     | Purpose                                                           |
 | ---------------------- | -------- | ----------------------------------------------------------------- |
 | `AIProvider`           | provider | Resolve client / `basePath` / `queryKeyPrefix`, expose on context |
 | `useAIConfig`          | hook     | Read the resolved config from the nearest `AIProvider`            |
 | `AIConfig`             | type     | Provider input (`client?`, `basePath?`, `queryKeyPrefix?`)        |
 | `AIProviderProps`      | type     | `{ config, children }` for `AIProvider`                           |
-| `ResolvedAIConfig`     | type     | Config after defaults + client resolution                        |
+| `ResolvedAIConfig`     | type     | Config after defaults + client resolution                         |
 | `aiKeys`               | const    | React Query key factory namespaced under `queryKeyPrefix`         |
 | `useAIProviders`       | hook     | `GET /providers` - registered AI providers                        |
 | `useAIProviderModels`  | hook     | `GET /providers/{name}/models`; disabled until a name is given    |
@@ -132,14 +128,14 @@ Subpath `@granit/react-ai/usage` (needs the query-engine peers):
 
 Subpath `@granit/react-ai/testing` (needs the `msw` peer):
 
-| Symbol                     | Kind  | Purpose                                                  |
-| -------------------------- | ----- | -------------------------------------------------------- |
-| `createAIHandlers`         | fn    | Stateful MSW handlers for the full AI surface            |
-| `aiWorkspaceQueryMetadata` | const | Mock `/workspaces/meta` query-metadata payload           |
-| `mockProviders`            | const | Fixture provider list (OpenAI / AzureOpenAI / Ollama)    |
-| `mockProviderModels`       | const | Fixture provider → model map                             |
-| `mockWorkspaces`           | const | Fixture workspaces (mix of `System` + `Dynamic`)         |
-| `mockUsageRecords`         | const | Fixture usage records                                    |
+| Symbol                     | Kind  | Purpose                                               |
+| -------------------------- | ----- | ----------------------------------------------------- |
+| `createAIHandlers`         | fn    | Stateful MSW handlers for the full AI surface         |
+| `aiWorkspaceQueryMetadata` | const | Mock `/workspaces/meta` query-metadata payload        |
+| `mockProviders`            | const | Fixture provider list (OpenAI / AzureOpenAI / Ollama) |
+| `mockProviderModels`       | const | Fixture provider → model map                          |
+| `mockWorkspaces`           | const | Fixture workspaces (mix of `System` + `Dynamic`)      |
+| `mockUsageRecords`         | const | Fixture usage records                                 |
 
 Wire types (`AIChatRequest`, `AIWorkspaceResponse`, `AIUsageRecord`, …) and the
 permission constants come from [`@granit/ai`](../ai); re-import them from there,

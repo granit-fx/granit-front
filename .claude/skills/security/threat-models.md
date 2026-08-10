@@ -51,16 +51,16 @@ re-bootstraps.
 
 ### STRIDE Analysis
 
-| Threat | Vector | Mitigation (expected) | Verify |
-|--------|--------|----------------------|--------|
-| **Spoofing** | Attacker triggers login redirect to attacker-controlled IdP | SPA never sets the IdP URL — BFF does; SPA only navigates to `/bff/login` | Check `@granit/react-bff` login function |
-| **Spoofing** | Attacker forges CSRF token | CSRF token retrieved over authenticated session and bound to user | Check `@granit/bff` bootstrap fetch |
-| **Tampering** | Attacker modifies axios interceptor at runtime via XSS | Defeated only by preventing XSS in the first place (cf. TM-02) | Check XSS surface |
-| **Repudiation** | User denies action performed in tab | Audit on BFF; trace ID propagated via `@granit/react-tracing` | Check trace propagation |
-| **Info Disclosure** | Session cookie readable from JS | HttpOnly flag set by BFF; SPA does not read `document.cookie` for auth | Grep `document.cookie` |
-| **Info Disclosure** | CSRF token logged | Logger templates do not reference token | Check `@granit/logger` templates |
-| **DoS** | 401 → infinite refresh storm | Single in-flight refresh, max 1 retry per request | Check 401 interceptor |
-| **EoP** | Cookie carried to attacker domain | `SameSite=Strict/Lax` + correct cookie domain on BFF | Check cookie posture (server-side, but document expectation) |
+| Threat              | Vector                                                      | Mitigation (expected)                                                     | Verify                                                       |
+| ------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| **Spoofing**        | Attacker triggers login redirect to attacker-controlled IdP | SPA never sets the IdP URL — BFF does; SPA only navigates to `/bff/login` | Check `@granit/react-bff` login function                     |
+| **Spoofing**        | Attacker forges CSRF token                                  | CSRF token retrieved over authenticated session and bound to user         | Check `@granit/bff` bootstrap fetch                          |
+| **Tampering**       | Attacker modifies axios interceptor at runtime via XSS      | Defeated only by preventing XSS in the first place (cf. TM-02)            | Check XSS surface                                            |
+| **Repudiation**     | User denies action performed in tab                         | Audit on BFF; trace ID propagated via `@granit/react-tracing`             | Check trace propagation                                      |
+| **Info Disclosure** | Session cookie readable from JS                             | HttpOnly flag set by BFF; SPA does not read `document.cookie` for auth    | Grep `document.cookie`                                       |
+| **Info Disclosure** | CSRF token logged                                           | Logger templates do not reference token                                   | Check `@granit/logger` templates                             |
+| **DoS**             | 401 → infinite refresh storm                                | Single in-flight refresh, max 1 retry per request                         | Check 401 interceptor                                        |
+| **EoP**             | Cookie carried to attacker domain                           | `SameSite=Strict/Lax` + correct cookie domain on BFF                      | Check cookie posture (server-side, but document expectation) |
 
 ### Attack Tree: Token theft via XSS in SPA
 
@@ -94,7 +94,7 @@ Goal: Steal user session via the SPA
 ```
 
 **Lesson:** Once XSS lands, BFF's HttpOnly cookie protects the
-*exfiltration* of the credential but NOT the *use* of the credential
+_exfiltration_ of the credential but NOT the _use_ of the credential
 in the user's browser. XSS prevention is paramount.
 
 ---
@@ -107,13 +107,13 @@ markdown source) → React component → `dangerouslySetInnerHTML` /
 
 ### STRIDE Analysis
 
-| Threat | Vector | Mitigation (expected) | Verify |
-|--------|--------|----------------------|--------|
-| **Tampering** | Attacker injects `<script>` or `<img onerror>` via stored content | Sanitizer with allowlist before render; Trusted Types policy | Grep `dangerouslySetInnerHTML` + sanitizer usage |
-| **Tampering** | Attacker injects `<a href="javascript:...">` | URL scheme validation in link components | Check link helpers |
-| **Tampering** | Attacker injects markup via i18n translation | Trust contributions; sanitize render or escape interpolations | Check `<Trans>` components |
-| **Info Disclosure** | XSS exfiltrates DOM (passwords, session tokens) | Prevent XSS; HttpOnly cookies; CSP `connect-src` allowlist | Document CSP expectations |
-| **EoP** | XSS calls existing axios with user credentials | No defense post-XSS; user-confirm for destructive ops | Check destructive flow confirmations |
+| Threat              | Vector                                                            | Mitigation (expected)                                         | Verify                                           |
+| ------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------ |
+| **Tampering**       | Attacker injects `<script>` or `<img onerror>` via stored content | Sanitizer with allowlist before render; Trusted Types policy  | Grep `dangerouslySetInnerHTML` + sanitizer usage |
+| **Tampering**       | Attacker injects `<a href="javascript:...">`                      | URL scheme validation in link components                      | Check link helpers                               |
+| **Tampering**       | Attacker injects markup via i18n translation                      | Trust contributions; sanitize render or escape interpolations | Check `<Trans>` components                       |
+| **Info Disclosure** | XSS exfiltrates DOM (passwords, session tokens)                   | Prevent XSS; HttpOnly cookies; CSP `connect-src` allowlist    | Document CSP expectations                        |
+| **EoP**             | XSS calls existing axios with user credentials                    | No defense post-XSS; user-confirm for destructive ops         | Check destructive flow confirmations             |
 
 ### Attack Tree: DOM XSS
 
@@ -155,13 +155,13 @@ tenant A data → UI displays tenant A data under tenant B context.
 
 ### STRIDE Analysis
 
-| Threat | Vector | Mitigation (expected) | Verify |
-|--------|--------|----------------------|--------|
-| **Info Disclosure** | Cache key omits tenant ID — cross-tenant HIT | All query keys include `tenantId`; helper enforces it | Grep `queryKey` definitions in `hooks/` |
-| **Info Disclosure** | `queryClient.setQueryData` from untrusted handler | Restrict mutators to trusted update flows | Grep `setQueryData` |
-| **Info Disclosure** | Stale data persisted in localStorage persister | Persister scoped per tenant; cleared on switch | Check `@tanstack/react-query-persist-client` config |
-| **Tampering** | User-controlled URL becomes part of query key — cache poisoning | Sanitize and bound query key segments | Check key factories |
-| **DoS** | Unbounded `staleTime`/`gcTime` retains gigabytes of data | Configure sensible defaults; per-query overrides justified | Check defaults |
+| Threat              | Vector                                                          | Mitigation (expected)                                      | Verify                                              |
+| ------------------- | --------------------------------------------------------------- | ---------------------------------------------------------- | --------------------------------------------------- |
+| **Info Disclosure** | Cache key omits tenant ID — cross-tenant HIT                    | All query keys include `tenantId`; helper enforces it      | Grep `queryKey` definitions in `hooks/`             |
+| **Info Disclosure** | `queryClient.setQueryData` from untrusted handler               | Restrict mutators to trusted update flows                  | Grep `setQueryData`                                 |
+| **Info Disclosure** | Stale data persisted in localStorage persister                  | Persister scoped per tenant; cleared on switch             | Check `@tanstack/react-query-persist-client` config |
+| **Tampering**       | User-controlled URL becomes part of query key — cache poisoning | Sanitize and bound query key segments                      | Check key factories                                 |
+| **DoS**             | Unbounded `staleTime`/`gcTime` retains gigabytes of data        | Configure sensible defaults; per-query overrides justified | Check defaults                                      |
 
 ### Attack Tree: Cross-Tenant Leak
 
@@ -194,13 +194,13 @@ production → runs in every user's browser with full SPA origin trust.
 
 ### STRIDE Analysis
 
-| Threat | Vector | Mitigation (expected) | Verify |
-|--------|--------|----------------------|--------|
-| **Tampering** | Compromised package version published by attacker | Lockfile pinning, version review on update | `pnpm-lock.yaml`, Renovate policy |
-| **Tampering** | Typosquat (e.g. `react-quary` instead of `react-query`) | Code review on new deps | PR reviewers |
-| **Tampering** | `postinstall` script exfiltrates env / SSH keys | `ignore-scripts=true` in CI; review on dev | `.npmrc`, CI config |
-| **Info Disclosure** | Malicious package reads `document.cookie` (defeated by HttpOnly), localStorage, intercepts fetch | Minimize 3rd-party deps; vet trust | Dep audit |
-| **EoP** | Package adds a backdoor login bypass to auth flow | Review auth-related deps especially carefully | Pin auth lib versions |
+| Threat              | Vector                                                                                           | Mitigation (expected)                         | Verify                            |
+| ------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------- | --------------------------------- |
+| **Tampering**       | Compromised package version published by attacker                                                | Lockfile pinning, version review on update    | `pnpm-lock.yaml`, Renovate policy |
+| **Tampering**       | Typosquat (e.g. `react-quary` instead of `react-query`)                                          | Code review on new deps                       | PR reviewers                      |
+| **Tampering**       | `postinstall` script exfiltrates env / SSH keys                                                  | `ignore-scripts=true` in CI; review on dev    | `.npmrc`, CI config               |
+| **Info Disclosure** | Malicious package reads `document.cookie` (defeated by HttpOnly), localStorage, intercepts fetch | Minimize 3rd-party deps; vet trust            | Dep audit                         |
+| **EoP**             | Package adds a backdoor login bypass to auth flow                                                | Review auth-related deps especially carefully | Pin auth lib versions             |
 
 ### Attack Tree: Supply Chain Compromise
 
@@ -236,14 +236,14 @@ without sanitization → DOM XSS.
 
 ### STRIDE Analysis
 
-| Threat | Vector | Mitigation (expected) | Verify |
-|--------|--------|----------------------|--------|
-| **Tampering** | Tool returns HTML with `<script>` | Render as text by default; sanitize when rendering HTML | Check chat output renderer |
-| **Tampering** | Tool returns markdown link with `javascript:` | Scheme allowlist on markdown links | Check markdown sanitizer |
-| **Tampering** | Tool description contains attacker-controlled hidden instruction → LLM follows it (prompt injection) | UI shows raw tool description; user reviews; LLM hardened with system prompt | Check tool registration flow |
-| **Info Disclosure** | Tool output streams PII into chat history persisted in localStorage | Mask sensitive fields; opt-in for persisting AI history | Check persistence |
-| **EoP** | UI auto-runs suggested tool action (e.g. "delete") | Always require explicit user confirmation for destructive ops | Check tool execution gate |
-| **EoP** | MCP server URL points to attacker → leaks user prompts/cookies | URL allowlist; no credentials forwarded to external MCP servers | Check connection config |
+| Threat              | Vector                                                                                               | Mitigation (expected)                                                        | Verify                       |
+| ------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------- |
+| **Tampering**       | Tool returns HTML with `<script>`                                                                    | Render as text by default; sanitize when rendering HTML                      | Check chat output renderer   |
+| **Tampering**       | Tool returns markdown link with `javascript:`                                                        | Scheme allowlist on markdown links                                           | Check markdown sanitizer     |
+| **Tampering**       | Tool description contains attacker-controlled hidden instruction → LLM follows it (prompt injection) | UI shows raw tool description; user reviews; LLM hardened with system prompt | Check tool registration flow |
+| **Info Disclosure** | Tool output streams PII into chat history persisted in localStorage                                  | Mask sensitive fields; opt-in for persisting AI history                      | Check persistence            |
+| **EoP**             | UI auto-runs suggested tool action (e.g. "delete")                                                   | Always require explicit user confirmation for destructive ops                | Check tool execution gate    |
+| **EoP**             | MCP server URL points to attacker → leaks user prompts/cookies                                       | URL allowlist; no credentials forwarded to external MCP servers              | Check connection config      |
 
 ### Attack Tree: XSS via AI Tool Output
 
@@ -278,15 +278,15 @@ Use ONLY when a BFF is not available. The BFF pattern is preferred.
 
 ### STRIDE Analysis
 
-| Threat | Vector | Mitigation (expected) | Verify |
-|--------|--------|----------------------|--------|
-| **Spoofing** | Authorization code interception (no PKCE) | Mandatory PKCE with S256 | Check OIDC client config |
-| **Tampering** | `redirect_uri` manipulated to attacker domain | IdP enforces allowlist; SPA uses static URI | Check `redirect_uri` literal |
-| **Tampering** | `state` parameter not validated → CSRF on callback | `state` is random + session-bound + validated | Check state handler |
-| **Tampering** | `nonce` not validated → token replay | `nonce` random + validated against ID token claim | Check nonce flow |
-| **Info Disclosure** | Tokens in `localStorage` (readable by XSS) | Use in-memory only OR move to BFF | Grep `localStorage.setItem.*token` |
-| **Info Disclosure** | Tokens leak via URL referrer | Tokens never in URL; `Referrer-Policy: no-referrer` | Check policy expectations |
-| **EoP** | Token reused after logout | Backend revocation; SPA discards on logout | Check logout flow |
+| Threat              | Vector                                             | Mitigation (expected)                               | Verify                             |
+| ------------------- | -------------------------------------------------- | --------------------------------------------------- | ---------------------------------- |
+| **Spoofing**        | Authorization code interception (no PKCE)          | Mandatory PKCE with S256                            | Check OIDC client config           |
+| **Tampering**       | `redirect_uri` manipulated to attacker domain      | IdP enforces allowlist; SPA uses static URI         | Check `redirect_uri` literal       |
+| **Tampering**       | `state` parameter not validated → CSRF on callback | `state` is random + session-bound + validated       | Check state handler                |
+| **Tampering**       | `nonce` not validated → token replay               | `nonce` random + validated against ID token claim   | Check nonce flow                   |
+| **Info Disclosure** | Tokens in `localStorage` (readable by XSS)         | Use in-memory only OR move to BFF                   | Grep `localStorage.setItem.*token` |
+| **Info Disclosure** | Tokens leak via URL referrer                       | Tokens never in URL; `Referrer-Policy: no-referrer` | Check policy expectations          |
+| **EoP**             | Token reused after logout                          | Backend revocation; SPA discards on logout          | Check logout flow                  |
 
 ---
 
@@ -298,13 +298,13 @@ Use ONLY when a BFF is not available. The BFF pattern is preferred.
 
 ### STRIDE Analysis
 
-| Threat | Vector | Mitigation (expected) | Verify |
-|--------|--------|----------------------|--------|
-| **Info Disclosure** | Tokens in `localStorage` | Never — use HttpOnly cookies via BFF | Grep |
-| **Info Disclosure** | PII (emails, names) in `localStorage` | Avoid; if necessary, scope per session and clear on logout | Grep |
-| **Info Disclosure** | Sensitive React Query cache persisted unencrypted | Per-query opt-in for persistence; never persist PII | Check persister config |
-| **Tampering** | Attacker modifies `localStorage` → SPA reads tampered config → privilege escalation in UI | Treat storage as untrusted input; validate with Zod on read | Check read paths |
-| **DoS** | Storage quota exhaustion fills `localStorage` | Bounded size, eviction policy | Check storage write helpers |
+| Threat              | Vector                                                                                    | Mitigation (expected)                                       | Verify                      |
+| ------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------- | --------------------------- |
+| **Info Disclosure** | Tokens in `localStorage`                                                                  | Never — use HttpOnly cookies via BFF                        | Grep                        |
+| **Info Disclosure** | PII (emails, names) in `localStorage`                                                     | Avoid; if necessary, scope per session and clear on logout  | Grep                        |
+| **Info Disclosure** | Sensitive React Query cache persisted unencrypted                                         | Per-query opt-in for persistence; never persist PII         | Check persister config      |
+| **Tampering**       | Attacker modifies `localStorage` → SPA reads tampered config → privilege escalation in UI | Treat storage as untrusted input; validate with Zod on read | Check read paths            |
+| **DoS**             | Storage quota exhaustion fills `localStorage`                                             | Bounded size, eviction policy                               | Check storage write helpers |
 
 ---
 
@@ -315,13 +315,13 @@ BFF → backend. File upload: `<input type="file">` → FormData → axios.
 
 ### STRIDE Analysis
 
-| Threat | Vector | Mitigation (expected) | Verify |
-|--------|--------|----------------------|--------|
-| **Tampering** | User bypasses `disabled` field via DevTools | Server re-validates business rules | Treat client as untrusted |
-| **Tampering** | User submits XSS-laden text — stored, then rendered raw elsewhere | Output sanitization on render (cf. TM-02) | Check render path |
-| **DoS** | User uploads multi-GB file | Client-side size check + server enforcement | Check upload helper |
-| **Info Disclosure** | Form auto-save persists draft with PII to `localStorage` | Auto-save scoped + cleared on submit/leave | Check auto-save |
-| **EoP** | Hidden form field carries `role=admin` — naive backends trust it | Server reads role from session, never from form | Treat client as untrusted |
+| Threat              | Vector                                                            | Mitigation (expected)                           | Verify                    |
+| ------------------- | ----------------------------------------------------------------- | ----------------------------------------------- | ------------------------- |
+| **Tampering**       | User bypasses `disabled` field via DevTools                       | Server re-validates business rules              | Treat client as untrusted |
+| **Tampering**       | User submits XSS-laden text — stored, then rendered raw elsewhere | Output sanitization on render (cf. TM-02)       | Check render path         |
+| **DoS**             | User uploads multi-GB file                                        | Client-side size check + server enforcement     | Check upload helper       |
+| **Info Disclosure** | Form auto-save persists draft with PII to `localStorage`          | Auto-save scoped + cleared on submit/leave      | Check auto-save           |
+| **EoP**             | Hidden form field carries `role=admin` — naive backends trust it  | Server reads role from session, never from form | Treat client as untrusted |
 
 ---
 
@@ -338,33 +338,33 @@ BFF → backend. File upload: `<input type="file">` → FormData → axios.
 
 ### Revision triggers — when to revisit a threat model
 
-| Change | Affected TMs | Why |
-|--------|-------------|-----|
+| Change                                                     | Affected TMs | Why                              |
+| ---------------------------------------------------------- | ------------ | -------------------------------- |
 | New authentication provider (`@granit/authentication-<x>`) | TM-01, TM-06 | New trust boundary, token format |
-| BFF replaced by direct SPA-to-API | TM-01, TM-06 | Token storage moves to browser |
-| New rich-text / markdown renderer | TM-02, TM-05 | New DOM sinks |
-| React Query upgrade or new persister | TM-03, TM-07 | Cache key semantics may change |
-| New direct dependency in `package.json` | TM-04 | Supply chain expanded |
-| MCP transport changes (stdio → HTTP) | TM-05 | New network surface |
-| New IdP added | TM-06 | New redirect target |
-| New offline-first feature (Service Worker, IndexedDB) | TM-07 | Storage attack surface grows |
-| Form library swap (Formik → react-hook-form, etc.) | TM-08 | Validation pipeline changes |
+| BFF replaced by direct SPA-to-API                          | TM-01, TM-06 | Token storage moves to browser   |
+| New rich-text / markdown renderer                          | TM-02, TM-05 | New DOM sinks                    |
+| React Query upgrade or new persister                       | TM-03, TM-07 | Cache key semantics may change   |
+| New direct dependency in `package.json`                    | TM-04        | Supply chain expanded            |
+| MCP transport changes (stdio → HTTP)                       | TM-05        | New network surface              |
+| New IdP added                                              | TM-06        | New redirect target              |
+| New offline-first feature (Service Worker, IndexedDB)      | TM-07        | Storage attack surface grows     |
+| Form library swap (Formik → react-hook-form, etc.)         | TM-08        | Validation pipeline changes      |
 
 **Rule:** Any PR that modifies a trust boundary crossing should reference
 the relevant TM and confirm mitigations still hold.
 
 ### CVSS 3.1 Quick Reference
 
-| Metric | Values |
-|--------|--------|
-| Attack Vector (AV) | Network (N), Adjacent (A), Local (L), Physical (P) |
-| Attack Complexity (AC) | Low (L), High (H) |
-| Privileges Required (PR) | None (N), Low (L), High (H) |
-| User Interaction (UI) | None (N), Required (R) |
-| Scope (S) | Unchanged (U), Changed (C) |
-| Confidentiality (C) | None (N), Low (L), High (H) |
-| Integrity (I) | None (N), Low (L), High (H) |
-| Availability (A) | None (N), Low (L), High (H) |
+| Metric                   | Values                                             |
+| ------------------------ | -------------------------------------------------- |
+| Attack Vector (AV)       | Network (N), Adjacent (A), Local (L), Physical (P) |
+| Attack Complexity (AC)   | Low (L), High (H)                                  |
+| Privileges Required (PR) | None (N), Low (L), High (H)                        |
+| User Interaction (UI)    | None (N), Required (R)                             |
+| Scope (S)                | Unchanged (U), Changed (C)                         |
+| Confidentiality (C)      | None (N), Low (L), High (H)                        |
+| Integrity (I)            | None (N), Low (L), High (H)                        |
+| Availability (A)         | None (N), Low (L), High (H)                        |
 
 Example: stored XSS in SPA →
 `CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:H/I:H/A:L` ≈ 8.7 (High).

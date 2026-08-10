@@ -99,20 +99,20 @@ detail) on success, so a wired `useApiKeys` refreshes automatically.
 
 ## Public API
 
-| Symbol                     | Kind | Purpose                                                       |
-| -------------------------- | ---- | ------------------------------------------------------------ |
-| `useApiKeys`               | hook | Paginated, filterable list (`GET {basePath}/api-keys`), QueryEngine grammar, `keepPreviousData` |
-| `useApiKeysQueryMeta`      | hook | Grid metadata (`GET {basePath}/api-keys/meta`) — columns, filters, quick filters, defaults |
-| `useApiKey`                | hook | Single key by id (`GET {basePath}/{id}`); disabled when `id` is empty |
-| `useCreateApiKey`          | hook | Create (`POST {basePath}`); returns the one-time `rawSecret`; invalidates list |
-| `useRevokeApiKey`          | hook | Revoke (`POST {basePath}/{id}/revoke`); invalidates list + detail |
-| `useRotateApiKey`          | hook | Rotate secret (`POST {basePath}/{id}/rotate`); new `rawSecret`; invalidates list + detail |
-| `useUpdateApiKeyScopes`    | hook | Update permissions + allowed CIDRs (`PUT {basePath}/{id}/scopes`); invalidates list + detail |
-| `buildApiKeyQueryKey`      | fn   | React Query key factory (`queryKeyPrefix` aware, defaults to `['api-keys']`) |
-| `ApiKeyHookOptions`        | type | `{ client, basePath?, queryKeyPrefix? }` accepted by every hook |
-| `ApiKeyQueryOptions`       | type | Overridable TanStack Query options (`staleTime`, `enabled`, `refetchInterval`, …) |
-| `UseApiKeysParams`         | type | List query params — alias of the core `ListApiKeysParams` (QueryEngine grammar) |
-| `UpdateApiKeyScopesVariables` | type | `{ id, request }` variables for the update-scopes mutation |
+| Symbol                        | Kind | Purpose                                                                                         |
+| ----------------------------- | ---- | ----------------------------------------------------------------------------------------------- |
+| `useApiKeys`                  | hook | Paginated, filterable list (`GET {basePath}/api-keys`), QueryEngine grammar, `keepPreviousData` |
+| `useApiKeysQueryMeta`         | hook | Grid metadata (`GET {basePath}/api-keys/meta`) — columns, filters, quick filters, defaults      |
+| `useApiKey`                   | hook | Single key by id (`GET {basePath}/{id}`); disabled when `id` is empty                           |
+| `useCreateApiKey`             | hook | Create (`POST {basePath}`); returns the one-time `rawSecret`; invalidates list                  |
+| `useRevokeApiKey`             | hook | Revoke (`POST {basePath}/{id}/revoke`); invalidates list + detail                               |
+| `useRotateApiKey`             | hook | Rotate secret (`POST {basePath}/{id}/rotate`); new `rawSecret`; invalidates list + detail       |
+| `useUpdateApiKeyScopes`       | hook | Update permissions + allowed CIDRs (`PUT {basePath}/{id}/scopes`); invalidates list + detail    |
+| `buildApiKeyQueryKey`         | fn   | React Query key factory (`queryKeyPrefix` aware, defaults to `['api-keys']`)                    |
+| `ApiKeyHookOptions`           | type | `{ client, basePath?, queryKeyPrefix? }` accepted by every hook                                 |
+| `ApiKeyQueryOptions`          | type | Overridable TanStack Query options (`staleTime`, `enabled`, `refetchInterval`, …)               |
+| `UseApiKeysParams`            | type | List query params — alias of the core `ListApiKeysParams` (QueryEngine grammar)                 |
+| `UpdateApiKeyScopesVariables` | type | `{ id, request }` variables for the update-scopes mutation                                      |
 
 Domain types and constants (`ApiKeyResponse`, `ApiKeyType`, `ApiKeyQuickFilters`,
 …) are not re-exported here — import them from the core

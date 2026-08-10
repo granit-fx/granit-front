@@ -71,7 +71,8 @@ describe('BulkActions', () => {
     // 'a' selected but 'b' not -> checkbox is unchecked, clicking selects all.
     await userEvent.click(screen.getByRole('checkbox'));
     expect(onSelectionChange).toHaveBeenCalledTimes(1);
-    expect(new Set(onSelectionChange.mock.calls[0][0])).toEqual(new Set(['a', 'b']));
+    const [selectedIds] = onSelectionChange.mock.calls[0] ?? [];
+    expect(new Set(selectedIds)).toEqual(new Set(['a', 'b']));
   });
 
   it('deselects visible ids when the checkbox is unchecked', async () => {

@@ -54,14 +54,18 @@ function FormDialogDemo({
   );
 }
 
+// The stories render `FormDialogDemo`, not `FormDialog` directly: the dialog
+// needs a live `useForm` return, which cannot be expressed as a static arg. All
+// of the demo's props are optional, so the render-only stories below need no
+// `args` — binding `component` to it is both accurate and type-complete.
 const meta = {
   title: 'Admin Kit/FormDialog',
-  component: FormDialog,
+  component: FormDialogDemo,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
   },
-} satisfies Meta<typeof FormDialog<DemoValues>>;
+} satisfies Meta<typeof FormDialogDemo>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

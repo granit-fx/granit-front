@@ -52,11 +52,7 @@ import { useGranitClient } from '@granit/react-api-client';
 
 function App({ children }: { children: React.ReactNode }) {
   // `client` may be omitted if a <GranitClientProvider> is already mounted.
-  return (
-    <TemplatingProvider config={{ client: useGranitClient() }}>
-      {children}
-    </TemplatingProvider>
-  );
+  return <TemplatingProvider config={{ client: useGranitClient() }}>{children}</TemplatingProvider>;
 }
 
 function TemplateList() {
@@ -79,11 +75,7 @@ mutation invalidates the relevant query keys (detail, history, lifecycle, list) 
 success, so the UI re-reads fresh server state:
 
 ```tsx
-import {
-  useTemplate,
-  useTemplateMutations,
-  useTemplatePreview,
-} from '@granit/react-templating';
+import { useTemplate, useTemplateMutations, useTemplatePreview } from '@granit/react-templating';
 
 function TemplateEditor({ name }: { name: string }) {
   const { data: template } = useTemplate(name);
@@ -92,13 +84,9 @@ function TemplateEditor({ name }: { name: string }) {
 
   return (
     <>
-      <button onClick={() => saveDraft.mutate({ name, content: '<h1>Hi</h1>' })}>
-        Save draft
-      </button>
+      <button onClick={() => saveDraft.mutate({ name, content: '<h1>Hi</h1>' })}>Save draft</button>
       <button onClick={() => publish.mutate({ name })}>Publish</button>
-      <button onClick={() => preview.mutate({ name, request: { data: {} } })}>
-        Preview
-      </button>
+      <button onClick={() => preview.mutate({ name, request: { data: {} } })}>Preview</button>
       {preview.data && <iframe title="preview" srcDoc={preview.data.html} />}
     </>
   );
@@ -107,7 +95,7 @@ function TemplateEditor({ name }: { name: string }) {
 
 ## Public API
 
-| Symbol                         | Kind     | Purpose                                                                |
+| Symbol                         | Kind     | Purpose                                                               |
 | ------------------------------ | -------- | --------------------------------------------------------------------- |
 | `TemplatingProvider`           | provider | Supplies resolved client, base path, query-key prefix to hooks below  |
 | `useTemplatingConfig`          | hook     | Read the resolved config; throws outside a provider                   |

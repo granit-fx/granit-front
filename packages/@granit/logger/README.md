@@ -58,32 +58,32 @@ import { createOtlpTransport } from '@granit/logger-otlp';
 
 const root = createLogger('App', {
   level: 'INFO',
-  transports: [createConsoleTransport(), createOtlpTransport({ /* … */ })],
+  transports: [createConsoleTransport(), createOtlpTransport({/* … */})],
 });
 ```
 
 ## Public API
 
-| Symbol                   | Kind  | Purpose                                                          |
-| ------------------------ | ----- | ---------------------------------------------------------------- |
-| `createLogger`           | fn    | Build a `Logger` for a prefix; resolves level + console default  |
-| `Logger`                 | type  | `debug` / `info` / `warn` / `error(msg, err?, ctx?)` / `child`   |
-| `LoggerOptions`          | type  | `{ level?, transports? }` passed to `createLogger`               |
-| `LogLevel`               | const | `{ DEBUG: 0, INFO: 1, WARN: 2, ERROR: 3 }` (numeric thresholds)  |
-| `LogLevelName`           | type  | `'DEBUG' \| 'INFO' \| 'WARN' \| 'ERROR'`                         |
-| `LogLevelValue`          | type  | The numeric value of a level (`0 \| 1 \| 2 \| 3`)                |
-| `LogContext`             | type  | `Record<string, unknown>` structured per-call context           |
-| `LogEntry`               | type  | The dispatched record a transport receives                       |
-| `LogTransport`           | type  | `{ send(entry), flush?(): Promise<void> }` sink contract         |
-| `createConsoleTransport` | fn    | Built-in styled-badge `console` transport (the default)          |
-| `redact`                 | const | Aggregate of the redactors, mirroring .NET `LogRedaction`        |
-| `redactEmail`            | fn    | `joh***@example.com` — keeps ≤3 leading chars + domain           |
-| `emailDomain`            | fn    | Bounded, non-PII domain tag (`example.com`)                      |
-| `redactPhone`            | fn    | Keeps country prefix + last 2 digits (`+336*****78`)             |
-| `redactToken`            | fn    | Keeps 4-char prefix + 3-char suffix (`dLkj...fGh`)               |
-| `redactIpAddress`        | fn    | Masks IPv4 to /24 (`192.168.1.***`), truncates IPv6              |
-| `redactUsername`         | fn    | Keeps a 3-char prefix (`joh***`)                                 |
-| `hashPrefix`             | fn    | `async` SHA-256[:4] (8 hex) correlation tag, non-reversible      |
+| Symbol | Kind | Purpose | | | |
+| ------------------------ | ----- | --------------------------------------------------------------- | | | |
+| `createLogger` | fn | Build a `Logger` for a prefix; resolves level + console default | | | |
+| `Logger` | type | `debug` / `info` / `warn` / `error(msg, err?, ctx?)` / `child` | | | |
+| `LoggerOptions` | type | `{ level?, transports? }` passed to `createLogger` | | | |
+| `LogLevel` | const | `{ DEBUG: 0, INFO: 1, WARN: 2, ERROR: 3 }` (numeric thresholds) | | | |
+| `LogLevelName` | type | `'DEBUG' \                                                      | 'INFO' \ | 'WARN' \ | 'ERROR'` |
+| `LogLevelValue` | type | The numeric value of a level (`0 \                              | 1 \      | 2 \      | 3`) |
+| `LogContext` | type | `Record<string, unknown>` structured per-call context | | | |
+| `LogEntry` | type | The dispatched record a transport receives | | | |
+| `LogTransport` | type | `{ send(entry), flush?(): Promise<void> }` sink contract | | | |
+| `createConsoleTransport` | fn | Built-in styled-badge `console` transport (the default) | | | |
+| `redact` | const | Aggregate of the redactors, mirroring .NET `LogRedaction` | | | |
+| `redactEmail` | fn | `joh***@example.com` — keeps ≤3 leading chars + domain | | | |
+| `emailDomain` | fn | Bounded, non-PII domain tag (`example.com`) | | | |
+| `redactPhone` | fn | Keeps country prefix + last 2 digits (`+336*****78`) | | | |
+| `redactToken` | fn | Keeps 4-char prefix + 3-char suffix (`dLkj...fGh`) | | | |
+| `redactIpAddress` | fn | Masks IPv4 to /24 (`192.168.1.***`), truncates IPv6 | | | |
+| `redactUsername` | fn | Keeps a 3-char prefix (`joh***`) | | | |
+| `hashPrefix` | fn | `async` SHA-256[:4] (8 hex) correlation tag, non-reversible | | | |
 
 ## Transports
 

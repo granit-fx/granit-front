@@ -1,5 +1,10 @@
 {
   "extends": "../../../tsconfig.base.json",
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["src/__tests__/**", "src/**/*.stories.ts", "src/**/*.stories.tsx"]
+  "compilerOptions": {
+    // Tests and stories are part of this package's `include`, so the ambient
+    // globals vitest injects (`globals: true`) and the jest-dom matchers pulled
+    // in by `@granit/testing`'s setup file have to be declared here.
+    "types": ["vitest/globals", "@testing-library/jest-dom", "node"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

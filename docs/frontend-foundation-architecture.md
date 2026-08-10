@@ -56,7 +56,7 @@ Two orthogonal axes are encoded in every package name:
 | ------------------------------ | --------- | --------------- |
 | `@granit/ui-theme`             | agnostic  | visual (tokens) |
 | `@granit/react-ui`             | React     | visual          |
-| `@granit/react-ui-kit`   | React     | visual          |
+| `@granit/react-ui-kit`         | React     | visual          |
 | `@granit/react-ui-shell-admin` | React     | visual (chrome) |
 | `@granit/shell-core`           | agnostic  | logic           |
 | `@granit/react-shell-core`     | React     | logic           |

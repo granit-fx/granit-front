@@ -68,20 +68,20 @@ await cancelScheduledAction(client, basePath, action.id);
 
 ## Public API
 
-| Symbol                      | Kind  | Purpose                                                              |
-| --------------------------- | ----- | ------------------------------------------------------------------- |
-| `ScheduledActionStatus`     | type  | `'Pending' \| 'Executed' \| 'Cancelled' \| 'Failed' \| 'Processing'` |
-| `ScheduledActionStatus`     | const | Value object mirroring the enum (PascalCase members)                |
-| `ScheduledActionId`         | type  | Branded `EntityId<'ScheduledAction'>`                               |
-| `ScheduledActionResponse`   | type  | Response DTO (payload type, schedule, status, audit fields)         |
-| `RescheduleActionRequest`   | type  | `{ newExecuteAt }` body for the reschedule call                     |
-| `listScheduledActions`      | fn    | `GET {basePath}` via QueryEngine returning a `PagedResult`          |
-| `getScheduledActionById`    | fn    | `GET {basePath}/{id}` returning one action                          |
-| `cancelScheduledAction`     | fn    | `DELETE {basePath}/{id}` — cancels a pending action                 |
-| `rescheduleScheduledAction` | fn    | `PUT {basePath}/{id}/reschedule` — moves `executeAt`                |
-| `SCHEDULING_STATUS_COLORS`  | const | Status → badge color (`blue`/`green`/`gray`/`red`/`amber`)          |
-| `SCHEDULING_STATUS_LABELS`  | const | Status → human-readable label                                       |
-| `SchedulingPermissions`     | const | `Actions.Read` / `Actions.Manage` permission names                  |
+| Symbol | Kind | Purpose | | | | |
+| --------------------------- | ----- | ----------------------------------------------------------- | | | | |
+| `ScheduledActionStatus` | type | `'Pending' \                                                | 'Executed' \ | 'Cancelled' \ | 'Failed' \ | 'Processing'` |
+| `ScheduledActionStatus` | const | Value object mirroring the enum (PascalCase members) | | | | |
+| `ScheduledActionId` | type | Branded `EntityId<'ScheduledAction'>` | | | | |
+| `ScheduledActionResponse` | type | Response DTO (payload type, schedule, status, audit fields) | | | | |
+| `RescheduleActionRequest` | type | `{ newExecuteAt }` body for the reschedule call | | | | |
+| `listScheduledActions` | fn | `GET {basePath}` via QueryEngine returning a `PagedResult` | | | | |
+| `getScheduledActionById` | fn | `GET {basePath}/{id}` returning one action | | | | |
+| `cancelScheduledAction` | fn | `DELETE {basePath}/{id}` — cancels a pending action | | | | |
+| `rescheduleScheduledAction` | fn | `PUT {basePath}/{id}/reschedule` — moves `executeAt` | | | | |
+| `SCHEDULING_STATUS_COLORS` | const | Status → badge color (`blue`/`green`/`gray`/`red`/`amber`) | | | | |
+| `SCHEDULING_STATUS_LABELS` | const | Status → human-readable label | | | | |
+| `SchedulingPermissions` | const | `Actions.Read` / `Actions.Manage` permission names | | | | |
 
 The list surface also exposes a `GET {basePath}/meta` query-metadata endpoint;
 fetch it with `getQueryMeta` from [`@granit/query-engine`](../query-engine) (the

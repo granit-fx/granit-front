@@ -72,9 +72,13 @@ function Harness({ metadata }: { readonly metadata?: QueryMetadata }) {
   return <SmartFilterBar smartFilter={smartFilter} placeholder="Search or filter…" />;
 }
 
+// The stories render `Harness`, not `SmartFilterBar` directly: the bar needs a
+// live `useSmartFilter` return, which cannot be expressed as a static arg. The
+// harness takes only an optional `metadata`, so the render-only stories below
+// need no `args`.
 const meta = {
   title: 'Admin Kit/Querying/SmartFilterBar',
-  component: SmartFilterBar,
+  component: Harness,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
@@ -86,7 +90,7 @@ const meta = {
       </div>
     ),
   ],
-} satisfies Meta<typeof SmartFilterBar>;
+} satisfies Meta<typeof Harness>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -46,11 +46,7 @@ import { useGranitClient } from '@granit/react-api-client';
 
 function App({ children }: { children: React.ReactNode }) {
   // `client` may be omitted if a <GranitClientProvider> is already mounted.
-  return (
-    <TaxProvider config={{ client: useGranitClient() }}>
-      {children}
-    </TaxProvider>
-  );
+  return <TaxProvider config={{ client: useGranitClient() }}>{children}</TaxProvider>;
 }
 
 function CountryRate({ country }: { country: string }) {
@@ -90,7 +86,7 @@ function TaxRatesGrid() {
 
 ## Public API
 
-| Symbol                | Kind     | Purpose                                                             |
+| Symbol                | Kind     | Purpose                                                            |
 | --------------------- | -------- | ------------------------------------------------------------------ |
 | `TaxProvider`         | provider | Resolves client / base path / query-key prefix for all hooks below |
 | `useTaxConfig`        | hook     | Read the resolved config; throws outside a `TaxProvider`           |

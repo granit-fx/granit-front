@@ -78,7 +78,7 @@ createOtlpTransport({
 
 | Symbol                 | Kind | Purpose                                                           |
 | ---------------------- | ---- | ----------------------------------------------------------------- |
-| `createOtlpTransport`  | fn   | Build a batching `LogTransport` that exports to an OTLP collector  |
+| `createOtlpTransport`  | fn   | Build a batching `LogTransport` that exports to an OTLP collector |
 | `OtlpTransportOptions` | type | Factory config (endpoint, service identity, batching, redact)     |
 | `TraceContext`         | type | `{ traceId, spanId }` from `getTraceContext` for correlation      |
 | `defaultPiiRedactor`   | fn   | Built-in PII scrubber (the default `redact`); composable/reusable |
@@ -114,7 +114,7 @@ attribute.
   [`@granit/tracing`](../tracing) / [`@granit/react-tracing`](../react-tracing);
   this package merely stamps `traceId` / `spanId` onto records via
   `getTraceContext` so the collector can correlate the two.
-- **Raw `fetch`, by design.** Telemetry sits *below* the `@granit/api-client`
+- **Raw `fetch`, by design.** Telemetry sits _below_ the `@granit/api-client`
   Axios stack (sanctioned infra), so it must not pull CSRF/auth/tenant
   interceptors. Do not route exports through the domain Axios client.
 - **Self-disabling, not resilient.** On the first failed POST, export stops for

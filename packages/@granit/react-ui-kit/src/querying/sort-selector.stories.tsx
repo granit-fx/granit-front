@@ -5,16 +5,34 @@ import { SortSelector } from './sort-selector';
 import type { ColumnDefinition, SortEntry } from '@granit/query-engine';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+// `ColumnDefinition` mirrors the backend query-metadata contract, so a fixture
+// has to carry the full shape. `isSortable` is the only part this selector
+// reads; the builder fills in the rest.
+const column = (
+  name: string,
+  label: string,
+  order: number,
+  isSortable: boolean
+): ColumnDefinition => ({
+  name,
+  label,
+  type: name === 'createdAt' ? 'DateTime' : 'String',
+  order,
+  isSortable,
+  isFilterable: true,
+  isVisible: true,
+});
+
 const sortableColumns: ColumnDefinition[] = [
-  { name: 'name', label: 'Name', isSortable: true },
-  { name: 'createdAt', label: 'Created At', isSortable: true },
-  { name: 'status', label: 'Status', isSortable: true },
+  column('name', 'Name', 0, true),
+  column('createdAt', 'Created At', 1, true),
+  column('status', 'Status', 2, true),
 ];
 
 const mixedColumns: ColumnDefinition[] = [
-  { name: 'name', label: 'Name', isSortable: true },
-  { name: 'description', label: 'Description', isSortable: false },
-  { name: 'createdAt', label: 'Created At', isSortable: true },
+  column('name', 'Name', 0, true),
+  column('description', 'Description', 1, false),
+  column('createdAt', 'Created At', 2, true),
 ];
 
 const sortAsc: SortEntry[] = [{ field: 'name', direction: 'asc' }];

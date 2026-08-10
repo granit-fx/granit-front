@@ -67,12 +67,12 @@ const config: TracingConfig = {
 
 ## Public API
 
-| Symbol                  | Kind | Purpose                                                                      |
-| ----------------------- | ---- | ---------------------------------------------------------------------------- |
-| `getTraceContext`       | fn   | Active span's `{ traceId, spanId }` from OTel global, else `undefined`        |
-| `TraceContext`          | type | W3C trace/span IDs (shared contract with `@granit/logger-otlp`)              |
-| `TracingConfig`         | type | Full provider input: service/version, exporter, instrumentation toggles      |
-| `TracingExporterConfig` | type | OTLP HTTP exporter target: `{ url, headers? }`                               |
+| Symbol                  | Kind | Purpose                                                                 |
+| ----------------------- | ---- | ----------------------------------------------------------------------- |
+| `getTraceContext`       | fn   | Active span's `{ traceId, spanId }` from OTel global, else `undefined`  |
+| `TraceContext`          | type | W3C trace/span IDs (shared contract with `@granit/logger-otlp`)         |
+| `TracingConfig`         | type | Full provider input: service/version, exporter, instrumentation toggles |
+| `TracingExporterConfig` | type | OTLP HTTP exporter target: `{ url, headers? }`                          |
 
 `getTraceContext` returns `undefined` not only when no span is active but also
 when the active span context is missing a `traceId` or `spanId` (it never

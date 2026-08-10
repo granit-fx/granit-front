@@ -83,11 +83,11 @@ Downstream components read the session through the host's auth context (the same
 
 ## Public API
 
-| Symbol                         | Kind     | Purpose                                                          |
-| ------------------------------ | -------- | --------------------------------------------------------------- |
-| `GoogleCloudAuthProvider`      | provider | Mounts `useGoogleCloudInit`, shows the init spinner, publishes  |
-|                                |          | the resolved session, and pre-binds `login` to the UI locale    |
-| `GoogleCloudAuthProviderProps` | type     | `{ context, config, children }` — host context + core config    |
+| Symbol                         | Kind     | Purpose                                                        |
+| ------------------------------ | -------- | -------------------------------------------------------------- |
+| `GoogleCloudAuthProvider`      | provider | Mounts `useGoogleCloudInit`, shows the init spinner, publishes |
+|                                |          | the resolved session, and pre-binds `login` to the UI locale   |
+| `GoogleCloudAuthProviderProps` | type     | `{ context, config, children }` — host context + core config   |
 
 ## Caveats
 

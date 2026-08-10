@@ -44,8 +44,7 @@ import {
   mergeParty,
   PartiesPermissions,
 } from '@granit/parties';
-import type {
-  AxiosInstance } from '@granit/api-client';
+import type { AxiosInstance } from '@granit/api-client';
 import type { PartyId, PartyCreateRequest } from '@granit/parties';
 
 // `basePath` is the parties collection root for the active scope.
@@ -93,65 +92,65 @@ const canMerge = PartiesPermissions.Parties.Merge; // 'Parties.Parties.Merge'
 
 ### Lifecycle, identity & contact channels
 
-| Symbol                       | Kind | Purpose                                                               |
-| ---------------------------- | ---- | --------------------------------------------------------------------- |
-| `listParties`                | fn   | `GET {basePath}` — paged list, optional `role` filter (unwraps `items`) |
-| `getPartyById`               | fn   | `GET {basePath}/{id}` — full `PartyResponse`                          |
+| Symbol                       | Kind | Purpose                                                                           |
+| ---------------------------- | ---- | --------------------------------------------------------------------------------- |
+| `listParties`                | fn   | `GET {basePath}` — paged list, optional `role` filter (unwraps `items`)           |
+| `getPartyById`               | fn   | `GET {basePath}/{id}` — full `PartyResponse`                                      |
 | `createParty`                | fn   | `POST {basePath}` — 409 on Tier-1 duplicate; `force` / `skipDuplicateCheck` knobs |
-| `updateParty`                | fn   | `PATCH {basePath}/{id}` — identity fields                             |
-| `suspendParty`               | fn   | `POST {basePath}/{id}/suspend` (idempotent; 409 on Archived)          |
-| `activateParty`              | fn   | `POST {basePath}/{id}/activate` (idempotent)                          |
-| `archiveParty`               | fn   | `POST {basePath}/{id}/archive` — terminal, idempotent                 |
-| `addPartyAddress`            | fn   | `POST {basePath}/{id}/addresses`                                      |
-| `removePartyAddress`         | fn   | `DELETE {basePath}/{id}/addresses/{addressId}` (idempotent)           |
-| `addPartyEmail`              | fn   | `POST {basePath}/{id}/emails`                                         |
-| `removePartyEmail`           | fn   | `DELETE {basePath}/{id}/emails/{emailId}` (idempotent)               |
-| `addPartyPhone`              | fn   | `POST {basePath}/{id}/phones`                                         |
-| `removePartyPhone`           | fn   | `DELETE {basePath}/{id}/phones/{phoneId}` (idempotent)               |
-| `addPartyRole`               | fn   | `POST {basePath}/{id}/roles` (idempotent)                            |
-| `removePartyRole`            | fn   | `DELETE {basePath}/{id}/roles/{role}` (idempotent)                   |
-| `addPartyExternalMapping`    | fn   | `POST {basePath}/{id}/external-mappings` (409 on duplicate provider)  |
-| `removePartyExternalMapping` | fn   | `DELETE {basePath}/{id}/external-mappings/{providerName}` (idempotent) |
-| `setPartyTaxStatus`          | fn   | `PUT {basePath}/{id}/tax-status`                                      |
-| `clearPartyTaxStatus`        | fn   | `DELETE {basePath}/{id}/tax-status` (idempotent)                     |
-| `replacePartyMetadata`       | fn   | `PUT {basePath}/{id}/metadata` — bulk replace (≤ 50 entries)          |
-| `downloadPartyVCard`         | fn   | `GET {basePath}/{id}/vcard` — `Blob` (vCard 4.0, RFC 6350)            |
+| `updateParty`                | fn   | `PATCH {basePath}/{id}` — identity fields                                         |
+| `suspendParty`               | fn   | `POST {basePath}/{id}/suspend` (idempotent; 409 on Archived)                      |
+| `activateParty`              | fn   | `POST {basePath}/{id}/activate` (idempotent)                                      |
+| `archiveParty`               | fn   | `POST {basePath}/{id}/archive` — terminal, idempotent                             |
+| `addPartyAddress`            | fn   | `POST {basePath}/{id}/addresses`                                                  |
+| `removePartyAddress`         | fn   | `DELETE {basePath}/{id}/addresses/{addressId}` (idempotent)                       |
+| `addPartyEmail`              | fn   | `POST {basePath}/{id}/emails`                                                     |
+| `removePartyEmail`           | fn   | `DELETE {basePath}/{id}/emails/{emailId}` (idempotent)                            |
+| `addPartyPhone`              | fn   | `POST {basePath}/{id}/phones`                                                     |
+| `removePartyPhone`           | fn   | `DELETE {basePath}/{id}/phones/{phoneId}` (idempotent)                            |
+| `addPartyRole`               | fn   | `POST {basePath}/{id}/roles` (idempotent)                                         |
+| `removePartyRole`            | fn   | `DELETE {basePath}/{id}/roles/{role}` (idempotent)                                |
+| `addPartyExternalMapping`    | fn   | `POST {basePath}/{id}/external-mappings` (409 on duplicate provider)              |
+| `removePartyExternalMapping` | fn   | `DELETE {basePath}/{id}/external-mappings/{providerName}` (idempotent)            |
+| `setPartyTaxStatus`          | fn   | `PUT {basePath}/{id}/tax-status`                                                  |
+| `clearPartyTaxStatus`        | fn   | `DELETE {basePath}/{id}/tax-status` (idempotent)                                  |
+| `replacePartyMetadata`       | fn   | `PUT {basePath}/{id}/metadata` — bulk replace (≤ 50 entries)                      |
+| `downloadPartyVCard`         | fn   | `GET {basePath}/{id}/vcard` — `Blob` (vCard 4.0, RFC 6350)                        |
 
 ### Merge & duplicate detection
 
-| Symbol                    | Kind | Purpose                                                  |
-| ------------------------- | ---- | -------------------------------------------------------- |
-| `previewPartyMerge`       | fn   | `GET {basePath}/{survivorId}/merge/preview?loserId=` — dry-run |
+| Symbol                    | Kind | Purpose                                                             |
+| ------------------------- | ---- | ------------------------------------------------------------------- |
+| `previewPartyMerge`       | fn   | `GET {basePath}/{survivorId}/merge/preview?loserId=` — dry-run      |
 | `mergeParty`              | fn   | `POST {basePath}/{survivorId}/merge` (+ optional `Idempotency-Key`) |
-| `listDuplicatesForParty`  | fn   | `GET {basePath}/{id}/duplicate-candidates` — flat per-party list |
-| `dismissPartyDuplicate`   | fn   | `POST {basePath}/duplicates/{id}/dismiss` (idempotent)   |
-| `mergePartyFromDuplicate` | fn   | `POST {basePath}/duplicates/{id}/merge` — loser inferred from row |
+| `listDuplicatesForParty`  | fn   | `GET {basePath}/{id}/duplicate-candidates` — flat per-party list    |
+| `dismissPartyDuplicate`   | fn   | `POST {basePath}/duplicates/{id}/dismiss` (idempotent)              |
+| `mergePartyFromDuplicate` | fn   | `POST {basePath}/duplicates/{id}/merge` — loser inferred from row   |
 
 ### Types & constants
 
-| Symbol                                | Kind  | Purpose                                       |
-| ------------------------------------- | ----- | --------------------------------------------- |
-| `PartyResponse`                       | type  | Full party aggregate from the admin API       |
-| `PartyListItemResponse`               | type  | Lightweight list-row summary                  |
-| `PartyCreateRequest` / `PartyUpdateRequest` | type | Create / identity-update payloads       |
-| `CreatePartyOptions`                  | type  | `force` (URL) / `skipDuplicateCheck` (header) knobs |
-| `PartyCreateConflictResponse`         | type  | 409 body on a Tier-1 duplicate match          |
-| `PartyCreateDuplicateCandidate`       | type  | One match summary inside the 409 body         |
-| `PartyAddress* / PartyEmail* / PartyPhone*` | type | Typed contact-channel sub-DTOs + requests |
-| `PartyExternalMapping*`               | type  | Polyglot external-provider mapping DTOs       |
-| `PartyTaxStatus* / PartyMetadataRequest / PartySuspendRequest` | type | Tax status, metadata, suspend payloads |
-| `PartyRoleRequest`                    | type  | Single role-flag add/remove payload           |
-| `PartyKind` / `PartyStatus` / `PartyRole` | type | Aggregate discriminator string-union enums |
-| `AddressKind` / `PhoneKind`           | type  | Contact-channel discriminators                |
-| `PartyMergeRequest` / `PartyMergeResponse` | type | `entity-merge` contracts branded with `PartyId` |
-| `MergeWinner` / `FieldConflictResponse` | type | Aliases of `WinnerSide` / `FieldConflict`   |
-| `DuplicateMatchTier`                  | type  | `Deterministic \| Blocking \| Fuzzy`          |
-| `DuplicateMatchSignalResponse`        | type  | One weighted signal under a candidate         |
-| `PartyDuplicateCandidateResponse`     | type  | Duplicate-inbox review row                    |
-| `PartyDuplicateMergeRequest`          | type  | One-click merge-from-row payload              |
-| `PartyId` / `PartyAddressId` / `PartyEmailId` / `PartyPhoneId` | type | Branded `EntityId<…>` identifiers |
-| `PartyExternalMappingId` / `PartyDuplicateCandidateId` / `EvidenceBlobId` | type | Branded `EntityId<…>` identifiers |
-| `PartiesPermissions`                  | const | Permission keys (`Read`, `Manage`, `Lifecycle`, `SetTaxStatus`, `ExternalMappings`, `Merge`) |
+| Symbol | Kind | Purpose | | |
+| ------------------------------------------------------------------------- | ----- | -------------------------------------------------------------------------------------------- | | |
+| `PartyResponse` | type | Full party aggregate from the admin API | | |
+| `PartyListItemResponse` | type | Lightweight list-row summary | | |
+| `PartyCreateRequest` / `PartyUpdateRequest` | type | Create / identity-update payloads | | |
+| `CreatePartyOptions` | type | `force` (URL) / `skipDuplicateCheck` (header) knobs | | |
+| `PartyCreateConflictResponse` | type | 409 body on a Tier-1 duplicate match | | |
+| `PartyCreateDuplicateCandidate` | type | One match summary inside the 409 body | | |
+| `PartyAddress* / PartyEmail* / PartyPhone*` | type | Typed contact-channel sub-DTOs + requests | | |
+| `PartyExternalMapping*` | type | Polyglot external-provider mapping DTOs | | |
+| `PartyTaxStatus* / PartyMetadataRequest / PartySuspendRequest` | type | Tax status, metadata, suspend payloads | | |
+| `PartyRoleRequest` | type | Single role-flag add/remove payload | | |
+| `PartyKind` / `PartyStatus` / `PartyRole` | type | Aggregate discriminator string-union enums | | |
+| `AddressKind` / `PhoneKind` | type | Contact-channel discriminators | | |
+| `PartyMergeRequest` / `PartyMergeResponse` | type | `entity-merge` contracts branded with `PartyId` | | |
+| `MergeWinner` / `FieldConflictResponse` | type | Aliases of `WinnerSide` / `FieldConflict` | | |
+| `DuplicateMatchTier` | type | `Deterministic \                                                                             | Blocking \ | Fuzzy` |
+| `DuplicateMatchSignalResponse` | type | One weighted signal under a candidate | | |
+| `PartyDuplicateCandidateResponse` | type | Duplicate-inbox review row | | |
+| `PartyDuplicateMergeRequest` | type | One-click merge-from-row payload | | |
+| `PartyId` / `PartyAddressId` / `PartyEmailId` / `PartyPhoneId` | type | Branded `EntityId<…>` identifiers | | |
+| `PartyExternalMappingId` / `PartyDuplicateCandidateId` / `EvidenceBlobId` | type | Branded `EntityId<…>` identifiers | | |
+| `PartiesPermissions` | const | Permission keys (`Read`, `Manage`, `Lifecycle`, `SetTaxStatus`, `ExternalMappings`, `Merge`) | | |
 
 ## Caveats
 

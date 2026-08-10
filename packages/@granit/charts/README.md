@@ -60,16 +60,16 @@ tick(12450.5); // → "12 450,50 €"
 
 ## Public API
 
-| Symbol                 | Kind | Purpose                                                              |
-| ---------------------- | ---- | ------------------------------------------------------------------- |
-| `ChartDataPoint<X, Y>` | type | Readonly `[x, y]` tuple — the native ECharts point shape            |
-| `ChartSeries<X, Y>`    | type | One series: stable `id`, `name`, tuple `data`, optional `color`     |
-| `ChartAxis`            | type | Coarse axis config: `type`, `label`, hard `min` / `max`             |
-| `ChartDimensions`      | type | Common `height` / `width` props for any chart primitive             |
-| `ChartThemeTokens`     | type | Tailwind-aligned token inputs for `buildEChartsTheme`               |
-| `buildEChartsTheme`    | fn   | Tokens → frozen ECharts theme JSON (never imports `echarts`)        |
-| `FormatAxisTickOptions`| type | Locale, `kind`, `currency`, `maximumFractionDigits` for tick format |
-| `formatAxisTick`       | fn   | Returns an `axisLabel.formatter` function via `Intl`                |
+| Symbol                  | Kind | Purpose                                                             |
+| ----------------------- | ---- | ------------------------------------------------------------------- |
+| `ChartDataPoint<X, Y>`  | type | Readonly `[x, y]` tuple — the native ECharts point shape            |
+| `ChartSeries<X, Y>`     | type | One series: stable `id`, `name`, tuple `data`, optional `color`     |
+| `ChartAxis`             | type | Coarse axis config: `type`, `label`, hard `min` / `max`             |
+| `ChartDimensions`       | type | Common `height` / `width` props for any chart primitive             |
+| `ChartThemeTokens`      | type | Tailwind-aligned token inputs for `buildEChartsTheme`               |
+| `buildEChartsTheme`     | fn   | Tokens → frozen ECharts theme JSON (never imports `echarts`)        |
+| `FormatAxisTickOptions` | type | Locale, `kind`, `currency`, `maximumFractionDigits` for tick format |
+| `formatAxisTick`        | fn   | Returns an `axisLabel.formatter` function via `Intl`                |
 
 ### Series shapes
 

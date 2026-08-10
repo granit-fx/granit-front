@@ -39,10 +39,7 @@ is the widened session shape consumed downstream. The React hook
 context value — this core package only types the contract on both ends.
 
 ```ts
-import type {
-  EntraIdAuthContextType,
-  EntraIdCoreConfig,
-} from '@granit/authentication-entraid';
+import type { EntraIdAuthContextType, EntraIdCoreConfig } from '@granit/authentication-entraid';
 
 // Host environment config (from the Azure app registration).
 const config: EntraIdCoreConfig = {
@@ -73,10 +70,10 @@ import { EntraIdAuthProvider } from '@granit/react-ui-authentication-entraid';
 
 ## Public API
 
-| Symbol                   | Kind | Purpose                                                                                                                                                         |
-| ------------------------ | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `EntraIdAuthContextType` | type | `BaseAuthContextType` widened with `msalInstance: IPublicClientApplication \| null` (null before init completes)                                                 |
-| `EntraIdCoreConfig`      | type | Entra app-registration config: `clientId`, `authority`, `redirectUri` (required); `scopes`, `cacheLocation`, `onAcquireTokenFailure`, `onSessionEnd` (optional) |
+| Symbol | Kind | Purpose | |
+| ------------------------ | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | |
+| `EntraIdAuthContextType` | type | `BaseAuthContextType` widened with `msalInstance: IPublicClientApplication \                                                                                    | null` (null before init completes) |
+| `EntraIdCoreConfig` | type | Entra app-registration config: `clientId`, `authority`, `redirectUri` (required); `scopes`, `cacheLocation`, `onAcquireTokenFailure`, `onSessionEnd` (optional) | |
 
 ## Out of scope / caveats
 

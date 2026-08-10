@@ -107,38 +107,38 @@ path (`config.oidcBasePath`).
 
 ## Public API
 
-| Symbol                         | Kind     | Purpose                                                             |
-| ------------------------------ | -------- | ------------------------------------------------------------------- |
-| `OpenIddictAdminProvider`      | provider | Supplies client, base path, OIDC base path, query-key prefix below  |
-| `useAdminConfig`               | hook     | Read the resolved config; throws outside the provider               |
-| `buildAdminQueryKey`           | fn       | Query-key factory honoring the configured `queryKeyPrefix`          |
-| `useAdminUsers`                | hook     | QueryEngine-backed paginated admin user listing                     |
-| `useImpersonateUser`           | hook     | `POST` impersonation — returns new tokens for the target user       |
-| `useOidcApplications`          | hook     | List all OIDC applications                                          |
-| `useOidcApplication`           | hook     | Fetch one application by client id (`null` on 404, skipped if no id) |
-| `useCreateOidcApplication`     | hook     | Create an application (invalidates the list)                        |
-| `useUpdateOidcApplication`     | hook     | Update an application (invalidates the list)                        |
-| `useDeleteOidcApplication`     | hook     | Delete an application (invalidates the list)                        |
-| `useRotateApplicationSecret`   | hook     | Rotate the client secret — returns the new plaintext secret once    |
-| `useOidcScopes`                | hook     | List all OIDC scopes                                                |
-| `useCreateOidcScope`           | hook     | Create a scope (invalidates the list)                               |
-| `useUpdateOidcScope`           | hook     | Update a scope by name (invalidates the list)                       |
-| `useDeleteOidcScope`           | hook     | Delete a scope by name (invalidates the list)                       |
-| `useOidcAuthorizations`        | hook     | List authorizations with optional filter params                     |
-| `useCreateOidcAuthorization`   | hook     | Create an authorization / admin consent grant (invalidates the list)|
-| `useRevokeAuthorization`       | hook     | Revoke a single authorization (invalidates the list)                |
-| `useRevokeUserAuthorizations`  | hook     | Revoke every authorization for a user (invalidates the list)        |
-| `useConsentApplication`        | hook     | Public application display info for consent page (`null` on 404)     |
-| `useConsentFlow`               | hook     | Drives the explicit-consent redirect flow (grant / deny)            |
-| `useDeviceVerification`        | hook     | Drives the RFC 8628 device-code verification page                   |
-| `openIddictAdminKeys`          | const    | Static query-key factory (`all` / `users` / `applications` / …)     |
-| `OpenIddictAdminConfig`        | type     | Provider input (optional client / basePath / oidcBasePath / prefix) |
-| `ResolvedOpenIddictAdminConfig`| type     | Provider output with the resolved required client                   |
-| `OpenIddictAdminProviderProps` | type     | `{ config, children }`                                              |
-| `ConsentApplicationInfo`       | type     | `{ clientId, displayName }` for the consent prompt                  |
-| `ConsentFlowState`             | type     | `useConsentFlow` return (`clientId`, `scopes`, `grant`, `deny`, …)  |
-| `DeviceVerificationState`      | type     | `useDeviceVerification` return (`status`, `errorCode`, `submit`)    |
-| `DeviceVerificationStatus`     | type     | `'idle' \| 'pending' \| 'success' \| 'error'`                       |
+| Symbol | Kind | Purpose | | | |
+| ------------------------------- | -------- | -------------------------------------------------------------------- | | | |
+| `OpenIddictAdminProvider` | provider | Supplies client, base path, OIDC base path, query-key prefix below | | | |
+| `useAdminConfig` | hook | Read the resolved config; throws outside the provider | | | |
+| `buildAdminQueryKey` | fn | Query-key factory honoring the configured `queryKeyPrefix` | | | |
+| `useAdminUsers` | hook | QueryEngine-backed paginated admin user listing | | | |
+| `useImpersonateUser` | hook | `POST` impersonation — returns new tokens for the target user | | | |
+| `useOidcApplications` | hook | List all OIDC applications | | | |
+| `useOidcApplication` | hook | Fetch one application by client id (`null` on 404, skipped if no id) | | | |
+| `useCreateOidcApplication` | hook | Create an application (invalidates the list) | | | |
+| `useUpdateOidcApplication` | hook | Update an application (invalidates the list) | | | |
+| `useDeleteOidcApplication` | hook | Delete an application (invalidates the list) | | | |
+| `useRotateApplicationSecret` | hook | Rotate the client secret — returns the new plaintext secret once | | | |
+| `useOidcScopes` | hook | List all OIDC scopes | | | |
+| `useCreateOidcScope` | hook | Create a scope (invalidates the list) | | | |
+| `useUpdateOidcScope` | hook | Update a scope by name (invalidates the list) | | | |
+| `useDeleteOidcScope` | hook | Delete a scope by name (invalidates the list) | | | |
+| `useOidcAuthorizations` | hook | List authorizations with optional filter params | | | |
+| `useCreateOidcAuthorization` | hook | Create an authorization / admin consent grant (invalidates the list) | | | |
+| `useRevokeAuthorization` | hook | Revoke a single authorization (invalidates the list) | | | |
+| `useRevokeUserAuthorizations` | hook | Revoke every authorization for a user (invalidates the list) | | | |
+| `useConsentApplication` | hook | Public application display info for consent page (`null` on 404) | | | |
+| `useConsentFlow` | hook | Drives the explicit-consent redirect flow (grant / deny) | | | |
+| `useDeviceVerification` | hook | Drives the RFC 8628 device-code verification page | | | |
+| `openIddictAdminKeys` | const | Static query-key factory (`all` / `users` / `applications` / …) | | | |
+| `OpenIddictAdminConfig` | type | Provider input (optional client / basePath / oidcBasePath / prefix) | | | |
+| `ResolvedOpenIddictAdminConfig` | type | Provider output with the resolved required client | | | |
+| `OpenIddictAdminProviderProps` | type | `{ config, children }` | | | |
+| `ConsentApplicationInfo` | type | `{ clientId, displayName }` for the consent prompt | | | |
+| `ConsentFlowState` | type | `useConsentFlow` return (`clientId`, `scopes`, `grant`, `deny`, …) | | | |
+| `DeviceVerificationState` | type | `useDeviceVerification` return (`status`, `errorCode`, `submit`) | | | |
+| `DeviceVerificationStatus` | type | `'idle' \                                                            | 'pending' \ | 'success' \ | 'error'` |
 
 `./testing` subpath (requires the optional `msw` peer): `createOpenIddictAdminHandlers`
 (MSW handlers) with the `adminUserQueryMetadata`, `oidcApplicationQueryMetadata`,

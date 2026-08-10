@@ -1,7 +1,7 @@
 ---
 name: quality
-description: "QA/DevSecOps engineer: full project quality audit or targeted MR review. Analyzes lint, format, tests, SonarQube (quality gate, issues, coverage). Detects regressions on modified files. Invoke before a merge or to reduce technical debt."
-argument-hint: "[review | projectKey]"
+description: 'QA/DevSecOps engineer: full project quality audit or targeted MR review. Analyzes lint, format, tests, SonarQube (quality gate, issues, coverage). Detects regressions on modified files. Invoke before a merge or to reduce technical debt.'
+argument-hint: '[review | projectKey]'
 ---
 
 # Quality Engineer — DevSecOps
@@ -12,11 +12,11 @@ then fix — in that order.
 
 ## Invocation modes
 
-| Argument | Mode | Scope |
-|----------|------|-------|
-| _(none)_ | Full audit | Lint + format + tests + SonarQube on whole project |
-| `review` | MR Code Review | Targeted analysis on files modified since `main` |
-| `{projectKey}` | Targeted audit | Full audit on the specified SonarQube project |
+| Argument       | Mode           | Scope                                              |
+| -------------- | -------------- | -------------------------------------------------- |
+| _(none)_       | Full audit     | Lint + format + tests + SonarQube on whole project |
+| `review`       | MR Code Review | Targeted analysis on files modified since `main`   |
+| `{projectKey}` | Targeted audit | Full audit on the specified SonarQube project      |
 
 ---
 
@@ -138,7 +138,7 @@ Same as full audit, restricted to modified files where possible.
 
 ## Final report
 
-```
+```text
 ## Quality Audit — {mode} — {date}
 
 ### Lint         : OK | FAILED ({n} errors, {n} warnings)

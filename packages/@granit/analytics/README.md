@@ -78,38 +78,38 @@ function render(envelope: WidgetSnapshotEnvelope) {
 
 ### Metrics — runtime evaluation
 
-| Symbol                  | Kind | Purpose                                                      |
-| ----------------------- | ---- | ------------------------------------------------------------ |
-| `evaluateMetric`        | fn   | `POST {basePath}/metrics/{metricName}` to `MetricResponse`   |
-| `MetricRequest`         | type | Request body — `period` + optional `compareTo`              |
-| `MetricResponse`        | type | Envelope: `snapshot`, `sequence`, `emittedAt`, `refreshHint` |
-| `MetricSnapshotPayload` | type | Value + `valueKind`, `currency`, `previous`, `noData`        |
-| `MetricPreviousPayload` | type | Previous-period delta: `value`, `deltaRatio`, `trend`        |
-| `PeriodSpec`            | type | `{ token }` or `{ from, to }` calendar window                |
-| `PeriodToken`           | type | `'today' \| 'last_30d' \| 'ytd' \| ...` (open `string`)      |
-| `CompareSpec`           | type | `{ token }` comparison window                                |
-| `CompareToken`          | type | `'previous_period' \| ...` (open `string`)                   |
-| `ValueKind`             | type | `'Count' \| 'Number' \| 'Currency' \| ...` wire enum         |
-| `Trend`                 | type | `'up' \| 'down' \| 'flat'` (lowercase wire value)            |
-| `RefreshHint`           | type | Re-export from `@granit/dashboards` (back-compat)            |
+| Symbol | Kind | Purpose | | | |
+| ----------------------- | ---- | ------------------------------------------------------------ | | | |
+| `evaluateMetric` | fn | `POST {basePath}/metrics/{metricName}` to `MetricResponse` | | | |
+| `MetricRequest` | type | Request body — `period` + optional `compareTo` | | | |
+| `MetricResponse` | type | Envelope: `snapshot`, `sequence`, `emittedAt`, `refreshHint` | | | |
+| `MetricSnapshotPayload` | type | Value + `valueKind`, `currency`, `previous`, `noData` | | | |
+| `MetricPreviousPayload` | type | Previous-period delta: `value`, `deltaRatio`, `trend` | | | |
+| `PeriodSpec` | type | `{ token }` or `{ from, to }` calendar window | | | |
+| `PeriodToken` | type | `'today' \                                                   | 'last_30d' \         | 'ytd' \                        | ...` (open `string`) |
+| `CompareSpec` | type | `{ token }` comparison window | | | |
+| `CompareToken` | type | `'previous_period' \                                         | ...` (open `string`) | | |
+| `ValueKind` | type | `'Count' \                                                   | 'Number' \           | 'Currency' \                   | ...` wire enum |
+| `Trend` | type | `'up' \                                                      | 'down' \             | 'flat'` (lowercase wire value) | |
+| `RefreshHint` | type | Re-export from `@granit/dashboards` (back-compat) | | | |
 
 ### Widgets — definitions
 
-| Symbol                      | Kind | Purpose                                                     |
-| --------------------------- | ---- | ----------------------------------------------------------- |
-| `AnalyticsWidgetDefinition` | type | Closed union of the five widget variants below              |
-| `KpiWidgetDefinition`       | type | Single-value tile bound via a `Datasource`                  |
-| `ChartWidgetDefinition`     | type | Aggregated chart over a `QueryDefinition` (`groupBy` + agg) |
-| `TableWidgetDefinition`     | type | Paginated grid over a `QueryDefinition`                     |
-| `PivotWidgetDefinition`     | type | Rows by columns by value OLAP pivot                         |
-| `MapWidgetDefinition`       | type | Geocoded markers on an interactive map                      |
-| `ChartType`                 | type | `'Bar' \| 'Line' \| 'Pie' \| ...` visual hint               |
-| `AggregateFunction`         | type | Re-export — `'Count' \| 'Sum' \| 'Avg' \| ...`              |
-| `MapPointSource`            | type | `LatLngMapPointSource \| GeographyMapPointSource`           |
-| `LatLngMapPointSource`      | type | Decimal lat/lng columns — works on any database             |
-| `GeographyMapPointSource`   | type | PostGIS `geography(Point)` column (opt-in, PostGIS-only)    |
-| `MapCenter`                 | type | Initial camera center (validated lat/lng range)             |
-| `MapTileLayerKind`          | type | `'Plan' \| 'Satellite' \| 'Hybrid' \| ...` default layer    |
+| Symbol | Kind | Purpose | | | |
+| --------------------------- | ---- | ----------------------------------------------------------- | | | |
+| `AnalyticsWidgetDefinition` | type | Closed union of the five widget variants below | | | |
+| `KpiWidgetDefinition` | type | Single-value tile bound via a `Datasource` | | | |
+| `ChartWidgetDefinition` | type | Aggregated chart over a `QueryDefinition` (`groupBy` + agg) | | | |
+| `TableWidgetDefinition` | type | Paginated grid over a `QueryDefinition` | | | |
+| `PivotWidgetDefinition` | type | Rows by columns by value OLAP pivot | | | |
+| `MapWidgetDefinition` | type | Geocoded markers on an interactive map | | | |
+| `ChartType` | type | `'Bar' \                                                    | 'Line' \                 | 'Pie' \    | ...` visual hint |
+| `AggregateFunction` | type | Re-export — `'Count' \                                      | 'Sum' \                  | 'Avg' \    | ...` |
+| `MapPointSource` | type | `LatLngMapPointSource \                                     | GeographyMapPointSource` | | |
+| `LatLngMapPointSource` | type | Decimal lat/lng columns — works on any database | | | |
+| `GeographyMapPointSource` | type | PostGIS `geography(Point)` column (opt-in, PostGIS-only) | | | |
+| `MapCenter` | type | Initial camera center (validated lat/lng range) | | | |
+| `MapTileLayerKind` | type | `'Plan' \                                                   | 'Satellite' \            | 'Hybrid' \ | ...` default layer |
 
 ### Widgets — snapshot envelopes + guards
 

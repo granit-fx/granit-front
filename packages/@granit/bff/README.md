@@ -31,11 +31,7 @@ published to a registry for app consumption. Declare these peers:
 ## Quick start
 
 ```ts
-import {
-  CsrfManager,
-  parseBffSessionResponse,
-  type BffUserResponse,
-} from '@granit/bff';
+import { CsrfManager, parseBffSessionResponse, type BffUserResponse } from '@granit/bff';
 
 const pathPrefix = '/admin';
 
@@ -66,18 +62,18 @@ await fetchWithCsrf(`${pathPrefix}/bff/logout`, { method: 'POST' });
 
 ## Public API
 
-| Symbol                    | Kind  | Purpose                                                       |
-| ------------------------- | ----- | ------------------------------------------------------------ |
-| `BffUser`                 | type  | `BffTenantUser \| BffHostUser` authenticated union           |
-| `BffTenantUser`           | type  | Tenant-scoped user - guarantees a non-empty `tenantId`       |
-| `BffHostUser`             | type  | Host (cross-tenant) user - guarantees no `tenantId`          |
-| `BffUnauthenticated`      | type  | `{ authenticated: false }` response                          |
-| `BffUserResponse`         | type  | `BffUser \| BffUnauthenticated` - full `/bff/user` result    |
-| `BffCsrfTokenResponse`    | type  | `POST /bff/csrf-token` body (`{ csrfToken }`)                |
-| `BffConfig`               | type  | Provider config: `pathPrefix`, `onUnauthenticated`, interval |
-| `ParseResult<T>`          | type  | `safeParse`-style `{ success, data } \| { success, issues }` |
-| `parseBffSessionResponse` | fn    | Validate a raw `/bff/user` body into a `BffUserResponse`     |
-| `CsrfManager`             | const | Class - fetches/caches the CSRF token, wraps `fetch`         |
+| Symbol | Kind | Purpose | |
+| ------------------------- | ----- | ------------------------------------------------------------ | |
+| `BffUser` | type | `BffTenantUser \                                             | BffHostUser` authenticated union |
+| `BffTenantUser` | type | Tenant-scoped user - guarantees a non-empty `tenantId` | |
+| `BffHostUser` | type | Host (cross-tenant) user - guarantees no `tenantId` | |
+| `BffUnauthenticated` | type | `{ authenticated: false }` response | |
+| `BffUserResponse` | type | `BffUser \                                                   | BffUnauthenticated` - full `/bff/user` result |
+| `BffCsrfTokenResponse` | type | `POST /bff/csrf-token` body (`{ csrfToken }`) | |
+| `BffConfig` | type | Provider config: `pathPrefix`, `onUnauthenticated`, interval | |
+| `ParseResult<T>` | type | `safeParse`-style `{ success, data } \                       | { success, issues }` |
+| `parseBffSessionResponse` | fn | Validate a raw `/bff/user` body into a `BffUserResponse` | |
+| `CsrfManager` | const | Class - fetches/caches the CSRF token, wraps `fetch` | |
 
 `CsrfManager` instances expose `fetchToken()` (force a fresh token),
 `getToken()` (`@internal` — for the api-client interceptor only), and

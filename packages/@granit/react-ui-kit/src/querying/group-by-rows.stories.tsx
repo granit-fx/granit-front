@@ -39,7 +39,10 @@ const renderItem = (patient: Patient, index: number) => (
 
 const meta = {
   title: 'Admin Kit/Querying/GroupByRows',
-  component: GroupByRows,
+  // Instantiated with `Patient` so `renderItem` resolves to a single
+  // `(item: Patient, …)` signature; the bare generic resolves to an
+  // intersection with `(item: unknown, …)`, which no concrete renderer matches.
+  component: GroupByRows<Patient>,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',

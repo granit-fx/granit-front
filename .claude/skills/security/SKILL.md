@@ -1,7 +1,7 @@
 ---
 name: security
-description: "Principal Frontend Security Architect: exhaustive security audit of the Granit front-end framework. Covers browser IAM (BFF client, OIDC SPA flows, token storage), XSS/DOM safety, React anti-patterns, axios/CSRF, multi-tenancy headers, supply chain (pnpm), AI/MCP client, observability, and CSP. Produces STRIDE threat models, CVSS-scored findings, OWASP ASVS/Top 10/LLM gap analysis, and a prioritized remediation roadmap."
-argument-hint: "[help | full | <domain> | diff] [--severity {critical|high|medium|all}] [--base <branch>]"
+description: 'Principal Frontend Security Architect: exhaustive security audit of the Granit front-end framework. Covers browser IAM (BFF client, OIDC SPA flows, token storage), XSS/DOM safety, React anti-patterns, axios/CSRF, multi-tenancy headers, supply chain (pnpm), AI/MCP client, observability, and CSP. Produces STRIDE threat models, CVSS-scored findings, OWASP ASVS/Top 10/LLM gap analysis, and a prioritized remediation roadmap.'
+argument-hint: '[help | full | <domain> | diff] [--severity {critical|high|medium|all}] [--base <branch>]'
 ---
 
 # Security Audit — Granit Front-End Framework
@@ -41,36 +41,36 @@ framework "Granit Front" (TypeScript 6 + React 19 + Vite 8, ~87 packages
 
 ## Invocation modes
 
-| Argument | Mode | Scope |
-|----------|------|-------|
-| `help` | Help | Show reference card, stop |
-| _(none)_ / `full` | Full audit | All security domains — the "Matrice Granit Front" |
-| `<domain>` | Domain audit | Single security domain (see list below) |
-| `diff` | Diff audit | Security-relevant changes in current branch vs base |
+| Argument          | Mode         | Scope                                               |
+| ----------------- | ------------ | --------------------------------------------------- |
+| `help`            | Help         | Show reference card, stop                           |
+| _(none)_ / `full` | Full audit   | All security domains — the "Matrice Granit Front"   |
+| `<domain>`        | Domain audit | Single security domain (see list below)             |
+| `diff`            | Diff audit   | Security-relevant changes in current branch vs base |
 
 ### Flags
 
-| Flag | Effect |
-|------|--------|
-| `--severity <s>` | Filter findings: `critical`, `high`, `medium`, `all` (default: `all`) |
-| `--base <branch>` | Override base branch for diff mode (default: `develop`) |
+| Flag              | Effect                                                                |
+| ----------------- | --------------------------------------------------------------------- |
+| `--severity <s>`  | Filter findings: `critical`, `high`, `medium`, `all` (default: `all`) |
+| `--base <branch>` | Override base branch for diff mode (default: `develop`)               |
 
 ### Security domains
 
-| Domain keyword | Scope |
-|----------------|-------|
-| `iam` | Authentication providers, BFF client, OIDC SPA, API keys, token storage |
-| `xss` | XSS surface: `dangerouslySetInnerHTML`, `innerHTML`, DOM sinks, Trusted Types |
-| `react` | React anti-patterns: unsafe props, ref escapes, hydration mismatch, effect leaks |
-| `api` | Axios client, interceptors, CSRF, response handling, error leakage |
-| `ai` | MCP client, AI hooks, prompt injection at the UI, tool output rendering |
-| `tenancy` | Multi-tenancy: header propagation, React Query cache partitioning |
-| `storage` | `localStorage`/`sessionStorage`/`IndexedDB`/cookies, sensitive data persistence |
-| `supply-chain` | pnpm dependencies, license compliance, lockfile integrity, postinstall scripts |
-| `observability` | Logger (`@granit/logger`), tracing, PII in logs, source maps in production |
-| `csp` | CSP, Trusted Types, SRI, CORS, security headers expected from BFF |
-| `forms` | Zod validation, form injection, file upload, client-side trust |
-| `i18n` | Translation injection, `dangerouslySetInnerHTML` via i18n, locale switching |
+| Domain keyword  | Scope                                                                            |
+| --------------- | -------------------------------------------------------------------------------- |
+| `iam`           | Authentication providers, BFF client, OIDC SPA, API keys, token storage          |
+| `xss`           | XSS surface: `dangerouslySetInnerHTML`, `innerHTML`, DOM sinks, Trusted Types    |
+| `react`         | React anti-patterns: unsafe props, ref escapes, hydration mismatch, effect leaks |
+| `api`           | Axios client, interceptors, CSRF, response handling, error leakage               |
+| `ai`            | MCP client, AI hooks, prompt injection at the UI, tool output rendering          |
+| `tenancy`       | Multi-tenancy: header propagation, React Query cache partitioning                |
+| `storage`       | `localStorage`/`sessionStorage`/`IndexedDB`/cookies, sensitive data persistence  |
+| `supply-chain`  | pnpm dependencies, license compliance, lockfile integrity, postinstall scripts   |
+| `observability` | Logger (`@granit/logger`), tracing, PII in logs, source maps in production       |
+| `csp`           | CSP, Trusted Types, SRI, CORS, security headers expected from BFF                |
+| `forms`         | Zod validation, form injection, file upload, client-side trust                   |
+| `i18n`          | Translation injection, `dangerouslySetInnerHTML` via i18n, locale switching      |
 
 ---
 
@@ -78,7 +78,7 @@ framework "Granit Front" (TypeScript 6 + React 19 + Vite 8, ~87 packages
 
 When `$ARGUMENTS` is `help`, display this reference card and stop:
 
-```
+```text
 /security — Granit Front Security Audit (Principal Frontend AppSec Architect)
 
 USAGE
@@ -219,14 +219,14 @@ Apply STRIDE systematically on the trust boundaries identified in Step 0.
 
 ### STRIDE matrix — mandatory analysis points
 
-| Threat | Question | Where to look |
-|--------|----------|---------------|
-| **Spoofing** | Can an attacker impersonate a user, tenant, or origin? | OIDC redirect_uri, BFF cookie, MCP client identity, tenant header injection |
-| **Tampering** | Can data be modified in transit or in the browser without detection? | CSRF token handling, axios interceptors, React Query cache mutation, postMessage targets |
-| **Repudiation** | Can actions be performed without UI audit trail? | Logger coverage on sensitive flows, missing telemetry on auth events |
-| **Information Disclosure** | Can sensitive data leak across boundaries? | Tokens in `localStorage`, PII in logs, error boundaries leaking stack traces, source maps in prod |
-| **Denial of Service** | Can the SPA be made unusable? | Unbounded React renders, axios retry storms, unbounded React Query stale cache, regex DoS |
-| **Elevation of Privilege** | Can a user gain unauthorized UI access? | Client-side gating ONLY (must be backed by server), role check in hooks, route guards |
+| Threat                     | Question                                                             | Where to look                                                                                     |
+| -------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| **Spoofing**               | Can an attacker impersonate a user, tenant, or origin?               | OIDC redirect_uri, BFF cookie, MCP client identity, tenant header injection                       |
+| **Tampering**              | Can data be modified in transit or in the browser without detection? | CSRF token handling, axios interceptors, React Query cache mutation, postMessage targets          |
+| **Repudiation**            | Can actions be performed without UI audit trail?                     | Logger coverage on sensitive flows, missing telemetry on auth events                              |
+| **Information Disclosure** | Can sensitive data leak across boundaries?                           | Tokens in `localStorage`, PII in logs, error boundaries leaking stack traces, source maps in prod |
+| **Denial of Service**      | Can the SPA be made unusable?                                        | Unbounded React renders, axios retry storms, unbounded React Query stale cache, regex DoS         |
+| **Elevation of Privilege** | Can a user gain unauthorized UI access?                              | Client-side gating ONLY (must be backed by server), role check in hooks, route guards             |
 
 For each threat:
 
@@ -427,7 +427,7 @@ Key areas:
   `THIRD-PARTY-NOTICES.md` (cf. global CLAUDE.md).
 - **`postinstall` / `preinstall` scripts:** flag any new dependency that
   runs arbitrary scripts on install (recommend `pnpm config set
-  enable-pre-post-scripts false` or `ignore-scripts=true` for CI).
+enable-pre-post-scripts false` or `ignore-scripts=true` for CI).
 - **Pinned versions:** React, axios, react-query pinned per recent
   commit `chore(deps): patch-bump devDependencies + pin React/axios/react-query`.
 - **Typosquatting:** check new dependencies against well-known packages.
@@ -524,7 +524,7 @@ For each finding, use this strict format:
 
 **Package:** `@granit/{pkg}` — `{module/file/component}`
 **File:** [{file}:{line}]({relative-path}#L{line})
-**CVSS 3.1:** {score} ({vector-string}) *(omit for INFO)*
+**CVSS 3.1:** {score} ({vector-string}) _(omit for INFO)_
 **Standard:** {OWASP ASVS x.y.z | OWASP Top 10 Axx | OWASP API xx | OWASP LLM-xx | CWE-xxx | RFC xxxx §y}
 
 **Description:**
@@ -534,6 +534,7 @@ For each finding, use this strict format:
 {Step-by-step exploitation scenario. Be specific to Granit Front's architecture.}
 
 **Evidence:**
+
 ```typescript
 // Relevant code snippet showing the vulnerability
 ```
@@ -561,15 +562,15 @@ For each finding, use this strict format:
 
 Use the right tool for the job:
 
-| Goal | Tool | Why |
-|------|------|-----|
-| Discover packages | `Bash` (`ls packages/@granit/`) | Never hardcode the list |
-| Read public surface | `Read` on `src/index.ts` | Token-efficient overview |
-| Search cross-cutting patterns | `Grep` | `dangerouslySetInnerHTML`, `localStorage`, `fetch(`, etc. |
-| Inspect a hook / component | `Read` | Full logic + types |
-| Find call sites | `Grep` | Map attack surface |
-| Inspect dependencies | `Bash` (`pnpm why <pkg>`, `pnpm list`) | Supply chain analysis |
-| Look up vulnerabilities | `Bash` (`pnpm audit --prod --json`) | CVE detection |
+| Goal                          | Tool                                   | Why                                                       |
+| ----------------------------- | -------------------------------------- | --------------------------------------------------------- |
+| Discover packages             | `Bash` (`ls packages/@granit/`)        | Never hardcode the list                                   |
+| Read public surface           | `Read` on `src/index.ts`               | Token-efficient overview                                  |
+| Search cross-cutting patterns | `Grep`                                 | `dangerouslySetInnerHTML`, `localStorage`, `fetch(`, etc. |
+| Inspect a hook / component    | `Read`                                 | Full logic + types                                        |
+| Find call sites               | `Grep`                                 | Map attack surface                                        |
+| Inspect dependencies          | `Bash` (`pnpm why <pkg>`, `pnpm list`) | Supply chain analysis                                     |
+| Look up vulnerabilities       | `Bash` (`pnpm audit --prod --json`)    | CVE detection                                             |
 
 ### 4b. Analysis sequence per package
 
@@ -602,60 +603,60 @@ Evaluate against these standards and produce a matrix.
 
 ### OWASP Top 10 Web (2021)
 
-| Risk | Description | Status | Gap |
-|------|-------------|--------|-----|
-| A01 | Broken Access Control | | |
-| A02 | Cryptographic Failures | | |
-| A03 | Injection (incl. XSS) | | |
-| A04 | Insecure Design | | |
-| A05 | Security Misconfiguration | | |
-| A06 | Vulnerable & Outdated Components | | |
-| A07 | Identification & Authentication Failures | | |
-| A08 | Software & Data Integrity Failures | | |
-| A09 | Security Logging & Monitoring Failures | | |
-| A10 | SSRF | | |
+| Risk | Description                              | Status | Gap |
+| ---- | ---------------------------------------- | ------ | --- |
+| A01  | Broken Access Control                    |        |     |
+| A02  | Cryptographic Failures                   |        |     |
+| A03  | Injection (incl. XSS)                    |        |     |
+| A04  | Insecure Design                          |        |     |
+| A05  | Security Misconfiguration                |        |     |
+| A06  | Vulnerable & Outdated Components         |        |     |
+| A07  | Identification & Authentication Failures |        |     |
+| A08  | Software & Data Integrity Failures       |        |     |
+| A09  | Security Logging & Monitoring Failures   |        |     |
+| A10  | SSRF                                     |        |     |
 
 ### OWASP ASVS 4.0 (browser-relevant sections)
 
-| Section | Area | Status | Gap |
-|---------|------|--------|-----|
-| V2 | Authentication | | |
-| V3 | Session Management | | |
-| V4 | Access Control | | |
-| V5 | Validation, Sanitization, Encoding | | |
-| V7 | Error Handling & Logging | | |
-| V8 | Data Protection | | |
-| V9 | Communications | | |
-| V13 | API Security | | |
-| V14 | Configuration | | |
+| Section | Area                               | Status | Gap |
+| ------- | ---------------------------------- | ------ | --- |
+| V2      | Authentication                     |        |     |
+| V3      | Session Management                 |        |     |
+| V4      | Access Control                     |        |     |
+| V5      | Validation, Sanitization, Encoding |        |     |
+| V7      | Error Handling & Logging           |        |     |
+| V8      | Data Protection                    |        |     |
+| V9      | Communications                     |        |     |
+| V13     | API Security                       |        |     |
+| V14     | Configuration                      |        |     |
 
 ### OWASP API Security Top 10 (2023) — client-side relevance
 
-| Risk | Description | Status | Gap |
-|------|-------------|--------|-----|
-| API1 | BOLA — does the UI surface IDs without expecting server enforcement? | | |
-| API2 | Broken Authentication — token lifecycle in the SPA | | |
-| API3 | BOPLA — over-fetching DTOs containing sensitive fields | | |
-| API4 | Unrestricted Resource Consumption — unbounded retries, infinite scroll | | |
+| Risk | Description                                                            | Status | Gap |
+| ---- | ---------------------------------------------------------------------- | ------ | --- |
+| API1 | BOLA — does the UI surface IDs without expecting server enforcement?   |        |     |
+| API2 | Broken Authentication — token lifecycle in the SPA                     |        |     |
+| API3 | BOPLA — over-fetching DTOs containing sensitive fields                 |        |     |
+| API4 | Unrestricted Resource Consumption — unbounded retries, infinite scroll |        |     |
 
 ### OWASP LLM Top 10 (2025) — UI relevance
 
-| Risk | Description | Status | Gap |
-|------|-------------|--------|-----|
-| LLM01 | Prompt Injection — UI input flowing into prompts | | |
-| LLM02 | Insecure Output Handling — rendering tool outputs as HTML | | |
-| LLM06 | Sensitive Information Disclosure — PII shown via AI tools | | |
-| LLM07 | Insecure Plugin/Tool Design — MCP client trust posture | | |
-| LLM08 | Excessive Agency — UI auto-executing tool suggestions | | |
+| Risk  | Description                                               | Status | Gap |
+| ----- | --------------------------------------------------------- | ------ | --- |
+| LLM01 | Prompt Injection — UI input flowing into prompts          |        |     |
+| LLM02 | Insecure Output Handling — rendering tool outputs as HTML |        |     |
+| LLM06 | Sensitive Information Disclosure — PII shown via AI tools |        |     |
+| LLM07 | Insecure Plugin/Tool Design — MCP client trust posture    |        |     |
+| LLM08 | Excessive Agency — UI auto-executing tool suggestions     |        |     |
 
 ### GDPR — Privacy by Design (Art. 25)
 
-| Principle | Implementation | Gap |
-|-----------|---------------|-----|
-| Data minimization (UI does not request unnecessary fields) | | |
-| Purpose limitation (telemetry scope, consent banner) | | |
-| Storage limitation (no unbounded retention in `localStorage`) | | |
-| Integrity & confidentiality (HTTPS only, no plaintext PII) | | |
+| Principle                                                     | Implementation | Gap |
+| ------------------------------------------------------------- | -------------- | --- |
+| Data minimization (UI does not request unnecessary fields)    |                |     |
+| Purpose limitation (telemetry scope, consent banner)          |                |     |
+| Storage limitation (no unbounded retention in `localStorage`) |                |     |
+| Integrity & confidentiality (HTTPS only, no plaintext PII)    |                |     |
 
 ---
 
@@ -672,8 +673,8 @@ Evaluate against these standards and produce a matrix.
 **Framework version:** {git describe --tags --always}
 **Packages audited:** {count}
 **Standards evaluated:** OWASP ASVS 4.0, OWASP Top 10 (2021), OWASP API Top 10,
-  OWASP LLM Top 10, RFC 6749/7636, W3C CSP Level 3, W3C Trusted Types,
-  ISO 27001:2022 (A.8, A.14), GDPR Art. 25/32
+OWASP LLM Top 10, RFC 6749/7636, W3C CSP Level 3, W3C Trusted Types,
+ISO 27001:2022 (A.8, A.14), GDPR Art. 25/32
 
 ---
 
@@ -682,35 +683,41 @@ Evaluate against these standards and produce a matrix.
 **Overall security posture:** {STRONG | ADEQUATE | NEEDS IMPROVEMENT | CRITICAL}
 
 **Key strengths:**
+
 1. {strength}
 2. {strength}
 3. {strength}
 
 **Top 3 systemic risks:**
+
 1. {risk — one sentence with impact}
 2. {risk}
 3. {risk}
 
 **Finding summary:**
+
 | Severity | Count | Remediated | Remaining |
-|----------|-------|------------|-----------|
-| Critical | | | |
-| High | | | |
-| Medium | | | |
-| Low | | | |
-| Info | | | |
+| -------- | ----- | ---------- | --------- |
+| Critical |       |            |           |
+| High     |       |            |           |
+| Medium   |       |            |           |
+| Low      |       |            |           |
+| Info     |       |            |           |
 
 ---
 
 ## 2. STRIDE Threat Model
 
 ### 2.1 Trust boundaries
+
 {Diagram and description from Step 0c}
 
 ### 2.2 Threat matrix
+
 {STRIDE analysis from Step 1}
 
 ### 2.3 Attack trees
+
 {For the top 3 most impactful threats, draw attack trees}
 
 ---
@@ -718,16 +725,27 @@ Evaluate against these standards and produce a matrix.
 ## 3. Detailed Findings
 
 ### 3.1 Identity & Access (IAM)
+
 ### 3.2 XSS Surface
+
 ### 3.3 React Anti-patterns
+
 ### 3.4 API Client & CSRF
+
 ### 3.5 AI / MCP Client
+
 ### 3.6 Multi-Tenancy Isolation
+
 ### 3.7 Browser Storage
+
 ### 3.8 Supply Chain
+
 ### 3.9 Observability
+
 ### 3.10 CSP & Headers
+
 ### 3.11 Forms & Validation
+
 ### 3.12 i18n Injection
 
 ---
@@ -735,18 +753,22 @@ Evaluate against these standards and produce a matrix.
 ## 4. Compliance Gap Analysis
 
 ### 4.1 OWASP Top 10 (2021)
+
 ### 4.2 OWASP ASVS 4.0
+
 ### 4.3 OWASP API Top 10
+
 ### 4.4 OWASP LLM Top 10
+
 ### 4.5 GDPR — Privacy by Design
 
 ---
 
 ## 5. Residual Risk Register
 
-| # | Risk description | Inherent risk (P x I) | Compensating controls | Residual risk | Risk owner | Accept / Mitigate / Transfer |
-|---|------------------|-----------------------|----------------------|---------------|------------|------------------------------|
-|   |                  |                       |                      |               |            |                              |
+| #   | Risk description | Inherent risk (P x I) | Compensating controls | Residual risk | Risk owner | Accept / Mitigate / Transfer |
+| --- | ---------------- | --------------------- | --------------------- | ------------- | ---------- | ---------------------------- |
+|     |                  |                       |                       |               |            |                              |
 
 **Probability scale:** Rare (1) — Unlikely (2) — Possible (3) — Likely (4) — Almost certain (5)
 **Impact scale:** Negligible (1) — Minor (2) — Moderate (3) — Major (4) — Catastrophic (5)
@@ -757,7 +779,9 @@ Evaluate against these standards and produce a matrix.
 ## 6. Remediation Roadmap
 
 ### Quick Wins (0-2 weeks)
+
 ### Tactical (1-3 months)
+
 ### Strategic (3-6 months — architecture evolution)
 
 ---
@@ -765,8 +789,11 @@ Evaluate against these standards and produce a matrix.
 ## Appendices
 
 ### A. Packages audited
+
 ### B. Tools and methods used
+
 ### C. Out of scope
+
 ### D. Glossary
 ```
 
@@ -814,13 +841,16 @@ For each changed file:
 ## Security Diff Review — {branch} — {date}
 
 ### Security-relevant files changed
+
 | File | Package | Change type | Risk |
-|------|---------|-------------|------|
+| ---- | ------- | ----------- | ---- |
 
 ### Findings
+
 {Using standard finding format, VULN-xxx}
 
 ### Verdict
+
 SAFE TO MERGE | SECURITY REVIEW REQUIRED — {reasons}
 ```
 

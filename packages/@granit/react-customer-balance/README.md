@@ -105,17 +105,17 @@ function AdminLedger() {
 ## Public API
 
 | Symbol                          | Kind     | Purpose                                                            |
-| ------------------------------- | -------- | ----------------------------------------------------------------- |
+| ------------------------------- | -------- | ------------------------------------------------------------------ |
 | `CustomerBalanceProvider`       | provider | Supplies client, base path, query-key prefix to all hooks below it |
-| `useCustomerBalanceConfig`      | hook     | Read the resolved config; throws outside a provider               |
-| `useCustomerBalance`            | hook     | `GET .../balance?currency=` — current balance for a currency      |
-| `useBalanceTransactions`        | hook     | `GET .../transactions` — paginated ledger (`PagedResult`)         |
-| `useAddAdminCredit`             | hook     | `POST .../balance/credit` mutation; writes balance to cache       |
-| `useApplyAdminDebit`            | hook     | `POST .../balance/debit` mutation; writes balance to cache        |
-| `buildCustomerBalanceQueryKey`  | fn       | Query-key factory honoring the configured `queryKeyPrefix`        |
-| `CustomerBalanceConfig`         | type     | Provider input (optional client / basePath / queryKeyPrefix)      |
-| `ResolvedCustomerBalanceConfig` | type     | Provider output with the resolved required client + basePath      |
-| `CustomerBalanceProviderProps`  | type     | `{ config, children }`                                            |
+| `useCustomerBalanceConfig`      | hook     | Read the resolved config; throws outside a provider                |
+| `useCustomerBalance`            | hook     | `GET .../balance?currency=` — current balance for a currency       |
+| `useBalanceTransactions`        | hook     | `GET .../transactions` — paginated ledger (`PagedResult`)          |
+| `useAddAdminCredit`             | hook     | `POST .../balance/credit` mutation; writes balance to cache        |
+| `useApplyAdminDebit`            | hook     | `POST .../balance/debit` mutation; writes balance to cache         |
+| `buildCustomerBalanceQueryKey`  | fn       | Query-key factory honoring the configured `queryKeyPrefix`         |
+| `CustomerBalanceConfig`         | type     | Provider input (optional client / basePath / queryKeyPrefix)       |
+| `ResolvedCustomerBalanceConfig` | type     | Provider output with the resolved required client + basePath       |
+| `CustomerBalanceProviderProps`  | type     | `{ config, children }`                                             |
 
 DTOs (`CustomerBalanceResponse`, `BalanceTransactionResponse`,
 `AdminCreditRequest`, `AdminDebitRequest`, `ListBalanceTransactionsParams`) are
@@ -141,7 +141,7 @@ transaction grid.
   so the next edit echoes the latest stamp.
 - **Currency-scoped cache.** Balances and transaction pages are keyed by
   currency; `useCustomerBalance('EUR')` and `useCustomerBalance('USD')` are
-  independent cache entries. A successful credit/debit invalidates *all*
+  independent cache entries. A successful credit/debit invalidates _all_
   transaction queries but only sets the balance for the mutated currency.
 - **Tenant safety.** The tenant header (`X-Tenant-Id`) is injected by
   `@granit/api-client`; on tenant switch, clear the React Query cache (e.g.
@@ -156,7 +156,7 @@ transaction grid.
   package is headless.
 - **DTOs, HTTP transport, permissions, and validation constraints** — owned by
   [`@granit/customer-balance`](../customer-balance) (mirror of the `Customer
-  Balance` backend); hooks here only adapt them to React Query.
+Balance` backend); hooks here only adapt them to React Query.
 - **Authentication** — issuing/refreshing tokens is `@granit/authentication` and
   the BFF; this package consumes the already-authenticated Axios client.
 

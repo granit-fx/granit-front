@@ -51,15 +51,15 @@ const { type, id } = parseMentionValue(value); // { type: 'user', id: '42' }
 
 ## Public API
 
-| Symbol                 | Kind  | Purpose                                                         |
-| ---------------------- | ----- | -------------------------------------------------------------- |
-| `MentionItem`          | type  | Normalized picker item (`{ type, id, label, extra }`)          |
-| `SearchMentionsParams` | type  | `searchMentions` query (`search`, optional `type`)             |
-| `MentionClientOptions` | type  | Shared call options (`{ signal? }`)                            |
-| `MENTIONS_SOURCE`      | const | Registry name of the facade source (`'mentions'`)              |
-| `searchMentions`       | fn    | Typeahead over `GET /lookups/mentions` (`type`->`scope.type`)  |
-| `resolveMention`       | fn    | Rehydrate a `"<type>:<id>"` value; `null` on unknown (404)     |
-| `parseMentionValue`    | fn    | Split a composite value into `{ type, id }` (no round-trip)    |
+| Symbol                 | Kind  | Purpose                                                       |
+| ---------------------- | ----- | ------------------------------------------------------------- |
+| `MentionItem`          | type  | Normalized picker item (`{ type, id, label, extra }`)         |
+| `SearchMentionsParams` | type  | `searchMentions` query (`search`, optional `type`)            |
+| `MentionClientOptions` | type  | Shared call options (`{ signal? }`)                           |
+| `MENTIONS_SOURCE`      | const | Registry name of the facade source (`'mentions'`)             |
+| `searchMentions`       | fn    | Typeahead over `GET /lookups/mentions` (`type`->`scope.type`) |
+| `resolveMention`       | fn    | Rehydrate a `"<type>:<id>"` value; `null` on unknown (404)    |
+| `parseMentionValue`    | fn    | Split a composite value into `{ type, id }` (no round-trip)   |
 
 ## Out of scope / caveats
 

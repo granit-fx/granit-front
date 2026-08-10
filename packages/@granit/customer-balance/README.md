@@ -69,7 +69,7 @@ const credited = await addAdminCredit(client, basePath, request);
 
 ## Public API
 
-| Symbol                          | Kind  | Purpose                                                           |
+| Symbol                          | Kind  | Purpose                                                          |
 | ------------------------------- | ----- | ---------------------------------------------------------------- |
 | `CustomerBalanceResponse`       | type  | Account state: `balance`, `currency`, `concurrencyStamp`         |
 | `BalanceTransactionResponse`    | type  | One ledger entry (type, amount, source, reference, timestamps)   |

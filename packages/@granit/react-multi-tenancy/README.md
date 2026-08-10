@@ -39,7 +39,7 @@ public registry for app consumption. A consumer must declare these peers:
 - `@granit/types` — shared base types (branded ids, `ISODateString`).
 - `@tanstack/react-query` (`^5`) and `react` (`^19`).
 - `@granit/query-engine` / `@granit/react-query-engine` (**optional**) — only for the
-  `/testing` tenant grid metadata + handlers; the tenant *list* is a QueryEngine surface.
+  `/testing` tenant grid metadata + handlers; the tenant _list_ is a QueryEngine surface.
 - `msw` (`^2.12`, **optional**) — only for the `@granit/react-multi-tenancy/testing`
   subpath.
 
@@ -53,7 +53,13 @@ tenant anywhere below it.
 import { TenantProvider, useKeycloakTenantResolvers, useTenant } from '@granit/react-multi-tenancy';
 import { useQueryClient } from '@tanstack/react-query';
 
-function TenantRoot({ tokenParsed, children }: { tokenParsed: Record<string, unknown>; children: React.ReactNode }) {
+function TenantRoot({
+  tokenParsed,
+  children,
+}: {
+  tokenParsed: Record<string, unknown>;
+  children: React.ReactNode;
+}) {
   const resolvers = useKeycloakTenantResolvers({ tokenParsed }); // reads `tenant_id` claim
   const queryClient = useQueryClient();
 
@@ -89,15 +95,13 @@ import { useGranitClient } from '@granit/react-api-client';
 function AdminRoot({ children }: { children: React.ReactNode }) {
   // `client` may be omitted if a <GranitClientProvider> is already mounted.
   return (
-    <TenantAdminProvider config={{ client: useGranitClient() }}>
-      {children}
-    </TenantAdminProvider>
+    <TenantAdminProvider config={{ client: useGranitClient() }}>{children}</TenantAdminProvider>
   );
 }
 
 function TenantEditor({ id }: { id: string }) {
   const { data: tenant } = useTenantDetail(id); // disabled while id is empty
-  const create = useCreateTenant();             // invalidates the tenant list on success
+  const create = useCreateTenant(); // invalidates the tenant list on success
   const activate = useActivateTenant();
 
   // create.mutate({ name, identifier }); activate.mutate(tenant.id);
@@ -107,25 +111,25 @@ function TenantEditor({ id }: { id: string }) {
 
 ## Public API
 
-| Symbol                          | Kind     | Purpose                                                                |
-| ------------------------------- | -------- | ---------------------------------------------------------------------- |
-| `TenantProvider`                | provider | Resolves the tenant, registers `setTenantGetter`, fail-safe cache clear |
-| `useTenant`                     | hook     | Current `CurrentTenant` from context; throws outside a provider        |
-| `TenantProviderProps`           | type     | `{ resolvers, options?, queryClient?, onTenantChange?, children }`     |
-| `useKeycloakTenantResolvers`    | hook     | Memoized resolver list reading the tenant id from a Keycloak JWT claim |
-| `UseKeycloakTenantResolversOptions` | type | `{ tokenParsed, claimType? }` (claim defaults to `tenant_id`)          |
-| `useClearQueriesOnTenantChange` | hook     | Clears the React Query cache when the active tenant id changes         |
-| `useClearQueriesOnUserChange`   | hook     | Clears the cache when the authenticated user id changes (same tenant)  |
-| `TenantAdminProvider`           | provider | Supplies client / base path / query-key prefix to the admin hooks      |
-| `useTenantAdminConfig`          | hook     | Read the resolved admin config; throws outside the provider            |
-| `buildTenantAdminQueryKey`      | fn       | Query-key factory honoring the configured `queryKeyPrefix`             |
-| `TenantAdminConfig`             | type     | Provider input (optional `client` / `basePath` / `queryKeyPrefix`)     |
-| `TenantAdminProviderProps`      | type     | `{ config, children }`                                                 |
-| `useTenantDetail`               | hook     | `GET {basePath}/tenants/{id}` → `TenantResponse`                       |
-| `useCreateTenant`               | hook     | `POST {basePath}/tenants`; invalidates the tenant list                 |
-| `useUpdateTenant`               | hook     | `PUT {basePath}/tenants/{id}` (concurrency-checked); invalidates list  |
-| `useActivateTenant`             | hook     | `POST {basePath}/tenants/{id}/activate`; invalidates list              |
-| `useDeactivateTenant`           | hook     | `POST {basePath}/tenants/{id}/deactivate`; invalidates list            |
+| Symbol                              | Kind     | Purpose                                                                 |
+| ----------------------------------- | -------- | ----------------------------------------------------------------------- |
+| `TenantProvider`                    | provider | Resolves the tenant, registers `setTenantGetter`, fail-safe cache clear |
+| `useTenant`                         | hook     | Current `CurrentTenant` from context; throws outside a provider         |
+| `TenantProviderProps`               | type     | `{ resolvers, options?, queryClient?, onTenantChange?, children }`      |
+| `useKeycloakTenantResolvers`        | hook     | Memoized resolver list reading the tenant id from a Keycloak JWT claim  |
+| `UseKeycloakTenantResolversOptions` | type     | `{ tokenParsed, claimType? }` (claim defaults to `tenant_id`)           |
+| `useClearQueriesOnTenantChange`     | hook     | Clears the React Query cache when the active tenant id changes          |
+| `useClearQueriesOnUserChange`       | hook     | Clears the cache when the authenticated user id changes (same tenant)   |
+| `TenantAdminProvider`               | provider | Supplies client / base path / query-key prefix to the admin hooks       |
+| `useTenantAdminConfig`              | hook     | Read the resolved admin config; throws outside the provider             |
+| `buildTenantAdminQueryKey`          | fn       | Query-key factory honoring the configured `queryKeyPrefix`              |
+| `TenantAdminConfig`                 | type     | Provider input (optional `client` / `basePath` / `queryKeyPrefix`)      |
+| `TenantAdminProviderProps`          | type     | `{ config, children }`                                                  |
+| `useTenantDetail`                   | hook     | `GET {basePath}/tenants/{id}` → `TenantResponse`                        |
+| `useCreateTenant`                   | hook     | `POST {basePath}/tenants`; invalidates the tenant list                  |
+| `useUpdateTenant`                   | hook     | `PUT {basePath}/tenants/{id}` (concurrency-checked); invalidates list   |
+| `useActivateTenant`                 | hook     | `POST {basePath}/tenants/{id}/activate`; invalidates list               |
+| `useDeactivateTenant`               | hook     | `POST {basePath}/tenants/{id}/deactivate`; invalidates list             |
 
 `./testing` subpath (requires the optional `msw` + QueryEngine peers):
 `createTenantHandlers` (stateful MSW handlers, default base `/api/v1/multi-tenancy`,
@@ -152,7 +156,7 @@ and the `mockTenants` data array.
   [`@granit/multi-tenancy`](../multi-tenancy)); any explicit Host "switch tenant" UI must
   gate on it before setting a tenant. See security audit VULN-203.
 - **Client resolution is a routing hint, not a security boundary.** The resolved tenant
-  selects which scope the client *requests*; the .NET backend is the authority that scopes
+  selects which scope the client _requests_; the .NET backend is the authority that scopes
   every query and rejects cross-tenant access.
 - **Optimistic concurrency, never `If-Match`.** `useUpdateTenant` forwards the
   `concurrencyStamp` carried in `UpdateTenantRequest`; a stale stamp yields a `409`. Read

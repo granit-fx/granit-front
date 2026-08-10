@@ -86,18 +86,18 @@ if (tx && tx.state === urlParams.get('state')) {
 
 ## Public API
 
-| Symbol                         | Kind  | Purpose                                                          |
-| ------------------------------ | ----- | --------------------------------------------------------------- |
-| `useCognitoInit`               | hook  | Init UserPool, restore/refresh session, wire token to api-client |
-| `CognitoCoreResult`            | type  | Hook return: context + `userPoolRef`, `login`, `logout`         |
-| `buildCognitoAuthorizeUrl`     | fn    | Build the Hosted-UI authorize URL (PKCE S256, `state`, `nonce`) |
-| `generatePkce`                 | fn    | Generate a `{ verifier, challenge }` PKCE pair (RFC 7636)       |
-| `randomToken`                  | fn    | Cryptographically random URL-safe token (verifier/`state`/`nonce`) |
-| `readCognitoAuthTransaction`   | fn    | Read the in-flight auth transaction from `sessionStorage`       |
-| `clearCognitoAuthTransaction`  | fn    | Remove the stored transaction (single-use)                      |
-| `COGNITO_AUTH_TX_KEY`          | const | `sessionStorage` key holding the in-flight transaction          |
-| `CognitoAuthTransaction`       | type  | `{ verifier, state, nonce }` carried across the IdP redirect    |
-| `PkcePair`                     | type  | `{ verifier, challenge }` returned by `generatePkce`            |
+| Symbol                        | Kind  | Purpose                                                            |
+| ----------------------------- | ----- | ------------------------------------------------------------------ |
+| `useCognitoInit`              | hook  | Init UserPool, restore/refresh session, wire token to api-client   |
+| `CognitoCoreResult`           | type  | Hook return: context + `userPoolRef`, `login`, `logout`            |
+| `buildCognitoAuthorizeUrl`    | fn    | Build the Hosted-UI authorize URL (PKCE S256, `state`, `nonce`)    |
+| `generatePkce`                | fn    | Generate a `{ verifier, challenge }` PKCE pair (RFC 7636)          |
+| `randomToken`                 | fn    | Cryptographically random URL-safe token (verifier/`state`/`nonce`) |
+| `readCognitoAuthTransaction`  | fn    | Read the in-flight auth transaction from `sessionStorage`          |
+| `clearCognitoAuthTransaction` | fn    | Remove the stored transaction (single-use)                         |
+| `COGNITO_AUTH_TX_KEY`         | const | `sessionStorage` key holding the in-flight transaction             |
+| `CognitoAuthTransaction`      | type  | `{ verifier, state, nonce }` carried across the IdP redirect       |
+| `PkcePair`                    | type  | `{ verifier, challenge }` returned by `generatePkce`               |
 
 `persistCognitoAuthTransaction` is internal (used by `login()`); the callback
 side reads via `readCognitoAuthTransaction`.

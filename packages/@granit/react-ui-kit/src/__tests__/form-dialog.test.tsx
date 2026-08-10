@@ -2,7 +2,6 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useForm } from 'react-hook-form';
 
-
 import { FormDialog } from '../form-dialog/form-dialog';
 
 import { renderWithI18n, setupI18n } from './test-utils';
@@ -80,7 +79,8 @@ describe('FormDialog', () => {
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1);
     });
-    expect(onSubmit.mock.calls[0][0]).toMatchObject({ name: 'Alice' });
+    const [submittedValues] = onSubmit.mock.calls[0] ?? [];
+    expect(submittedValues).toMatchObject({ name: 'Alice' });
   });
 
   it('closes via the cancel button without submitting', async () => {

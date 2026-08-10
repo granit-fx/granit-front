@@ -93,7 +93,7 @@ drop in `ConversationScrollArea` for the batteries-included scroller.
 
 ### Provider & config
 
-| Symbol                    | Kind     | Purpose                                                         |
+| Symbol                    | Kind     | Purpose                                                        |
 | ------------------------- | -------- | -------------------------------------------------------------- |
 | `AIChatProvider`          | provider | Supplies the Axios client, `basePath`, query-key prefix        |
 | `useAIChatConfig`         | hook     | Resolved config; throws outside a provider                     |
@@ -105,21 +105,21 @@ drop in `ConversationScrollArea` for the batteries-included scroller.
 
 ### Hooks — conversations & messages
 
-| Symbol                            | Kind | Purpose                                                          |
-| --------------------------------- | ---- | --------------------------------------------------------------- |
-| `useConversations`                | hook | List the owner's conversations (sidebar)                        |
-| `useConversation`                 | hook | A single conversation's metadata (title, favorite, dates)       |
-| `useConversationMessages`         | hook | Reverse keyset infinite query over the thread (oldest-first)    |
-| `useChatWorkspaces`               | hook | Selectable default workspaces (`Auto` first)                    |
-| `useCreateConversation`           | hook | Mutation: create an empty conversation (`Conversations.Manage`) |
-| `useRenameConversation`           | hook | Mutation: rename, invalidating the list/detail                  |
-| `useDeleteConversation`           | hook | Mutation: delete, invalidating the list                         |
-| `useSetConversationFavorite`      | hook | Mutation: toggle the favorite flag                              |
-| `useReportMessage`                | hook | Mutation: flag a message (`Conversations.Report`)               |
+| Symbol                       | Kind | Purpose                                                         |
+| ---------------------------- | ---- | --------------------------------------------------------------- |
+| `useConversations`           | hook | List the owner's conversations (sidebar)                        |
+| `useConversation`            | hook | A single conversation's metadata (title, favorite, dates)       |
+| `useConversationMessages`    | hook | Reverse keyset infinite query over the thread (oldest-first)    |
+| `useChatWorkspaces`          | hook | Selectable default workspaces (`Auto` first)                    |
+| `useCreateConversation`      | hook | Mutation: create an empty conversation (`Conversations.Manage`) |
+| `useRenameConversation`      | hook | Mutation: rename, invalidating the list/detail                  |
+| `useDeleteConversation`      | hook | Mutation: delete, invalidating the list                         |
+| `useSetConversationFavorite` | hook | Mutation: toggle the favorite flag                              |
+| `useReportMessage`           | hook | Mutation: flag a message (`Conversations.Report`)               |
 
 ### Hooks — streaming, mentions, scrolling
 
-| Symbol                     | Kind | Purpose                                                          |
+| Symbol                     | Kind | Purpose                                                         |
 | -------------------------- | ---- | --------------------------------------------------------------- |
 | `useChatStream`            | hook | Stream a turn over SSE; accumulates content, tools, usage, etc. |
 | `useDefaultMentionSearch`  | hook | Provider-backed `@`-mention search (`GET /lookups/mentions`)    |
@@ -130,46 +130,46 @@ drop in `ConversationScrollArea` for the batteries-included scroller.
 ### Components
 
 | Symbol                   | Kind      | Purpose                                                         |
-| ------------------------ | --------- | -------------------------------------------------------------- |
-| `ConversationThread`     | component | Renders messages + the live streaming bubble (ARIA live log)   |
-| `ConversationScrollArea` | component | Batteries-included scroller (stick-to-bottom + scroll button)  |
-| `ScrollToBottomButton`   | component | Controlled "scroll to latest" affordance                       |
-| `ChatMessage`            | component | One bubble; assistant rows render via `ChatMarkdown`           |
-| `ChatMarkdown`           | component | Assistant Markdown → escaped React tree (no `rehype-raw`)      |
-| `MessageMetrics`         | component | Per-turn timing chip (opt-in via `showMessageMetrics`)         |
-| `SystemMessage`          | component | Inline error/info notice (`alert` / `status`)                  |
+| ------------------------ | --------- | --------------------------------------------------------------- |
+| `ConversationThread`     | component | Renders messages + the live streaming bubble (ARIA live log)    |
+| `ConversationScrollArea` | component | Batteries-included scroller (stick-to-bottom + scroll button)   |
+| `ScrollToBottomButton`   | component | Controlled "scroll to latest" affordance                        |
+| `ChatMessage`            | component | One bubble; assistant rows render via `ChatMarkdown`            |
+| `ChatMarkdown`           | component | Assistant Markdown → escaped React tree (no `rehype-raw`)       |
+| `MessageMetrics`         | component | Per-turn timing chip (opt-in via `showMessageMetrics`)          |
+| `SystemMessage`          | component | Inline error/info notice (`alert` / `status`)                   |
 | `ChatComposer`           | component | `contenteditable` input with `/` `@` pickers, attachments, Send |
-| `WorkspaceSelector`      | component | Brand-agnostic workspace/model picker                          |
-| `ComposerSuggestions`    | component | Controlled `/` `@` suggestion listbox                          |
-| `SuggestedActions`       | component | Streamed deep-link actions as buttons (never auto-invoked)     |
-| `ClarificationPrompt`    | component | Clarifying question + options that resume the turn             |
-| `ToolActivity`           | component | Live tool-call chips + derived "thinking" line                 |
-| `AttachmentChips`        | component | Staged attachments with upload status                          |
-| `detectTrigger`          | fn        | Detect a `/` or `@` token ending at the caret                  |
+| `WorkspaceSelector`      | component | Brand-agnostic workspace/model picker                           |
+| `ComposerSuggestions`    | component | Controlled `/` `@` suggestion listbox                           |
+| `SuggestedActions`       | component | Streamed deep-link actions as buttons (never auto-invoked)      |
+| `ClarificationPrompt`    | component | Clarifying question + options that resume the turn              |
+| `ToolActivity`           | component | Live tool-call chips + derived "thinking" line                  |
+| `AttachmentChips`        | component | Staged attachments with upload status                           |
+| `detectTrigger`          | fn        | Detect a `/` or `@` token ending at the caret                   |
 
 ### Types
 
-| Symbol                              | Kind | Purpose                                                      |
-| ----------------------------------- | ---- | ----------------------------------------------------------- |
-| `UseChatStreamReturn`               | type | `useChatStream` surface (content, tools, usage, metrics, …) |
-| `ChatErrorKind`                     | type | `rate-limit \| server \| network \| unknown`               |
-| `ChatStreamUsage`, `ChatTurnMetrics` | type | Token usage + client-side timing for a turn               |
-| `ToolCallActivity`, `ToolCallStatus` | type | One in-flight tool invocation and its lifecycle           |
-| `Use*Return` / `*Variables`         | type | Mutation return shapes + variables (create/rename/…)        |
-| `UseConversationMessages*`          | type | Options/result/page-param for the message query            |
-| `MentionOption`, `PromptOption`, `WorkspaceOption` | type | Composer picker option shapes               |
-| `SearchMentions`, `ResolveMention`, `UploadAttachment` | type | Host-injected composer adapters         |
-| `StagedMention`, `ComposerAttachment`, `AttachmentStatus` | type | Composer working state                |
-| `*Props`                            | type | Public prop types for every exported component              |
-| `ActiveTrigger`                     | type | A live `/` `@` autocomplete token                           |
+| Symbol | Kind | Purpose | | | |
+| --------------------------------------------------------- | ---- | ----------------------------------------------------------- | | | |
+| `UseChatStreamReturn` | type | `useChatStream` surface (content, tools, usage, metrics, …) | | | |
+| `ChatErrorKind` | type | `rate-limit \                                               | server \ | network \ | unknown` |
+| `ChatStreamUsage`, `ChatTurnMetrics` | type | Token usage + client-side timing for a turn | | | |
+| `ToolCallActivity`, `ToolCallStatus` | type | One in-flight tool invocation and its lifecycle | | | |
+| `Use*Return` / `*Variables` | type | Mutation return shapes + variables (create/rename/…) | | | |
+| `UseConversationMessages*` | type | Options/result/page-param for the message query | | | |
+| `MentionOption`, `PromptOption`, `WorkspaceOption` | type | Composer picker option shapes | | | |
+| `SearchMentions`, `ResolveMention`, `UploadAttachment` | type | Host-injected composer adapters | | | |
+| `StagedMention`, `ComposerAttachment`, `AttachmentStatus` | type | Composer working state | | | |
+| `*Props` | type | Public prop types for every exported component | | | |
+| `ActiveTrigger` | type | A live `/` `@` autocomplete token | | | |
 
 ### i18n & report contract
 
-| Symbol                                          | Kind  | Purpose                                              |
-| ----------------------------------------------- | ----- | ---------------------------------------------------- |
-| `aiChatTranslationsEn` / `aiChatTranslationsFr` | const | Bundled label packs for the `aiChat` namespace       |
-| `defaultChatLabels`                             | const | English fallback used when no `labels` prop is given  |
-| `ChatTranslations`                              | type  | The label bundle shape                                |
+| Symbol                                          | Kind  | Purpose                                                |
+| ----------------------------------------------- | ----- | ------------------------------------------------------ |
+| `aiChatTranslationsEn` / `aiChatTranslationsFr` | const | Bundled label packs for the `aiChat` namespace         |
+| `defaultChatLabels`                             | const | English fallback used when no `labels` prop is given   |
+| `ChatTranslations`                              | type  | The label bundle shape                                 |
 | `MESSAGE_REPORT_CATEGORIES`                     | const | Report categories (re-exported from `@granit/ai-chat`) |
 | `MessageReportCategory`, `ReportMessageRequest` | type  | Report contract (re-exported from `@granit/ai-chat`)   |
 

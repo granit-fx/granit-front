@@ -70,22 +70,22 @@ const canExecute = WorkflowPermissions.Transitions.Execute; // 'Workflow.Transit
 
 ## Public API
 
-| Symbol                          | Kind  | Purpose                                                                         |
-| ------------------------------- | ----- | ------------------------------------------------------------------------------- |
-| `WorkflowStatus`                | type  | `{ currentState, availableTransitions }` for a state                            |
-| `WorkflowTransition`            | type  | One reachable transition (`targetState`, `name`, `allowed`, `requiresApproval`) |
-| `WorkflowTransitionRequest`     | type  | Transition body (`targetState`, optional `comment`)                             |
-| `WorkflowTransitionResult`      | type  | Outcome of an attempt (`succeeded`, `resultingState`, `outcome`)                |
-| `TransitionHistory`             | type  | One audit-trail entry (states, `transitionedAt/By`, `comment`)                  |
-| `WorkflowHistoryPage`           | type  | `PagedResult<TransitionHistory>` — the history response                         |
-| `TransitionOutcome`             | const | `Completed \| ApprovalRequested \| Denied \| InvalidTransition`                    |
-| `TransitionOutcomeValue`        | type  | Union of `TransitionOutcome` values                                             |
-| `WorkflowLifecycleStatus`       | const | Lifecycle enum `Draft \| PendingReview \| Published \| Archived`                   |
-| `WorkflowLifecycleStatusValue`  | type  | Union of `WorkflowLifecycleStatus` numeric values                               |
-| `listTransitions`               | fn    | `GET {basePath}/transitions?currentState=` → `WorkflowStatus`                   |
-| `executeStateMachineTransition` | fn    | `POST {basePath}/transitions?currentState=` → result                            |
-| `getHistory`                    | fn    | `GET {basePath}/{entityType}/{entityId}/history` (paginated)                    |
-| `WorkflowPermissions`           | const | Backend permission names (`Workflow.History.Read`, `Transitions.Read/Execute`)  |
+| Symbol | Kind | Purpose | | | |
+| ------------------------------- | ----- | ------------------------------------------------------------------------------- | | | |
+| `WorkflowStatus` | type | `{ currentState, availableTransitions }` for a state | | | |
+| `WorkflowTransition` | type | One reachable transition (`targetState`, `name`, `allowed`, `requiresApproval`) | | | |
+| `WorkflowTransitionRequest` | type | Transition body (`targetState`, optional `comment`) | | | |
+| `WorkflowTransitionResult` | type | Outcome of an attempt (`succeeded`, `resultingState`, `outcome`) | | | |
+| `TransitionHistory` | type | One audit-trail entry (states, `transitionedAt/By`, `comment`) | | | |
+| `WorkflowHistoryPage` | type | `PagedResult<TransitionHistory>` — the history response | | | |
+| `TransitionOutcome` | const | `Completed \                                                                    | ApprovalRequested \ | Denied \    | InvalidTransition` |
+| `TransitionOutcomeValue` | type | Union of `TransitionOutcome` values | | | |
+| `WorkflowLifecycleStatus` | const | Lifecycle enum `Draft \                                                         | PendingReview \     | Published \ | Archived` |
+| `WorkflowLifecycleStatusValue` | type | Union of `WorkflowLifecycleStatus` numeric values | | | |
+| `listTransitions` | fn | `GET {basePath}/transitions?currentState=` → `WorkflowStatus` | | | |
+| `executeStateMachineTransition` | fn | `POST {basePath}/transitions?currentState=` → result | | | |
+| `getHistory` | fn | `GET {basePath}/{entityType}/{entityId}/history` (paginated) | | | |
+| `WorkflowPermissions` | const | Backend permission names (`Workflow.History.Read`, `Transitions.Read/Execute`) | | | |
 
 `entityType` and `entityId` are URL-encoded by `getHistory`; both transition
 calls send `currentState` as a query parameter (the state machine is probed
