@@ -39,7 +39,7 @@ these peers:
   `ManualDataTable` / `ViewSwitcher`.
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/utils` — `cn` class-name helper.
-- `@tanstack/react-table` (`^8.21`) — `ColumnDef` for the column factory.
+- `@tanstack/react-table` (`^9.0`) — `DataTableColumnDef` for the column factory.
 - `cronstrue` (`^3.20`) — humanizes cron expressions; this module owns its locale
   mapping (see below).
 - `lucide-react` (`^1.21`) — action / status icons.
@@ -88,7 +88,9 @@ function JobKanban() {
   const { data } = useBackgroundJobs({ page: 1, pageSize: 20 });
   return (
     <div className="grid gap-4 lg:grid-cols-3">
-      {(data?.items ?? []).map((job) => <JobCard key={job.jobName} job={job} />)}
+      {(data?.items ?? []).map((job) => (
+        <JobCard key={job.jobName} job={job} />
+      ))}
     </div>
   );
 }
@@ -108,18 +110,18 @@ const columns = createBackgroundJobColumns({
 
 ## Public API
 
-| Symbol | Kind | Purpose |
-| --- | --- | --- |
-| `BackgroundJobListPage` | component | Self-wiring monitoring page: list + kanban, view switch, refresh |
-| `JobCard` | component | Kanban card for one `BackgroundJobStatus` (schedule, runs, actions) |
-| `JobActions` | component | Pause / resume + trigger-now buttons, driven by the headless hooks |
-| `JobStatusBadge` | component | Status pill: paused / active / failing from job state |
-| `createBackgroundJobColumns` | fn | `ColumnDef[]` factory for the `ManualDataTable` list view |
-| `getCronstrueLocale` | fn | BCP 47 tag to cronstrue locale name (with base-language fallback) |
-| `loadCronstrueLocale` | fn | Lazily `import()`s a cronstrue locale file; no-ops once loaded |
-| `backgroundJobsTranslationsEn` | const | English `BackgroundJobs.*` i18next bundle (flat keys) |
-| `backgroundJobsTranslationsFr` | const | French `BackgroundJobs.*` i18next bundle (flat keys) |
-| `BackgroundJobsTranslations` | type | Shape of the translation bundle (keys = the `BackgroundJobs.*` ids) |
+| Symbol                         | Kind      | Purpose                                                             |
+| ------------------------------ | --------- | ------------------------------------------------------------------- |
+| `BackgroundJobListPage`        | component | Self-wiring monitoring page: list + kanban, view switch, refresh    |
+| `JobCard`                      | component | Kanban card for one `BackgroundJobStatus` (schedule, runs, actions) |
+| `JobActions`                   | component | Pause / resume + trigger-now buttons, driven by the headless hooks  |
+| `JobStatusBadge`               | component | Status pill: paused / active / failing from job state               |
+| `createBackgroundJobColumns`   | fn        | `DataTableColumnDef[]` factory for the `ManualDataTable` list view  |
+| `getCronstrueLocale`           | fn        | BCP 47 tag to cronstrue locale name (with base-language fallback)   |
+| `loadCronstrueLocale`          | fn        | Lazily `import()`s a cronstrue locale file; no-ops once loaded      |
+| `backgroundJobsTranslationsEn` | const     | English `BackgroundJobs.*` i18next bundle (flat keys)               |
+| `backgroundJobsTranslationsFr` | const     | French `BackgroundJobs.*` i18next bundle (flat keys)                |
+| `BackgroundJobsTranslations`   | type      | Shape of the translation bundle (keys = the `BackgroundJobs.*` ids) |
 
 `createBackgroundJobColumns` is a pure factory, not a hook — call it inside a
 `useMemo` with the resolved `t`, `locale`, date formatters and mutation callbacks

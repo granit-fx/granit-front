@@ -10,8 +10,8 @@ import { MoreHorizontal } from 'lucide-react';
 import { SubscriptionStatusBadge } from './subscription-status-badge';
 
 import type { useTranslation } from '@granit/react-localization';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { SubscriptionResponse } from '@granit/subscriptions';
-import type { ColumnDef } from '@tanstack/react-table';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -29,7 +29,7 @@ export function createSubscriptionColumns({
   onView: (subscription: SubscriptionResponse) => void;
   planNames?: ReadonlyMap<string, string>;
   formatDate: (date: string | Date) => string;
-}): ColumnDef<SubscriptionResponse>[] {
+}): DataTableColumnDef<SubscriptionResponse>[] {
   return [
     {
       accessorKey: 'id',

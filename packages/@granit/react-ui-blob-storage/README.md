@@ -44,7 +44,7 @@ these peers:
   primitives and the `QueryEndpointDataTable` / filter-sort-group toolbar.
 - `@granit/logger` — `createLogger` (action handlers log on failure).
 - `@granit/types` — shared base types.
-- `@tanstack/react-table` (`^8.21`), `lucide-react` (`^1.21`), `react` /
+- `@tanstack/react-table` (`^9.0`), `lucide-react` (`^1.21`), `react` /
   `react-dom` (`^19`).
 
 ## Quick start

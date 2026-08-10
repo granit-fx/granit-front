@@ -43,7 +43,7 @@ these peers:
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/logger` — `createLogger` for the local logger.
 - `@granit/types` — `toEntityId` and the branded id types.
-- `@tanstack/react-table` (`^8.21`), `lucide-react` (`^1.21`).
+- `@tanstack/react-table` (`^9.0`), `lucide-react` (`^1.21`).
 - `react-router` (`^7.18`) — pages use `Link` / `useParams` / `useNavigate`.
 - `react` and `react-dom` (`^19`).
 

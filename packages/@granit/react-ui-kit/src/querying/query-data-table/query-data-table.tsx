@@ -12,20 +12,23 @@ import {
   TableRow,
 } from '@granit/react-ui';
 import { cn } from '@granit/utils';
-import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { flexRender, useTable } from '@tanstack/react-table';
 import { ChevronDownIcon, ChevronRightIcon } from 'lucide-react';
 import { useState } from 'react';
+
+import { dataTableFeatures } from '../../data-table/table-features.js';
 
 import { EmptyState } from './empty-state.js';
 import { SortableHeader } from './sortable-header.js';
 import { TablePagination } from './table-pagination.js';
 
+import type { DataTableColumnDef, DataTableRow } from '../../data-table/table-features.js';
 import type { GroupEntry, SortEntry } from '@granit/query-engine';
-import type { ColumnDef, Row } from '@tanstack/react-table';
+import type { RowData } from '@tanstack/react-table';
 
-export interface QueryDataTableProps<T> {
+export interface QueryDataTableProps<T extends RowData> {
   /** TanStack Table column definitions. */
-  readonly columns: readonly ColumnDef<T, unknown>[];
+  readonly columns: readonly DataTableColumnDef<T>[];
   /** Data items. */
   readonly data: readonly T[];
   /** Total count for pagination. */
@@ -55,7 +58,7 @@ export interface QueryDataTableProps<T> {
 }
 
 /**
- * Data table powered by TanStack Table v8 and @granit/ui Table components.
+ * Data table powered by TanStack Table v9 and @granit/ui Table components.
  *
  * Integrates with useQueryEndpoint dispatchers for pagination and sorting.
  *
@@ -77,7 +80,7 @@ export interface QueryDataTableProps<T> {
  * />
  * ```
  */
-export function QueryDataTable<T>({
+export function QueryDataTable<T extends RowData>({
   columns,
   data,
   totalCount,
@@ -97,10 +100,10 @@ export function QueryDataTable<T>({
   const flatData = groups ? groups.flatMap((g) => g.items ?? []) : data;
 
   // TanStack Table API is inherently non-memoizable.
-  const table = useReactTable({
+  const table = useTable({
+    features: dataTableFeatures,
     data: flatData as T[],
-    columns: columns as ColumnDef<T, unknown>[],
-    getCoreRowModel: getCoreRowModel(),
+    columns: columns as DataTableColumnDef<T>[],
     manualPagination: true,
     manualSorting: true,
     rowCount: totalCount,
@@ -234,15 +237,15 @@ export function QueryDataTable<T>({
 // GroupRows — collapsible group header + data rows
 // ---------------------------------------------------------------------------
 
-interface GroupRowsProps<T> {
+interface GroupRowsProps<T extends RowData> {
   readonly group: GroupEntry<T>;
-  readonly rows: readonly Row<T>[];
+  readonly rows: readonly DataTableRow<T>[];
   readonly colSpan: number;
   readonly isCollapsed: boolean;
   readonly onToggle: () => void;
 }
 
-function GroupRows<T>({
+function GroupRows<T extends RowData>({
   group,
   rows,
   colSpan,

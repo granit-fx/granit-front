@@ -37,7 +37,7 @@ for app consumption through a public registry. A consumer must declare these pee
   constraints to react-hook-form.
 - `@granit/types` — `CurrencyCode` and `toISODateString`.
 - `@granit/utils` — `cn` class-name helper.
-- `@tanstack/react-table` (`^8.21`) — drives the transaction table.
+- `@tanstack/react-table` (`^9.0`) — drives the transaction table.
 - `react-hook-form` (`^7.80`) — form state for the dialogs.
 - `lucide-react` (`^1.21`) — the page-header icons.
 - `react` / `react-dom` (`^19`).
@@ -72,13 +72,11 @@ The dialogs and table can also be composed directly when the full page is not wa
 for example a custom layout reusing the summary card and column factory:
 
 ```tsx
-import { useReactTable, getCoreRowModel } from '@tanstack/react-table';
+import { useTable } from '@tanstack/react-table';
+import { dataTableFeatures } from '@granit/react-ui-kit';
 import { useCustomerBalance, useBalanceTransactions } from '@granit/react-customer-balance';
 import { useTranslation, useDateFormatter } from '@granit/react-localization';
-import {
-  BalanceSummaryCard,
-  createTransactionColumns,
-} from '@granit/react-ui-customer-balance';
+import { BalanceSummaryCard, createTransactionColumns } from '@granit/react-ui-customer-balance';
 
 function MiniBalance() {
   const { t, i18n } = useTranslation();
@@ -87,10 +85,10 @@ function MiniBalance() {
   const tx = useBalanceTransactions({ currency: 'EUR', page: 1, pageSize: 25 });
 
   const columns = createTransactionColumns({ t, formatDateTime, locale: i18n.language });
-  const table = useReactTable({
+  const table = useTable({
+    features: dataTableFeatures,
     data: tx.data?.items ?? [],
     columns,
-    getCoreRowModel: getCoreRowModel(),
   });
 
   return balance.data ? <BalanceSummaryCard balance={balance.data} /> : null;
@@ -99,17 +97,17 @@ function MiniBalance() {
 
 ## Public API
 
-| Symbol                          | Kind      | Purpose                                                          |
-| ------------------------------- | --------- | ---------------------------------------------------------------- |
-| `CustomerBalancePage`           | component | Full admin page: currency selector, summary, table, credit/debit |
-| `BalanceSummaryCard`            | component | Balance + currency + last-updated card for the current balance   |
-| `AddCreditDialog`               | component | `FormDialog` issuing an admin credit (`useAddAdminCredit`)       |
-| `ApplyDebitDialog`              | component | Destructive `FormDialog` applying a debit (`useApplyAdminDebit`) |
-| `createTransactionColumns`      | fn        | `@tanstack/react-table` `ColumnDef[]` factory for the table      |
-| `formatCurrency`                | fn        | Minor-unit amount → locale-aware ISO-4217 currency string        |
-| `customerBalanceTranslationsEn` | const     | English i18next bundle (`CustomerBalance.*`, flat keys)          |
-| `customerBalanceTranslationsFr` | const     | French i18next bundle (`CustomerBalance.*`, flat keys)           |
-| `CustomerBalanceTranslations`   | type      | Shape of the bundle (`typeof customerBalanceTranslationsEn`)     |
+| Symbol                          | Kind      | Purpose                                                              |
+| ------------------------------- | --------- | -------------------------------------------------------------------- |
+| `CustomerBalancePage`           | component | Full admin page: currency selector, summary, table, credit/debit     |
+| `BalanceSummaryCard`            | component | Balance + currency + last-updated card for the current balance       |
+| `AddCreditDialog`               | component | `FormDialog` issuing an admin credit (`useAddAdminCredit`)           |
+| `ApplyDebitDialog`              | component | Destructive `FormDialog` applying a debit (`useApplyAdminDebit`)     |
+| `createTransactionColumns`      | fn        | `@tanstack/react-table` `DataTableColumnDef[]` factory for the table |
+| `formatCurrency`                | fn        | Minor-unit amount → locale-aware ISO-4217 currency string            |
+| `customerBalanceTranslationsEn` | const     | English i18next bundle (`CustomerBalance.*`, flat keys)              |
+| `customerBalanceTranslationsFr` | const     | French i18next bundle (`CustomerBalance.*`, flat keys)               |
+| `CustomerBalanceTranslations`   | type      | Shape of the bundle (`typeof customerBalanceTranslationsEn`)         |
 
 ### Component props
 

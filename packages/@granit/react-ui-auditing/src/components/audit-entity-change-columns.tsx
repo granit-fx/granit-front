@@ -6,7 +6,7 @@ import { AuditChangeTypeBadge } from './audit-change-type-badge';
 
 import type { AuditEntityChangeSummaryResponse } from '@granit/auditing';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 /** The `t` produced by react-localization's `useTranslation` — derived from the
  * hook itself so the column factory's type always matches the caller's, free of
@@ -22,7 +22,10 @@ interface AuditEntityChangeColumnOptions {
 export function createAuditEntityChangeColumns({
   t,
   routeBase = '/auditing',
-}: AuditEntityChangeColumnOptions): ColumnDef<AuditEntityChangeSummaryResponse, unknown>[] {
+}: AuditEntityChangeColumnOptions): DataTableColumnDef<
+  AuditEntityChangeSummaryResponse,
+  unknown
+>[] {
   return [
     {
       id: 'entityType',

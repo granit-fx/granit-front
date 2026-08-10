@@ -3,7 +3,7 @@ import { cn, formatNumber } from '@granit/utils';
 
 import type { BalanceTransactionResponse } from '@granit/customer-balance';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 /** The `t` produced by react-localization's `useTranslation` — derived from the
  * hook itself so the column factory's type always matches the caller's, free of
@@ -20,7 +20,7 @@ export function createTransactionColumns({
   t,
   formatDateTime,
   locale,
-}: TransactionColumnOptions): ColumnDef<BalanceTransactionResponse, unknown>[] {
+}: TransactionColumnOptions): DataTableColumnDef<BalanceTransactionResponse, unknown>[] {
   return [
     {
       id: 'createdAt',

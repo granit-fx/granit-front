@@ -43,7 +43,7 @@ these peers:
   and `WorkflowLifecycleStatus` for the publish/archive confirmations.
 - `@granit/react-localization` — `useTranslation` (host i18next instance).
 - `@granit/types` — `toEntityId` for the route-param → branded id cast.
-- `@tanstack/react-table` (`^8.21`) — column model for the grid.
+- `@tanstack/react-table` (`^9.0`) — column model for the grid.
 - `react` / `react-dom` (`^19`), `react-hook-form` (`^7.80`),
   `react-router` (`^7.18`), `lucide-react` (`^1.21`).
 
@@ -113,20 +113,20 @@ function ProductHeader({ product }: { product: ProductResponse }) {
 
 ## Public API
 
-| Symbol                    | Kind      | Purpose                                                             |
-| ------------------------- | --------- | ------------------------------------------------------------------- |
-| `CatalogListPage`         | component | Smart-filtered, sortable, server-paginated products grid (provider) |
-| `CatalogCreatePage`       | component | Spec-validated create form (`ProductCreateRequest` constraints)     |
-| `CatalogEditPage`         | component | Edit form, gated to `Draft` (`ProductUpdateRequest` constraints)    |
-| `CatalogDetailPage`       | component | Product info + lifecycle, metadata, and external-mappings sections  |
-| `LifecycleActions`        | component | Publish/Archive buttons + confirm dialog (strong-confirm)           |
-| `LifecycleStatusBadge`    | component | Localized badge for `Draft` / `Published` / `Archived`              |
-| `MetadataEditor`          | component | Key/value metadata grid editor → `useUpdateProductMetadata`         |
-| `ExternalMappingsManager` | component | Add/remove provider/external-id mappings (spec-validated add form)  |
-| `createProductColumns`    | fn        | `ColumnDef<ProductResponse>[]` for the grid (SKU opens detail)      |
-| `catalogTranslationsEn`   | const     | English `Catalog.*` flat-key i18next bundle                         |
-| `catalogTranslationsFr`   | const     | French `Catalog.*` flat-key i18next bundle                          |
-| `CatalogTranslations`     | type      | Shape of a `Catalog.*` bundle (keyed off the English source)        |
+| Symbol                    | Kind      | Purpose                                                                 |
+| ------------------------- | --------- | ----------------------------------------------------------------------- |
+| `CatalogListPage`         | component | Smart-filtered, sortable, server-paginated products grid (provider)     |
+| `CatalogCreatePage`       | component | Spec-validated create form (`ProductCreateRequest` constraints)         |
+| `CatalogEditPage`         | component | Edit form, gated to `Draft` (`ProductUpdateRequest` constraints)        |
+| `CatalogDetailPage`       | component | Product info + lifecycle, metadata, and external-mappings sections      |
+| `LifecycleActions`        | component | Publish/Archive buttons + confirm dialog (strong-confirm)               |
+| `LifecycleStatusBadge`    | component | Localized badge for `Draft` / `Published` / `Archived`                  |
+| `MetadataEditor`          | component | Key/value metadata grid editor → `useUpdateProductMetadata`             |
+| `ExternalMappingsManager` | component | Add/remove provider/external-id mappings (spec-validated add form)      |
+| `createProductColumns`    | fn        | `DataTableColumnDef<ProductResponse>[]` for the grid (SKU opens detail) |
+| `catalogTranslationsEn`   | const     | English `Catalog.*` flat-key i18next bundle                             |
+| `catalogTranslationsFr`   | const     | French `Catalog.*` flat-key i18next bundle                              |
+| `CatalogTranslations`     | type      | Shape of a `Catalog.*` bundle (keyed off the English source)            |
 
 The headless data layer (`CatalogProvider`, `useProduct`, the mutations) and the
 `Product*` DTO / id / enum types are **not** re-exported here — import them from

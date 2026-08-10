@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 import { TransactionStatusBadge } from './transaction-status-badge';
 
 import type { PaymentTransactionResponse } from '@granit/payments';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { TFunction } from 'i18next';
 
 interface TransactionColumnOptions {
@@ -17,7 +17,7 @@ interface TransactionColumnOptions {
 export function createTransactionColumns({
   t,
   locale,
-}: TransactionColumnOptions): ColumnDef<PaymentTransactionResponse, unknown>[] {
+}: TransactionColumnOptions): DataTableColumnDef<PaymentTransactionResponse, unknown>[] {
   return [
     {
       id: 'id',

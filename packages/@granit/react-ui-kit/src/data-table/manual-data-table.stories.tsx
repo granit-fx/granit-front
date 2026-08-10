@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { ManualDataTable } from './manual-data-table';
 
+import type { DataTableColumnDef } from './table-features';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ColumnDef } from '@tanstack/react-table';
 
 interface Person {
   readonly id: string;
@@ -12,7 +12,7 @@ interface Person {
   readonly role: string;
 }
 
-const columns: ColumnDef<Person, unknown>[] = [
+const columns: DataTableColumnDef<Person, unknown>[] = [
   { accessorKey: 'name', header: 'Name' },
   { accessorKey: 'email', header: 'Email' },
   { accessorKey: 'role', header: 'Role' },
@@ -55,12 +55,26 @@ function ManualDataTableDemo({ rows }: { readonly rows: readonly Person[] }) {
   );
 }
 
+// `component` is instantiated with `Person` so the story props resolve to the
+// fixture row type rather than to `RowData`, the constraint TanStack Table v9
+// puts on `TData`. The `args` defaults cover every required prop, which is what
+// lets the `render`-only stories below type-check.
 const meta = {
   title: 'Admin Kit/DataTable/ManualDataTable',
-  component: ManualDataTable,
+  component: ManualDataTable<Person>,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
+  },
+  args: {
+    columns,
+    data: ALL_ROWS,
+    totalCount: ALL_ROWS.length,
+    page: 1,
+    pageSize: PAGE_SIZES[0],
+    pageSizes: PAGE_SIZES,
+    onPageChange: () => {},
+    onPageSizeChange: () => {},
   },
 } satisfies Meta<typeof ManualDataTable<Person>>;
 

@@ -1,8 +1,8 @@
 import { WebhookStatusBadge } from './webhook-status-badge';
 
 import type { useTranslation } from '@granit/react-localization';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { WebhookSubscriptionResponse } from '@granit/webhooks';
-import type { ColumnDef } from '@tanstack/react-table';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -16,7 +16,7 @@ export function createSubscriptionColumns({
   onView: (item: WebhookSubscriptionResponse) => void;
   formatDate: (date: string | Date) => string;
   formatDateTime: (date: string | Date) => string;
-}): ColumnDef<WebhookSubscriptionResponse>[] {
+}): DataTableColumnDef<WebhookSubscriptionResponse>[] {
   return [
     {
       accessorKey: 'targetUrl',

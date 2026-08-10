@@ -6,7 +6,7 @@ import { AuditCategoryBadge } from './audit-category-badge';
 
 import type { AuditEntryResponse } from '@granit/auditing';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 /** The `t` produced by react-localization's `useTranslation` — derived from the
  * hook itself so the column factory's type always matches the caller's, free of
@@ -24,7 +24,7 @@ export function createAuditColumns({
   t,
   formatDateTime,
   routeBase = '/auditing',
-}: AuditColumnOptions): ColumnDef<AuditEntryResponse, unknown>[] {
+}: AuditColumnOptions): DataTableColumnDef<AuditEntryResponse, unknown>[] {
   return [
     {
       id: 'timestamp',

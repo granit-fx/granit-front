@@ -21,8 +21,8 @@ import { createTaxRateColumns } from './tax-rate-columns';
 import { TaxRateDetailCard } from './tax-rate-detail-card';
 
 import type { QueryConfig } from '@granit/query-engine';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { TaxRateEntry } from '@granit/tax';
-import type { ColumnDef } from '@tanstack/react-table';
 
 const QUERY_CONFIG: QueryConfig = {
   basePath: '/api/v1/tax/rates',
@@ -58,7 +58,7 @@ function TaxRatesPageContent() {
   });
   const { handlePresetToggle } = useSmartFilterSync(smartFilter, queryEndpoint, meta);
 
-  const columns = useMemo<readonly ColumnDef<TaxRateEntry, unknown>[]>(
+  const columns = useMemo<readonly DataTableColumnDef<TaxRateEntry, unknown>[]>(
     () =>
       createTaxRateColumns({
         t,

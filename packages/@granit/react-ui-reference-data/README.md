@@ -45,7 +45,7 @@ these peers (all `workspace:*` unless noted):
   / `useFieldProps` over the hand-written `SchemaConstraints`.
 - `@granit/react-localization` — `useTranslation` (i18n).
 - `@granit/logger`, `@granit/types`, `@granit/utils` — logging, base types, `cn`.
-- `@tanstack/react-table` (`^8.21`) — `ColumnDef` for the columns factory.
+- `@tanstack/react-table` (`^9.0`) — `DataTableColumnDef` for the columns factory.
 - `react` (`^19`), `react-dom` (`^19`), `react-hook-form` (`^7.80`),
   `react-router` (`^7.18`) — runtime, form state, list-to-detail navigation.
 - `lucide-react` (`^1.21`) — icons.
@@ -135,26 +135,26 @@ function CountryCreatePage() {
 
 ## Public API
 
-| Symbol                            | Kind      | Purpose                                                               |
-| --------------------------------- | --------- | --------------------------------------------------------------------- |
-| `ReferenceDataListPageShell`      | component | Query grid: smart filters, export/import, card/tree, deactivate       |
-| `ReferenceDataCreatePageShell`    | component | Create-page chrome (back link + title) wrapping the form              |
-| `ReferenceDataEditPageShell`      | component | Edit-page chrome: loading/not-found states, badge, deactivate action  |
-| `ReferenceDataForm`               | component | Spec-validated create/edit form; `mode` discriminates create vs edit  |
-| `createReferenceDataColumns`      | fn        | `ColumnDef[]` factory (code, label, status, metadata, actions menu)   |
-| `ReferenceDataCard`               | component | Single-entry card for the card view, with an app-content slot         |
-| `CategoryTreeView`                | component | Lazy-expanding tree; fetches children via an injected `useChildren`   |
-| `MetadataEditor`                  | component | Field-array editor for the `metadata` key/value bag (datalist hints)  |
-| `ReferenceDataDeactivateDialog`   | component | Confirm dialog for deactivate/reactivate of one entry                 |
-| `createReferenceDataConstraints`  | const     | `SchemaConstraints` for `ReferenceDataCreateRequest` (with `code`)    |
-| `editReferenceDataConstraints`    | const     | `SchemaConstraints` for `ReferenceDataUpdateRequest` (no `code`)      |
-| `referenceDataTranslationsEn`     | const     | Default `ReferenceData.Common.*` English i18n bundle                  |
-| `referenceDataTranslationsFr`     | const     | Default `ReferenceData.Common.*` French i18n bundle                   |
-| `ReferenceDataEntry`              | type      | Re-export of the core entry DTO (the generic `T` the shells use)      |
-| `ReferenceDataFormValues`         | type      | Shared form-value shape (labels, code?, validity, sort, metadata)     |
-| `CreateReferenceDataFormValues`   | type      | `ReferenceDataFormValues` with `code` required                        |
-| `EditReferenceDataFormValues`     | type      | `ReferenceDataFormValues` without `code`                              |
-| `ReferenceDataListPageShellProps` | type      | List-shell props (`i18nPrefix`, `basePath`, `queryConfig`, mutations) |
+| Symbol                            | Kind      | Purpose                                                                      |
+| --------------------------------- | --------- | ---------------------------------------------------------------------------- |
+| `ReferenceDataListPageShell`      | component | Query grid: smart filters, export/import, card/tree, deactivate              |
+| `ReferenceDataCreatePageShell`    | component | Create-page chrome (back link + title) wrapping the form                     |
+| `ReferenceDataEditPageShell`      | component | Edit-page chrome: loading/not-found states, badge, deactivate action         |
+| `ReferenceDataForm`               | component | Spec-validated create/edit form; `mode` discriminates create vs edit         |
+| `createReferenceDataColumns`      | fn        | `DataTableColumnDef[]` factory (code, label, status, metadata, actions menu) |
+| `ReferenceDataCard`               | component | Single-entry card for the card view, with an app-content slot                |
+| `CategoryTreeView`                | component | Lazy-expanding tree; fetches children via an injected `useChildren`          |
+| `MetadataEditor`                  | component | Field-array editor for the `metadata` key/value bag (datalist hints)         |
+| `ReferenceDataDeactivateDialog`   | component | Confirm dialog for deactivate/reactivate of one entry                        |
+| `createReferenceDataConstraints`  | const     | `SchemaConstraints` for `ReferenceDataCreateRequest` (with `code`)           |
+| `editReferenceDataConstraints`    | const     | `SchemaConstraints` for `ReferenceDataUpdateRequest` (no `code`)             |
+| `referenceDataTranslationsEn`     | const     | Default `ReferenceData.Common.*` English i18n bundle                         |
+| `referenceDataTranslationsFr`     | const     | Default `ReferenceData.Common.*` French i18n bundle                          |
+| `ReferenceDataEntry`              | type      | Re-export of the core entry DTO (the generic `T` the shells use)             |
+| `ReferenceDataFormValues`         | type      | Shared form-value shape (labels, code?, validity, sort, metadata)            |
+| `CreateReferenceDataFormValues`   | type      | `ReferenceDataFormValues` with `code` required                               |
+| `EditReferenceDataFormValues`     | type      | `ReferenceDataFormValues` without `code`                                     |
+| `ReferenceDataListPageShellProps` | type      | List-shell props (`i18nPrefix`, `basePath`, `queryConfig`, mutations)        |
 
 ## Injection contract
 

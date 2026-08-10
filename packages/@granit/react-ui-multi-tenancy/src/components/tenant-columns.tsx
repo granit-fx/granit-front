@@ -11,7 +11,7 @@ import { MoreHorizontal } from 'lucide-react';
 
 import type { TenantQueryItem } from './types';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -31,7 +31,7 @@ export function createTenantColumns({
   canUpdate,
   canManage,
   formatDate,
-}: TenantColumnOptions): ColumnDef<TenantQueryItem, unknown>[] {
+}: TenantColumnOptions): DataTableColumnDef<TenantQueryItem, unknown>[] {
   return [
     {
       id: 'name',

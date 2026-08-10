@@ -6,9 +6,9 @@ import { WorkspaceTable } from '../components/workspace-table';
 import { renderWithProviders } from './test-utils';
 
 import type { AIWorkspaceResponse } from '@granit/ai';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
-const columns: ColumnDef<AIWorkspaceResponse, unknown>[] = [
+const columns: DataTableColumnDef<AIWorkspaceResponse, unknown>[] = [
   { id: 'key', accessorKey: 'key', header: 'Key', cell: ({ row }) => row.original.key },
   {
     id: 'provider',

@@ -8,8 +8,8 @@ import { ReferenceDataListPageShell } from './reference-data-list-page-shell';
 
 import type { ReferenceDataEntry } from './types';
 import type { QueryConfig, QueryMetadata } from '@granit/query-engine';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ColumnDef } from '@tanstack/react-table';
 
 const api = createApiClient({ baseURL: '' });
 
@@ -42,7 +42,7 @@ const QUERY_CONFIG: QueryConfig = {
   basePath: STORYBOOK_BASE,
 };
 
-const columns: ColumnDef<ReferenceDataEntry, unknown>[] = [
+const columns: DataTableColumnDef<ReferenceDataEntry, unknown>[] = [
   { accessorKey: 'code', header: 'Code' },
   { accessorKey: 'labelEn', header: 'Label' },
 ];

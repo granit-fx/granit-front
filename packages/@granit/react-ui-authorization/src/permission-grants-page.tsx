@@ -5,10 +5,9 @@ import { QueryDataTable, useDebouncedValue } from '@granit/react-ui-kit';
 import { Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
-
 import type { PermissionGrant } from '@granit/authorization';
 import type { SortEntry } from '@granit/query-engine';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -50,7 +49,7 @@ export function PermissionGrantsPage() {
     });
   };
 
-  const columns = useMemo<ColumnDef<PermissionGrant>[]>(
+  const columns = useMemo<DataTableColumnDef<PermissionGrant>[]>(
     () => [
       {
         accessorKey: 'name',

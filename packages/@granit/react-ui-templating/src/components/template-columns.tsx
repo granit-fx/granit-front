@@ -7,7 +7,7 @@ import {
 import { TemplateStatusBadge } from './template-status-badge';
 
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -26,7 +26,7 @@ export function createTemplateColumns({
   t: TranslateFn;
   onEdit: (item: TemplateListItem) => void;
   formatDate: (date: string | Date) => string;
-}): ColumnDef<TemplateListItem>[] {
+}): DataTableColumnDef<TemplateListItem>[] {
   return [
     {
       accessorKey: 'name',

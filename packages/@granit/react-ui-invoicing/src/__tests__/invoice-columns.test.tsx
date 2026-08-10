@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { createInvoiceColumns } from '../components/invoice-columns';
 
 import type { InvoiceResponse } from '@granit/invoicing';
-import type { CellContext, ColumnDef } from '@tanstack/react-table';
+import type { DataTableCellContext, DataTableColumnDef } from '@granit/react-ui-kit';
 import type { ReactNode } from 'react';
 
 // Shared fixtures: [1] is an Open EUR invoice with both dates set, [2] is a
@@ -15,7 +15,7 @@ const noDatesInvoice = sampleInvoices[2]!;
 
 function makeColumns(
   overrides: Partial<Parameters<typeof createInvoiceColumns>[0]> = {}
-): ColumnDef<InvoiceResponse, unknown>[] {
+): DataTableColumnDef<InvoiceResponse, unknown>[] {
   return createInvoiceColumns({
     t: ((key: string) => key) as Parameters<typeof createInvoiceColumns>[0]['t'],
     onViewDetail: vi.fn(),
@@ -27,12 +27,15 @@ function makeColumns(
 
 /** Invoke a column's cell renderer the way react-table would, for a given row. */
 function renderCell(
-  column: ColumnDef<InvoiceResponse, unknown>,
+  column: DataTableColumnDef<InvoiceResponse, unknown>,
   invoice: InvoiceResponse
 ): ReactNode {
   const cell = column.cell;
   if (typeof cell !== 'function') return null;
-  const ctx = { row: { original: invoice } } as unknown as CellContext<InvoiceResponse, unknown>;
+  const ctx = { row: { original: invoice } } as unknown as DataTableCellContext<
+    InvoiceResponse,
+    unknown
+  >;
   return cell(ctx);
 }
 

@@ -13,13 +13,16 @@ import {
   TableHeader,
   TableRow,
 } from '@granit/react-ui';
-import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { flexRender, useTable } from '@tanstack/react-table';
 
-import type { ColumnDef } from '@tanstack/react-table';
+import { dataTableFeatures } from './table-features.js';
+
+import type { DataTableColumnDef } from './table-features.js';
+import type { RowData } from '@tanstack/react-table';
 import type { ReactNode } from 'react';
 
-export interface ManualDataTableProps<TData> {
-  readonly columns: ColumnDef<TData, unknown>[];
+export interface ManualDataTableProps<TData extends RowData> {
+  readonly columns: DataTableColumnDef<TData>[];
   readonly data: readonly TData[];
   readonly totalCount: number;
   /** Current page (1-based). */
@@ -42,7 +45,7 @@ export interface ManualDataTableProps<TData> {
  * {@link QueryDataTable}; reach for this when a feature only needs a plain
  * server-paged list with Previous/Next controls.
  */
-export function ManualDataTable<TData>({
+export function ManualDataTable<TData extends RowData>({
   columns,
   data,
   totalCount,
@@ -58,10 +61,10 @@ export function ManualDataTable<TData>({
   const { t } = useTranslation();
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
-  const table = useReactTable({
+  const table = useTable({
+    features: dataTableFeatures,
     data: data as TData[],
     columns,
-    getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     pageCount: totalPages,
   });

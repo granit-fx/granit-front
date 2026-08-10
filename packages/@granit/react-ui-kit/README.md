@@ -7,7 +7,7 @@ column-visibility, presets, bulk actions, date-period picker, paginated tables),
 form-in-dialog and detail-aside shells, a top progress bar, a view switcher, and
 internationalized URL / phone / timezone inputs.
 
-This is a **`react-ui` admin feature kit**, but a *horizontal* one — it has no
+This is a **`react-ui` admin feature kit**, but a _horizontal_ one — it has no
 backend counterpart and no single `react-<name>` hooks sibling. It composes
 [`@granit/react-ui`](../react-ui) primitives (shadcn/Radix) with the headless
 querying hooks from [`@granit/react-query-engine`](../react-query-engine)
@@ -36,7 +36,7 @@ consumer must declare these peers (from `package.json`):
 - `@granit/data-lookup` + `@granit/react-data-lookup` — the lookup descriptor /
   options surface backing in-filter lookup suggestions.
 - `@granit/react-api-client` and `@granit/utils` — Axios context + `cn`.
-- `@tanstack/react-table` (`^8.21`) — the grid engine for `ManualDataTable` /
+- `@tanstack/react-table` (`^9.0`) — the grid engine for `ManualDataTable` /
   `QueryDataTable`.
 - `react-hook-form` (`^7.80`) — `FormDialog` wraps a caller-owned form instance.
 - `cmdk` (`^1.1`) — the smart-filter and picker omniboxes.
@@ -58,9 +58,9 @@ import {
   useSmartFilterSync,
 } from '@granit/react-ui-kit';
 import { useSmartFilter, useQueryEndpoint, useQueryMeta } from '@granit/react-query-engine';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@tanstack/react-table';
 
-function PartyList({ columns }: { columns: ColumnDef<Party, unknown>[] }) {
+function PartyList({ columns }: { columns: DataTableColumnDef<Party, unknown>[] }) {
   const meta = useQueryMeta('/api/v1/parties');
   const smartFilter = useSmartFilter({ metadata: meta.data });
   const queryEndpoint = useQueryEndpoint<Party>('/api/v1/parties');
@@ -119,39 +119,39 @@ All exports come through the single barrel (`@granit/react-ui-kit`);
 import everything from the package root. Each component type alias
 (`*Props`) is re-exported alongside its component.
 
-| Symbol                     | Kind      | Purpose                                                                  |
-| -------------------------- | --------- | ------------------------------------------------------------------------ |
-| `ManualDataTable`          | component | Server-paginated TanStack table driven by `page`/`pageSize` props        |
-| `QueryDataTable`           | component | Filter/sort/group-aware table with skeletons + collapsible groups        |
-| `QueryEndpointDataTable`   | component | Thin wrapper unwrapping `useQueryEndpoint` grouped/paged branching       |
-| `QueryControlBar`          | component | Top row: presets + sort + group-by selectors + total-count label         |
-| `SmartFilterBar`           | component | cmdk omnibox: facet tokens, field/operator/value/lookup suggestions      |
-| `SortSelector`             | component | Dropdown to pick a sort field and cycle asc → desc → unsorted            |
-| `GroupBySelector`          | component | Dropdown to pick a group-by field (or clear grouping)                    |
-| `GroupByRows`              | component | Expand/collapse group rows with lazy drill-down via `onExpand`           |
-| `ColumnVisibility`         | component | Checkbox dropdown toggling visible columns                               |
-| `FilterPresets`            | component | Odoo-style preset toggle button rows (OR within group, AND between)      |
-| `BulkActions`              | component | Selection toolbar with batch action buttons (hidden when empty)          |
-| `DatePeriodPicker`         | component | Period dropdown (Today / ThisWeek / … / Custom) from `DateFilterMeta`    |
-| `FacetBadge`               | component | One filter token rendered as a removable badge                           |
-| `SuggestionList`           | component | cmdk suggestion list for fields / operators / presets / quick filters    |
-| `LookupSuggestionList`     | component | In-filter lookup options list (single or `In`-multi select)              |
-| `SortableHeader`           | component | Clickable table header showing sort direction                            |
-| `TablePagination`          | component | Page nav + page-size selector for `QueryDataTable`                       |
-| `EmptyState`               | component | Standard "no results" cell content                                       |
-| `FormDialog`               | component | Form-in-modal shell over a caller-owned `react-hook-form` instance       |
-| `DetailAsideLayout`        | component | Two-pane detail surface: inline aside on `lg+`, Sheet below              |
-| `DetailAsideMobileTrigger` | component | Optional named entry point opening the mobile aside Sheet                |
-| `TopProgressBar`           | component | nProgress-style top bar tracking fetches/mutations/route suspense        |
-| `RouteSuspenseSignal`      | component | Mount inside a Suspense fallback to feed `TopProgressBar`                |
-| `ViewSwitcher`             | component | List/Kanban toggle (`ViewMode`)                                          |
-| `TimezonePicker`           | component | IANA timezone combobox (grouped by region, GMT offsets, clearable)       |
-| `UrlInput`                 | component | Protocol-select + path input, joins/splits a single URL string           |
-| `PhoneInput`               | component | Country-select + national input emitting E.164 (`libphonenumber-js`)     |
-| `useSmartFilterSync`       | hook      | Sync `useSmartFilter` state into a `useQueryEndpoint` + preset toggle    |
-| `useOperatorLabels`        | hook      | Translated operator labels (`Eq`, `Contains`, `Between`, …)              |
-| `formatPhoneInternational` | fn        | E.164 → spaced international display string (read-side only)             |
-| `ViewMode`                 | type      | `'list' \| 'kanban'`                                                     |
+| Symbol | Kind | Purpose | |
+| -------------------------- | --------- | --------------------------------------------------------------------- | |
+| `ManualDataTable` | component | Server-paginated TanStack table driven by `page`/`pageSize` props | |
+| `QueryDataTable` | component | Filter/sort/group-aware table with skeletons + collapsible groups | |
+| `QueryEndpointDataTable` | component | Thin wrapper unwrapping `useQueryEndpoint` grouped/paged branching | |
+| `QueryControlBar` | component | Top row: presets + sort + group-by selectors + total-count label | |
+| `SmartFilterBar` | component | cmdk omnibox: facet tokens, field/operator/value/lookup suggestions | |
+| `SortSelector` | component | Dropdown to pick a sort field and cycle asc → desc → unsorted | |
+| `GroupBySelector` | component | Dropdown to pick a group-by field (or clear grouping) | |
+| `GroupByRows` | component | Expand/collapse group rows with lazy drill-down via `onExpand` | |
+| `ColumnVisibility` | component | Checkbox dropdown toggling visible columns | |
+| `FilterPresets` | component | Odoo-style preset toggle button rows (OR within group, AND between) | |
+| `BulkActions` | component | Selection toolbar with batch action buttons (hidden when empty) | |
+| `DatePeriodPicker` | component | Period dropdown (Today / ThisWeek / … / Custom) from `DateFilterMeta` | |
+| `FacetBadge` | component | One filter token rendered as a removable badge | |
+| `SuggestionList` | component | cmdk suggestion list for fields / operators / presets / quick filters | |
+| `LookupSuggestionList` | component | In-filter lookup options list (single or `In`-multi select) | |
+| `SortableHeader` | component | Clickable table header showing sort direction | |
+| `TablePagination` | component | Page nav + page-size selector for `QueryDataTable` | |
+| `EmptyState` | component | Standard "no results" cell content | |
+| `FormDialog` | component | Form-in-modal shell over a caller-owned `react-hook-form` instance | |
+| `DetailAsideLayout` | component | Two-pane detail surface: inline aside on `lg+`, Sheet below | |
+| `DetailAsideMobileTrigger` | component | Optional named entry point opening the mobile aside Sheet | |
+| `TopProgressBar` | component | nProgress-style top bar tracking fetches/mutations/route suspense | |
+| `RouteSuspenseSignal` | component | Mount inside a Suspense fallback to feed `TopProgressBar` | |
+| `ViewSwitcher` | component | List/Kanban toggle (`ViewMode`) | |
+| `TimezonePicker` | component | IANA timezone combobox (grouped by region, GMT offsets, clearable) | |
+| `UrlInput` | component | Protocol-select + path input, joins/splits a single URL string | |
+| `PhoneInput` | component | Country-select + national input emitting E.164 (`libphonenumber-js`) | |
+| `useSmartFilterSync` | hook | Sync `useSmartFilter` state into a `useQueryEndpoint` + preset toggle | |
+| `useOperatorLabels` | hook | Translated operator labels (`Eq`, `Contains`, `Between`, …) | |
+| `formatPhoneInternational` | fn | E.164 → spaced international display string (read-side only) | |
+| `ViewMode` | type | `'list' \                                                             | 'kanban'` |
 
 ## Out of scope / caveats
 

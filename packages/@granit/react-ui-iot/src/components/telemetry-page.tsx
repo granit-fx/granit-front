@@ -4,9 +4,9 @@ import { QueryEndpointDataTable } from '@granit/react-ui-kit';
 import { useMemo } from 'react';
 
 import type { TelemetryPoint } from '@granit/iot';
-import type { CellContext, ColumnDef } from '@tanstack/react-table';
+import type { DataTableCellContext, DataTableColumnDef } from '@granit/react-ui-kit';
 
-type TelemetryCell = CellContext<TelemetryPoint, unknown>;
+type TelemetryCell = DataTableCellContext<TelemetryPoint, unknown>;
 
 function DeviceCell({ row }: TelemetryCell) {
   return <span className="font-mono text-xs text-muted-foreground">{row.original.deviceId}</span>;
@@ -45,7 +45,7 @@ function TelemetryContent() {
   const { t } = useTranslation();
   const queryEndpoint = useTelemetryQuery();
 
-  const columns = useMemo<ColumnDef<TelemetryPoint, unknown>[]>(
+  const columns = useMemo<DataTableColumnDef<TelemetryPoint, unknown>[]>(
     () => [
       {
         id: 'deviceId',

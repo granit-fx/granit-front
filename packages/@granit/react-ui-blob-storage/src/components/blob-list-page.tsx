@@ -32,7 +32,7 @@ import { BlobDeleteDialog } from './blob-delete-dialog';
 
 import type { BlobDescriptorListItem, BlobStatus } from '@granit/blob-storage';
 import type { QueryConfig } from '@granit/query-engine';
-import type { CellContext, ColumnDef } from '@tanstack/react-table';
+import type { DataTableCellContext, DataTableColumnDef } from '@granit/react-ui-kit';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -58,25 +58,35 @@ const STATUS_KEY: Record<BlobStatus, string> = {
 // Module-scope cell renderers — hoisted out of the column factory so
 // Sonar's "component-defined-inside-parent" heuristic stops firing on
 // inline `cell: ({ getValue }) => <Foo …/>` arrows.
-function renderFileNameCell(info: CellContext<BlobDescriptorListItem, unknown>): React.ReactNode {
+function renderFileNameCell(
+  info: DataTableCellContext<BlobDescriptorListItem, unknown>
+): React.ReactNode {
   return <FileNameCell value={info.getValue<string>()} />;
 }
 
-function renderContainerCell(info: CellContext<BlobDescriptorListItem, unknown>): React.ReactNode {
+function renderContainerCell(
+  info: DataTableCellContext<BlobDescriptorListItem, unknown>
+): React.ReactNode {
   return <ContainerCell value={info.getValue<string>()} />;
 }
 
-function renderMonoCellBlob(info: CellContext<BlobDescriptorListItem, unknown>): React.ReactNode {
+function renderMonoCellBlob(
+  info: DataTableCellContext<BlobDescriptorListItem, unknown>
+): React.ReactNode {
   return <MonoCell value={info.getValue<string>()} />;
 }
 
-function renderSizeCell(info: CellContext<BlobDescriptorListItem, unknown>): React.ReactNode {
+function renderSizeCell(
+  info: DataTableCellContext<BlobDescriptorListItem, unknown>
+): React.ReactNode {
   const v = info.getValue<number | null | undefined>();
   return v == null ? '—' : formatBytes(v);
 }
 
 function renderStatusCell(t: TranslateFn) {
-  return function StatusCell(info: CellContext<BlobDescriptorListItem, unknown>): React.ReactNode {
+  return function StatusCell(
+    info: DataTableCellContext<BlobDescriptorListItem, unknown>
+  ): React.ReactNode {
     const status = info.getValue<BlobStatus>();
     if (!(status in STATUS_INTENT)) {
       return <Badge variant="outline">{String(status ?? '—')}</Badge>;
@@ -91,7 +101,9 @@ function renderActionsCell(
   onDelete: (blob: BlobDescriptorListItem) => void,
   t: TranslateFn
 ) {
-  return function ActionsCell(info: CellContext<BlobDescriptorListItem, unknown>): React.ReactNode {
+  return function ActionsCell(
+    info: DataTableCellContext<BlobDescriptorListItem, unknown>
+  ): React.ReactNode {
     return (
       <BlobRowActions
         blob={info.row.original}
@@ -237,7 +249,7 @@ function BlobStorageContent() {
     }
   };
 
-  const columns = useMemo<ColumnDef<BlobDescriptorListItem>[]>(
+  const columns = useMemo<DataTableColumnDef<BlobDescriptorListItem>[]>(
     () => [
       {
         accessorKey: 'originalFileName',
@@ -275,7 +287,7 @@ function BlobStorageContent() {
               id: 'actions',
               header: '',
               cell: renderActionsCell(canManage, handleDownload, setDeleteTarget, t),
-            } satisfies ColumnDef<BlobDescriptorListItem>,
+            } satisfies DataTableColumnDef<BlobDescriptorListItem>,
           ]
         : []),
     ],

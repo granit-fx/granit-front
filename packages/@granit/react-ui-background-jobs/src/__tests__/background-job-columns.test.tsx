@@ -7,7 +7,7 @@ import { createBackgroundJobColumns } from '../components/background-job-columns
 import { renderBackgroundJobs } from './test-utils';
 
 import type { BackgroundJobStatus } from '@granit/background-jobs';
-import type { CellContext, ColumnDef } from '@tanstack/react-table';
+import type { DataTableCellContext, DataTableColumnDef } from '@granit/react-ui-kit';
 import type { ReactElement } from 'react';
 
 function makeJob(overrides: Partial<BackgroundJobStatus> = {}): BackgroundJobStatus {
@@ -23,7 +23,7 @@ const handlers = {
   onTrigger: vi.fn(),
 };
 
-function buildColumns(isMutating = false): ColumnDef<BackgroundJobStatus, unknown>[] {
+function buildColumns(isMutating = false): DataTableColumnDef<BackgroundJobStatus, unknown>[] {
   return createBackgroundJobColumns({
     t: ((key: string, opts?: { count?: number }) =>
       opts?.count === undefined ? key : `${key}#${opts.count}`) as never,
@@ -37,7 +37,7 @@ function buildColumns(isMutating = false): ColumnDef<BackgroundJobStatus, unknow
 
 /** Renders a column's cell for a given job through the i18n/tooltip wrapper. */
 function renderCell(
-  columns: ColumnDef<BackgroundJobStatus, unknown>[],
+  columns: DataTableColumnDef<BackgroundJobStatus, unknown>[],
   columnId: string,
   job: BackgroundJobStatus
 ) {
@@ -45,7 +45,10 @@ function renderCell(
   if (!column?.cell || typeof column.cell !== 'function') {
     throw new Error(`Column ${columnId} has no cell renderer`);
   }
-  const ctx = { row: { original: job } } as unknown as CellContext<BackgroundJobStatus, unknown>;
+  const ctx = { row: { original: job } } as unknown as DataTableCellContext<
+    BackgroundJobStatus,
+    unknown
+  >;
   const node = column.cell(ctx) as ReactElement | null;
   return renderBackgroundJobs(<>{node}</>);
 }
@@ -116,7 +119,7 @@ describe('createBackgroundJobColumns', () => {
     const column = columns.find((c) => c.id === 'consecutiveFailures');
     const ctx = {
       row: { original: makeJob({ consecutiveFailures: 0, deadLetterCount: 0 }) },
-    } as unknown as CellContext<BackgroundJobStatus, unknown>;
+    } as unknown as DataTableCellContext<BackgroundJobStatus, unknown>;
     if (!column?.cell || typeof column.cell !== 'function') throw new Error('no cell');
     expect(column.cell(ctx)).toBeNull();
   });

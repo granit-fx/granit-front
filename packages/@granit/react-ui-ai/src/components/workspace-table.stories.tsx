@@ -4,8 +4,8 @@ import { fn } from 'storybook/test';
 import { WorkspaceTable } from './workspace-table';
 
 import type { AIWorkspaceResponse } from '@granit/ai';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ColumnDef } from '@tanstack/react-table';
 
 const workspaces: AIWorkspaceResponse[] = [
   {
@@ -32,7 +32,7 @@ const workspaces: AIWorkspaceResponse[] = [
   },
 ];
 
-const columns: ColumnDef<AIWorkspaceResponse, unknown>[] = [
+const columns: DataTableColumnDef<AIWorkspaceResponse, unknown>[] = [
   { id: 'name', accessorKey: 'name', header: 'Key' },
   { id: 'provider', accessorKey: 'provider', header: 'Provider' },
   { id: 'model', accessorKey: 'model', header: 'Model' },

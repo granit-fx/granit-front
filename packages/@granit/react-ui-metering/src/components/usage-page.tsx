@@ -13,7 +13,7 @@ import {
 import { useMemo } from 'react';
 
 import type { UsageAggregate } from '@granit/metering';
-import type { CellContext, ColumnDef } from '@tanstack/react-table';
+import type { DataTableCellContext, DataTableColumnDef } from '@granit/react-ui-kit';
 
 function TenantCell({
   value,
@@ -31,12 +31,14 @@ function MonoCell({ value }: { readonly value: string }) {
 
 // Module-scope cell renderers — see ai-usage-page for the same pattern.
 function renderTenantCell(hostLabel: string) {
-  return function TenantCellRenderer(info: CellContext<UsageAggregate, unknown>): React.ReactNode {
+  return function TenantCellRenderer(
+    info: DataTableCellContext<UsageAggregate, unknown>
+  ): React.ReactNode {
     return <TenantCell value={info.getValue<string | null>()} hostLabel={hostLabel} />;
   };
 }
 
-function renderMonoCellUsage(info: CellContext<UsageAggregate, unknown>): React.ReactNode {
+function renderMonoCellUsage(info: DataTableCellContext<UsageAggregate, unknown>): React.ReactNode {
   return <MonoCell value={info.getValue<string>()} />;
 }
 
@@ -54,7 +56,7 @@ function UsageAggregatesContent() {
   });
   const { handlePresetToggle } = useSmartFilterSync(smartFilter, queryEndpoint, meta);
 
-  const columns = useMemo<ColumnDef<UsageAggregate>[]>(
+  const columns = useMemo<DataTableColumnDef<UsageAggregate>[]>(
     () => [
       {
         accessorKey: 'tenantId',

@@ -3,7 +3,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 
 import type { BlogPostListItemResponse } from '@granit/blog';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -34,8 +34,8 @@ export function createPostsColumns({
   onEdit,
   onDelete,
   canManage,
-}: PostsColumnOptions): ColumnDef<BlogPostListItemResponse, unknown>[] {
-  const columns: ColumnDef<BlogPostListItemResponse, unknown>[] = [
+}: PostsColumnOptions): DataTableColumnDef<BlogPostListItemResponse, unknown>[] {
+  const columns: DataTableColumnDef<BlogPostListItemResponse, unknown>[] = [
     {
       id: 'slug',
       accessorKey: 'slug',

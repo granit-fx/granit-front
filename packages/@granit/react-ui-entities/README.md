@@ -53,7 +53,7 @@ these peers (all `workspace:*` unless a version range is given):
 - `@granit/react-workspaces` — `useSidePeek`, the URL-driven peek-stack the
   list page and side-peek drawer share.
 - `@granit/logger` (`createLogger`) and `@granit/utils` (`cn`).
-- `@tanstack/react-query` (`^5`), `@tanstack/react-table` (`^8.21`),
+- `@tanstack/react-query` (`^5`), `@tanstack/react-table` (`^9.0`),
   `react` / `react-dom` (`^19`), `react-router` (`^7.18`),
   `date-fns` (`^4`), `lucide-react` (`^1.21`), `sonner` (`^2`).
 
@@ -139,43 +139,43 @@ function CustomBoard({ manifest, layout, rows }: BoardProps) {
 
 ## Public API
 
-| Symbol                            | Kind      | Purpose                                                                  |
-| --------------------------------- | --------- | ------------------------------------------------------------------------ |
-| `WorkspaceEntityPage`             | component | List page (`/w/:workspace/:entity`) — toolbar, view switcher, layouts    |
-| `WorkspaceEntityDetailPage`       | component | Detail route (`/w/:workspace/:entity/:id`) — back shell + detail body    |
-| `WorkspaceEntityFormPage`         | component | Create / edit form route (`mode` prop); POST / PATCH to the entity REST  |
-| `EntityCalendarView`              | component | Odoo-style day/week/month/year calendar over a date-projected layout     |
-| `EntityKanbanView`                | component | Drag-and-drop kanban; column transition PATCHes the group-by property    |
-| `EntityGalleryView`               | component | Infinite-scroll card gallery (flat + grouped) with injected images       |
-| `EntityViewSwitcher`              | component | Tab strip over `listLayouts`; renders nothing for a single layout        |
-| `EntityDetailContent`             | component | Manifest-driven detail body (header, sections, relations, collections)   |
-| `CollectionSectionCard`           | component | Child-collection table card (per-column formatter + optional Sum footer) |
-| `ActionDrawer`                    | component | Global drawer host for `OpenDrawer` actions (detail body or URL iframe)  |
-| `ActionModal`                     | component | Global modal host for `OpenModal` actions (form body or URL iframe)      |
-| `EntityActionButton`              | component | shadcn-styled trigger for one `EntityActionManifest` via the dispatcher  |
-| `EntityActionScopeProvider`       | provider  | Carries the active entity name to the globally-mounted overlay hosts     |
-| `useEntityActionScope`            | hook      | Read `{ entityName, setEntityName }`; throws outside the provider        |
-| `EntityPageLayout`                | component | Fixed-slot shell (title / actions / view switcher / controls / body)     |
-| `SidePeekDrawer`                  | component | Notion-style side peek over `useSidePeek`; reuses `EntityDetailContent`  |
-| `recapParentRefs`                 | fn        | Bulk-recap parent markers → `ParentRef[]` (cache-invalidation targets)   |
-| `asExtended`                      | fn        | Cast `EntityManifestResponse` to the forward-looking extension type      |
-| `WorkspaceEntityFormPageProps`    | type      | `{ mode: 'create' \| 'edit' }`                                           |
-| `EntityCalendarViewProps`         | type      | Calendar view props (`entityName`, `manifest`, `layout`, handlers)       |
-| `CalendarViewMode`                | type      | `'day' \| 'week' \| 'month' \| 'year'`                                   |
-| `EntityKanbanViewProps`           | type      | Kanban view props (rows, `canUpdate`, locale, handlers)                  |
-| `EntityGalleryViewProps`          | type      | Gallery view props (`layout`, `renderImage`, handlers)                   |
-| `GalleryRenderImage`              | type      | `(blobId, row) => ReactNode` — the storage-agnostic image slot           |
-| `EntityViewSwitcherProps`         | type      | `{ layouts, activeKind, onChange }`                                      |
-| `EntityDetailContentProps`        | type      | `{ entityName, entityId, workspace?, onRelationClick? }`                 |
-| `EntityActionButtonProps`         | type      | `{ action, entityId, actionHandlers? }`                                  |
-| `EntityPageLayoutProps`           | type      | Page-shell slot props                                                    |
-| `EntityPageLayoutWidth`           | type      | `'full' \| 'comfortable' \| 'narrow'`                                    |
-| `SidePeekDrawerProps`             | type      | `{ activeWorkspaceName? }`                                               |
-| `ParentRef`                       | type      | `{ entityName, entityId }` produced by `recapParentRefs`                 |
-| `ExtendedEntityManifest`          | type      | `EntityManifestResponse` + `collectionSections` (forward-looking)        |
-| `ExtendedIdentitySection`         | type      | Identity facet alias used by the extended manifest                       |
-| `EntityCollectionSectionManifest` | type      | Child-collection descriptor (property, columns, currency, footer)        |
-| `CollectionColumnManifest`        | type      | One collection column (property, label key, component, align)            |
+| Symbol | Kind | Purpose | | | |
+| --------------------------------- | --------- | ------------------------------------------------------------------------ | | | |
+| `WorkspaceEntityPage` | component | List page (`/w/:workspace/:entity`) — toolbar, view switcher, layouts | | | |
+| `WorkspaceEntityDetailPage` | component | Detail route (`/w/:workspace/:entity/:id`) — back shell + detail body | | | |
+| `WorkspaceEntityFormPage` | component | Create / edit form route (`mode` prop); POST / PATCH to the entity REST | | | |
+| `EntityCalendarView` | component | Odoo-style day/week/month/year calendar over a date-projected layout | | | |
+| `EntityKanbanView` | component | Drag-and-drop kanban; column transition PATCHes the group-by property | | | |
+| `EntityGalleryView` | component | Infinite-scroll card gallery (flat + grouped) with injected images | | | |
+| `EntityViewSwitcher` | component | Tab strip over `listLayouts`; renders nothing for a single layout | | | |
+| `EntityDetailContent` | component | Manifest-driven detail body (header, sections, relations, collections) | | | |
+| `CollectionSectionCard` | component | Child-collection table card (per-column formatter + optional Sum footer) | | | |
+| `ActionDrawer` | component | Global drawer host for `OpenDrawer` actions (detail body or URL iframe) | | | |
+| `ActionModal` | component | Global modal host for `OpenModal` actions (form body or URL iframe) | | | |
+| `EntityActionButton` | component | shadcn-styled trigger for one `EntityActionManifest` via the dispatcher | | | |
+| `EntityActionScopeProvider` | provider | Carries the active entity name to the globally-mounted overlay hosts | | | |
+| `useEntityActionScope` | hook | Read `{ entityName, setEntityName }`; throws outside the provider | | | |
+| `EntityPageLayout` | component | Fixed-slot shell (title / actions / view switcher / controls / body) | | | |
+| `SidePeekDrawer` | component | Notion-style side peek over `useSidePeek`; reuses `EntityDetailContent` | | | |
+| `recapParentRefs` | fn | Bulk-recap parent markers → `ParentRef[]` (cache-invalidation targets) | | | |
+| `asExtended` | fn | Cast `EntityManifestResponse` to the forward-looking extension type | | | |
+| `WorkspaceEntityFormPageProps` | type | `{ mode: 'create' \                                                      | 'edit' }` | | |
+| `EntityCalendarViewProps` | type | Calendar view props (`entityName`, `manifest`, `layout`, handlers) | | | |
+| `CalendarViewMode` | type | `'day' \                                                                 | 'week' \        | 'month' \ | 'year'` |
+| `EntityKanbanViewProps` | type | Kanban view props (rows, `canUpdate`, locale, handlers) | | | |
+| `EntityGalleryViewProps` | type | Gallery view props (`layout`, `renderImage`, handlers) | | | |
+| `GalleryRenderImage` | type | `(blobId, row) => ReactNode` — the storage-agnostic image slot | | | |
+| `EntityViewSwitcherProps` | type | `{ layouts, activeKind, onChange }` | | | |
+| `EntityDetailContentProps` | type | `{ entityName, entityId, workspace?, onRelationClick? }` | | | |
+| `EntityActionButtonProps` | type | `{ action, entityId, actionHandlers? }` | | | |
+| `EntityPageLayoutProps` | type | Page-shell slot props | | | |
+| `EntityPageLayoutWidth` | type | `'full' \                                                                | 'comfortable' \ | 'narrow'` | |
+| `SidePeekDrawerProps` | type | `{ activeWorkspaceName? }` | | | |
+| `ParentRef` | type | `{ entityName, entityId }` produced by `recapParentRefs` | | | |
+| `ExtendedEntityManifest` | type | `EntityManifestResponse` + `collectionSections` (forward-looking) | | | |
+| `ExtendedIdentitySection` | type | Identity facet alias used by the extended manifest | | | |
+| `EntityCollectionSectionManifest` | type | Child-collection descriptor (property, columns, currency, footer) | | | |
+| `CollectionColumnManifest` | type | One collection column (property, label key, component, align) | | | |
 
 ## App-agnostic seams
 

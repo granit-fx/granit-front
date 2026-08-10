@@ -17,7 +17,7 @@ import { getCronstrueLocale } from '../cronstrue-locale';
 
 import type { BackgroundJobStatus } from '@granit/background-jobs';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 // Derive the translate function type from the localization hook rather than
 // importing `TFunction` from i18next directly — keeps the column factory immune
@@ -50,7 +50,7 @@ export function createBackgroundJobColumns({
   onResume,
   onTrigger,
   isMutating,
-}: BackgroundJobColumnOptions): ColumnDef<BackgroundJobStatus, unknown>[] {
+}: BackgroundJobColumnOptions): DataTableColumnDef<BackgroundJobStatus, unknown>[] {
   return [
     {
       id: 'jobName',

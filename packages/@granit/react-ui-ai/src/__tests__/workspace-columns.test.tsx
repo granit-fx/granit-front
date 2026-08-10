@@ -7,7 +7,7 @@ import { renderWithProviders, testI18n } from './test-utils';
 
 import type { AIWorkspaceResponse } from '@granit/ai';
 import type { useTranslation } from '@granit/react-localization';
-import type { CellContext, ColumnDef } from '@tanstack/react-table';
+import type { DataTableCellContext, DataTableColumnDef } from '@granit/react-ui-kit';
 
 vi.mock('@granit/ai', () => ({
   AI_WORKSPACE_KINDS: { SYSTEM: 'System', DYNAMIC: 'Dynamic' },
@@ -30,19 +30,21 @@ function makeColumns(overrides?: {
   });
 }
 
-function getCol(columns: ColumnDef<AIWorkspaceResponse, unknown>[], id: string) {
+function getCol(columns: DataTableColumnDef<AIWorkspaceResponse, unknown>[], id: string) {
   const col = columns.find((c) => c.id === id);
   if (!col) throw new Error(`column ${id} not found`);
   return col;
 }
 
 function renderCell(
-  columns: ColumnDef<AIWorkspaceResponse, unknown>[],
+  columns: DataTableColumnDef<AIWorkspaceResponse, unknown>[],
   id: string,
   ws: AIWorkspaceResponse
 ) {
   const col = getCol(columns, id);
-  const cell = col.cell as (ctx: CellContext<AIWorkspaceResponse, unknown>) => React.ReactNode;
+  const cell = col.cell as (
+    ctx: DataTableCellContext<AIWorkspaceResponse, unknown>
+  ) => React.ReactNode;
   return renderWithProviders(<>{cell({ row: { original: ws } } as never)}</>);
 }
 

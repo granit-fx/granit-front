@@ -35,7 +35,10 @@ vi.mock('@granit/react-authorization', () => ({
 }));
 
 // Deterministic grid/list toggle: a single button that flips to the kanban view.
-vi.mock('@granit/react-ui-kit', () => ({
+// Partial mock: WorkspaceTable builds its table from the real `dataTableFeatures`
+// feature set, so only the two components below may be replaced.
+vi.mock('@granit/react-ui-kit', async (importOriginal) => ({
+  ...(await importOriginal<Record<string, unknown>>()),
   ViewSwitcher: ({ onViewChange }: { onViewChange: (view: 'list' | 'kanban') => void }) => (
     <button type="button" onClick={() => onViewChange('kanban')}>
       toggle-grid

@@ -11,8 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from '@granit/react-ui';
-import { EmptyState } from '@granit/react-ui-kit';
-import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { dataTableFeatures, EmptyState } from '@granit/react-ui-kit';
+import { flexRender, useTable } from '@tanstack/react-table';
 import { Loader2, Plus, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
@@ -48,10 +48,10 @@ export function LegalDocumentListPage() {
     },
   });
 
-  const table = useReactTable({
+  const table = useTable({
+    features: dataTableFeatures,
     data: documents ?? [],
     columns,
-    getCoreRowModel: getCoreRowModel(),
   });
 
   function clearFilter() {

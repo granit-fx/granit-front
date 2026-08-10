@@ -39,7 +39,7 @@ these peers:
   `Spinner`, …).
 - `@granit/react-ui-admin-kit` — `QueryDataTable`, the paginated history grid.
 - `@granit/utils` — `cn` class merge helper.
-- `@tanstack/react-table` (`^8.21`) — `ColumnDef` for the column factories.
+- `@tanstack/react-table` (`^9.0`) — `DataTableColumnDef` for the column factories.
 - `lucide-react` (`^1.21`) — action/status icons.
 - `react` and `react-dom` (`^19`).
 
@@ -139,36 +139,36 @@ function useImportColumns(onViewReport: (job: ImportJobResponse) => void) {
 
 ## Public API
 
-| Symbol                       | Kind      | Purpose                                                       |
-| ---------------------------- | --------- | ------------------------------------------------------------- |
-| `ExportListPage`             | component | Self-wiring export history page (provider + filters + grid)   |
-| `ImportListPage`             | component | Self-wiring import history page (+ filters, grid, report)     |
-| `ExportButton`               | component | Toolbar button that triggers an export (`onExport`)           |
-| `ExportDialog`               | component | Field/format/preset/roundtrip config + start + progress       |
-| `ImportButton`               | component | Toolbar button that triggers an import (`onImport`)           |
-| `ImportDialog`               | component | Four-step wizard: upload, map, execute, report                |
-| `HistoryFilters`             | component | Status filter bar; `mode` picks import vs export status set   |
-| `ImportReportDialog`         | component | Read-only import report modal (counts, errors, correction)    |
-| `JobStatusBadge`             | component | Localized status pill for an import/export job status         |
-| `ColumnMappingTable`         | component | Source-to-target property mapping editor with previews        |
-| `FileDropZone`               | component | Drag-and-drop file picker with click-to-browse fallback       |
-| `ImportRowErrors`            | component | Table of per-row import errors (`maxDisplay` cap, default 50) |
-| `ImportReportSummary`        | component | Result card: total/succeeded/failed/skipped/inserted/updated  |
-| `MappingConfidenceBadge`     | component | Badge for a mapping's `MappingConfidence` level               |
-| `createExportHistoryColumns` | fn        | `ColumnDef[]` for the export grid (+ format, rows, download)  |
-| `createImportHistoryColumns` | fn        | `ColumnDef[]` for the import grid (+ file name, view-report)  |
-| `createJobDateColumn`        | fn        | Shared created-at column (generic over the job row)           |
-| `createJobEntityColumn`      | fn        | Shared definition-name ("entity") column                      |
-| `createJobStatusColumn`      | fn        | Shared `JobStatusBadge` column                                |
-| `createJobActionColumn`      | fn        | Trailing action column (`onAction`, optional `visible`)       |
-| `DEFAULT_PAGE_SIZE`          | const     | `20` — history grid page size                                 |
-| `IMPORT_STATUSES`            | const     | Ordered `ImportJobStatus[]` for the import filter dropdown    |
-| `IMPORT_TERMINAL_STATUSES`   | const     | Import statuses with no further transitions                   |
-| `EXPORT_STATUSES`            | const     | Ordered `ExportJobStatus[]` for the export filter dropdown    |
-| `EXPORT_TERMINAL_STATUSES`   | const     | Export statuses with no further transitions                   |
-| `dataExchangeTranslationsEn` | const     | English `DataExchange.*` i18next bundle (flat keys)           |
-| `dataExchangeTranslationsFr` | const     | French `DataExchange.*` i18next bundle (flat keys)            |
-| `DataExchangeTranslations`   | type      | Shape of the `…En` bundle (the translation-key contract)      |
+| Symbol                       | Kind      | Purpose                                                               |
+| ---------------------------- | --------- | --------------------------------------------------------------------- |
+| `ExportListPage`             | component | Self-wiring export history page (provider + filters + grid)           |
+| `ImportListPage`             | component | Self-wiring import history page (+ filters, grid, report)             |
+| `ExportButton`               | component | Toolbar button that triggers an export (`onExport`)                   |
+| `ExportDialog`               | component | Field/format/preset/roundtrip config + start + progress               |
+| `ImportButton`               | component | Toolbar button that triggers an import (`onImport`)                   |
+| `ImportDialog`               | component | Four-step wizard: upload, map, execute, report                        |
+| `HistoryFilters`             | component | Status filter bar; `mode` picks import vs export status set           |
+| `ImportReportDialog`         | component | Read-only import report modal (counts, errors, correction)            |
+| `JobStatusBadge`             | component | Localized status pill for an import/export job status                 |
+| `ColumnMappingTable`         | component | Source-to-target property mapping editor with previews                |
+| `FileDropZone`               | component | Drag-and-drop file picker with click-to-browse fallback               |
+| `ImportRowErrors`            | component | Table of per-row import errors (`maxDisplay` cap, default 50)         |
+| `ImportReportSummary`        | component | Result card: total/succeeded/failed/skipped/inserted/updated          |
+| `MappingConfidenceBadge`     | component | Badge for a mapping's `MappingConfidence` level                       |
+| `createExportHistoryColumns` | fn        | `DataTableColumnDef[]` for the export grid (+ format, rows, download) |
+| `createImportHistoryColumns` | fn        | `DataTableColumnDef[]` for the import grid (+ file name, view-report) |
+| `createJobDateColumn`        | fn        | Shared created-at column (generic over the job row)                   |
+| `createJobEntityColumn`      | fn        | Shared definition-name ("entity") column                              |
+| `createJobStatusColumn`      | fn        | Shared `JobStatusBadge` column                                        |
+| `createJobActionColumn`      | fn        | Trailing action column (`onAction`, optional `visible`)               |
+| `DEFAULT_PAGE_SIZE`          | const     | `20` — history grid page size                                         |
+| `IMPORT_STATUSES`            | const     | Ordered `ImportJobStatus[]` for the import filter dropdown            |
+| `IMPORT_TERMINAL_STATUSES`   | const     | Import statuses with no further transitions                           |
+| `EXPORT_STATUSES`            | const     | Ordered `ExportJobStatus[]` for the export filter dropdown            |
+| `EXPORT_TERMINAL_STATUSES`   | const     | Export statuses with no further transitions                           |
+| `dataExchangeTranslationsEn` | const     | English `DataExchange.*` i18next bundle (flat keys)                   |
+| `dataExchangeTranslationsFr` | const     | French `DataExchange.*` i18next bundle (flat keys)                    |
+| `DataExchangeTranslations`   | type      | Shape of the `…En` bundle (the translation-key contract)              |
 
 ## Out of scope / caveats
 

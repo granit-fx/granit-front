@@ -1,20 +1,21 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@granit/react-ui';
-import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { dataTableFeatures } from '@granit/react-ui-kit';
+import { flexRender, useTable } from '@tanstack/react-table';
 
 import type { AIWorkspaceResponse } from '@granit/ai';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 interface WorkspaceTableProps {
   readonly data: readonly AIWorkspaceResponse[];
-  readonly columns: ColumnDef<AIWorkspaceResponse, unknown>[];
+  readonly columns: DataTableColumnDef<AIWorkspaceResponse, unknown>[];
   readonly onRowClick?: (ws: AIWorkspaceResponse) => void;
 }
 
 export function WorkspaceTable({ data, columns, onRowClick }: WorkspaceTableProps) {
-  const table = useReactTable({
+  const table = useTable({
+    features: dataTableFeatures,
     data: data as AIWorkspaceResponse[],
     columns,
-    getCoreRowModel: getCoreRowModel(),
   });
 
   return (

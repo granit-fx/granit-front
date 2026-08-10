@@ -4,6 +4,7 @@
 
 export * from './confirm-action-dialog/confirm-action-dialog';
 export * from './data-table/manual-data-table';
+export * from './data-table/table-features';
 export * from './form-dialog/form-dialog';
 export * from './hooks/use-copy-to-clipboard';
 export * from './hooks/use-local-storage';

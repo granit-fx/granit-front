@@ -5,15 +5,17 @@ import { QueryDataTable } from '../querying/query-data-table/query-data-table';
 
 import { renderWithI18n, setupI18n } from './test-utils';
 
+import type { DataTableColumnDef } from '../data-table/table-features';
 import type { GroupEntry, SortEntry } from '@granit/query-engine';
-import type { ColumnDef } from '@tanstack/react-table';
 
 interface Row {
   readonly id: number;
   readonly name: string;
 }
 
-const columns: ColumnDef<Row, unknown>[] = [{ accessorKey: 'name', header: 'Name', id: 'name' }];
+const columns: DataTableColumnDef<Row, unknown>[] = [
+  { accessorKey: 'name', header: 'Name', id: 'name' },
+];
 
 const data: Row[] = [
   { id: 1, name: 'Alice' },

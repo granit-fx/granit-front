@@ -48,7 +48,7 @@ these peers:
   record-events forms.
 - `@granit/types` — `toEntityId` / `toISODateString` branded helpers.
 - `@granit/utils` — `cn` class merge.
-- `@tanstack/react-table` (`^8.21`) — the meter list table model.
+- `@tanstack/react-table` (`^9.0`) — the meter list table model.
 - `react-hook-form` (`^7.80`) — the meter / record-events forms.
 - `react-router` (`^7.18`) — navigation + route params in the pages.
 - `lucide-react` (`^1.21`), `react` (`^19`), `react-dom` (`^19`).
@@ -101,16 +101,17 @@ import { createMeterColumns, QuotaStatusCard } from '@granit/react-ui-metering';
 import { useActiveMeters, useMeteringQuota } from '@granit/react-metering';
 import { useTranslation } from '@granit/react-localization';
 import { toEntityId } from '@granit/types';
-import { useReactTable, getCoreRowModel } from '@tanstack/react-table';
+import { dataTableFeatures } from '@granit/react-ui-kit';
+import { useTable } from '@tanstack/react-table';
 
 function MeterPicker({ onPick }: { onPick: (id: string) => void }) {
   const { t } = useTranslation();
   const { data: meters } = useActiveMeters();
   const columns = createMeterColumns({ t, onViewDetail: onPick });
-  const table = useReactTable({
+  const table = useTable({
+    features: dataTableFeatures,
     data: [...(meters ?? [])],
     columns,
-    getCoreRowModel: getCoreRowModel(),
   });
   // render `table` …
   return null;
@@ -124,21 +125,21 @@ function QuotaTile({ meterId }: { meterId: string }) {
 
 ## Public API
 
-| Symbol                   | Kind      | Purpose                                                                  |
-| ------------------------ | --------- | ------------------------------------------------------------------------ |
-| `MeterListPage`          | component | Meter catalog table (status badges) + create dialog; routes to detail    |
-| `MeterDetailPage`        | component | One meter: info, usage + quota cards, publish/archive/edit/record        |
-| `MeteringUsagePage`      | component | Cross-tenant usage-aggregates explorer (query-engine grid, own provider) |
-| `MeterForm`              | component | Create / edit meter form; spec-driven validation; discriminated `mode`   |
-| `createMeterColumns`     | fn        | `ColumnDef[]` factory for the meter table (name/type/unit/status/view)   |
-| `ArchiveMeterDialog`     | component | Confirm-and-archive a meter via `useArchiveMeterDefinition`              |
-| `RecordEventsDialog`     | component | Batch usage-event entry (field array) via `useRecordUsageEvents`         |
-| `QuotaStatusCard`        | component | Quota gauge: percent-used bar, current/limit, exceeded callout           |
-| `UsageSummaryCard`       | component | Aggregated value / period / event-count summary for a period             |
-| `MeterFormValues`        | type      | `{ name, description, aggregationType, unit }` form shape                |
-| `meteringTranslationsEn` | const     | English `Metering.*` i18next resource bundle (flat keys)                 |
-| `meteringTranslationsFr` | const     | French `Metering.*` i18next resource bundle (flat keys)                  |
-| `MeteringTranslations`   | type      | Type of the bundle, for compile-time key parity between locales          |
+| Symbol                   | Kind      | Purpose                                                                         |
+| ------------------------ | --------- | ------------------------------------------------------------------------------- |
+| `MeterListPage`          | component | Meter catalog table (status badges) + create dialog; routes to detail           |
+| `MeterDetailPage`        | component | One meter: info, usage + quota cards, publish/archive/edit/record               |
+| `MeteringUsagePage`      | component | Cross-tenant usage-aggregates explorer (query-engine grid, own provider)        |
+| `MeterForm`              | component | Create / edit meter form; spec-driven validation; discriminated `mode`          |
+| `createMeterColumns`     | fn        | `DataTableColumnDef[]` factory for the meter table (name/type/unit/status/view) |
+| `ArchiveMeterDialog`     | component | Confirm-and-archive a meter via `useArchiveMeterDefinition`                     |
+| `RecordEventsDialog`     | component | Batch usage-event entry (field array) via `useRecordUsageEvents`                |
+| `QuotaStatusCard`        | component | Quota gauge: percent-used bar, current/limit, exceeded callout                  |
+| `UsageSummaryCard`       | component | Aggregated value / period / event-count summary for a period                    |
+| `MeterFormValues`        | type      | `{ name, description, aggregationType, unit }` form shape                       |
+| `meteringTranslationsEn` | const     | English `Metering.*` i18next resource bundle (flat keys)                        |
+| `meteringTranslationsFr` | const     | French `Metering.*` i18next resource bundle (flat keys)                         |
+| `MeteringTranslations`   | type      | Type of the bundle, for compile-time key parity between locales                 |
 
 ## Out of scope / caveats
 

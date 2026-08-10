@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 
 import type { DuplicateMatchTier, PartyDuplicateCandidateResponse } from '@granit/parties';
-import type { CellContext, ColumnDef } from '@tanstack/react-table';
+import type { DataTableCellContext, DataTableColumnDef } from '@granit/react-ui-kit';
 
 const PARTIES_NAMESPACE = 'parties';
 
@@ -82,7 +82,7 @@ function DuplicatesInboxBody({
     initialParams: { page: 1, pageSize: pageSize ?? 20 },
   });
 
-  const columns = useMemo<ColumnDef<PartyDuplicateCandidateResponse, unknown>[]>(
+  const columns = useMemo<DataTableColumnDef<PartyDuplicateCandidateResponse, unknown>[]>(
     () => [
       { id: 'score', header: t('Duplicates.Columns.Score'), cell: ScoreCell },
       { id: 'tier', header: t('Duplicates.Columns.Tier'), cell: TierCell },
@@ -134,7 +134,7 @@ interface DuplicatesColumnMeta {
   readonly onMerge?: (candidate: PartyDuplicateCandidateResponse) => void;
 }
 
-type DuplicateCell = CellContext<PartyDuplicateCandidateResponse, unknown>;
+type DuplicateCell = DataTableCellContext<PartyDuplicateCandidateResponse, unknown>;
 
 function cellMeta(info: DuplicateCell): DuplicatesColumnMeta {
   return (info.column.columnDef.meta ?? {}) as DuplicatesColumnMeta;

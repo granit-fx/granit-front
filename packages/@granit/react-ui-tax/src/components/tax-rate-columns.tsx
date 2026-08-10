@@ -2,8 +2,8 @@ import { Button } from '@granit/react-ui';
 import { Eye } from 'lucide-react';
 
 import type { useTranslation } from '@granit/react-localization';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { TaxRateEntry } from '@granit/tax';
-import type { ColumnDef } from '@tanstack/react-table';
 
 // Type `t` off useTranslation's return rather than importing `TFunction` from
 // i18next directly — keeps the column factory immune to i18next version skew.
@@ -17,7 +17,7 @@ interface TaxRateColumnOptions {
 export function createTaxRateColumns({
   t,
   onViewDetail,
-}: TaxRateColumnOptions): ColumnDef<TaxRateEntry, unknown>[] {
+}: TaxRateColumnOptions): DataTableColumnDef<TaxRateEntry, unknown>[] {
   return [
     {
       id: 'countryCode',

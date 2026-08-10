@@ -12,7 +12,7 @@ import { MoreHorizontal } from 'lucide-react';
 import { LegalDocumentStatusBadge } from './legal-document-status-badge';
 
 import type { LegalDocumentDetailResponse } from '@granit/privacy';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 interface ColumnActions {
   onViewVersions: (documentId: string) => void;
@@ -22,7 +22,7 @@ interface ColumnActions {
 
 export function useLegalDocumentColumns(
   actions: ColumnActions
-): ColumnDef<LegalDocumentDetailResponse>[] {
+): DataTableColumnDef<LegalDocumentDetailResponse>[] {
   const { t } = useTranslation();
   const { hasPermission } = usePermissions();
   const canManage = hasPermission('Privacy.LegalDocuments.Manage');

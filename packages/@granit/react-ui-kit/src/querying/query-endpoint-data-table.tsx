@@ -1,7 +1,8 @@
 import { QueryDataTable } from './query-data-table/query-data-table';
 
+import type { DataTableColumnDef } from '../data-table/table-features.js';
 import type { useQueryEndpoint } from '@granit/react-query-engine';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { RowData } from '@tanstack/react-table';
 
 type QueryEndpoint<T> = ReturnType<typeof useQueryEndpoint<T>>;
 
@@ -9,12 +10,12 @@ type QueryEndpoint<T> = ReturnType<typeof useQueryEndpoint<T>>;
  * Thin wrapper around `<QueryDataTable>` that unwraps the
  * `isGrouped ? grouped : paged` branching consumed by every list page.
  */
-export function QueryEndpointDataTable<T>({
+export function QueryEndpointDataTable<T extends RowData>({
   queryEndpoint,
   columns,
 }: Readonly<{
   queryEndpoint: QueryEndpoint<T>;
-  columns: readonly ColumnDef<T, unknown>[];
+  columns: readonly DataTableColumnDef<T>[];
 }>) {
   const { isGrouped, params, query, groupedQuery, setPage, setPageSize, toggleSort } =
     queryEndpoint;

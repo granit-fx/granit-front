@@ -11,7 +11,7 @@ import { PlanStatusBadge } from './plan-status-badge';
 
 import type { PlanQueryItem } from '../types';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -23,7 +23,7 @@ export function createPlanColumns({
   t: TranslateFn;
   formatDate: (value: string) => string;
   onView: (plan: { id: string }) => void;
-}): ColumnDef<PlanQueryItem>[] {
+}): DataTableColumnDef<PlanQueryItem>[] {
   return [
     {
       accessorKey: 'name',

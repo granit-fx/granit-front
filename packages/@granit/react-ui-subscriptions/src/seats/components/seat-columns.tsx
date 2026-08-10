@@ -1,8 +1,8 @@
 import { Button } from '@granit/react-ui';
 
 import type { useTranslation } from '@granit/react-localization';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { SeatResponse } from '@granit/subscriptions';
-import type { ColumnDef } from '@tanstack/react-table';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -14,7 +14,7 @@ export function createSeatColumns({
   t: TranslateFn;
   onRevoke: (seat: SeatResponse) => void;
   formatDate: (date: string | Date) => string;
-}): ColumnDef<SeatResponse>[] {
+}): DataTableColumnDef<SeatResponse>[] {
   return [
     {
       accessorKey: 'userId',

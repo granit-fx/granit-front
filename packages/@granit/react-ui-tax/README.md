@@ -37,7 +37,7 @@ these peers:
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/react-validation` — `createConstraintsResolver` for the validate form.
 - `@granit/utils` — `cn`.
-- `@tanstack/react-table` (`^8.21`), `react-hook-form` (`^7.80`),
+- `@tanstack/react-table` (`^9.0`), `react-hook-form` (`^7.80`),
   `react-router` (`^7.18`), `lucide-react` (`^1.21`).
 - `react` / `react-dom` (`^19`).
 
@@ -123,7 +123,7 @@ package.
 | ----------------------- | --------- | -------------------------------------------------------------------------------------------- |
 | `TaxRatesPage`          | component | Routed rates list (own `QueryProvider`) + smart filter; `:countryCode` shows the detail card |
 | `TaxValidatePage`       | component | Routed tax ID validation page — form + result card via `useValidateTaxId`                    |
-| `createTaxRateColumns`  | fn        | TanStack `ColumnDef<TaxRateEntry>[]` factory (`t`, `onViewDetail`)                           |
+| `createTaxRateColumns`  | fn        | TanStack `DataTableColumnDef<TaxRateEntry>[]` factory (`t`, `onViewDetail`)                  |
 | `TaxRateDetailCard`     | component | Per-country card: standard/reduced/super-reduced/parking rates + effective dates             |
 | `ValidateTaxForm`       | component | Spec-driven validation form (`onSubmit`, `isPending`)                                        |
 | `ValidationResultCard`  | component | Renders a `TaxValidateResponse` (badge, company info, source, timestamp)                     |

@@ -5,7 +5,7 @@ import { createReferenceDataColumns } from '../components/reference-data-columns
 import { renderWithProviders, testI18n } from './test-utils';
 
 import type { ReferenceDataEntry } from '../components/types';
-import type { CellContext, ColumnDef } from '@tanstack/react-table';
+import type { DataTableCellContext, DataTableColumnDef } from '@granit/react-ui-kit';
 import type { ReactElement } from 'react';
 
 const t = testI18n.t.bind(testI18n);
@@ -40,12 +40,15 @@ function makeEntry(overrides: Partial<ReferenceDataEntry> = {}): ReferenceDataEn
 }
 
 function renderCell(
-  column: ColumnDef<ReferenceDataEntry, unknown> | undefined,
+  column: DataTableColumnDef<ReferenceDataEntry, unknown> | undefined,
   entry: ReferenceDataEntry
 ) {
   const cell = column?.cell;
   if (typeof cell !== 'function') throw new Error('cell renderer expected');
-  const ctx = { row: { original: entry } } as unknown as CellContext<ReferenceDataEntry, unknown>;
+  const ctx = { row: { original: entry } } as unknown as DataTableCellContext<
+    ReferenceDataEntry,
+    unknown
+  >;
   return renderWithProviders(cell(ctx) as ReactElement);
 }
 

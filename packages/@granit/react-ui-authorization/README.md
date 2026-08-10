@@ -38,7 +38,7 @@ these peers:
 - `@granit/react-ui-admin-kit` — `QueryDataTable` for the discovery tables.
 - `@granit/react-localization` — `useTranslation` / `useDateFormatter`.
 - `@granit/query-engine` — `SortEntry` and the paged query surface types.
-- `@tanstack/react-table` (`^8.21`), `lucide-react` (`^1.21`).
+- `@tanstack/react-table` (`^9.0`), `lucide-react` (`^1.21`).
 - `react` and `react-dom` (`^19`).
 
 ## Quick start

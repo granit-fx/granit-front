@@ -4,7 +4,7 @@ import { Eye } from 'lucide-react';
 
 import type { Device, DeviceStatus } from '@granit/iot';
 import type { useDateFormatter, useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 // Type `t` off useTranslation's return rather than importing `TFunction` from
 // i18next directly — keeps the column factory immune to i18next version skew.
@@ -35,7 +35,7 @@ export function createDeviceColumns({
   t,
   formatDateTime,
   onViewDetail,
-}: DeviceColumnOptions): ColumnDef<Device, unknown>[] {
+}: DeviceColumnOptions): DataTableColumnDef<Device, unknown>[] {
   return [
     {
       id: 'serialNumber',

@@ -12,8 +12,8 @@ import { Link } from 'react-router';
 import { SchedulingStatusBadge } from './scheduling-status-badge';
 
 import type { useTranslation } from '@granit/react-localization';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { ScheduledActionResponse } from '@granit/scheduling';
-import type { ColumnDef } from '@tanstack/react-table';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -33,7 +33,7 @@ export function createSchedulingColumns({
   onReschedule,
   isMutating,
   canManage,
-}: SchedulingColumnOptions): ColumnDef<ScheduledActionResponse, unknown>[] {
+}: SchedulingColumnOptions): DataTableColumnDef<ScheduledActionResponse, unknown>[] {
   return [
     {
       id: 'view',
@@ -49,7 +49,7 @@ export function createSchedulingColumns({
           </Link>
         </Button>
       ),
-    } satisfies ColumnDef<ScheduledActionResponse, unknown>,
+    } satisfies DataTableColumnDef<ScheduledActionResponse, unknown>,
     {
       id: 'payloadType',
       accessorKey: 'payloadType',
@@ -151,7 +151,7 @@ export function createSchedulingColumns({
                 </DropdownMenu>
               );
             },
-          } satisfies ColumnDef<ScheduledActionResponse, unknown>,
+          } satisfies DataTableColumnDef<ScheduledActionResponse, unknown>,
         ]
       : []),
   ];

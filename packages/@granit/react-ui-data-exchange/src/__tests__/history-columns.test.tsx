@@ -14,14 +14,14 @@ import {
 import { renderDataExchange } from './test-utils';
 
 import type { ExportJobResponse, ImportJobResponse } from '@granit/data-exchange';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { ReactNode } from 'react';
 
 const t = ((key: string) => key) as never;
 const formatDateTime = (date: string | Date) => `formatted:${String(date)}`;
 
 // Minimal stand-in for a tanstack cell context: only `row.original` is read.
-function renderCell<TRow>(column: ColumnDef<TRow, unknown>, original: TRow): ReactNode {
+function renderCell<TRow>(column: DataTableColumnDef<TRow, unknown>, original: TRow): ReactNode {
   const cell = column.cell;
   if (typeof cell !== 'function') return null;
   return cell({ row: { original } } as never) as ReactNode;
@@ -81,8 +81,8 @@ describe('createExportHistoryColumns', () => {
     const rowCountColumn = columns.find((c) => c.id === 'rowCount');
     renderDataExchange(
       <>
-        {renderCell(formatColumn as ColumnDef<ExportJobResponse, unknown>, exportJob)}
-        {renderCell(rowCountColumn as ColumnDef<ExportJobResponse, unknown>, exportJob)}
+        {renderCell(formatColumn as DataTableColumnDef<ExportJobResponse, unknown>, exportJob)}
+        {renderCell(rowCountColumn as DataTableColumnDef<ExportJobResponse, unknown>, exportJob)}
       </>
     );
     expect(screen.getByText('csv')).toBeInTheDocument();
@@ -95,7 +95,7 @@ describe('createExportHistoryColumns', () => {
     renderDataExchange(
       <>
         {renderCell(
-          rowCountColumn as ColumnDef<ExportJobResponse, unknown>,
+          rowCountColumn as DataTableColumnDef<ExportJobResponse, unknown>,
           {
             ...exportJob,
             rowCount: null,
@@ -112,7 +112,7 @@ describe('createExportHistoryColumns', () => {
     const { rerender, container } = renderDataExchange(
       <>
         {renderCell(
-          actionColumn as ColumnDef<ExportJobResponse, unknown>,
+          actionColumn as DataTableColumnDef<ExportJobResponse, unknown>,
           {
             ...exportJob,
             status: 'Failed',
@@ -121,7 +121,9 @@ describe('createExportHistoryColumns', () => {
       </>
     );
     expect(container.querySelector('button')).not.toBeInTheDocument();
-    rerender(<>{renderCell(actionColumn as ColumnDef<ExportJobResponse, unknown>, exportJob)}</>);
+    rerender(
+      <>{renderCell(actionColumn as DataTableColumnDef<ExportJobResponse, unknown>, exportJob)}</>
+    );
     expect(screen.getByRole('button', { name: 'DataExchange.Download' })).toBeInTheDocument();
   });
 });
@@ -135,7 +137,7 @@ describe('createImportHistoryColumns', () => {
     });
     const fileColumn = columns.find((c) => c.id === 'originalFileName');
     renderDataExchange(
-      <>{renderCell(fileColumn as ColumnDef<ImportJobResponse, unknown>, importJob)}</>
+      <>{renderCell(fileColumn as DataTableColumnDef<ImportJobResponse, unknown>, importJob)}</>
     );
     expect(screen.getByText('countries-2026-03.csv')).toBeInTheDocument();
   });
@@ -145,7 +147,7 @@ describe('createImportHistoryColumns', () => {
     const columns = createImportHistoryColumns({ t, formatDateTime, onViewReport });
     const actionColumn = columns.find((c) => c.id === 'actions');
     const { user } = renderDataExchange(
-      <>{renderCell(actionColumn as ColumnDef<ImportJobResponse, unknown>, importJob)}</>
+      <>{renderCell(actionColumn as DataTableColumnDef<ImportJobResponse, unknown>, importJob)}</>
     );
     await user.click(screen.getByRole('button', { name: 'DataExchange.ViewReport' }));
     expect(onViewReport).toHaveBeenCalledWith(importJob);

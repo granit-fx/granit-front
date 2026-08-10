@@ -2,9 +2,9 @@ import { fn } from 'storybook/test';
 
 import { QueryDataTable } from './query-data-table';
 
+import type { DataTableColumnDef } from '../../data-table/table-features';
 import type { GroupEntry } from '@granit/query-engine';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ColumnDef } from '@tanstack/react-table';
 
 interface Country {
   readonly code: string;
@@ -12,7 +12,7 @@ interface Country {
   readonly region: string;
 }
 
-const columns: ColumnDef<Country, unknown>[] = [
+const columns: DataTableColumnDef<Country, unknown>[] = [
   { id: 'code', accessorKey: 'code', header: 'Code', enableSorting: true },
   { id: 'labelEn', accessorKey: 'labelEn', header: 'Name', enableSorting: true },
   { id: 'region', accessorKey: 'region', header: 'Region' },

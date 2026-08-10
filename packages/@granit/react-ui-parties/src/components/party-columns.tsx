@@ -6,7 +6,7 @@ import { PartyStatusBadge } from './party-status-badge';
 
 import type { PartyId, PartyListItemResponse } from '@granit/parties';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -18,7 +18,7 @@ interface PartyColumnOptions {
 export function createPartyColumns({
   t,
   onViewDetail,
-}: PartyColumnOptions): ColumnDef<PartyListItemResponse, unknown>[] {
+}: PartyColumnOptions): DataTableColumnDef<PartyListItemResponse, unknown>[] {
   return [
     {
       id: 'name',

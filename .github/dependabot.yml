@@ -43,6 +43,18 @@ updates:
       # Revisit once typescript-eslint ships TS 7.1 support.
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
+      # TanStack Table majors are rewrites, not bumps. v9 renamed the hook
+      # (`useReactTable` -> `useTable`), turned row models into feature slots
+      # (`getCoreRowModel()` is gone, the core model is implicit) and added a
+      # leading `TFeatures` generic to every core type — so `ColumnDef<T, V>`
+      # became `ColumnDef<TFeatures, T, V>`. That reaches ~65 call sites across
+      # 29 packages and changes the column-definition types 28 of them expose to
+      # showcase-admin-react, which makes it a coordinated breaking change rather
+      # than something to merge from a dependabot PR. The framework pins one
+      # feature set in `@granit/react-ui-kit` (`dataTableFeatures`); see
+      # MIGRATION.md. Minors and patches still flow through the tanstack group.
+      - dependency-name: "@tanstack/react-table"
+        update-types: ["version-update:semver-major"]
     groups:
       granit:
         patterns:

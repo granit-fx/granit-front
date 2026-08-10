@@ -3,7 +3,7 @@ import { Eye, Send } from 'lucide-react';
 
 import type { ReleaseResponse, ReleaseStatus } from '@granit/cms';
 import type { useDateFormatter, useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 type FormatDateFn = ReturnType<typeof useDateFormatter>['formatDate'];
@@ -44,7 +44,7 @@ export function createReleasesColumns({
   formatDate,
   onView,
   onPublish,
-}: ReleasesColumnOptions): ColumnDef<ReleaseResponse, unknown>[] {
+}: ReleasesColumnOptions): DataTableColumnDef<ReleaseResponse, unknown>[] {
   return [
     {
       id: 'name',

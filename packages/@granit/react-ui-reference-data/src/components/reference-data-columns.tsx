@@ -11,7 +11,7 @@ import { MoreHorizontal } from 'lucide-react';
 
 import type { ReferenceDataEntry } from './types';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -29,7 +29,7 @@ export function createReferenceDataColumns({
   onEdit,
   onDeactivate,
   onReactivate,
-}: ReferenceDataColumnOptions): ColumnDef<ReferenceDataEntry, unknown>[] {
+}: ReferenceDataColumnOptions): DataTableColumnDef<ReferenceDataEntry, unknown>[] {
   return [
     {
       id: 'code',

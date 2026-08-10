@@ -4,7 +4,7 @@ import { JobStatusBadge } from './job-status-badge';
 
 import type { ExportJobStatus, ImportJobStatus } from '@granit/data-exchange';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { ReactNode } from 'react';
 
 // Derive the translate function type from the localization hook rather than
@@ -25,7 +25,7 @@ interface JobHistoryRow {
 export function createJobDateColumn<TRow extends JobHistoryRow>(
   t: TranslateFn,
   formatDateTime: (date: string | Date) => string
-): ColumnDef<TRow, unknown> {
+): DataTableColumnDef<TRow, unknown> {
   return {
     id: 'createdAt',
     accessorKey: 'createdAt',
@@ -41,7 +41,7 @@ export function createJobDateColumn<TRow extends JobHistoryRow>(
 /** Definition-name ("entity") column. */
 export function createJobEntityColumn<TRow extends JobHistoryRow>(
   t: TranslateFn
-): ColumnDef<TRow, unknown> {
+): DataTableColumnDef<TRow, unknown> {
   return {
     id: 'definitionName',
     accessorKey: 'definitionName',
@@ -55,7 +55,7 @@ export function createJobEntityColumn<TRow extends JobHistoryRow>(
 /** Status-badge column. */
 export function createJobStatusColumn<TRow extends JobHistoryRow>(
   t: TranslateFn
-): ColumnDef<TRow, unknown> {
+): DataTableColumnDef<TRow, unknown> {
   return {
     id: 'status',
     accessorKey: 'status',
@@ -78,7 +78,7 @@ export function createJobActionColumn<TRow extends JobHistoryRow>({
   ariaLabel,
   onAction,
   visible,
-}: JobActionColumnConfig<TRow>): ColumnDef<TRow, unknown> {
+}: JobActionColumnConfig<TRow>): DataTableColumnDef<TRow, unknown> {
   return {
     id: 'actions',
     header: '',

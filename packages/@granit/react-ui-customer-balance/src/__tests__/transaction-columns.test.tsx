@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { createTransactionColumns } from '../components/transaction-columns';
 
 import type { BalanceTransactionResponse } from '@granit/customer-balance';
-import type { CellContext } from '@tanstack/react-table';
+import type { DataTableCellContext } from '@granit/react-ui-kit';
 import type { ReactNode } from 'react';
 
 // The wire contract (contracts/openapi/customer-balance.json) types both
@@ -23,7 +23,7 @@ describe('createTransactionColumns amount cell', () => {
 
   function renderAmount(row: Partial<BalanceTransactionResponse>): string {
     const cellFn = amountColumn?.cell as (
-      ctx: CellContext<BalanceTransactionResponse, unknown>
+      ctx: DataTableCellContext<BalanceTransactionResponse, unknown>
     ) => ReactNode;
     const { container } = render(<>{cellFn({ row: { original: row } } as never)}</>);
     return container.textContent ?? '';

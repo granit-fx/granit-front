@@ -40,7 +40,7 @@ for app consumption through a public registry. A consumer must declare these pee
   resolver derived from the OpenAPI constraints.
 - `@granit/types` — `toEntityId`, branded id + `CurrencyCode` types.
 - `@granit/utils` — `cn` class-name helper.
-- `@tanstack/react-table` (`^8.21`) — the table model behind the column factories.
+- `@tanstack/react-table` (`^9.0`) — the table model behind the column factories.
 - `react-hook-form` (`^7.80`) — the charge/refund dialog forms.
 - `react-router` (`^7.18`) — `:id` route param + detail-page links.
 - `i18next` (`^26`), `lucide-react` (`^1.21`), `react` (`^19`), `react-dom` (`^19`).
@@ -102,35 +102,35 @@ import { RefundDialog } from '@granit/react-ui-payments';
 
 The lower-level dialogs and column factories are exported too, for apps that compose
 their own pages — e.g. `createTransactionColumns({ t })` returns the
-`@tanstack/react-table` `ColumnDef[]` used by `TransactionListPage`.
+`@tanstack/react-table` `DataTableColumnDef[]` used by `TransactionListPage`.
 
 ## Public API
 
-| Symbol                        | Kind      | Purpose                                                   |
-| ----------------------------- | --------- | --------------------------------------------------------- |
-| `TransactionListPage`         | component | Paginated transactions table + charge action              |
-| `TransactionDetailPage`       | component | One transaction (route `:id`) with refund/dispute history |
-| `PaymentMethodsPage`          | component | Host-level provider/method activation panel               |
-| `TenantPaymentMethodsPage`    | component | Tenant saved methods grid (attach/detach)                 |
-| `ChargeDialog`                | component | Spec-validated charge form (`PaymentChargeRequest`)       |
-| `RefundDialog`                | component | Spec-validated refund form (`PaymentRefundRequest`)       |
-| `AttachMethodDialog`          | component | Pick + attach an available method to the tenant           |
-| `DetachMethodDialog`          | component | Confirm-and-detach a saved method (`AlertDialog`)         |
-| `PaymentConfigurationSection` | component | One card per provider; toggle/resync each method          |
-| `PaymentMethodCard`           | component | A single saved method with a detach menu                  |
-| `TransactionStatusBadge`      | component | `PaymentStatus` to colored badge                          |
-| `CapabilityBadges`            | component | Country/currency/sequence/amount-bound chips              |
-| `PendingSnapshotBadge`        | component | Flags an activation predating capability snapshotting     |
-| `createTransactionColumns`    | fn        | TanStack `ColumnDef[]` for the transaction list           |
-| `createRefundColumns`         | fn        | TanStack `ColumnDef[]` for the refund history table       |
-| `createDisputeColumns`        | fn        | TanStack `ColumnDef[]` for the dispute history table      |
-| `createPaymentHistoryColumns` | fn        | Shared id/status/amount/reason/date column factory        |
-| `categoryIndex`               | fn        | `PaymentMethodCategory` to `PaymentMethodIcon` index      |
-| `methodTypeCategory`          | fn        | Free-form `type` to best-effort `PaymentMethodCategory`   |
-| `methodTypeCategoryIndex`     | fn        | Convenience: method `type` to `PaymentMethodIcon` index   |
-| `paymentsTranslationsEn`      | const     | English flat `Payments.*` i18next bundle                  |
-| `paymentsTranslationsFr`      | const     | French flat `Payments.*` i18next bundle                   |
-| `PaymentsTranslations`        | type      | `typeof paymentsTranslationsEn` — the bundle key shape    |
+| Symbol                        | Kind      | Purpose                                                       |
+| ----------------------------- | --------- | ------------------------------------------------------------- |
+| `TransactionListPage`         | component | Paginated transactions table + charge action                  |
+| `TransactionDetailPage`       | component | One transaction (route `:id`) with refund/dispute history     |
+| `PaymentMethodsPage`          | component | Host-level provider/method activation panel                   |
+| `TenantPaymentMethodsPage`    | component | Tenant saved methods grid (attach/detach)                     |
+| `ChargeDialog`                | component | Spec-validated charge form (`PaymentChargeRequest`)           |
+| `RefundDialog`                | component | Spec-validated refund form (`PaymentRefundRequest`)           |
+| `AttachMethodDialog`          | component | Pick + attach an available method to the tenant               |
+| `DetachMethodDialog`          | component | Confirm-and-detach a saved method (`AlertDialog`)             |
+| `PaymentConfigurationSection` | component | One card per provider; toggle/resync each method              |
+| `PaymentMethodCard`           | component | A single saved method with a detach menu                      |
+| `TransactionStatusBadge`      | component | `PaymentStatus` to colored badge                              |
+| `CapabilityBadges`            | component | Country/currency/sequence/amount-bound chips                  |
+| `PendingSnapshotBadge`        | component | Flags an activation predating capability snapshotting         |
+| `createTransactionColumns`    | fn        | TanStack `DataTableColumnDef[]` for the transaction list      |
+| `createRefundColumns`         | fn        | TanStack `DataTableColumnDef[]` for the refund history table  |
+| `createDisputeColumns`        | fn        | TanStack `DataTableColumnDef[]` for the dispute history table |
+| `createPaymentHistoryColumns` | fn        | Shared id/status/amount/reason/date column factory            |
+| `categoryIndex`               | fn        | `PaymentMethodCategory` to `PaymentMethodIcon` index          |
+| `methodTypeCategory`          | fn        | Free-form `type` to best-effort `PaymentMethodCategory`       |
+| `methodTypeCategoryIndex`     | fn        | Convenience: method `type` to `PaymentMethodIcon` index       |
+| `paymentsTranslationsEn`      | const     | English flat `Payments.*` i18next bundle                      |
+| `paymentsTranslationsFr`      | const     | French flat `Payments.*` i18next bundle                       |
+| `PaymentsTranslations`        | type      | `typeof paymentsTranslationsEn` — the bundle key shape        |
 
 ## i18n
 

@@ -11,7 +11,7 @@ import { MoreHorizontal } from 'lucide-react';
 
 import type { LocalizationOverride } from '@granit/localization';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -43,7 +43,7 @@ export function createLocalizationColumns({
   t,
   onEdit,
   onDelete,
-}: LocalizationColumnOptions): ColumnDef<LocalizationOverride, unknown>[] {
+}: LocalizationColumnOptions): DataTableColumnDef<LocalizationOverride, unknown>[] {
   return [
     {
       id: 'resourceName',

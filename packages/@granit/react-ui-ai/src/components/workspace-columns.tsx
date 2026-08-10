@@ -11,7 +11,7 @@ import { MoreHorizontal } from 'lucide-react';
 
 import type { AIWorkspaceResponse } from '@granit/ai';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -29,7 +29,7 @@ export function createWorkspaceColumns({
   onEdit,
   onDelete,
   canManage,
-}: WorkspaceColumnOptions): ColumnDef<AIWorkspaceResponse, unknown>[] {
+}: WorkspaceColumnOptions): DataTableColumnDef<AIWorkspaceResponse, unknown>[] {
   return [
     {
       id: 'key',

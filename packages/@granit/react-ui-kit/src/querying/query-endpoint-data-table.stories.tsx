@@ -6,9 +6,9 @@ import { http, HttpResponse } from 'msw';
 
 import { QueryEndpointDataTable } from './query-endpoint-data-table';
 
+import type { DataTableColumnDef } from '../data-table/table-features';
 import type { PagedResult, QueryMetadata } from '@granit/query-engine';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ColumnDef } from '@tanstack/react-table';
 
 const BASE = '/api/v1/reference-data/countries';
 
@@ -70,7 +70,7 @@ const META: QueryMetadata = {
   },
 };
 
-const columns: ColumnDef<Country, unknown>[] = [
+const columns: DataTableColumnDef<Country, unknown>[] = [
   { id: 'code', accessorKey: 'code', header: 'Code', enableSorting: true },
   { id: 'labelEn', accessorKey: 'labelEn', header: 'Name', enableSorting: true },
   { id: 'region', accessorKey: 'region', header: 'Region' },
@@ -110,9 +110,15 @@ function Harness() {
   return <QueryEndpointDataTable queryEndpoint={queryEndpoint} columns={columns} />;
 }
 
+// The story component is `Harness`, not `QueryEndpointDataTable` itself: the
+// latter needs a live `useQueryEndpoint` return, which cannot be expressed as a
+// static arg, so both stories below render the harness and vary only the MSW
+// handlers. Binding `component` to the propless harness is what they actually
+// render, and it keeps them free of `args` they would ignore. `QueryDataTable`
+// carries the arg-driven autodocs for the underlying table.
 const meta = {
   title: 'Admin Kit/Querying/QueryEndpointDataTable',
-  component: QueryEndpointDataTable,
+  component: Harness,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
@@ -130,7 +136,7 @@ const meta = {
       </QueryClientProvider>
     ),
   ],
-} satisfies Meta<typeof QueryEndpointDataTable>;
+} satisfies Meta<typeof Harness>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -9,7 +9,7 @@ import {
 
 import type { ImportJobResponse } from '@granit/data-exchange';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -23,7 +23,7 @@ export function createImportHistoryColumns({
   t,
   formatDateTime,
   onViewReport,
-}: ImportColumnOptions): ColumnDef<ImportJobResponse, unknown>[] {
+}: ImportColumnOptions): DataTableColumnDef<ImportJobResponse, unknown>[] {
   return [
     createJobDateColumn<ImportJobResponse>(t, formatDateTime),
     createJobEntityColumn<ImportJobResponse>(t),

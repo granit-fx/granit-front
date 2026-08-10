@@ -2,8 +2,8 @@ import { WebhookDeliveryActions } from './webhook-delivery-actions';
 import { WebhookDeliveryStatusBadge } from './webhook-delivery-status-badge';
 
 import type { useTranslation } from '@granit/react-localization';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { WebhookDeliveryAttemptResponse } from '@granit/webhooks';
-import type { ColumnDef } from '@tanstack/react-table';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -19,7 +19,7 @@ export function createDeliveryColumns({
   onViewPayload?: (delivery: WebhookDeliveryAttemptResponse) => void;
   storePayload: boolean;
   formatDateTime: (date: string | Date) => string;
-}): ColumnDef<WebhookDeliveryAttemptResponse>[] {
+}): DataTableColumnDef<WebhookDeliveryAttemptResponse>[] {
   return [
     {
       accessorKey: 'eventType',

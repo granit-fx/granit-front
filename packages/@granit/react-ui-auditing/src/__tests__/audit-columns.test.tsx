@@ -1,6 +1,7 @@
 import { mockAuditEntries } from '@granit/react-auditing/testing';
 import { useTranslation } from '@granit/react-localization';
-import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { dataTableFeatures } from '@granit/react-ui-kit';
+import { flexRender, useTable } from '@tanstack/react-table';
 import { screen } from '@testing-library/react';
 
 import { createAuditColumns } from '../components/audit-columns';
@@ -26,10 +27,10 @@ function ColumnsHarness({
     formatDateTime: (date) => `D(${String(date)})`,
     routeBase,
   });
-  const table = useReactTable({
+  const table = useTable({
+    features: dataTableFeatures,
     data: entries as AuditEntryResponse[],
     columns,
-    getCoreRowModel: getCoreRowModel(),
   });
   return (
     <table>

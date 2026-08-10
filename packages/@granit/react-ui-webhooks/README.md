@@ -44,7 +44,7 @@ these peers:
   use `Link` / `useParams` / `useNavigate` / `useBeforeUnload`.
 - `react-hook-form` (`^7`), `@hookform/resolvers` (`^5`) and `zod` (`^4`) — the
   subscription and deactivation forms.
-- `@tanstack/react-table` (`^8`) — `ColumnDef` for the column factories.
+- `@tanstack/react-table` (`^9`) — `DataTableColumnDef` for the column factories.
 - `class-variance-authority` (`^0.7`) — badge variants.
 - `lucide-react` (`^1`) — icons.
 
@@ -130,8 +130,8 @@ function MiniHeader({ id }: { id: string }) {
 | `WebhookStatusBadge`            | component | Subscription status pill (Active / Suspended / Deactivated)        |
 | `WebhookDeliveryStatusBadge`    | component | Delivery pill derived from `isSuccess` + `httpStatusCode`          |
 | `WebhookKeyStatusBadge`         | component | Signing-key status pill (Active / Retired / Revoked)               |
-| `createSubscriptionColumns`     | fn        | `ColumnDef[]` factory for the subscription grid                    |
-| `createDeliveryColumns`         | fn        | `ColumnDef[]` factory for the delivery grid                        |
+| `createSubscriptionColumns`     | fn        | `DataTableColumnDef[]` factory for the subscription grid           |
+| `createDeliveryColumns`         | fn        | `DataTableColumnDef[]` factory for the delivery grid               |
 | `webhookSubscriptionFormSchema` | const     | Zod schema: HTTPS + SSRF/private-IP refinements + event type       |
 | `webhookDeactivationSchema`     | const     | Zod schema: required deactivation reason                           |
 | `WebhookSubscriptionFormValues` | type      | `z.infer` of the subscription schema                               |

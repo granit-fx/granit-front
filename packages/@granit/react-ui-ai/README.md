@@ -47,7 +47,7 @@ these peers:
   `useNavigate` / `useParams` power the list-to-detail navigation.
 - `react-hook-form` (`^7.80`) + `@hookform/resolvers` (`^5.4`) + `zod` (`^4.4`) —
   the workspace forms.
-- `@tanstack/react-table` (`^8.21`) — `WorkspaceTable` column model.
+- `@tanstack/react-table` (`^9.0`) — `WorkspaceTable` column model.
 - `lucide-react` (`^1.21`) — icons.
 
 ## Quick start

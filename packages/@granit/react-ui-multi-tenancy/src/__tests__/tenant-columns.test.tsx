@@ -6,7 +6,7 @@ import { createTenantColumns } from '../components/tenant-columns';
 import { renderWithProviders } from './test-utils';
 
 import type { TenantQueryItem } from '../components/types';
-import type { CellContext, ColumnDef } from '@tanstack/react-table';
+import type { DataTableCellContext, DataTableColumnDef } from '@granit/react-ui-kit';
 import type { ReactElement } from 'react';
 
 const handlers = {
@@ -25,7 +25,7 @@ function makeTenant(overrides: Partial<TenantQueryItem> = {}): TenantQueryItem {
 
 function buildColumns(
   options: { canUpdate?: boolean; canManage?: boolean } = {}
-): ColumnDef<TenantQueryItem, unknown>[] {
+): DataTableColumnDef<TenantQueryItem, unknown>[] {
   const { canUpdate = true, canManage = true } = options;
   return createTenantColumns({
     t: ((key: string) => key) as never,
@@ -38,7 +38,7 @@ function buildColumns(
 }
 
 function getCell(
-  columns: ColumnDef<TenantQueryItem, unknown>[],
+  columns: DataTableColumnDef<TenantQueryItem, unknown>[],
   columnId: string,
   tenant: TenantQueryItem
 ): ReactElement | null {
@@ -46,12 +46,15 @@ function getCell(
   if (!column?.cell || typeof column.cell !== 'function') {
     throw new Error(`Column ${columnId} has no cell renderer`);
   }
-  const ctx = { row: { original: tenant } } as unknown as CellContext<TenantQueryItem, unknown>;
+  const ctx = { row: { original: tenant } } as unknown as DataTableCellContext<
+    TenantQueryItem,
+    unknown
+  >;
   return column.cell(ctx) as ReactElement | null;
 }
 
 function renderCell(
-  columns: ColumnDef<TenantQueryItem, unknown>[],
+  columns: DataTableColumnDef<TenantQueryItem, unknown>[],
   columnId: string,
   tenant: TenantQueryItem
 ) {

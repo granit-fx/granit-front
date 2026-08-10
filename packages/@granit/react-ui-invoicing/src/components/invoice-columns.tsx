@@ -6,7 +6,7 @@ import { InvoiceStatusBadge } from './invoice-status-badge';
 
 import type { InvoiceResponse } from '@granit/invoicing';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -22,7 +22,7 @@ export function createInvoiceColumns({
   onViewDetail,
   formatDate,
   locale,
-}: InvoiceColumnOptions): ColumnDef<InvoiceResponse, unknown>[] {
+}: InvoiceColumnOptions): DataTableColumnDef<InvoiceResponse, unknown>[] {
   return [
     {
       id: 'invoiceNumber',

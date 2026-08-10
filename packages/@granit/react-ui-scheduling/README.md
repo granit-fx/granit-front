@@ -42,7 +42,7 @@ for app consumption through a public registry. A consumer must declare these pee
 - `@granit/react-localization` — `useTranslation`, `useDateFormatter`.
 - `@granit/types` — `toEntityId` / `toISODateString` branded helpers.
 - `@granit/utils` — `cn` class merge.
-- `@tanstack/react-table` (`^8.21`) — column model for the grid.
+- `@tanstack/react-table` (`^9.0`) — column model for the grid.
 - `react` / `react-dom` (`^19`), `react-router` (`^7.18`) for list ↔ detail
   navigation, and `lucide-react` (`^1.21`) icons.
 
@@ -99,14 +99,14 @@ const columns = createSchedulingColumns({
 
 ## Public API
 
-| Symbol                     | Kind      | Purpose                                                             |
-| -------------------------- | --------- | ------------------------------------------------------------------- |
-| `SchedulingListPage`       | component | Self-contained list page: query grid, filters, sort, manage dialogs |
-| `SchedulingDetailPage`     | component | Self-contained detail page: fields, cancel/reschedule, 10s poll     |
-| `SchedulingStatusBadge`    | component | Maps `ScheduledActionStatus` to a `Badge` color/variant + label     |
-| `createSchedulingColumns`  | fn        | Builds `ColumnDef<ScheduledActionResponse>[]` for a TanStack grid   |
-| `schedulingTranslationsEn` | const     | English `Scheduling.*` strings (flat dotted keys)                   |
-| `schedulingTranslationsFr` | const     | French `Scheduling.*` strings (flat dotted keys)                    |
+| Symbol                     | Kind      | Purpose                                                                    |
+| -------------------------- | --------- | -------------------------------------------------------------------------- |
+| `SchedulingListPage`       | component | Self-contained list page: query grid, filters, sort, manage dialogs        |
+| `SchedulingDetailPage`     | component | Self-contained detail page: fields, cancel/reschedule, 10s poll            |
+| `SchedulingStatusBadge`    | component | Maps `ScheduledActionStatus` to a `Badge` color/variant + label            |
+| `createSchedulingColumns`  | fn        | Builds `DataTableColumnDef<ScheduledActionResponse>[]` for a TanStack grid |
+| `schedulingTranslationsEn` | const     | English `Scheduling.*` strings (flat dotted keys)                          |
+| `schedulingTranslationsFr` | const     | French `Scheduling.*` strings (flat dotted keys)                           |
 
 Both pages are self-wiring — they mount their own `SchedulingProvider` (and the list
 its `QueryProvider`), so they need no scheduling-specific context above them, only the

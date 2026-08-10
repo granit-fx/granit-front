@@ -1,7 +1,7 @@
 import { createPaymentHistoryColumns } from './payment-history-columns';
 
 import type { DisputeStatus, PaymentDisputeResponse } from '@granit/payments';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { TFunction } from 'i18next';
 
 const disputeStatusVariant: Record<
@@ -21,7 +21,7 @@ interface DisputeColumnOptions {
 
 export function createDisputeColumns(
   options: DisputeColumnOptions
-): ColumnDef<PaymentDisputeResponse, unknown>[] {
+): DataTableColumnDef<PaymentDisputeResponse, unknown>[] {
   return createPaymentHistoryColumns<PaymentDisputeResponse, DisputeStatus>({
     ...options,
     i18nPrefix: 'Payments.Disputes',

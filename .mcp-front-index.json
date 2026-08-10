@@ -11020,12 +11020,12 @@
         {
           "name": "createRefundColumns",
           "kind": "function",
-          "signature": "function createRefundColumns( options: RefundColumnOptions ): ColumnDef<PaymentRefundResponse, unknown>[]"
+          "signature": "function createRefundColumns( options: RefundColumnOptions ): DataTableColumnDef<PaymentRefundResponse, unknown>[]"
         },
         {
           "name": "createDisputeColumns",
           "kind": "function",
-          "signature": "function createDisputeColumns( options: DisputeColumnOptions ): ColumnDef<PaymentDisputeResponse, unknown>[]"
+          "signature": "function createDisputeColumns( options: DisputeColumnOptions ): DataTableColumnDef<PaymentDisputeResponse, unknown>[]"
         },
         {
           "name": "createPaymentHistoryColumns",
@@ -11111,7 +11111,7 @@
         {
           "name": "useLegalDocumentColumns",
           "kind": "function",
-          "signature": "function useLegalDocumentColumns( actions: ColumnActions ): ColumnDef<LegalDocumentDetailResponse>[]"
+          "signature": "function useLegalDocumentColumns( actions: ColumnActions ): DataTableColumnDef<LegalDocumentDetailResponse>[]"
         }
       ]
     },

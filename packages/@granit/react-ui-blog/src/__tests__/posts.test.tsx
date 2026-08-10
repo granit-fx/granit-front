@@ -7,7 +7,7 @@ import { PostsListPage } from '../components/posts-list-page';
 import { renderWithProviders } from './test-utils';
 
 import type { BlogPostListItemResponse } from '@granit/blog';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { ReactElement } from 'react';
 
 const deleteMutate = vi.fn((_v: unknown, opts?: { onSuccess?: () => void }) => opts?.onSuccess?.());
@@ -53,7 +53,7 @@ const row = (
 });
 
 function renderCell(
-  column: ColumnDef<BlogPostListItemResponse, unknown>,
+  column: DataTableColumnDef<BlogPostListItemResponse, unknown>,
   ctx: { original: BlogPostListItemResponse }
 ) {
   const cell = column.cell as (c: unknown) => ReactElement;

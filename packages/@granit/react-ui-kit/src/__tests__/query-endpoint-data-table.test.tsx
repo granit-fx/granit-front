@@ -5,19 +5,19 @@ import { QueryEndpointDataTable } from '../querying/query-endpoint-data-table';
 
 import { renderWithI18n, setupI18n } from './test-utils';
 
+import type { DataTableColumnDef } from '../data-table/table-features';
 import type { GroupedResult, PagedResult } from '@granit/query-engine';
 import type { UseQueryEndpointReturn } from '@granit/react-query-engine';
 import type { UseQueryResult } from '@tanstack/react-query';
-import type { ColumnDef } from '@tanstack/react-table';
-
-
 
 interface Row {
   readonly id: number;
   readonly name: string;
 }
 
-const columns: ColumnDef<Row, unknown>[] = [{ accessorKey: 'name', header: 'Name', id: 'name' }];
+const columns: DataTableColumnDef<Row, unknown>[] = [
+  { accessorKey: 'name', header: 'Name', id: 'name' },
+];
 
 function pagedQuery(
   overrides: Partial<UseQueryResult<PagedResult<Row>>> = {}

@@ -52,7 +52,7 @@ import type {
   EntitySelectionActionManifest,
 } from '@granit/entities';
 import type { QueryMetadata } from '@granit/query-engine';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 // Builds TanStack table columns from the QueryMetadata + manifest field
 // widget hints. Cell rendering picks a formatter based on the widget id
@@ -106,11 +106,11 @@ function createGenericColumns({
   onView,
   onEdit,
   selection,
-}: CreateGenericColumnsArgs): ColumnDef<Readonly<Record<string, unknown>>, unknown>[] {
+}: CreateGenericColumnsArgs): DataTableColumnDef<Readonly<Record<string, unknown>>, unknown>[] {
   const dataColumns = meta.columns
     .filter((c) => c.isVisible)
     .sort((a, b) => a.order - b.order)
-    .map((col): ColumnDef<Readonly<Record<string, unknown>>, unknown> => {
+    .map((col): DataTableColumnDef<Readonly<Record<string, unknown>>, unknown> => {
       const pascalKey = col.name.charAt(0).toUpperCase() + col.name.slice(1);
       const component = fieldComponents.get(pascalKey);
       return {
@@ -135,7 +135,7 @@ function createGenericColumns({
   // button is omitted entirely. Replaces every per-entity actions cell
   // (`createPartyColumns` / `createInvoiceColumns` etc.) — adding a new
   // entity downstream gets the actions bar for free.
-  const actionsColumn: ColumnDef<Readonly<Record<string, unknown>>, unknown> = {
+  const actionsColumn: DataTableColumnDef<Readonly<Record<string, unknown>>, unknown> = {
     id: '__actions',
     header: '',
     cell: ({ row }) => {
@@ -176,7 +176,7 @@ function createGenericColumns({
     return [...dataColumns, actionsColumn];
   }
 
-  const selectionColumn: ColumnDef<Readonly<Record<string, unknown>>, unknown> = {
+  const selectionColumn: DataTableColumnDef<Readonly<Record<string, unknown>>, unknown> = {
     id: '__select',
     header: () => {
       const visibleCount = selection.visibleIds.length;
@@ -593,7 +593,7 @@ interface LayoutBodyArgs {
   readonly manifest: ExtendedEntityManifest;
   readonly canUpdate: boolean;
   readonly locale: string;
-  readonly columns: ColumnDef<Readonly<Record<string, unknown>>, unknown>[];
+  readonly columns: DataTableColumnDef<Readonly<Record<string, unknown>>, unknown>[];
   readonly queryEndpoint: ReturnType<typeof useQueryEndpoint<Readonly<Record<string, unknown>>>>;
   readonly totalCount: number;
   readonly onItemClick: (id: string) => void;

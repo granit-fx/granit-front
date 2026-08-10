@@ -39,7 +39,7 @@ these peers:
   every component.
 - `@granit/types` — `toEntityId` for the branded `AuditEntry` id parsed from the
   route.
-- `@tanstack/react-table` (`^8.21`) — `ColumnDef`, the type `createAuditColumns`
+- `@tanstack/react-table` (`^9.0`) — `DataTableColumnDef`, the type `createAuditColumns`
   returns.
 - `i18next` (`^26`) — runtime for the shipped resource bundles.
 - `lucide-react` (`^1.21`) — page icons.
@@ -97,22 +97,22 @@ function MyAuditGrid({ routeBase }: { routeBase: string }) {
 
 ## Public API
 
-| Symbol                     | Kind      | Purpose                                                            |
-| -------------------------- | --------- | ------------------------------------------------------------------ |
-| `AuditListPage`            | component | Routable list page: category filter + paginated `ManualDataTable`  |
-| `AuditDetailPage`          | component | Routable detail page: metadata grid + entity-change cards          |
-| `AuditCategoryBadge`       | component | Localized, variant-colored badge for an `AuditCategoryValue`       |
-| `AuditChangeTypeBadge`     | component | Localized, variant-colored badge for an `AuditChangeTypeValue`     |
-| `AuditEntityChangeCard`    | component | Card listing one entity's property-level original/new values       |
-| `createAuditColumns`       | fn        | `ColumnDef[]` factory (timestamp, user, category, count, IP, view) |
-| `DEFAULT_AUDIT_BASE_PATH`  | const     | `'/api/v1/auditing'` (default module API mount path)               |
-| `DEFAULT_AUDIT_ROUTE_BASE` | const     | `'/auditing'` (default client-side route base)                     |
-| `auditingTranslationsEn`   | const     | English `Audit.*` resource bundle (flat keys, `translation` ns)    |
-| `auditingTranslationsFr`   | const     | French `Audit.*` resource bundle                                   |
-| `AuditListPageProps`       | type      | `{ basePath?, routeBase? }`                                        |
-| `AuditDetailPageProps`     | type      | `{ basePath?, routeBase? }`                                        |
-| `AuditingTranslations`     | type      | Shape of a resource bundle (`fr` is checked against it)            |
-| `AuditEntryResponse`       | type      | Re-export of the core list-row DTO from `@granit/auditing`         |
+| Symbol                     | Kind      | Purpose                                                                     |
+| -------------------------- | --------- | --------------------------------------------------------------------------- |
+| `AuditListPage`            | component | Routable list page: category filter + paginated `ManualDataTable`           |
+| `AuditDetailPage`          | component | Routable detail page: metadata grid + entity-change cards                   |
+| `AuditCategoryBadge`       | component | Localized, variant-colored badge for an `AuditCategoryValue`                |
+| `AuditChangeTypeBadge`     | component | Localized, variant-colored badge for an `AuditChangeTypeValue`              |
+| `AuditEntityChangeCard`    | component | Card listing one entity's property-level original/new values                |
+| `createAuditColumns`       | fn        | `DataTableColumnDef[]` factory (timestamp, user, category, count, IP, view) |
+| `DEFAULT_AUDIT_BASE_PATH`  | const     | `'/api/v1/auditing'` (default module API mount path)                        |
+| `DEFAULT_AUDIT_ROUTE_BASE` | const     | `'/auditing'` (default client-side route base)                              |
+| `auditingTranslationsEn`   | const     | English `Audit.*` resource bundle (flat keys, `translation` ns)             |
+| `auditingTranslationsFr`   | const     | French `Audit.*` resource bundle                                            |
+| `AuditListPageProps`       | type      | `{ basePath?, routeBase? }`                                                 |
+| `AuditDetailPageProps`     | type      | `{ basePath?, routeBase? }`                                                 |
+| `AuditingTranslations`     | type      | Shape of a resource bundle (`fr` is checked against it)                     |
+| `AuditEntryResponse`       | type      | Re-export of the core list-row DTO from `@granit/auditing`                  |
 
 ## Injection
 

@@ -50,7 +50,7 @@ consumer must declare these peers:
 - `react` (`^19`), `react-dom` (`^19`), `react-router` (`^8`) — pages use
   `Link` / `useNavigate` / `useParams`.
 - `react-hook-form` (`^7`), `@hookform/resolvers` (`^5`), `zod` (`^4`) — the form layer.
-- `@tanstack/react-table` (`^8`) — the list grid.
+- `@tanstack/react-table` (`^9`) — the list grid.
 - `libphonenumber-js` (`^1.13`) — phone-number validation in `partyPhoneSchema`.
 - `lucide-react` (`^1.21`) — action icons.
 
@@ -121,19 +121,19 @@ pages plus the zod schemas that drive every form.
 
 ### List & detail building blocks
 
-| Symbol                 | Kind      | Purpose                                                        |
-| ---------------------- | --------- | -------------------------------------------------------------- |
-| `createPartyColumns`   | fn        | `ColumnDef<PartyListItemResponse>[]` for the list grid         |
-| `PartyStatusBadge`     | component | Colour-coded `Active` / `Suspended` / `Archived` badge         |
-| `PartyRolesBadges`     | component | Renders parsed comma-flag roles as badges (`roles` string)     |
-| `PartyCreateForm`      | component | Standalone create form (`onSubmit` / `onCancel` / `isPending`) |
-| `PartyIdentityForm`    | component | Identity tab edit form bound to a `PartyResponse`              |
-| `DownloadVCardButton`  | component | Streams `downloadPartyVCard` and triggers a `.vcf` download    |
-| `LifecycleActions`     | component | Suspend / activate / archive (archive behind a confirm dialog) |
-| `MergeAction`          | component | Picker → `<MergeWizard>` from a survivor party                 |
-| `MergeFromCandidate`   | component | Survivor-pick → `<MergeWizard>` for an inbox candidate pair    |
-| `CreateConflictDialog` | component | Use-existing / create-anyway / merge-into on a create 409      |
-| `PartyPickerDialog`    | component | Searchable picker that excludes one id and archived parties    |
+| Symbol                 | Kind      | Purpose                                                         |
+| ---------------------- | --------- | --------------------------------------------------------------- |
+| `createPartyColumns`   | fn        | `DataTableColumnDef<PartyListItemResponse>[]` for the list grid |
+| `PartyStatusBadge`     | component | Colour-coded `Active` / `Suspended` / `Archived` badge          |
+| `PartyRolesBadges`     | component | Renders parsed comma-flag roles as badges (`roles` string)      |
+| `PartyCreateForm`      | component | Standalone create form (`onSubmit` / `onCancel` / `isPending`)  |
+| `PartyIdentityForm`    | component | Identity tab edit form bound to a `PartyResponse`               |
+| `DownloadVCardButton`  | component | Streams `downloadPartyVCard` and triggers a `.vcf` download     |
+| `LifecycleActions`     | component | Suspend / activate / archive (archive behind a confirm dialog)  |
+| `MergeAction`          | component | Picker → `<MergeWizard>` from a survivor party                  |
+| `MergeFromCandidate`   | component | Survivor-pick → `<MergeWizard>` for an inbox candidate pair     |
+| `CreateConflictDialog` | component | Use-existing / create-anyway / merge-into on a create 409       |
+| `PartyPickerDialog`    | component | Searchable picker that excludes one id and archived parties     |
 
 ### Detail tabs
 

@@ -41,7 +41,7 @@ these peers:
   import/export provider, buttons, and dialogs.
 - `@granit/utils` — the `cn` class-name helper.
 - `@granit/logger` — `createLogger`; dialog errors are logged, not `console`d.
-- `@tanstack/react-table` (`^8.21`) — `ColumnDef` for the override columns.
+- `@tanstack/react-table` (`^9.0`) — `DataTableColumnDef` for the override columns.
 - `lucide-react` (`^1.21`), `react` (`^19`), and `react-dom` (`^19`).
 
 ## Quick start
@@ -77,25 +77,25 @@ function LocalizationRoutes({ languages }: { languages: LanguageInfo[] }) {
 `LanguageSwitcher` is a standalone control (it reads `LanguagesContext` and drives
 `useLocale().setLocale`); drop it anywhere inside the languages provider, e.g. a
 footer or a settings menu. `createLocalizationColumns({ t, onEdit, onDelete })`
-builds the `ColumnDef[]` for the grid and is exported for hosts that render their
+builds the `DataTableColumnDef[]` for the grid and is exported for hosts that render their
 own table instead of `LocalizationOverrideListPage`.
 
 ## Public API
 
-| Symbol                            | Kind      | Purpose                                                                       |
-| --------------------------------- | --------- | ----------------------------------------------------------------------------- |
-| `LanguageListPage`                | component | Page: heading + the read-only `LanguageList`                                  |
-| `LocalizationOverrideListPage`    | component | Page: self-contained overrides grid (own `QueryProvider` + data exchange)     |
-| `LanguageList`                    | component | Read-only list of available languages (flag, name, default badge)             |
-| `LanguageSwitcher`                | component | Locale `<Select>` bound to `useLocale().setLocale`                            |
-| `createLocalizationColumns`       | fn        | Builds the override grid `ColumnDef[]` (module / culture badges, row actions) |
-| `TranslationCreateDialog`         | component | Create a new override (`PUT .../overrides/{resource}/{culture}/{key}`)        |
-| `TranslationEditDialog`           | component | Edit an existing override's value (same upsert `PUT`, identity locked)        |
-| `TranslationDeleteDialog`         | component | Confirm + `DELETE .../overrides/{resource}/{culture}/{key}`                   |
-| `LanguagesContext`                | provider  | React context holding `LanguageInfo[]`; populated by the host                 |
-| `useLanguages`                    | hook      | Read the available languages from `LanguagesContext`                          |
-| `localizationAdminTranslationsEn` | const     | English `Localization.*` admin strings (`translation` namespace)              |
-| `localizationAdminTranslationsFr` | const     | French `Localization.*` admin strings                                         |
+| Symbol                            | Kind      | Purpose                                                                                |
+| --------------------------------- | --------- | -------------------------------------------------------------------------------------- |
+| `LanguageListPage`                | component | Page: heading + the read-only `LanguageList`                                           |
+| `LocalizationOverrideListPage`    | component | Page: self-contained overrides grid (own `QueryProvider` + data exchange)              |
+| `LanguageList`                    | component | Read-only list of available languages (flag, name, default badge)                      |
+| `LanguageSwitcher`                | component | Locale `<Select>` bound to `useLocale().setLocale`                                     |
+| `createLocalizationColumns`       | fn        | Builds the override grid `DataTableColumnDef[]` (module / culture badges, row actions) |
+| `TranslationCreateDialog`         | component | Create a new override (`PUT .../overrides/{resource}/{culture}/{key}`)                 |
+| `TranslationEditDialog`           | component | Edit an existing override's value (same upsert `PUT`, identity locked)                 |
+| `TranslationDeleteDialog`         | component | Confirm + `DELETE .../overrides/{resource}/{culture}/{key}`                            |
+| `LanguagesContext`                | provider  | React context holding `LanguageInfo[]`; populated by the host                          |
+| `useLanguages`                    | hook      | Read the available languages from `LanguagesContext`                                   |
+| `localizationAdminTranslationsEn` | const     | English `Localization.*` admin strings (`translation` namespace)                       |
+| `localizationAdminTranslationsFr` | const     | French `Localization.*` admin strings                                                  |
 
 ## Injection
 

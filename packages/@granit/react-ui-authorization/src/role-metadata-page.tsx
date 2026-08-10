@@ -9,7 +9,7 @@ import { PermissionSideBadge } from './components/permission-side-badge';
 
 import type { RoleMetadata } from '@granit/authorization';
 import type { SortEntry } from '@granit/query-engine';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -61,7 +61,7 @@ export function RoleMetadataPage() {
     });
   };
 
-  const columns = useMemo<ColumnDef<RoleMetadata>[]>(
+  const columns = useMemo<DataTableColumnDef<RoleMetadata>[]>(
     () => [
       {
         accessorKey: 'name',

@@ -1,5 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@granit/react-ui';
-import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { dataTableFeatures } from '@granit/react-ui-kit';
+import { useTable } from '@tanstack/react-table';
 
 import { createLocalizationColumns } from './localization-columns';
 
@@ -22,10 +23,10 @@ export function LocalizationColumnsPreview({
     onDelete,
   });
 
-  const table = useReactTable({
+  const table = useTable({
+    features: dataTableFeatures,
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
   });
 
   return (

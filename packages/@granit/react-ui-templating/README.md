@@ -49,7 +49,7 @@ existing `GranitClientProvider` and must declare these peers:
 - TipTap (`@tiptap/react` + starter-kit and extensions) for the WYSIWYG editor and
   CodeMirror 6 (`codemirror`, `@codemirror/lang-html`, `@codemirror/state`,
   `@codemirror/theme-one-dark`) for the code editor — both lazy-loaded.
-- `@tanstack/react-table` (`^8`) — column definitions for the grid.
+- `@tanstack/react-table` (`^9`) — column definitions for the grid.
 
 ## Quick start
 
@@ -109,31 +109,31 @@ function CustomGridHeader({ template }: { template: TemplateDetail }) {
 
 ## Public API
 
-| Symbol                     | Kind      | Purpose                                                            |
-| -------------------------- | --------- | ------------------------------------------------------------------ |
-| `TemplateListPage`         | component | Self-contained list route: query grid, dashboard, filters, I/O     |
-| `TemplateCreatePage`       | component | Create route: metadata form + editor, saves a draft                |
-| `TemplateEditPage`         | component | Edit route (`:name`): editor / preview / history tabs + lifecycle  |
-| `TemplateForm`             | component | zod-validated metadata form (name, culture, layout, mime, content) |
-| `TemplateEditor`           | component | Dual WYSIWYG (TipTap) / code (CodeMirror) editor; lazy-loaded      |
-| `TemplateEditorHandle`     | type      | Imperative ref: `insertAtCursor(text)` into the active editor      |
-| `TemplatePreview`          | component | Test-data panel + sandboxed HTML preview, PDF / Excel download     |
-| `TemplateHistory`          | component | Revision timeline: pick two to compare, restore archived/published |
-| `TemplateRevisionDiff`     | component | Dialog rendering a line diff between two revisions                 |
-| `TemplateLifecycleActions` | component | Publish / unpublish / delete-draft buttons with confirm dialogs    |
-| `TemplateStatusBadge`      | component | CVA badge for a `WorkflowLifecycleStatus` (Draft, Published, …)    |
-| `TemplateDashboard`        | component | Four stat cards: total, drafts, published, category count          |
-| `TemplateCategoriesDialog` | component | CRUD manager for template categories                               |
-| `VariablePanel`            | component | Variables (global/model/enrichment), click to insert an expression |
-| `createTemplateColumns`    | fn        | `ColumnDef<TemplateListItem>[]` factory for the query grid         |
-| `useTestDataStore`         | hook      | Per-template named test-data sets in `localStorage` (see caveats)  |
-| `templateFormSchema`       | const     | Zod schema for the metadata form                                   |
-| `TemplateFormValues`       | type      | `z.infer` of `templateFormSchema`                                  |
-| `TEMPLATING_CONFIG`        | const     | `TemplatingConfig` (base path, query-key prefix; no client)        |
-| `QUERY_CONFIG`             | const     | `QueryConfig` for the list grid (templating/templates)             |
-| `DEFAULT_PAGE_SIZE`        | const     | Initial grid page size (`20`)                                      |
-| `templatesTranslationsEn`  | const     | English `Templates.*` i18n bundle                                  |
-| `templatesTranslationsFr`  | const     | French `Templates.*` i18n bundle                                   |
+| Symbol                     | Kind      | Purpose                                                             |
+| -------------------------- | --------- | ------------------------------------------------------------------- |
+| `TemplateListPage`         | component | Self-contained list route: query grid, dashboard, filters, I/O      |
+| `TemplateCreatePage`       | component | Create route: metadata form + editor, saves a draft                 |
+| `TemplateEditPage`         | component | Edit route (`:name`): editor / preview / history tabs + lifecycle   |
+| `TemplateForm`             | component | zod-validated metadata form (name, culture, layout, mime, content)  |
+| `TemplateEditor`           | component | Dual WYSIWYG (TipTap) / code (CodeMirror) editor; lazy-loaded       |
+| `TemplateEditorHandle`     | type      | Imperative ref: `insertAtCursor(text)` into the active editor       |
+| `TemplatePreview`          | component | Test-data panel + sandboxed HTML preview, PDF / Excel download      |
+| `TemplateHistory`          | component | Revision timeline: pick two to compare, restore archived/published  |
+| `TemplateRevisionDiff`     | component | Dialog rendering a line diff between two revisions                  |
+| `TemplateLifecycleActions` | component | Publish / unpublish / delete-draft buttons with confirm dialogs     |
+| `TemplateStatusBadge`      | component | CVA badge for a `WorkflowLifecycleStatus` (Draft, Published, …)     |
+| `TemplateDashboard`        | component | Four stat cards: total, drafts, published, category count           |
+| `TemplateCategoriesDialog` | component | CRUD manager for template categories                                |
+| `VariablePanel`            | component | Variables (global/model/enrichment), click to insert an expression  |
+| `createTemplateColumns`    | fn        | `DataTableColumnDef<TemplateListItem>[]` factory for the query grid |
+| `useTestDataStore`         | hook      | Per-template named test-data sets in `localStorage` (see caveats)   |
+| `templateFormSchema`       | const     | Zod schema for the metadata form                                    |
+| `TemplateFormValues`       | type      | `z.infer` of `templateFormSchema`                                   |
+| `TEMPLATING_CONFIG`        | const     | `TemplatingConfig` (base path, query-key prefix; no client)         |
+| `QUERY_CONFIG`             | const     | `QueryConfig` for the list grid (templating/templates)              |
+| `DEFAULT_PAGE_SIZE`        | const     | Initial grid page size (`20`)                                       |
+| `templatesTranslationsEn`  | const     | English `Templates.*` i18n bundle                                   |
+| `templatesTranslationsFr`  | const     | French `Templates.*` i18n bundle                                    |
 
 ## Out of scope / caveats
 

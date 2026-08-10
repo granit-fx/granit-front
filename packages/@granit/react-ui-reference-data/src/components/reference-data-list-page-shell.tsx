@@ -35,7 +35,7 @@ import type { ReferenceDataEntry } from './types';
 import type { QueryConfig } from '@granit/query-engine';
 import type { DataExchangeConfig } from '@granit/react-data-exchange';
 import type { ViewMode } from '@granit/react-ui-kit';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { ReactNode } from 'react';
 
 // Structural mutation type — avoids coupling to a specific `@tanstack/react-query`
@@ -70,7 +70,7 @@ export interface ReferenceDataListPageShellProps<
    * an Ordinal (case-sensitive) comparison, so a casing mismatch yields HTTP 404.
    */
   readonly importDefinition: string;
-  readonly columns: ColumnDef<T, unknown>[];
+  readonly columns: DataTableColumnDef<T, unknown>[];
   readonly deactivateMutation: MutationLike<string>;
   readonly updateMutation: MutationLike<ReferenceDataUpdatePayload>;
   readonly showCardView?: boolean;

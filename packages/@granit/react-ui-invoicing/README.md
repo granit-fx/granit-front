@@ -41,7 +41,7 @@ these peers (see `package.json`):
 - `@granit/react-validation` — `createConstraintsResolver` for the form.
 - `@granit/types`, `@granit/utils`, `@granit/logger` — shared base types, `cn`,
   and `createLogger`.
-- `@tanstack/react-table` (`^8.21`) — the list grid.
+- `@tanstack/react-table` (`^9.0`) — the list grid.
 - `react-hook-form` (`^7.80`) — the create-invoice form.
 - `react-router` (`^7.18`) — list-to-detail navigation and the back link.
 - `lucide-react` (`^1.21`), `react` (`^19`), `react-dom` (`^19`).
@@ -101,18 +101,18 @@ Compose the leaf components directly when you need a custom layout — e.g.
 
 ## Public API
 
-| Symbol                    | Kind      | Purpose                                                             |
-| ------------------------- | --------- | ------------------------------------------------------------------- |
-| `InvoiceListPage`         | component | KPI tiles + query grid; opens create dialog, routes to detail       |
-| `InvoiceDetailPage`       | component | Detail view (info, amounts, dates, line items, PDF) + workflow slot |
-| `CreateInvoiceDialog`     | component | `react-hook-form` create dialog, spec-validated via constraints     |
-| `DownloadPdfButton`       | component | Fetches the invoice PDF blob and triggers a browser download        |
-| `InvoiceLineItems`        | component | Line-item table (description, qty, unit price, amount, tax)         |
-| `InvoiceStatusBadge`      | component | Status pill with per-state color variants (Draft/Open/Paid/...)     |
-| `createInvoiceColumns`    | fn        | Builds the list `ColumnDef[]` (i18n/date/locale/callback injected)  |
-| `INVOICE_WORKFLOW_STATES` | const     | Ordered tuple of invoice states for the host workflow panel         |
-| `invoicingTranslationsEn` | const     | English `Invoicing.*` i18n resource bundle                          |
-| `invoicingTranslationsFr` | const     | French `Invoicing.*` i18n resource bundle                           |
+| Symbol                    | Kind      | Purpose                                                                     |
+| ------------------------- | --------- | --------------------------------------------------------------------------- |
+| `InvoiceListPage`         | component | KPI tiles + query grid; opens create dialog, routes to detail               |
+| `InvoiceDetailPage`       | component | Detail view (info, amounts, dates, line items, PDF) + workflow slot         |
+| `CreateInvoiceDialog`     | component | `react-hook-form` create dialog, spec-validated via constraints             |
+| `DownloadPdfButton`       | component | Fetches the invoice PDF blob and triggers a browser download                |
+| `InvoiceLineItems`        | component | Line-item table (description, qty, unit price, amount, tax)                 |
+| `InvoiceStatusBadge`      | component | Status pill with per-state color variants (Draft/Open/Paid/...)             |
+| `createInvoiceColumns`    | fn        | Builds the list `DataTableColumnDef[]` (i18n/date/locale/callback injected) |
+| `INVOICE_WORKFLOW_STATES` | const     | Ordered tuple of invoice states for the host workflow panel                 |
+| `invoicingTranslationsEn` | const     | English `Invoicing.*` i18n resource bundle                                  |
+| `invoicingTranslationsFr` | const     | French `Invoicing.*` i18n resource bundle                                   |
 
 ## Injection points
 

@@ -1,7 +1,7 @@
 import { createPaymentHistoryColumns } from './payment-history-columns';
 
 import type { PaymentRefundResponse, RefundStatus } from '@granit/payments';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { TFunction } from 'i18next';
 
 const refundStatusVariant: Record<RefundStatus, 'default' | 'secondary' | 'destructive'> = {
@@ -17,7 +17,7 @@ interface RefundColumnOptions {
 
 export function createRefundColumns(
   options: RefundColumnOptions
-): ColumnDef<PaymentRefundResponse, unknown>[] {
+): DataTableColumnDef<PaymentRefundResponse, unknown>[] {
   return createPaymentHistoryColumns<PaymentRefundResponse, RefundStatus>({
     ...options,
     i18nPrefix: 'Payments.Refunds',

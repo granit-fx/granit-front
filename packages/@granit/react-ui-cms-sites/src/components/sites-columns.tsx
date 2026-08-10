@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import type { SiteResponse } from '@granit/cms';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { NavigateFunction } from 'react-router';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
@@ -26,7 +26,7 @@ export function createSitesColumns({
   t,
   navigate,
   onDelete,
-}: SitesColumnOptions): ColumnDef<SiteResponse, unknown>[] {
+}: SitesColumnOptions): DataTableColumnDef<SiteResponse, unknown>[] {
   return [
     {
       id: 'slug',

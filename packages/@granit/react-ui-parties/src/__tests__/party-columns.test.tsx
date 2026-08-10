@@ -7,14 +7,16 @@ import { createPartyColumns } from '../components/party-columns';
 import { renderWithProviders } from './test-utils';
 
 import type { PartyId, PartyListItemResponse } from '@granit/parties';
-import type { CellContext } from '@tanstack/react-table';
+import type { DataTableCellContext } from '@granit/react-ui-kit';
 
 const t = ((key: string) => key) as never;
 
 function cellFor(id: string, row: PartyListItemResponse) {
   const columns = createPartyColumns({ t, onViewDetail: vi.fn() });
   const column = columns.find((c) => c.id === id)!;
-  const cell = column.cell as (ctx: CellContext<PartyListItemResponse, unknown>) => unknown;
+  const cell = column.cell as (
+    ctx: DataTableCellContext<PartyListItemResponse, unknown>
+  ) => unknown;
   return cell({ row: { original: row } } as never);
 }
 
@@ -53,7 +55,9 @@ describe('createPartyColumns', () => {
     const onViewDetail = vi.fn();
     const columns = createPartyColumns({ t, onViewDetail });
     const actions = columns.find((c) => c.id === 'actions')!;
-    const cell = actions.cell as (ctx: CellContext<PartyListItemResponse, unknown>) => unknown;
+    const cell = actions.cell as (
+      ctx: DataTableCellContext<PartyListItemResponse, unknown>
+    ) => unknown;
     renderWithProviders(<>{cell({ row: { original: item } } as never) as never}</>);
     await userEvent.setup({ delay: null }).click(screen.getByRole('button'));
     expect(onViewDetail).toHaveBeenCalledWith(item.id as PartyId);

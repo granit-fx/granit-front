@@ -4,7 +4,7 @@ import { Eye } from 'lucide-react';
 
 import type { MeterDefinitionResponse } from '@granit/metering';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 // Type `t` off useTranslation's return rather than importing `TFunction` from
 // i18next directly — keeps the column factory immune to i18next version skew.
@@ -18,7 +18,7 @@ interface MeterColumnOptions {
 export function createMeterColumns({
   t,
   onViewDetail,
-}: MeterColumnOptions): ColumnDef<MeterDefinitionResponse, unknown>[] {
+}: MeterColumnOptions): DataTableColumnDef<MeterDefinitionResponse, unknown>[] {
   return [
     {
       id: 'name',

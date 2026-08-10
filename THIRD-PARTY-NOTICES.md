@@ -48,7 +48,7 @@ Last updated: 2026-08-04
 | @storybook/react-vite           | 10.5.6  | Storybook Contributors                                              |
 | @tailwindcss/vite               | 4.3.3   | Copyright (c) Tailwind Labs, Inc.                                   |
 | @tanstack/react-query           | 5.101.4 | Copyright (c) Tanner Linsley                                        |
-| @tanstack/react-table           | 8.21.3  | Copyright (c) Tanner Linsley                                        |
+| @tanstack/react-table           | 9.0.0   | Copyright (c) Tanner Linsley                                        |
 | @tanstack/react-virtual         | 3.14.9  | Copyright (c) Tanner Linsley                                        |
 | @testing-library/jest-dom       | 7.0.0   | Copyright (c) Testing Library Contributors                          |
 | @testing-library/react          | 16.3.2  | Copyright (c) Testing Library Contributors                          |

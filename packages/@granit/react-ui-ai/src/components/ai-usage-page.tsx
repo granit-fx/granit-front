@@ -4,7 +4,7 @@ import { GroupBySelector, QueryDataTable, SortSelector } from '@granit/react-ui-
 import { useMemo } from 'react';
 
 import type { AIUsageRecord } from '@granit/ai';
-import type { CellContext, ColumnDef } from '@tanstack/react-table';
+import type { DataTableCellContext, DataTableColumnDef } from '@granit/react-ui-kit';
 
 function MonoCell({ value }: { readonly value: string }) {
   return <span className="font-mono text-xs">{value}</span>;
@@ -14,14 +14,16 @@ function MonoCell({ value }: { readonly value: string }) {
 // `cell: ({ getValue }) => <MonoCell …/>` get flagged by Sonar's
 // "component-defined-inside-parent" heuristic; hoisting them out
 // silences the rule without changing tanstack-table semantics.
-function renderMonoCell(info: CellContext<AIUsageRecord, unknown>): React.ReactNode {
+function renderMonoCell(info: DataTableCellContext<AIUsageRecord, unknown>): React.ReactNode {
   return <MonoCell value={info.getValue<string>()} />;
 }
 
 // Sparse identifier column: the conversation id is nullable, so fall back to a
 // dash rather than rendering an empty MonoCell. Hoisted to module scope for the
 // same Sonar "component-defined-inside-parent" reason as renderMonoCell.
-function renderConversationCell(info: CellContext<AIUsageRecord, unknown>): React.ReactNode {
+function renderConversationCell(
+  info: DataTableCellContext<AIUsageRecord, unknown>
+): React.ReactNode {
   const value = info.getValue<string | null>();
   return value ? <MonoCell value={value} /> : '-';
 }
@@ -32,7 +34,7 @@ function AIUsageContent() {
   const queryEndpoint = useAIUsage();
   const meta = useAIUsageMeta();
 
-  const columns = useMemo<ColumnDef<AIUsageRecord>[]>(
+  const columns = useMemo<DataTableColumnDef<AIUsageRecord>[]>(
     () => [
       {
         accessorKey: 'workspaceName',

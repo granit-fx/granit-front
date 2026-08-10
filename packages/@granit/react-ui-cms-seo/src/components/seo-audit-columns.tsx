@@ -2,7 +2,7 @@ import { Badge } from '@granit/react-ui';
 
 import type { SeoMetadataListItem } from '@granit/react-cms-seo';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -18,7 +18,7 @@ interface SeoAuditColumnOptions {
  */
 export function createSeoAuditColumns({
   t,
-}: SeoAuditColumnOptions): ColumnDef<SeoMetadataListItem, unknown>[] {
+}: SeoAuditColumnOptions): DataTableColumnDef<SeoMetadataListItem, unknown>[] {
   const missing = () => <Badge variant="secondary">{t('cms:Seo.Audit.Missing', 'Missing')}</Badge>;
 
   return [

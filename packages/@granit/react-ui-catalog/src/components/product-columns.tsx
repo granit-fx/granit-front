@@ -1,7 +1,7 @@
 import { LifecycleStatusBadge } from './lifecycle-status-badge';
 
 import type { ProductResponse } from '@granit/catalog';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { TFunction } from 'i18next';
 
 /**
@@ -14,7 +14,7 @@ export function createProductColumns({
 }: {
   t: TFunction;
   onOpen: (product: ProductResponse) => void;
-}): ColumnDef<ProductResponse>[] {
+}): DataTableColumnDef<ProductResponse>[] {
   return [
     {
       accessorKey: 'sku',

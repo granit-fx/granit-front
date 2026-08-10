@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import type { MenuResponse } from '@granit/cms';
 import type { useTranslation } from '@granit/react-localization';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 
 type TranslateFn = ReturnType<typeof useTranslation>['t'];
 
@@ -24,7 +24,7 @@ export function createMenusColumns({
   t,
   siteId,
   onDelete,
-}: MenusColumnOptions): ColumnDef<MenuResponse, unknown>[] {
+}: MenusColumnOptions): DataTableColumnDef<MenuResponse, unknown>[] {
   return [
     {
       id: 'key',

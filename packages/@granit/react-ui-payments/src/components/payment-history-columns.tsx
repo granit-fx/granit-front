@@ -1,6 +1,6 @@
 import { Badge } from '@granit/react-ui';
 
-import type { ColumnDef } from '@tanstack/react-table';
+import type { DataTableColumnDef } from '@granit/react-ui-kit';
 import type { TFunction } from 'i18next';
 
 type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline';
@@ -36,7 +36,7 @@ export function createPaymentHistoryColumns<
   formatDateTime,
   i18nPrefix,
   statusVariant,
-}: PaymentHistoryColumnOptions<TStatus>): ColumnDef<TRow, unknown>[] {
+}: PaymentHistoryColumnOptions<TStatus>): DataTableColumnDef<TRow, unknown>[] {
   return [
     {
       id: 'id',
