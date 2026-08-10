@@ -191,6 +191,16 @@ export function createPaymentsHandlers(baseUrl = DEFAULT_BASE_PATH) {
     // GET /transactions/meta — query metadata
     createQueryMetaHandler(`${baseUrl}/transactions`, paymentTransactionQueryMetadata),
 
+    // GET list all transactions (Query Engine — returns PagedResult).
+    // Query params are ignored: the full sample set is returned regardless of
+    // page / filter / sort, which is enough to exercise the admin grid.
+    http.get(`${baseUrl}/transactions`, () => {
+      return HttpResponse.json({
+        items: sampleTransactions,
+        totalCount: sampleTransactions.length,
+      });
+    }),
+
     // GET transactions for the current tenant
     http.get(`${baseUrl}/transactions/mine`, () => {
       return HttpResponse.json({
