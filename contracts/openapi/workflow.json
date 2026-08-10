@@ -104,6 +104,164 @@
           }
         }
       }
+    },
+    "/workflow/transitions": {
+      "get": {
+        "tags": ["Workflow"],
+        "summary": "Returns the transitions available from the given state for the current user.",
+        "description": "Returns the list of transitions available from the specified current state for the current user, considering their permissions. Transitions where the user lacks the required permission but approval routing is enabled are included with RequiresApproval = true.",
+        "operationId": "GetAvailableWorkflowStateTransitions",
+        "parameters": [
+          {
+            "name": "currentState",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowStatusResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Workflow"],
+        "summary": "Evaluates a workflow transition with permission checking and approval routing.",
+        "description": "Attempts to transition from the current state to the target state. Returns the outcome: Completed (direct transition), ApprovalRequested (routed to pending review), Denied (no permission and no approval path), or InvalidTransition (no such transition defined). The caller is responsible for persisting the resulting state on the entity.",
+        "operationId": "ExecuteWorkflowStateTransition",
+        "parameters": [
+          {
+            "name": "currentState",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkflowTransitionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowTransitionResultResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -155,6 +313,21 @@
           }
         }
       },
+      "WorkflowStatusResponse": {
+        "required": ["currentState", "availableTransitions"],
+        "type": "object",
+        "properties": {
+          "currentState": {
+            "type": "string"
+          },
+          "availableTransitions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowTransitionResponse"
+            }
+          }
+        }
+      },
       "WorkflowTransitionHistoryResponse": {
         "required": ["previousState", "newState", "transitionedAt", "transitionedBy", "comment"],
         "type": "object",
@@ -174,6 +347,53 @@
           },
           "comment": {
             "type": ["null", "string"]
+          }
+        }
+      },
+      "WorkflowTransitionRequest": {
+        "required": ["targetState"],
+        "type": "object",
+        "properties": {
+          "targetState": {
+            "maxLength": 100,
+            "type": "string"
+          },
+          "comment": {
+            "maxLength": 2000,
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "WorkflowTransitionResponse": {
+        "required": ["targetState", "name", "allowed", "requiresApproval"],
+        "type": "object",
+        "properties": {
+          "targetState": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "allowed": {
+            "type": "boolean"
+          },
+          "requiresApproval": {
+            "type": "boolean"
+          }
+        }
+      },
+      "WorkflowTransitionResultResponse": {
+        "required": ["succeeded", "resultingState", "outcome"],
+        "type": "object",
+        "properties": {
+          "succeeded": {
+            "type": "boolean"
+          },
+          "resultingState": {
+            "type": "string"
+          },
+          "outcome": {
+            "type": "string"
           }
         }
       }

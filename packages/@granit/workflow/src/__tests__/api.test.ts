@@ -6,8 +6,8 @@ import { executeStateMachineTransition, getHistory, listTransitions } from '../a
 
 import type {
   WorkflowTransitionHistoryResponse,
-  WorkflowTransitionResult,
-  WorkflowStatus,
+  WorkflowTransitionResultResponse,
+  WorkflowStatusResponse,
 } from '../types/index';
 
 describe('workflow api', () => {
@@ -45,7 +45,7 @@ describe('workflow api', () => {
 
   it('should call GET with query param for listTransitions', async () => {
     const client = createMockClient();
-    const status: WorkflowStatus = {
+    const status: WorkflowStatusResponse = {
       currentState: 'Draft',
       availableTransitions: [
         { targetState: 'Published', name: 'Publier', allowed: true, requiresApproval: false },
@@ -64,7 +64,7 @@ describe('workflow api', () => {
 
   it('should call POST with query param and body for executeStateMachineTransition', async () => {
     const client = createMockClient();
-    const transitionResult: WorkflowTransitionResult = {
+    const transitionResult: WorkflowTransitionResultResponse = {
       succeeded: true,
       resultingState: 'Published',
       outcome: 'Completed',

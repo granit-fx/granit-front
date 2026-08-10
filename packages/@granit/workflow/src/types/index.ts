@@ -5,13 +5,12 @@ export { WorkflowLifecycleStatus } from './lifecycle-status';
 export type { WorkflowLifecycleStatusValue } from './lifecycle-status';
 
 export type {
-  WorkflowTransition,
+  WorkflowTransitionResponse,
   WorkflowTransitionHistoryResponse,
-  TransitionHistory,
   WorkflowTransitionRequest,
-  WorkflowTransitionResult,
+  WorkflowTransitionResultResponse,
 } from './transition';
 
-export type { WorkflowStatus } from './workflow-status';
+export type { WorkflowStatusResponse } from './workflow-status';
 
 export type { WorkflowHistoryPage } from './history';

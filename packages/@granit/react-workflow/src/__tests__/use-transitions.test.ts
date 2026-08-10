@@ -7,12 +7,12 @@ import { useTransitions } from '../hooks/use-transitions';
 
 import { axiosResponse, createMockClient, createWrapper } from './test-utils.tsx';
 
-import type { WorkflowStatus } from '@granit/workflow';
+import type { WorkflowStatusResponse } from '@granit/workflow';
 
 describe('useTransitions', () => {
   it('should load transitions on mount', async () => {
     const client = createMockClient();
-    const status: WorkflowStatus = mockWorkflowStatus;
+    const status: WorkflowStatusResponse = mockWorkflowStatus;
     vi.mocked(client.get).mockResolvedValue(axiosResponse(status));
 
     const { result } = renderHook(() => useTransitions({ currentState: status.currentState }), {
@@ -60,11 +60,11 @@ describe('useTransitions', () => {
     const client = createMockClient();
     // One transition first, then the full fixture (two) — exercises the refetch
     // growing the available-transition list.
-    const status1: WorkflowStatus = {
+    const status1: WorkflowStatusResponse = {
       ...mockWorkflowStatus,
       availableTransitions: mockWorkflowStatus.availableTransitions.slice(0, 1),
     };
-    const status2: WorkflowStatus = mockWorkflowStatus;
+    const status2: WorkflowStatusResponse = mockWorkflowStatus;
     vi.mocked(client.get)
       .mockResolvedValueOnce(axiosResponse(status1))
       .mockResolvedValueOnce(axiosResponse(status2));

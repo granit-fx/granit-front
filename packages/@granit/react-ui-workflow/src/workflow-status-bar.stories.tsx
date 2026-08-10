@@ -4,12 +4,12 @@ import { fn } from 'storybook/test';
 import { storyI18n } from './stories-i18n';
 import { WorkflowStatusBar } from './workflow-status-bar';
 
-import type { WorkflowTransition } from '@granit/workflow';
+import type { WorkflowTransitionResponse } from '@granit/workflow';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const USER_STATES = ['PendingValidation', 'Active', 'Suspended', 'Archived'] as const;
 
-const allowedTransitions: WorkflowTransition[] = [
+const allowedTransitions: WorkflowTransitionResponse[] = [
   { targetState: 'Suspended', name: 'Suspend', allowed: true, requiresApproval: false },
   { targetState: 'Archived', name: 'Archive', allowed: false, requiresApproval: true },
 ];
@@ -44,7 +44,9 @@ export const FirstState: Story = {
   args: {
     currentState: 'PendingValidation',
     states: USER_STATES,
-    transitions: [{ targetState: 'Active', name: 'Activate', allowed: true, requiresApproval: false }],
+    transitions: [
+      { targetState: 'Active', name: 'Activate', allowed: true, requiresApproval: false },
+    ],
   },
 };
 
@@ -65,7 +67,9 @@ export const RequiresApproval: Story = {
   args: {
     currentState: 'Suspended',
     states: USER_STATES,
-    transitions: [{ targetState: 'Active', name: 'Reactivate', allowed: false, requiresApproval: true }],
+    transitions: [
+      { targetState: 'Active', name: 'Reactivate', allowed: false, requiresApproval: true },
+    ],
   },
 };
 
@@ -73,6 +77,8 @@ export const SimpleThreeState: Story = {
   args: {
     currentState: 'Draft',
     states: ['Draft', 'Published', 'Archived'],
-    transitions: [{ targetState: 'Published', name: 'Publish', allowed: true, requiresApproval: false }],
+    transitions: [
+      { targetState: 'Published', name: 'Publish', allowed: true, requiresApproval: false },
+    ],
   },
 };

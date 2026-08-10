@@ -169,7 +169,7 @@ export const mockEntityManifest: EntityManifestResponse = {
   actions: [
     {
       name: 'Approve',
-      kind: 'WorkflowTransition',
+      kind: 'WorkflowTransitionResponse',
       displayKey: 'Granit.Parties.Party.Action.Approve',
       icon: 'check',
       order: 0,

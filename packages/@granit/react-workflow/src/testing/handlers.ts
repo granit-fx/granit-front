@@ -7,17 +7,17 @@ import { mockWorkflowHistory, mockWorkflowStatus } from './data';
 
 import type {
   WorkflowTransitionHistoryResponse,
-  WorkflowStatus,
-  WorkflowTransition,
+  WorkflowStatusResponse,
+  WorkflowTransitionResponse,
   WorkflowTransitionRequest,
-  WorkflowTransitionResult,
+  WorkflowTransitionResultResponse,
 } from '@granit/workflow';
 
 function resolveOutcome(
   targetState: string,
   currentState: string,
-  transitions: readonly WorkflowTransition[]
-): WorkflowTransitionResult {
+  transitions: readonly WorkflowTransitionResponse[]
+): WorkflowTransitionResultResponse {
   const dto = transitions.find((t) => t.targetState === targetState);
 
   if (!dto) {
@@ -46,7 +46,7 @@ function resolveOutcome(
  * @param baseUrl - API base path (default: `/api/v1/workflow`)
  */
 export function createWorkflowHandlers(baseUrl = DEFAULT_BASE_PATH) {
-  let currentStatus: WorkflowStatus = { ...mockWorkflowStatus };
+  let currentStatus: WorkflowStatusResponse = { ...mockWorkflowStatus };
   let history: WorkflowTransitionHistoryResponse[] = [...mockWorkflowHistory];
 
   return [

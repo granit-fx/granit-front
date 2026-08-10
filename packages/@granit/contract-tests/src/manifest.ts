@@ -328,7 +328,7 @@ export const CONTRACTS: readonly ModuleContract[] = [
   // value objects and string-union enums are verified indirectly / via the
   // grid and are intentionally not listed. A handful of API DTOs the front
   // does not yet model (e.g. taxonomy Search*, dashboards DashboardRender*,
-  // invoicing WorkflowTransition*) are left for a later pass.
+  // invoicing WorkflowTransitionResponse*) are left for a later pass.
   {
     slug: 'catalog',
     package: 'catalog',
@@ -967,12 +967,37 @@ export const CONTRACTS: readonly ModuleContract[] = [
   {
     slug: 'workflow',
     package: 'workflow',
-    // `WorkflowHistoryPage` is an alias of the shared `PagedResult<T>` wrapper,
-    // excluded per the header note. Route conformance stays off: the spec only
-    // documents the entity-history route, while the front also calls the
-    // state-machine `/transitions` pair — a backend generator gap, not a front
-    // one, so enabling the check here would fail on two orphan endpoints.
-    types: ['WorkflowTransitionHistoryResponse'],
+    // `WorkflowHistoryPage` aliases the shared `PagedResult<T>` wrapper and is
+    // excluded per the header note, like the other `*Of*` generics.
+    types: [
+      'WorkflowTransitionHistoryResponse',
+      'WorkflowStatusResponse',
+      'WorkflowTransitionResponse',
+      'WorkflowTransitionResultResponse',
+      'WorkflowTransitionRequest',
+    ],
+    checkEndpoints: true,
+    // `getHistory` builds its URL through the local `buildEntityUrl` helper
+    // (wrapping `buildApiUrl` for segment encoding), and the endpoint extractor
+    // only resolves `basePath` identifiers and template literals — it cannot see
+    // through a helper call. Same blind spot keeps route checks off for
+    // `timeline`, which uses the identical helper for nine routes. The route is
+    // implemented and covered by the package's own tests; the two `/transitions`
+    // routes are the ones this check now genuinely verifies.
+    endpointIgnore: ['/{}/{}/history'],
+  },
+  {
+    slug: 'reference-data',
+    package: 'reference-data',
+    // The spec's response schema is `ReferenceDataResponse`; the front calls it
+    // `ReferenceDataEntry`. Suffix-aligning it (see the section above) reaches 15
+    // files in granit-showcase-react, so it needs a coordinated change and is
+    // deferred — only the two request DTOs are name-aligned today.
+    //
+    // Route conformance stays off: the generator materialises the routes under
+    // its stub type's segment (`/reference-data/samples`), while real callers
+    // mount them per application entity (`/reference-data/countries`, …).
+    types: ['ReferenceDataCreateRequest', 'ReferenceDataUpdateRequest'],
   },
   // ─── Analytics + data-exchange (granit-business / granit-dotnet) ────────────
   {

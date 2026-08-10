@@ -1,6 +1,6 @@
 # Guide de migration
 
-## `TransitionHistory` → `WorkflowTransitionHistoryResponse`
+## `@granit/workflow` : alignement des DTO sur les noms de schémas backend
 
 **Date** : 2026-08-10
 **Packages affectés** : `@granit/workflow` (et ses consommateurs
@@ -10,27 +10,52 @@
 
 L'oracle de conformité (`@granit/contract-tests`) résout les schémas backend
 **par leur nom** : le type front doit s'appeler exactement comme le schéma
-OpenAPI. `TransitionHistory` était champ pour champ le
-`WorkflowTransitionHistoryResponse` de `contracts/openapi/workflow.json` — mêmes
-propriétés, même ordre, `comment` correctement modélisé en clé requise à valeur
-nullable — mais son nom divergeait, ce qui rendait le DTO **inassertable** : le
-module `workflow` ne pouvait pas figurer au manifest.
+OpenAPI. Le backend suffixe ses DTO de réponse en `*Response` ; ce package avait
+laissé tomber le suffixe, ce qui rendait les DTO **inassertables** — le module ne
+pouvait pas figurer au manifest, faute de schéma résoluble.
+
+Les quatre types correspondaient déjà champ pour champ au spec, dans l'ordre.
+Seuls les noms divergeaient.
 
 ### Impact sur les consommateurs
 
-Aucun changement cassant : `TransitionHistory` reste exporté comme alias
-déprécié, le package étant publié sur `npm.pkg.github.com`. Migration mécanique :
+| Avant                      | Après                               |
+| -------------------------- | ----------------------------------- |
+| `TransitionHistory`        | `WorkflowTransitionHistoryResponse` |
+| `WorkflowStatus`           | `WorkflowStatusResponse`            |
+| `WorkflowTransition`       | `WorkflowTransitionResponse`        |
+| `WorkflowTransitionResult` | `WorkflowTransitionResultResponse`  |
 
-```diff
-- import type { TransitionHistory } from '@granit/workflow';
-+ import type { WorkflowTransitionHistoryResponse } from '@granit/workflow';
+```bash
+git ls-files '*.ts' '*.tsx' | xargs sed -i \
+  -e 's/\bTransitionHistory\b/WorkflowTransitionHistoryResponse/g' \
+  -e 's/\bWorkflowTransitionResult\b/WorkflowTransitionResultResponse/g' \
+  -e 's/\bWorkflowStatus\b/WorkflowStatusResponse/g' \
+  -e 's/\bWorkflowTransition\b/WorkflowTransitionResponse/g'
 ```
 
-`WorkflowHistoryPage` est **inchangé** : c'est un alias du wrapper partagé
-`PagedResult<T>`, que le manifest exclut délibérément (comme les autres
-génériques `*Of*`).
+Applique les substitutions **dans cet ordre** : les bornes de mot rendent
+`WorkflowTransitionResult` et `WorkflowTransition` indépendants, mais l'ordre
+ci-dessus évite toute ambiguïté de relecture.
 
-L'alias sera retiré au prochain major.
+Aucun alias de rétrocompatibilité n'est conservé, conformément aux huit packages
+déjà alignés (`data-lookup`, `timeline`, `openiddict-admin`, `blob-storage`,
+`authentication-api-keys`, `ai`, `ai-chat`, `ai-prompts` — voir la section
+« Suffix-aligned modules » du manifest). `granit-showcase-react` ne référence
+aucun de ces quatre types, donc aucune coordination applicative n'est requise.
+
+`WorkflowTransitionRequest` est **inchangé** (son nom correspondait déjà), et
+`WorkflowHistoryPage` aussi : c'est un alias du wrapper partagé `PagedResult<T>`,
+que le manifest exclut avec les autres génériques `*Of*`.
+
+### Reste à faire — `reference-data`
+
+Le spec expose `ReferenceDataResponse` là où le front nomme le type
+`ReferenceDataEntry`. Le même alignement s'impose, mais il touche **15 fichiers
+de `granit-showcase-react`** (écrans countries / document-types /
+product-categories) : il demande donc une MR coordonnée et reste à faire. Seuls
+`ReferenceDataCreateRequest` et `ReferenceDataUpdateRequest`, dont les noms
+correspondent déjà, sont asserté aujourd'hui.
 
 ## TanStack Table v8 → v9 (`ColumnDef` → `DataTableColumnDef`)
 

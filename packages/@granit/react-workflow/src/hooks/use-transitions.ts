@@ -5,7 +5,7 @@ import { useWorkflowConfig } from '../providers/workflow-provider';
 
 import { buildWorkflowQueryKey } from './query-keys';
 
-import type { WorkflowStatus } from '@granit/workflow';
+import type { WorkflowStatusResponse } from '@granit/workflow';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 export interface UseTransitionsOptions {
@@ -16,7 +16,7 @@ export interface UseTransitionsOptions {
 export function useTransitions({
   currentState,
   enabled = true,
-}: UseTransitionsOptions): UseQueryResult<WorkflowStatus> {
+}: UseTransitionsOptions): UseQueryResult<WorkflowStatusResponse> {
   const config = useWorkflowConfig();
 
   return useQuery({

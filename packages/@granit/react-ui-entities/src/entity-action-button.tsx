@@ -32,7 +32,7 @@ function variantFor(action: EntityActionManifest): VariantSpec {
       return { variant: 'outline', Icon: Download };
     case 'Navigate':
       return { variant: 'outline', Icon: ExternalLink };
-    case 'WorkflowTransition':
+    case 'WorkflowTransitionResponse':
       return { variant: 'default', Icon: Play };
     case 'OpenDrawer':
       return { variant: 'outline', Icon: PanelRightOpen };

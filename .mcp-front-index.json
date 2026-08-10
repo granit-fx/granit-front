@@ -12154,7 +12154,7 @@
             {
               "name": "transitions",
               "kind": "property",
-              "signature": "transitions: readonly WorkflowTransition[]"
+              "signature": "transitions: readonly WorkflowTransitionResponse[]"
             },
             {
               "name": "onTransition",
@@ -12987,7 +12987,7 @@
         {
           "name": "executeStateMachineTransition",
           "kind": "function",
-          "signature": "async function executeStateMachineTransition( client: AxiosInstance, basePath: string, currentState: string, request: WorkflowTransitionRequest ): Promise<WorkflowTransitionResult>"
+          "signature": "async function executeStateMachineTransition( client: AxiosInstance, basePath: string, currentState: string, request: WorkflowTransitionRequest ): Promise<WorkflowTransitionResultResponse>"
         },
         {
           "name": "getHistory",
@@ -12997,7 +12997,7 @@
         {
           "name": "listTransitions",
           "kind": "function",
-          "signature": "async function listTransitions( client: AxiosInstance, basePath: string, currentState: string ): Promise<WorkflowStatus>"
+          "signature": "async function listTransitions( client: AxiosInstance, basePath: string, currentState: string ): Promise<WorkflowStatusResponse>"
         },
         {
           "name": "WorkflowPermissions",

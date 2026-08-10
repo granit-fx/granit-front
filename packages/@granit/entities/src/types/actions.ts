@@ -7,12 +7,7 @@
  * Mirrors `Granit.Entities.Actions.EntityActionKind`.
  */
 export type EntityActionKind =
-  | 'ApiCall'
-  | 'Download'
-  | 'Navigate'
-  | 'WorkflowTransition'
-  | 'OpenDrawer'
-  | 'OpenModal';
+  'ApiCall' | 'Download' | 'Navigate' | 'WorkflowTransitionResponse' | 'OpenDrawer' | 'OpenModal';
 
 /**
  * Wire shape for one action exposed on an entity manifest. Carries the
@@ -33,13 +28,13 @@ export interface EntityActionManifest {
   readonly icon: string | null;
   /** Display order among the entity's actions. */
   readonly order: number;
-  /** URL template with `{id}` placeholder. `null` for `WorkflowTransition`. */
+  /** URL template with `{id}` placeholder. `null` for `WorkflowTransitionResponse`. */
   readonly urlTemplate: string | null;
   /** HTTP verb for `ApiCall` (POST / PUT / DELETE). `null` otherwise. */
   readonly httpMethod: string | null;
   /** Optional i18n key for the confirmation modal. */
   readonly confirmationKey: string | null;
-  /** Name of the target workflow state for `WorkflowTransition`. */
+  /** Name of the target workflow state for `WorkflowTransitionResponse`. */
   readonly workflowTransitionName: string | null;
   /** Contributing assembly. `null` for intra-module declarations. */
   readonly contributorAssemblyName: string | null;

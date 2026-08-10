@@ -25,7 +25,10 @@ import { WorkflowHistory } from './workflow-history';
 import { WorkflowStatusBar } from './workflow-status-bar';
 
 import type { WorkflowConfig } from '@granit/react-workflow';
-import type { WorkflowTransition, WorkflowTransitionResult } from '@granit/workflow';
+import type {
+  WorkflowTransitionResponse,
+  WorkflowTransitionResultResponse,
+} from '@granit/workflow';
 
 export interface EntityWorkflowProps {
   /**
@@ -70,10 +73,12 @@ function EntityWorkflowInner({
 
   const history = historyData?.items ?? [];
 
-  const [pendingTransition, setPendingTransition] = useState<WorkflowTransition | null>(null);
+  const [pendingTransition, setPendingTransition] = useState<WorkflowTransitionResponse | null>(
+    null
+  );
 
   const handleOutcome = useCallback(
-    (result: WorkflowTransitionResult) => {
+    (result: WorkflowTransitionResultResponse) => {
       switch (result.outcome) {
         case 'Completed':
           toast.success(t('Workflow.OutcomeCompleted'));

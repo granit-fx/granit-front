@@ -1,7 +1,7 @@
-import type { WorkflowTransition } from './transition';
+import type { WorkflowTransitionResponse } from './transition';
 
 /** Current workflow status of an entity. */
-export interface WorkflowStatus {
+export interface WorkflowStatusResponse {
   readonly currentState: string;
-  readonly availableTransitions: readonly WorkflowTransition[];
+  readonly availableTransitions: readonly WorkflowTransitionResponse[];
 }

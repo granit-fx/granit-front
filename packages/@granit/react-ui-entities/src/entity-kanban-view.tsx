@@ -525,7 +525,7 @@ interface KanbanCardActionButtonProps {
 
 // Compact icon-only action button for kanban cards. Delegates to the
 // canonical entity-action dispatcher from `@granit/react-entities`
-// (download / ApiCall / Navigate / WorkflowTransition) and renders a
+// (download / ApiCall / Navigate / WorkflowTransitionResponse) and renders a
 // small icon-button styled with shadcn `<Button>` so the card stays
 // dense. The dispatcher's defaults handle `Download` / `ApiCall`;
 // `Navigate` is overridden via `actionHandlers` to stay in-app.
@@ -582,7 +582,7 @@ function renderActionIcon(action: EntityActionManifest) {
       return <Download className={className} />;
     case 'Navigate':
       return <ExternalLink className={className} />;
-    case 'WorkflowTransition':
+    case 'WorkflowTransitionResponse':
       return <Play className={className} />;
     case 'OpenDrawer':
       return <PanelRightOpen className={className} />;

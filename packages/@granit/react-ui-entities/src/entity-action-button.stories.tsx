@@ -97,12 +97,12 @@ export const Navigate: Story = {
   },
 };
 
-export const WorkflowTransition: Story = {
+export const WorkflowTransitionResponse: Story = {
   args: {
     action: {
       ...baseAction,
       name: 'Approve',
-      kind: 'WorkflowTransition',
+      kind: 'WorkflowTransitionResponse',
       workflowTransitionName: 'Approved',
     } as EntityActionManifest,
   },
@@ -198,7 +198,7 @@ export const AllVariants: Story = {
           {
             ...baseAction,
             name: 'Transition',
-            kind: 'WorkflowTransition',
+            kind: 'WorkflowTransitionResponse',
             displayKey: null,
             workflowTransitionName: 'Active',
           } as EntityActionManifest

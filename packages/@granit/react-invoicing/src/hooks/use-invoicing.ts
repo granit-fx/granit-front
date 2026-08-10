@@ -27,9 +27,9 @@ import type {
 import type { PagedResult, QueryMetadata, QueryRequest } from '@granit/query-engine';
 import type { UseQueryEndpointOptions, UseQueryEndpointReturn } from '@granit/react-query-engine';
 import type {
-  WorkflowStatus,
+  WorkflowStatusResponse,
   WorkflowTransitionRequest,
-  WorkflowTransitionResult,
+  WorkflowTransitionResultResponse,
 } from '@granit/workflow';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
@@ -240,7 +240,9 @@ export function useMarkInvoiceUncollectible(): UseMutationResult<
  * const { data: status } = useListInvoiceTransitions(invoice.status);
  * ```
  */
-export function useListInvoiceTransitions(currentState: string): UseQueryResult<WorkflowStatus> {
+export function useListInvoiceTransitions(
+  currentState: string
+): UseQueryResult<WorkflowStatusResponse> {
   const config = useInvoicingConfig();
 
   return useQuery({
@@ -261,7 +263,7 @@ export function useListInvoiceTransitions(currentState: string): UseQueryResult<
  * ```
  */
 export function useExecuteInvoiceTransition(): UseMutationResult<
-  WorkflowTransitionResult,
+  WorkflowTransitionResultResponse,
   Error,
   { readonly currentState: string; readonly request: WorkflowTransitionRequest }
 > {

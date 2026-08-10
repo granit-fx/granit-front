@@ -177,18 +177,18 @@ describe('useEntityActionDispatcher — ApiCall', () => {
   });
 });
 
-describe('useEntityActionDispatcher — WorkflowTransition', () => {
+describe('useEntityActionDispatcher — WorkflowTransitionResponse', () => {
   it('emits a console.warn when no workflowTransition handler is supplied', async () => {
     const warn = vi.spyOn(globalThis.console, 'warn').mockImplementation(() => undefined);
     const { wrapper } = makeWrapper();
     const { result } = renderHook(() => useEntityActionDispatcher(), { wrapper });
     await result.current(
-      makeAction({ kind: 'WorkflowTransition', workflowTransitionName: 'Approved' }),
+      makeAction({ kind: 'WorkflowTransitionResponse', workflowTransitionName: 'Approved' }),
       'abc',
       null
     );
     expect(warn).toHaveBeenCalledOnce();
-    expect(String(warn.mock.calls[0]?.[0])).toContain('WorkflowTransition');
+    expect(String(warn.mock.calls[0]?.[0])).toContain('WorkflowTransitionResponse');
   });
 
   it('delegates to the workflowTransition handler when supplied', async () => {
@@ -196,7 +196,10 @@ describe('useEntityActionDispatcher — WorkflowTransition', () => {
     const handlers: EntityActionHandlers = { workflowTransition };
     const { wrapper } = makeWrapper();
     const { result } = renderHook(() => useEntityActionDispatcher(handlers), { wrapper });
-    const action = makeAction({ kind: 'WorkflowTransition', workflowTransitionName: 'Approved' });
+    const action = makeAction({
+      kind: 'WorkflowTransitionResponse',
+      workflowTransitionName: 'Approved',
+    });
     const row = { id: 'abc', workflowState: 'Draft' };
     await result.current(action, 'abc', row);
     expect(workflowTransition).toHaveBeenCalledWith(action, 'abc', row, expect.anything());

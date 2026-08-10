@@ -15,7 +15,7 @@ export interface EntityListPageHeaderProps {
    * Optional per-kind handler overrides forwarded to
    * `useEntityActionDispatcher`. Apps with SPA routers typically
    * override `navigate`; apps with workflow-bearing entities override
-   * `workflowTransition` (though `WorkflowTransition` actions are
+   * `workflowTransition` (though `WorkflowTransitionResponse` actions are
    * almost never pinned on the header — they need a row).
    */
   readonly handlers?: EntityActionHandlers;

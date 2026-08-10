@@ -4,9 +4,515 @@
     "title": "reference-data",
     "version": "1"
   },
-  "paths": {},
+  "paths": {
+    "/reference-data/samples": {
+      "get": {
+        "tags": ["Reference Data"],
+        "summary": "Returns a filtered, paginated list of Samples entries.",
+        "description": "Lists Samples reference data entries with support for filtering, sorting, and pagination.",
+        "operationId": "GetAllSamples",
+        "parameters": [
+          {
+            "name": "ActiveOnly",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "name": "Search",
+            "in": "query",
+            "description": "Free-text search query.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Descending",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "description": "1-based page index.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfReferenceDataResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Reference Data"],
+        "summary": "Creates a new Samples entry.",
+        "description": "Creates a new Samples reference data entry with a unique code and localized labels.",
+        "operationId": "CreateSamples",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReferenceDataCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reference-data/samples/{code}": {
+      "get": {
+        "tags": ["Reference Data"],
+        "summary": "Returns a single Samples entry by code.",
+        "description": "Returns the full Samples entry identified by its unique code. Returns 404 if not found.",
+        "operationId": "GetSamplesByCode",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "Reference data code (e.g. ISO 3166-1 Alpha-2 for countries: 'BE', 'FR').",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReferenceDataResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Reference Data"],
+        "summary": "Updates an existing Samples entry.",
+        "description": "Updates labels, sort order, active status, and validity dates. Metadata use merge semantics: properties in the request are added or updated, properties not in the request are preserved. Returns 404 if not found.",
+        "operationId": "UpdateSamples",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "Reference data code (e.g. ISO 3166-1 Alpha-2 for countries: 'BE', 'FR').",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReferenceDataUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Reference Data"],
+        "summary": "Deactivates a Samples entry (soft delete).",
+        "description": "Sets the entry's active flag to false. Returns 404 if not found.",
+        "operationId": "DeactivateSamples",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "Reference data code (e.g. ISO 3166-1 Alpha-2 for countries: 'BE', 'FR').",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reference-data/samples/{code}/children": {
+      "get": {
+        "tags": ["Reference Data"],
+        "summary": "Returns direct children of a Samples entry.",
+        "description": "Returns all active direct children ordered by sort order. Returns 404 if the parent does not exist.",
+        "operationId": "GetSamplesChildren",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "Reference data code (e.g. ISO 3166-1 Alpha-2 for countries: 'BE', 'FR').",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReferenceDataResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   "components": {
     "schemas": {
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "PagedResultOfReferenceDataResponse": {
+        "required": ["items", "totalCount", "hasMore"],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReferenceDataResponse"
+            }
+          },
+          "totalCount": {
+            "type": ["null", "integer"],
+            "format": "int32"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": ["null", "string"]
+          }
+        }
+      },
       "ProblemDetails": {
         "type": "object",
         "properties": {
@@ -31,7 +537,305 @@
             "description": "A URI reference that identifies the specific occurrence."
           }
         }
+      },
+      "ReferenceDataCreateRequest": {
+        "required": ["code", "labelEn"],
+        "type": "object",
+        "properties": {
+          "code": {
+            "maxLength": 50,
+            "pattern": "^[A-Za-z0-9_.\\-]+$",
+            "type": "string"
+          },
+          "labelEn": {
+            "type": "string"
+          },
+          "labelFr": {
+            "type": "string",
+            "default": ""
+          },
+          "labelNl": {
+            "type": "string",
+            "default": ""
+          },
+          "labelDe": {
+            "type": "string",
+            "default": ""
+          },
+          "labelEs": {
+            "type": "string",
+            "default": ""
+          },
+          "labelIt": {
+            "type": "string",
+            "default": ""
+          },
+          "labelPt": {
+            "type": "string",
+            "default": ""
+          },
+          "labelZh": {
+            "type": "string",
+            "default": ""
+          },
+          "labelJa": {
+            "type": "string",
+            "default": ""
+          },
+          "labelPl": {
+            "type": "string",
+            "default": ""
+          },
+          "labelTr": {
+            "type": "string",
+            "default": ""
+          },
+          "labelKo": {
+            "type": "string",
+            "default": ""
+          },
+          "labelSv": {
+            "type": "string",
+            "default": ""
+          },
+          "labelCs": {
+            "type": "string",
+            "default": ""
+          },
+          "labelHi": {
+            "type": "string",
+            "default": ""
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          "validFrom": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "validTo": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "parentCode": {
+            "type": ["null", "string"]
+          },
+          "metadata": {
+            "type": ["null", "object"],
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ReferenceDataResponse": {
+        "required": [
+          "id",
+          "code",
+          "label",
+          "labelEn",
+          "labelFr",
+          "labelNl",
+          "labelDe",
+          "labelEs",
+          "labelIt",
+          "labelPt",
+          "labelZh",
+          "labelJa",
+          "labelPl",
+          "labelTr",
+          "labelKo",
+          "labelSv",
+          "labelCs",
+          "labelHi",
+          "activated",
+          "sortOrder",
+          "validFrom",
+          "validTo",
+          "parentCode",
+          "metadata"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "labelEn": {
+            "type": "string"
+          },
+          "labelFr": {
+            "type": "string"
+          },
+          "labelNl": {
+            "type": "string"
+          },
+          "labelDe": {
+            "type": "string"
+          },
+          "labelEs": {
+            "type": "string"
+          },
+          "labelIt": {
+            "type": "string"
+          },
+          "labelPt": {
+            "type": "string"
+          },
+          "labelZh": {
+            "type": "string"
+          },
+          "labelJa": {
+            "type": "string"
+          },
+          "labelPl": {
+            "type": "string"
+          },
+          "labelTr": {
+            "type": "string"
+          },
+          "labelKo": {
+            "type": "string"
+          },
+          "labelSv": {
+            "type": "string"
+          },
+          "labelCs": {
+            "type": "string"
+          },
+          "labelHi": {
+            "type": "string"
+          },
+          "activated": {
+            "type": "boolean"
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "validFrom": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "validTo": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "parentCode": {
+            "type": ["null", "string"]
+          },
+          "metadata": {
+            "type": ["null", "object"],
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ReferenceDataUpdateRequest": {
+        "required": ["labelEn"],
+        "type": "object",
+        "properties": {
+          "labelEn": {
+            "type": "string"
+          },
+          "labelFr": {
+            "type": "string",
+            "default": ""
+          },
+          "labelNl": {
+            "type": "string",
+            "default": ""
+          },
+          "labelDe": {
+            "type": "string",
+            "default": ""
+          },
+          "labelEs": {
+            "type": "string",
+            "default": ""
+          },
+          "labelIt": {
+            "type": "string",
+            "default": ""
+          },
+          "labelPt": {
+            "type": "string",
+            "default": ""
+          },
+          "labelZh": {
+            "type": "string",
+            "default": ""
+          },
+          "labelJa": {
+            "type": "string",
+            "default": ""
+          },
+          "labelPl": {
+            "type": "string",
+            "default": ""
+          },
+          "labelTr": {
+            "type": "string",
+            "default": ""
+          },
+          "labelKo": {
+            "type": "string",
+            "default": ""
+          },
+          "labelSv": {
+            "type": "string",
+            "default": ""
+          },
+          "labelCs": {
+            "type": "string",
+            "default": ""
+          },
+          "labelHi": {
+            "type": "string",
+            "default": ""
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          "activated": {
+            "type": "boolean",
+            "default": true
+          },
+          "validFrom": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "validTo": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "parentCode": {
+            "type": ["null", "string"]
+          },
+          "metadata": {
+            "type": ["null", "object"],
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Reference Data"
+    }
+  ]
 }

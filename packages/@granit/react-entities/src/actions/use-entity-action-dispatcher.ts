@@ -42,7 +42,7 @@ export interface EntityActionHandlers {
    */
   readonly navigate?: EntityActionHandler;
   /**
-   * `WorkflowTransition` — resolved through the entity's workflow
+   * `WorkflowTransitionResponse` — resolved through the entity's workflow
    * runtime. The framework does not depend on `@granit/react-workflow`,
    * so the default emits a `console.warn` and short-circuits — apps
    * with workflow-bearing entities must wire this slot.
@@ -102,7 +102,7 @@ export type EntityActionDispatch = (
  * - **Navigate** — sets `globalThis.location.href` (full page load).
  *   Apps with SPA routers override the `navigate` handler to call
  *   their router's navigate function.
- * - **WorkflowTransition** — emits a `console.warn` and no-ops.
+ * - **WorkflowTransitionResponse** — emits a `console.warn` and no-ops.
  *   The framework doesn't depend on `@granit/react-workflow`, so
  *   apps wire this through the `workflowTransition` handler.
  *
@@ -137,7 +137,7 @@ export function useEntityActionDispatcher(
         case 'Navigate':
           await navigate(action, rowId, row, client);
           return;
-        case 'WorkflowTransition':
+        case 'WorkflowTransitionResponse':
           await workflowTransition(action, rowId, row, client);
           return;
         case 'OpenDrawer':
@@ -232,8 +232,8 @@ const defaultNavigate: EntityActionHandler = (action, rowId) => {
 function makeDefaultWorkflowTransition(logger: Logger): EntityActionHandler {
   return (action) => {
     logger.warn(
-      `EntityAction "${action.name}" is a WorkflowTransition; the framework's default dispatcher does not execute transitions. Pass a \`workflowTransition\` handler to \`useEntityActionDispatcher\` (typically wired through \`useExecuteTransition()\` from \`@granit/react-workflow\`).`,
-      { actionName: action.name, kind: 'WorkflowTransition' }
+      `EntityAction "${action.name}" is a WorkflowTransitionResponse; the framework's default dispatcher does not execute transitions. Pass a \`workflowTransition\` handler to \`useEntityActionDispatcher\` (typically wired through \`useExecuteTransition()\` from \`@granit/react-workflow\`).`,
+      { actionName: action.name, kind: 'WorkflowTransitionResponse' }
     );
   };
 }

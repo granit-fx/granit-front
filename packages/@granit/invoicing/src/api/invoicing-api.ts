@@ -11,9 +11,9 @@ import type {
 import type { AxiosInstance } from '@granit/api-client';
 import type { PagedResult, QueryMetadata, QueryRequest } from '@granit/query-engine';
 import type {
-  WorkflowStatus,
+  WorkflowStatusResponse,
   WorkflowTransitionRequest,
-  WorkflowTransitionResult,
+  WorkflowTransitionResultResponse,
 } from '@granit/workflow';
 
 /**
@@ -152,7 +152,7 @@ export async function listInvoiceTransitions(
   client: AxiosInstance,
   basePath: string,
   currentState: string
-): Promise<WorkflowStatus> {
+): Promise<WorkflowStatusResponse> {
   return listTransitions(client, `${basePath}/invoices`, currentState);
 }
 
@@ -166,6 +166,6 @@ export async function executeInvoiceTransition(
   basePath: string,
   currentState: string,
   request: WorkflowTransitionRequest
-): Promise<WorkflowTransitionResult> {
+): Promise<WorkflowTransitionResultResponse> {
   return executeStateMachineTransition(client, `${basePath}/invoices`, currentState, request);
 }

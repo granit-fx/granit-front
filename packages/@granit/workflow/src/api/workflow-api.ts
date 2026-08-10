@@ -3,8 +3,8 @@ import { buildApiUrl } from '@granit/api-client';
 import type {
   WorkflowHistoryPage,
   WorkflowTransitionRequest,
-  WorkflowTransitionResult,
-  WorkflowStatus,
+  WorkflowTransitionResultResponse,
+  WorkflowStatusResponse,
 } from '../types/index';
 import type { AxiosInstance } from '@granit/api-client';
 import type { PaginationParams } from '@granit/query-engine';
@@ -28,8 +28,8 @@ export async function listTransitions(
   client: AxiosInstance,
   basePath: string,
   currentState: string
-): Promise<WorkflowStatus> {
-  const { data } = await client.get<WorkflowStatus>(`${basePath}/transitions`, {
+): Promise<WorkflowStatusResponse> {
+  const { data } = await client.get<WorkflowStatusResponse>(`${basePath}/transitions`, {
     params: { currentState },
   });
   return data;
@@ -41,10 +41,14 @@ export async function executeStateMachineTransition(
   basePath: string,
   currentState: string,
   request: WorkflowTransitionRequest
-): Promise<WorkflowTransitionResult> {
-  const { data } = await client.post<WorkflowTransitionResult>(`${basePath}/transitions`, request, {
-    params: { currentState },
-  });
+): Promise<WorkflowTransitionResultResponse> {
+  const { data } = await client.post<WorkflowTransitionResultResponse>(
+    `${basePath}/transitions`,
+    request,
+    {
+      params: { currentState },
+    }
+  );
   return data;
 }
 

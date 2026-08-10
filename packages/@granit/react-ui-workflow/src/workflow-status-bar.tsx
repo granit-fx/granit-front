@@ -1,12 +1,12 @@
 import { useTranslation } from '@granit/react-localization';
 import { Badge, Button } from '@granit/react-ui';
 
-import type { WorkflowTransition } from '@granit/workflow';
+import type { WorkflowTransitionResponse } from '@granit/workflow';
 
 export interface WorkflowStatusBarProps {
   currentState: string;
   states: readonly string[];
-  transitions: readonly WorkflowTransition[];
+  transitions: readonly WorkflowTransitionResponse[];
   onTransition?: (targetState: string, comment?: string) => void;
   isLoading?: boolean;
   className?: string;

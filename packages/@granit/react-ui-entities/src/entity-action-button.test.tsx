@@ -54,7 +54,7 @@ describe('EntityActionButton', () => {
   it.each([
     ['Download', 'outline', true],
     ['Navigate', 'outline', true],
-    ['WorkflowTransition', 'default', true],
+    ['WorkflowTransitionResponse', 'default', true],
     ['OpenDrawer', 'outline', true],
     ['OpenModal', 'outline', true],
   ] as const)('maps kind %s to variant %s with an icon', (kind, variant, hasIcon) => {

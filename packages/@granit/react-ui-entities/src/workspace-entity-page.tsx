@@ -294,7 +294,7 @@ function WorkspaceEntityContent({
 
   // Override the framework's default `Navigate` handler so urlTemplate-based
   // actions stay in-app (React Router push) rather than triggering a full
-  // page load. Other kinds (`ApiCall` / `Download` / `WorkflowTransition`)
+  // page load. Other kinds (`ApiCall` / `Download` / `WorkflowTransitionResponse`)
   // fall back to the framework defaults, which already use the ambient
   // `useGranitClient()` axios instance.
   const actionHandlers = useMemo<EntityActionHandlers>(

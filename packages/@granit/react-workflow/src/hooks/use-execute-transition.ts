@@ -7,12 +7,12 @@ import { useWorkflowConfig } from '../providers/workflow-provider';
 
 import { buildWorkflowQueryKey } from './query-keys';
 
-import type { WorkflowTransitionResult } from '@granit/workflow';
+import type { WorkflowTransitionResultResponse } from '@granit/workflow';
 
 const logger = workflowLogger.child('execute-transition');
 
 export interface UseExecuteTransitionOptions {
-  onSuccess?: (result: WorkflowTransitionResult) => void;
+  onSuccess?: (result: WorkflowTransitionResultResponse) => void;
   onError?: (error: Error) => void;
 }
 
@@ -21,9 +21,9 @@ export interface UseExecuteTransitionReturn {
     currentState: string,
     targetState: string,
     comment?: string
-  ) => Promise<WorkflowTransitionResult | null>;
+  ) => Promise<WorkflowTransitionResultResponse | null>;
   readonly isPending: boolean;
-  readonly data: WorkflowTransitionResult | null;
+  readonly data: WorkflowTransitionResultResponse | null;
   readonly error: Error | null;
 }
 
@@ -65,7 +65,7 @@ export function useExecuteTransition(
       currentState: string,
       targetState: string,
       comment?: string
-    ): Promise<WorkflowTransitionResult | null> => {
+    ): Promise<WorkflowTransitionResultResponse | null> => {
       try {
         return await mutation.mutateAsync({ currentState, targetState, comment });
       } catch {

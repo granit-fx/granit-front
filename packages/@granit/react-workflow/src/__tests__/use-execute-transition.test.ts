@@ -5,12 +5,12 @@ import { useExecuteTransition } from '../hooks/use-execute-transition';
 
 import { axiosResponse, createMockClient, createWrapper } from './test-utils.tsx';
 
-import type { WorkflowTransitionResult } from '@granit/workflow';
+import type { WorkflowTransitionResultResponse } from '@granit/workflow';
 
 describe('useExecuteTransition', () => {
   it('should execute a transition successfully', async () => {
     const client = createMockClient();
-    const transitionResult: WorkflowTransitionResult = {
+    const transitionResult: WorkflowTransitionResultResponse = {
       succeeded: true,
       resultingState: 'Published',
       outcome: 'Completed',
@@ -22,7 +22,7 @@ describe('useExecuteTransition', () => {
       wrapper: createWrapper(client),
     });
 
-    let returned: WorkflowTransitionResult | null = null;
+    let returned: WorkflowTransitionResultResponse | null = null;
     await act(async () => {
       returned = await result.current.transition('Draft', 'Published', 'Approved');
     });
@@ -47,7 +47,7 @@ describe('useExecuteTransition', () => {
       wrapper: createWrapper(client),
     });
 
-    let returned: WorkflowTransitionResult | null = null;
+    let returned: WorkflowTransitionResultResponse | null = null;
     await act(async () => {
       returned = await result.current.transition('Draft', 'Published');
     });
@@ -96,7 +96,7 @@ describe('useExecuteTransition', () => {
 
   it('should handle approval-requested outcome', async () => {
     const client = createMockClient();
-    const transitionResult: WorkflowTransitionResult = {
+    const transitionResult: WorkflowTransitionResultResponse = {
       succeeded: true,
       resultingState: 'PendingReview',
       outcome: 'ApprovalRequested',
@@ -107,7 +107,7 @@ describe('useExecuteTransition', () => {
       wrapper: createWrapper(client),
     });
 
-    let returned: WorkflowTransitionResult | null = null;
+    let returned: WorkflowTransitionResultResponse | null = null;
     await act(async () => {
       returned = await result.current.transition('Draft', 'Published');
     });

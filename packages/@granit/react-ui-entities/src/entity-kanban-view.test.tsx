@@ -434,7 +434,7 @@ describe('EntityKanbanView', () => {
     const actions = [
       action('dl', 'Download'),
       action('go', 'Navigate'),
-      action('flow', 'WorkflowTransition'),
+      action('flow', 'WorkflowTransitionResponse'),
       action('drawer', 'OpenDrawer'),
       action('modal', 'OpenModal'),
       action('call', 'ApiCall'),
@@ -462,7 +462,7 @@ describe('EntityKanbanView', () => {
     expect(buttons.map((b) => b.getAttribute('data-action-kind'))).toEqual([
       'Download',
       'Navigate',
-      'WorkflowTransition',
+      'WorkflowTransitionResponse',
       'OpenDrawer',
       'OpenModal',
       'ApiCall',
