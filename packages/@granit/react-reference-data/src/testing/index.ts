@@ -9,3 +9,9 @@ export {
   emptyLabels,
 } from './handlers';
 export type { ReferenceDataHandlersConfig } from './handlers';
+
+export { makeReferenceDataEntry } from './fixtures';
+export type { ReferenceDataEntrySeed } from './fixtures';
+
+export { buildReferenceDataMeta } from './meta';
+export type { MetaTranslator, ReferenceDataColumnSpec, ReferenceDataMetaConfig } from './meta';

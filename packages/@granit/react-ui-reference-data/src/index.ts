@@ -9,6 +9,10 @@ export type {
 // Validation
 export { createReferenceDataConstraints, editReferenceDataConstraints } from './validation';
 
+// Form ⇄ API mapping
+export { toReferenceDataFormValues, toReferenceDataPayload } from './components/form-mapping';
+export type { ReferenceDataPayloadFields } from './components/form-mapping';
+
 // Components
 export { MetadataEditor } from './components/metadata-editor';
 export { ReferenceDataForm } from './components/reference-data-form';

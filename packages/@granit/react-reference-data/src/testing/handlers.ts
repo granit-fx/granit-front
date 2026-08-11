@@ -252,7 +252,7 @@ export function buildBaseEntry(body: Partial<ReferenceDataResponse>): ReferenceD
     labelKo: body.labelKo ?? '',
     labelSv: body.labelSv ?? '',
     labelCs: body.labelCs ?? '',
-    labelHi: body.labelCs ?? '',
+    labelHi: body.labelHi ?? '',
     sortOrder: body.sortOrder ?? 0,
     activated: body.activated ?? true,
     validFrom: body.validFrom ?? null,

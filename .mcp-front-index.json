@@ -11130,6 +11130,22 @@
           "signature": "const editReferenceDataConstraints: SchemaConstraints"
         },
         {
+          "name": "toReferenceDataFormValues",
+          "kind": "function",
+          "signature": "function toReferenceDataFormValues( entry: ReferenceDataResponse ): EditReferenceDataFormValues"
+        },
+        {
+          "name": "toReferenceDataPayload",
+          "kind": "function",
+          "signature": "function toReferenceDataPayload< TValues extends ReferenceDataFormValues | EditReferenceDataFormValues, >(values: TValues): PayloadOf<TValues>"
+        },
+        {
+          "name": "ReferenceDataPayloadFields",
+          "kind": "interface",
+          "signature": "interface ReferenceDataPayloadFields",
+          "members": []
+        },
+        {
           "name": "MetadataEditor",
           "kind": "function",
           "signature": "function MetadataEditor("
