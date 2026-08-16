@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "description": "Shared TypeScript/React framework for Digital Dynamics front-end applications",
   "type": "module",
-  "packageManager": "pnpm@11.12.0",
+  "packageManager": "pnpm@11.22.0",
   "scripts": {
     "lint": "eslint 'packages/@granit/*/src/**/*.{ts,tsx}' --max-warnings 0",
     "tsc": "pnpm -r exec -- tsc --noEmit",
