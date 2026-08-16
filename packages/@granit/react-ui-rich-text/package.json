@@ -43,7 +43,7 @@
     "@granit/react-localization": "workspace:*",
     "@granit/react-ui": "workspace:*",
     "@granit/utils": "workspace:*",
-    "@storybook/react-vite": "^10.5.7",
+    "@storybook/react-vite": "^10.5.8",
     "@tiptap/core": "^3.29.0",
     "@tiptap/extension-placeholder": "^3.29.0",
     "@tiptap/extension-task-item": "^3.29.0",
@@ -53,11 +53,11 @@
     "@tiptap/starter-kit": "^3.29.0",
     "@tiptap/suggestion": "^3.29.0",
     "i18next": "^26.3.6",
-    "lucide-react": "^1.29.0",
+    "lucide-react": "^1.31.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^17.0.9",
-    "storybook": "^10.5.7",
+    "storybook": "^10.5.8",
     "tippy.js": "^6.3.7"
   }
 }
