@@ -18,7 +18,7 @@
     "next-themes": "^0.4.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "zustand": "^5.0.14"
+    "zustand": "^5.0.15"
   },
   "publishConfig": {
     "exports": {
@@ -32,6 +32,6 @@
   "devDependencies": {
     "@granit/shell-core": "workspace:*",
     "next-themes": "^0.4.6",
-    "zustand": "^5.0.14"
+    "zustand": "^5.0.15"
   }
 }
