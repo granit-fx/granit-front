@@ -52,9 +52,19 @@ updates:
       # showcase-admin-react, which makes it a coordinated breaking change rather
       # than something to merge from a dependabot PR. The framework pins one
       # feature set in `@granit/react-ui-kit` (`dataTableFeatures`); see
-      # MIGRATION.md. Minors and patches still flow through the tanstack group.
+      # MIGRATION.md. Minors and patches are excluded for the singleton-peer
+      # reason above: the range is declared in both `peerDependencies` and
+      # `devDependencies` of 28 published packages, so a patch bump rewrites the
+      # peer floor showcase-admin-react resolves against — a contract change for
+      # no functional gain, since the resolved version already moves through the
+      # lockfile. Bump it workspace wide, like every other singleton peer.
       - dependency-name: "@tanstack/react-table"
-        update-types: ["version-update:semver-major"]
+        update-types:
+          [
+            "version-update:semver-major",
+            "version-update:semver-minor",
+            "version-update:semver-patch",
+          ]
     groups:
       granit:
         patterns:
