@@ -33,13 +33,13 @@
   "devDependencies": {
     "@granit/react-localization": "workspace:*",
     "@granit/react-ui": "workspace:*",
-    "@storybook/react-vite": "^10.5.8",
+    "@storybook/react-vite": "^10.5.10",
     "i18next": "^26.3.6",
     "lucide-react": "^1.31.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^17.0.9",
     "react-router": "^8.3.0",
-    "storybook": "^10.5.8"
+    "storybook": "^10.5.10"
   }
 }
