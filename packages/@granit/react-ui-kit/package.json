@@ -54,12 +54,12 @@
     "@granit/react-ui": "workspace:*",
     "@granit/testing": "workspace:*",
     "@granit/utils": "workspace:*",
-    "@storybook/react-vite": "^10.5.10",
+    "@storybook/react-vite": "^10.6.0",
     "@tanstack/react-query": "^5.0.0",
     "@tanstack/react-table": "^9.0.0",
     "cmdk": "^1.1.1",
-    "libphonenumber-js": "^1.13.11",
+    "libphonenumber-js": "^1.13.12",
     "msw": "^2.15.0",
-    "storybook": "^10.5.10"
+    "storybook": "^10.6.0"
   }
 }
