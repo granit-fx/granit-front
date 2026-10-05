@@ -59,7 +59,7 @@
     "@tanstack/react-table": "^9.0.0",
     "cmdk": "^1.1.1",
     "libphonenumber-js": "^1.13.11",
-    "msw": "^2.15.0",
+    "msw": "^3.0.1",
     "storybook": "^10.5.10"
   }
 }
