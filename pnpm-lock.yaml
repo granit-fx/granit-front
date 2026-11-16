@@ -147,8 +147,8 @@ importers:
         specifier: ^9.1.7
         version: 9.1.7
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       jsdom:
         specifier: ^30.0.1
         version: 30.0.1
@@ -186,8 +186,8 @@ importers:
         specifier: ^7.85.0
         version: 7.85.0(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.11
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1407,7 +1407,7 @@ importers:
         version: 19.2.8
       react-i18next:
         specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.11(i18next@27.1.1(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
     devDependencies:
       '@granit/analytics':
         specifier: workspace:*
@@ -1443,8 +1443,8 @@ importers:
         specifier: workspace:*
         version: link:../types
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       msw:
         specifier: ^2.15.0
         version: 2.15.0(@types/node@26.2.0)(typescript@6.0.3)
@@ -2220,7 +2220,7 @@ importers:
         version: 19.2.8
       react-i18next:
         specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.11(i18next@27.1.1(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
     devDependencies:
       '@granit/dashboards':
         specifier: workspace:*
@@ -2448,7 +2448,7 @@ importers:
         version: 7.85.0(react@19.2.8)
       react-i18next:
         specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.11(i18next@27.1.1(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -2528,7 +2528,7 @@ importers:
         version: 19.2.8
       react-i18next:
         specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.11(i18next@27.1.1(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -3077,7 +3077,7 @@ importers:
         version: 19.2.8
       react-i18next:
         specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.11(i18next@27.1.1(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -3779,8 +3779,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -3797,8 +3797,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -3854,8 +3854,8 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -3869,8 +3869,8 @@ importers:
         specifier: ^7.81.0
         version: 7.85.0(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -3935,8 +3935,8 @@ importers:
         specifier: '>=3.4.12'
         version: 3.4.14
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -3953,8 +3953,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -4007,8 +4007,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -4022,8 +4022,8 @@ importers:
         specifier: ^7.81.0
         version: 7.85.0(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -4035,7 +4035,7 @@ importers:
         version: 19.2.8
       react-i18next:
         specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.11(i18next@27.1.1(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
     devDependencies:
       '@granit/analytics':
         specifier: workspace:*
@@ -4065,8 +4065,8 @@ importers:
         specifier: workspace:*
         version: link:../react-ui
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
 
   packages/@granit/react-ui-auditing:
     dependencies:
@@ -4190,11 +4190,11 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       storybook:
         specifier: ^10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -4271,11 +4271,11 @@ importers:
         specifier: ^10.5.10
         version: 10.5.10(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(esbuild@0.28.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.4)(storybook@10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8))(supports-color@7.2.0)(typescript@6.0.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0))
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       storybook:
         specifier: ^10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -4388,11 +4388,11 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       storybook:
         specifier: ^10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -4602,14 +4602,14 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       msw:
         specifier: ^2.15.0
         version: 2.15.0(@types/node@26.2.0)(typescript@6.0.3)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       storybook:
         specifier: ^10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -4699,14 +4699,14 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       msw:
         specifier: ^2.15.0
         version: 2.15.0(@types/node@26.2.0)(typescript@6.0.3)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       storybook:
         specifier: ^10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -4778,11 +4778,11 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       storybook:
         specifier: ^10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -5156,8 +5156,8 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       react-hook-form:
         specifier: ^7.81.0
         version: 7.85.0(react@19.2.8)
@@ -5232,14 +5232,14 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       msw:
         specifier: ^2.15.0
         version: 2.15.0(@types/node@26.2.0)(typescript@6.0.3)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       storybook:
         specifier: ^10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -5497,8 +5497,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       react:
         specifier: ^19.0.0
         version: 19.2.8
@@ -5506,8 +5506,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -5584,8 +5584,8 @@ importers:
         specifier: ^4.0.0
         version: 4.4.0
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -5599,8 +5599,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -5659,8 +5659,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -5674,8 +5674,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -5723,8 +5723,8 @@ importers:
         specifier: ^10.5.10
         version: 10.5.10(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(esbuild@0.28.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rollup@4.62.4)(storybook@10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8))(supports-color@7.2.0)(typescript@6.0.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0))
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -5735,8 +5735,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -5794,7 +5794,7 @@ importers:
         version: 19.2.8
       react-i18next:
         specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.11(i18next@27.1.1(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -5934,11 +5934,11 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       storybook:
         specifier: ^10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -5997,8 +5997,8 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -6012,8 +6012,8 @@ importers:
         specifier: ^7.81.0
         version: 7.85.0(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6082,11 +6082,11 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       storybook:
         specifier: ^10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -6107,7 +6107,7 @@ importers:
         version: 7.85.0(react@19.2.8)
       react-i18next:
         specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.11(i18next@27.1.1(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
     devDependencies:
       '@granit/api-client':
         specifier: workspace:*
@@ -6228,11 +6228,11 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       storybook:
         specifier: ^10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -6244,7 +6244,7 @@ importers:
         version: 19.2.8
       react-i18next:
         specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 17.0.11(i18next@27.1.1(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
     devDependencies:
       '@granit/analytics':
         specifier: workspace:*
@@ -6410,8 +6410,8 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -6425,8 +6425,8 @@ importers:
         specifier: ^7.81.0
         version: 7.85.0(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6483,11 +6483,11 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       storybook:
         specifier: ^10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -6531,8 +6531,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -6549,8 +6549,8 @@ importers:
         specifier: ^7.81.0
         version: 7.85.0(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6627,8 +6627,8 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       libphonenumber-js:
         specifier: ^1.13.11
         version: 1.13.11
@@ -6648,8 +6648,8 @@ importers:
         specifier: ^7.81.0
         version: 7.85.0(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6715,11 +6715,11 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       storybook:
         specifier: ^10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -6769,8 +6769,8 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -6787,8 +6787,8 @@ importers:
         specifier: ^7.81.0
         version: 7.85.0(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6859,8 +6859,8 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -6877,8 +6877,8 @@ importers:
         specifier: ^7.81.0
         version: 7.85.0(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6925,8 +6925,8 @@ importers:
         specifier: ^3.29.0
         version: 3.30.1(@floating-ui/dom@1.8.0)(@tiptap/core@3.30.1(@tiptap/pm@3.30.1))(@tiptap/pm@3.30.1)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -6937,8 +6937,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       storybook:
         specifier: ^10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -6994,8 +6994,8 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -7006,8 +7006,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -7186,11 +7186,11 @@ importers:
         specifier: ^9.0.0
         version: 9.1.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -7310,8 +7310,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       msw:
         specifier: ^2.15.0
         version: 2.15.0(@types/node@26.2.0)(typescript@6.0.3)
@@ -7325,8 +7325,8 @@ importers:
         specifier: ^7.81.0
         version: 7.85.0(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -7412,8 +7412,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -7430,8 +7430,8 @@ importers:
         specifier: ^7.81.0
         version: 7.85.0(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -7490,8 +7490,8 @@ importers:
         specifier: ^3.29.0
         version: 3.30.1
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -7505,8 +7505,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -7568,8 +7568,8 @@ importers:
         specifier: ^0.7.1
         version: 0.7.1
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -7586,8 +7586,8 @@ importers:
         specifier: ^7.81.0
         version: 7.85.0(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       react-router:
         specifier: ^8.3.0
         version: 8.3.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -7622,8 +7622,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -7634,8 +7634,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       storybook:
         specifier: ^10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -7667,8 +7667,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.8)
       i18next:
-        specifier: ^26.3.6
-        version: 26.3.6(typescript@6.0.3)
+        specifier: ^27.1.1
+        version: 27.1.1(typescript@6.0.3)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -7679,8 +7679,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
       react-i18next:
-        specifier: ^17.0.9
-        version: 17.0.11(i18next@26.3.6(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        specifier: ^18.0.1
+        version: 18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3)
       storybook:
         specifier: ^10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -9204,24 +9204,28 @@ packages:
   '@opentelemetry/sdk-trace-base@2.10.0':
     resolution: {integrity: sha512-GuYQQT7QD2EeO8lcZLRQzcbOyhqAzL+6WWTKTU9mSUBYBazkEDl+VrQcXQhbB08OWM9anD1aHleVadzulpOaUQ==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.3.0 <1.10.0'
 
   '@opentelemetry/sdk-trace-base@2.6.0':
     resolution: {integrity: sha512-g/OZVkqlxllgFM7qMKqbPV9c1DUPhQ7d4n3pgZFcrnrNft9eJXZM2TNHTPYREJBrtNdRytYyvwjgL5geDKl3EQ==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.3.0 <1.10.0'
 
   '@opentelemetry/sdk-trace-web@2.10.0':
     resolution: {integrity: sha512-6WqXdWSlBH0GNjDhv1gg6SLVtMtIBVhLaWqd1hiKSXS8meXXP13sVPQoYFHz1uVo0feUTUCdP9vMS54KflisAw==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
   '@opentelemetry/sdk-trace-web@2.6.0':
     resolution: {integrity: sha512-xyYmLFatwUeYnB7NtQ2Ydl9Y8uiblN+EDo5YEjnk7ZRMhGFyt1wgPqb8EYvATLuDiRVtxid1fJsL6RH1fCQMIA==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
@@ -12095,6 +12099,15 @@ packages:
       typescript:
         optional: true
 
+  i18next@27.1.1:
+    resolution: {integrity: sha512-Qq3aJizS3RXQ30crhx9BKQLrHoa6GKpgrOJjVZ9vgj3EBxAddrmVfDNUrAMxSUimw5Jc+ld4SSZUAzf1q4nGyQ==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      typescript: ^5 || ^6 || ^7
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   idb@7.1.1:
     resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
 
@@ -12207,6 +12220,7 @@ packages:
   isomorphic-dompurify@3.22.0:
     resolution: {integrity: sha512-cz/BkSODnQir4IV2quqbuEHhAGz4MAYGvhoemsxuwMpY/oZbRHlNjPLPyIQ0fdULiwDPUE+OHPwWb6XTEiNk1A==}
     engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
+    deprecated: Raised the minimum Node.js version (breaking) without a major bump. Use 4.x for the same code with correct semver, or pin 3.19.0 for Node < 22.22.2.
 
   isomorphic-unfetch@3.1.0:
     resolution: {integrity: sha512-geDJjpoZ8N0kWexiwkX8F9NkTsXhetLPVbZFQ+JTW239QNOwvB0gniuR1Wc6f0AMTn7/mFGyXvHTifrCp/GH8Q==}
@@ -13068,6 +13082,20 @@ packages:
       react-dom:
         optional: true
       react-native:
+        optional: true
+      typescript:
+        optional: true
+
+  react-i18next@18.0.1:
+    resolution: {integrity: sha512-kPWXI0E/lrPj3+/umcKNzYZVnWmEedLiamMzDIHfbs+5ANf6yzvlZsjKou8f7kaGkfMMDLIZBejV+4aSN1CyBw==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      '@types/react': '*'
+      i18next: '>= 27.0.1'
+      react: ^19.0.0
+      typescript: ^5 || ^6 || ^7
+    peerDependenciesMeta:
+      '@types/react':
         optional: true
       typescript:
         optional: true
@@ -18127,6 +18155,10 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
+  i18next@27.1.1(typescript@6.0.3):
+    optionalDependencies:
+      typescript: 6.0.3
+
   idb@7.1.1: {}
 
   ieee754@1.2.1: {}
@@ -19373,6 +19405,26 @@ snapshots:
       use-sync-external-store: 1.6.0(react@19.2.8)
     optionalDependencies:
       react-dom: 19.2.8(react@19.2.8)
+      typescript: 6.0.3
+
+  react-i18next@17.0.11(i18next@27.1.1(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3):
+    dependencies:
+      '@babel/runtime': 7.29.7
+      html-parse-stringify: 4.0.1
+      i18next: 27.1.1(typescript@6.0.3)
+      react: 19.2.8
+      use-sync-external-store: 1.6.0(react@19.2.8)
+    optionalDependencies:
+      react-dom: 19.2.8(react@19.2.8)
+      typescript: 6.0.3
+
+  react-i18next@18.0.1(@types/react@19.2.18)(i18next@27.1.1(typescript@6.0.3))(react@19.2.8)(typescript@6.0.3):
+    dependencies:
+      html-parse-stringify: 4.0.1
+      i18next: 27.1.1(typescript@6.0.3)
+      react: 19.2.8
+    optionalDependencies:
+      '@types/react': 19.2.18
       typescript: 6.0.3
 
   react-is@16.13.1: {}
